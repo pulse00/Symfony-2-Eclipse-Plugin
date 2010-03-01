@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.dubture.symfony2.feature_1.0.0.qualifier.jar" id="com.dubture.symfony2.feature" version="1.0.0.qualifier">
+      <category name="com.dubture.symfony2"/>
+   </feature>
+   <category-def name="com.dubture.symfony2" label="Symfony"/>
+</site>
