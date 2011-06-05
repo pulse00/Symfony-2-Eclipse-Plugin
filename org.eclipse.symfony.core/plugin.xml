@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="symfonyNature"
+         name="Symfony Project Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.eclipse.symfony.core.builder.SymfonyNature">
+         </run>
+      </runtime>
+      <builder
+            id="org.eclipse.symfony.core.symfonyBuilder">
+      </builder>
+   </extension>
+   <extension
+         id="symfonyBuilder"
+         name="Symfony Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="org.eclipse.symfony.core.builder.SymfonyBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.dltk.core.buildParticipant">
+      <buildParticipant
+            class="org.eclipse.symfony.core.builder.SymfonyBuildParticipantFactory"
+            id="org.eclipse.symfony.core.buildParticipant"
+            name="Symfony Builder"
+            nature="org.eclipse.php.core.PHPNature">
+      </buildParticipant>
+   </extension>
+
+</plugin>

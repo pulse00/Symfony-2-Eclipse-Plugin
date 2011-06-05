@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="org.eclipse.symfony.ui.addnature"
+            objectClass="org.eclipse.core.resources.IProject">
+         <menu
+               id="org.eclipse.symfony.ui.menu1"
+               label="Symfony"
+               path="additions">
+            <separator
+                  name="project">
+            </separator>
+         </menu>
+         <action
+               class="org.eclipse.symfony.ui.popup.actions.AddSymfonyNature"
+               enablesFor="1"
+               id="org.eclipse.symfony.ui.newAction"
+               label="Add/Remove Symfony Nature"
+               menubarPath="org.eclipse.symfony.ui.menu1/project">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="org.eclipse.symfony.ui.debugModel"
+            objectClass="org.eclipse.core.resources.IProject">
+         <action
+               class="org.eclipse.symfony.ui.popup.actions.DebugModelAction"
+               enablesFor="1"
+               id="org.eclipse.symfony.ui.debugmodelaction"
+               label="Debug symfony model"
+               menubarPath="org.eclipse.symfony.ui.menu1/project">
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>
