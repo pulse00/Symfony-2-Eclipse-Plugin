@@ -33,7 +33,7 @@
    </extension>
    
    
-	<!-- DLTK buildparticipant - not used at the moment -->
+	<!-- The Symfony2 dltk builder - traverses AST nodes during building to parse model elements like Bundles/AppKernel etc. -->   
 	
    <extension
          point="org.eclipse.dltk.core.buildParticipant">
@@ -54,8 +54,8 @@
       </visitor>
    </extension>
    
-   
-   <!-- The Symfony2 dltk builder - traverses AST nodes during building to parse model elements like Bundles etc. -->   
+
+	<!-- PDT SourceElementRequestor - not used at the moment -->   
    <extension
          point="org.eclipse.php.core.phpSourceElementRequestors">
       <requestor
