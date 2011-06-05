@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+
+	<!-- The Symfony2 Project Nature -->
    <extension
          id="symfonyNature"
          name="Symfony Project Nature"
@@ -10,10 +12,14 @@
                class="org.eclipse.symfony.core.builder.SymfonyNature">
          </run>
       </runtime>
+      
       <builder
             id="org.eclipse.symfony.core.symfonyBuilder">
       </builder>
+      
    </extension>
+   
+   <!-- The Symfony2 core builder - visits xml and yml files to parse the configuration --> 
    <extension
          id="symfonyBuilder"
          name="Symfony Builder"
@@ -25,6 +31,10 @@
          </run>
       </builder>
    </extension>
+   
+   
+	<!-- DLTK buildparticipant - not used at the moment -->
+	
    <extension
          point="org.eclipse.dltk.core.buildParticipant">
       <buildParticipant
@@ -34,5 +44,23 @@
             nature="org.eclipse.php.core.PHPNature">
       </buildParticipant>
    </extension>
+   
+   
+   <!-- The Symfony2 indexing visitor - traverses the AST nodes to contribute model elements to the index like Routings and Annotations -->
+   <extension
+         point="org.eclipse.php.core.phpIndexingVisitors">
+      <visitor
+            class="org.eclipse.symfony.core.index.SymfonyIndexingVisitorExtension">
+      </visitor>
+   </extension>
+   
+   
+   <!-- The Symfony2 dltk builder - traverses AST nodes during building to parse model elements like Bundles etc. -->   
+   <extension
+         point="org.eclipse.php.core.phpSourceElementRequestors">
+      <requestor
+            class="org.eclipse.symfony.core.compiler.SourceElementRequestor">
+      </requestor>
+   </extension>   
 
 </plugin>

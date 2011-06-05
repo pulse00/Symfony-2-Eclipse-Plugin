@@ -7,6 +7,15 @@ import javax.xml.parsers.SAXParserFactory;
 import org.eclipse.core.resources.IFile;
 import org.xml.sax.SAXException;
 
+/**
+ * 
+ * {@link XMLConfigParser} retrieves project configuration
+ * from xml files and contributes it to the Symfony2 model.
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 public class XMLConfigParser implements IConfigParser {
 
 	private SAXParserFactory parserFactory;
@@ -15,10 +24,12 @@ public class XMLConfigParser implements IConfigParser {
 	public void parse(IFile file) {
 
 		try {			
-			System.out.println("parse xml config file: " + file.getFullPath().toString());
+//			System.out.println("parse xml config file: " + file.getFullPath().toString());
 			getParser().parse(file.getContents(), new XMLHandler(file));
-		} catch (Exception e) {			
-			e.printStackTrace();			
+		} catch (Exception e) {		
+			
+			System.out.println("xml parsing error: " + e.getMessage());
+//			e.printStackTrace();			
 		}
 	}
 

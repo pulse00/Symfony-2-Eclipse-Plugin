@@ -1,12 +1,20 @@
 package org.eclipse.symfony.core.builder;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.symfony.core.model.Project;
 
+
+/**
+ * 
+ * The {@link ResourceVisitor} is a standard buildvisitor to 
+ * parse xml/yml config files from a Symfony2 project during
+ * a full build.
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 public class ResourceVisitor extends AbstractSymfonyVisitor 
 	implements IResourceVisitor {
 	
@@ -16,21 +24,15 @@ public class ResourceVisitor extends AbstractSymfonyVisitor
 	@Override
 	public boolean visit(IResource resource) throws CoreException {
 					
-		if (resource instanceof IProject) {
-
-			System.out.println("is project!");
-			Project project = new Project((IProject) resource);
-			getModel().addProject(project);
-			
-		} else if (resource instanceof IFile) {
+		if (resource instanceof IFile && resource.getFileExtension() != null) {
 			
 			IFile file = (IFile) resource;
 			
-			if (resource.getFileExtension().equals("xml")) {				
+			if (resource.getFileExtension().equals("xml")) {
 				getXmlParser().parse(file);				
 			} else if (resource.getFileExtension().equals("yml")) {
 				
-				System.out.println("is yml file");
+//				System.out.println("is yml file");
 			}
 			
 		}

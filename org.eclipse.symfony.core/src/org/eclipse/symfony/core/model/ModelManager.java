@@ -4,7 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.core.IScriptProject;
 
+
+/**
+ * 
+ * The ModelManager is the central singleton which
+ * holds references to all projects in the workspace.
+ * 
+ * You can add listeners to modelevents, ie. when the
+ * model is cleared completely by a full-build.
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 public class ModelManager {
 	
 	private static ModelManager instance;
@@ -30,6 +44,7 @@ public class ModelManager {
 
 		projects = new ArrayList<Project>();
 
+		System.out.println("clearing model");
 		for (IModelClearListener listener : modelClearListeners) {
 			listener.modelCleared();			
 		}
@@ -46,6 +61,8 @@ public class ModelManager {
 
 	public void addProject(Project project) {
 
+		System.out.println("Creating project: " + project.getName());
+		
 		for (Project proj : projects) {			
 			if (proj == project) {
 				projects.remove(proj);
@@ -56,4 +73,51 @@ public class ModelManager {
 		projects.add(project);
 		
 	}
+
+	public void addBundle(Bundle bundle) {
+
+		IScriptProject scriptProject = bundle.getProject();
+				
+		boolean found = false;
+		
+		for (Project project : projects) {
+			
+			if (project.equals(scriptProject)) {
+				project.addBundle(bundle);				
+				dispatchChangeListener();
+				found = true;
+				break;
+				
+			} 
+		}
+		
+		if (found == false) {			
+			Project project = new Project(scriptProject);			
+			project.addBundle(bundle);
+			addProject(project);
+			dispatchChangeListener();
+		}
+	}
+	
+	
+	public void addService(Service service) {
+		
+		for (Project project : projects) {
+			for (Bundle bundle : project.getBundles()) {
+				
+
+				if (bundle.getBasePath().isPrefixOf(service.getFile().getFullPath())) {				
+					bundle.addService(service);
+					return;
+				}
+			}
+		}
+	}
+	
+	private void dispatchChangeListener() {
+		
+		//TODO: implement model change listener logic
+		
+	}
+
 }

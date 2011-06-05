@@ -6,8 +6,17 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 
+/**
+ * 
+ * The {@link DeltaVisitor} is a standard delta buildvisitor to 
+ * parse xml/yml config files from a Symfony2 project.
+ *  
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 public class DeltaVisitor extends AbstractSymfonyVisitor 
-implements IResourceDeltaVisitor {
+	implements IResourceDeltaVisitor {
 
 
 	@Override
@@ -30,7 +39,7 @@ implements IResourceDeltaVisitor {
 
 				} else if (resource.getFileExtension().equals("yml")) {
 
-					System.out.println("is yml file");
+//					System.out.println("is yml file");
 				}
 
 			}

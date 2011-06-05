@@ -10,6 +10,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.symfony.core.SymfonyCorePlugin;
 import org.eclipse.symfony.core.model.ModelManager;
 
+/**
+ * 
+ * (non-Javadoc)
+ * 
+ * @see IncrementalProjectBuilder 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 public class SymfonyBuilder extends IncrementalProjectBuilder {
 
 	public static final String BUILDER_ID = SymfonyCorePlugin.ID + ".symfonyBuilder";
@@ -41,10 +49,10 @@ public class SymfonyBuilder extends IncrementalProjectBuilder {
 			throws CoreException {
 		try {
 			
-			ModelManager.getInstance().clear();
 			
 			getProject().accept(new ResourceVisitor());
-		} catch (CoreException e) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

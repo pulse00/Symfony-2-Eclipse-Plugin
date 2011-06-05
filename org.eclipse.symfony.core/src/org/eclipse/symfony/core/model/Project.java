@@ -1,18 +1,42 @@
 package org.eclipse.symfony.core.model;
 
-import org.eclipse.core.resources.IProject;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Project {
+import org.eclipse.dltk.core.IScriptProject;
 
-	private IProject project = null;
+
+/**
+ * 
+ * Represents a Symfony2 Project. You can retrieve
+ * bundles, services, commands, etc. which declared
+ * within a project instance.
+ *  
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
+public class Project  {
+
+	/**
+	 * The underlying project in the eclipse workspace
+	 */
+	private IScriptProject project = null;
 	
-	public Project(IProject project) {
+	
+	/**
+	 * List of bundles this project contains
+	 */
+	private ArrayList<Bundle> bundles = new ArrayList<Bundle>();
+	
+	
+	public Project(IScriptProject project) {
 		
 		this.project = project;		
 		
 	}
 	
-	public IProject getRecource() {
+	public IScriptProject getRecource() {
 		
 		return project;
 		
@@ -20,7 +44,7 @@ public class Project {
 	
 	public String toDebugString() {
 				
-		String debug = project.getName();		
+		String debug = project.getProject().getName();		
 		return debug;
 		
 	}
@@ -28,7 +52,34 @@ public class Project {
 	@Override
 	public String toString() {
 
-		return project.getName();
+		return project.getProject().getName();
+		
+	}
+
+	public void addBundle(Bundle bundle) {
+
+		bundles.remove(bundle);
+		bundles.add(bundle);
+		
+	}
+
+	public List<Bundle> getBundles() {
+
+		return bundles;
+	}
+
+	public String getName() {
+
+		return project.getProject().getName();
+	}
+	
+	@Override
+	public boolean equals(Object project) {
+		
+		if (!(project instanceof IScriptProject))
+			return false;
+		
+		return project.equals(this.project);
 		
 	}
 }

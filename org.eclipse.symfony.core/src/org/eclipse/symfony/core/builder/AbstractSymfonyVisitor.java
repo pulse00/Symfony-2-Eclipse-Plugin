@@ -8,7 +8,11 @@ import org.eclipse.symfony.core.parser.XMLConfigParser;
 import org.eclipse.symfony.core.parser.YamlConfigParser;
 
 /**
- * @author Robert Gruendler <robert@dubture.com>
+ *
+ * Abstract visitor to provide xml- and yml parsers.
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
 public abstract class AbstractSymfonyVisitor {
