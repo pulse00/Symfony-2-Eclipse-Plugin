@@ -120,4 +120,16 @@ public class ModelManager {
 		
 	}
 
+	public void activateBundle(String fullyQualifiedName) {
+
+		
+		for (Project project : projects) {
+			for (Bundle bundle : project.getBundles()) {				
+				if (bundle.getFullyQualifiedName().equals(fullyQualifiedName)) {
+					bundle.activate();
+				}
+			}
+		}
+	}
+
 }

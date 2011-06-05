@@ -13,6 +13,7 @@ import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.visitor.BundleVisitor;
+import org.eclipse.symfony.core.visitor.KernelVisitor;
 
 /**
  * 
@@ -23,6 +24,15 @@ import org.eclipse.symfony.core.visitor.BundleVisitor;
  */
 public class SymfonyBuildParticipant implements IBuildParticipant {
 
+	private ModuleDeclaration getModuleDeclaration(IBuildContext context) {
+		
+		ISourceModule sourceModule = context.getSourceModule();		
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+		
+		return moduleDeclaration;		
+		
+	}
+	
 	@Override
 	public void build(IBuildContext context) throws CoreException {
 
@@ -51,11 +61,15 @@ public class SymfonyBuildParticipant implements IBuildParticipant {
 			if (file.getName().endsWith("Bundle.php") && !file.getName().equals("Bundle.php")) {
 				
 //				System.out.println("traverse bundle: " + file.getName());
-				ISourceModule sourceModule = context.getSourceModule();		
-				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);			
-				moduleDeclaration.traverse(new BundleVisitor(context));
+				getModuleDeclaration(context).traverse(new BundleVisitor(context));
 				
-			}			
+			} else if (file.getName().equals("AppKernel.php")) {
+				
+
+				getModuleDeclaration(context).traverse(new KernelVisitor(context));
+
+				
+			}
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

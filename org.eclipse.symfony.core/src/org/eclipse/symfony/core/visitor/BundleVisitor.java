@@ -2,6 +2,7 @@ package org.eclipse.symfony.core.visitor;
 
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.symfony.core.model.Bundle;
 import org.eclipse.symfony.core.model.ModelManager;
@@ -22,9 +23,22 @@ public class BundleVisitor extends PHPASTVisitor {
 
 	private IBuildContext context;
 	
+	private Bundle bundle = null;
+	
+	private String namespace;
+	
+	
 	public BundleVisitor(IBuildContext context) {
 		
 		this.context = context;
+		
+	}
+	
+	@Override
+	public boolean visit(NamespaceDeclaration s) throws Exception {
+	
+		namespace = s.getName();
+		return true;
 		
 	}
 	
@@ -37,7 +51,7 @@ public class BundleVisitor extends PHPASTVisitor {
 					
 			try {
 				
-				Bundle bundle = new Bundle(context.getSourceModule(), declaration);
+				Bundle bundle = new Bundle(context.getSourceModule(), declaration, namespace);
 				ModelManager.getInstance().addBundle(bundle);			
 				return true;
 				

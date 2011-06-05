@@ -1,7 +1,6 @@
 package org.eclipse.symfony.core.model;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 
 
 /**
@@ -18,6 +17,7 @@ public class Service {
 	private IFile file;
 	private String name;
 	private String clazz;
+	private Bundle bundle;
 	
 	
 	public Service(IFile resource, String name, String clazz) {
@@ -37,5 +37,13 @@ public class Service {
 
 		return clazz;
 		
+	}
+
+	public Bundle getBundle() {
+		return bundle;
+	}
+
+	public void setBundle(Bundle bundle) {
+		this.bundle = bundle;
 	}	
 }

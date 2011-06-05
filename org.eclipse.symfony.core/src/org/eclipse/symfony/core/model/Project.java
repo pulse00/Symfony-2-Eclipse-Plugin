@@ -3,6 +3,7 @@ package org.eclipse.symfony.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.IScriptProject;
 
 
@@ -18,10 +19,22 @@ import org.eclipse.dltk.core.IScriptProject;
  */
 public class Project  {
 
+	
+	public final static int YAML_CONFIG = 0;
+	public final static int XML_CONFIG = 1;
+	
 	/**
 	 * The underlying project in the eclipse workspace
 	 */
 	private IScriptProject project = null;
+	
+	
+	//TODO: parse the publicPath (ie. "/web") from php sources
+	private IPath publicPath;
+	
+	
+	//TODO: parse the configuration type (xml/yml) from the php sources
+	private int configType;
 	
 	
 	/**
