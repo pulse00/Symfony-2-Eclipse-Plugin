@@ -14,3 +14,5 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.symfony.core,
  org.eclipse.symfony.core.builder,
  org.eclipse.symfony.core.model
+Bundle-ClassPath: lib/snakeyaml-1.8.jar,
+ .

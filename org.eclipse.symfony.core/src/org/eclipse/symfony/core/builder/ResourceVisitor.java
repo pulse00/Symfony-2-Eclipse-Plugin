@@ -30,8 +30,9 @@ public class ResourceVisitor extends AbstractSymfonyVisitor
 				getXmlParser().parse(file);				
 			} else if (resource.getFileExtension().equals("yml")) {
 								
+				
 				if (resource.getName().contains("routing")) {
-					
+					System.out.println("contains routing");
 					try {
 						getYmlRoutingParser().parse(file);
 					} catch (Exception e) {
