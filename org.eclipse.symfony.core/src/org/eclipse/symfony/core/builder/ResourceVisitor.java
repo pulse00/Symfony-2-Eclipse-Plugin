@@ -19,8 +19,6 @@ public class ResourceVisitor extends AbstractSymfonyVisitor
 	implements IResourceVisitor {
 	
 	
-	
-
 	@Override
 	public boolean visit(IResource resource) throws CoreException {
 					
@@ -31,13 +29,18 @@ public class ResourceVisitor extends AbstractSymfonyVisitor
 			if (resource.getFileExtension().equals("xml")) {
 				getXmlParser().parse(file);				
 			} else if (resource.getFileExtension().equals("yml")) {
-				
-//				System.out.println("is yml file");
+								
+				if (resource.getName().contains("routing")) {
+					
+					try {
+						getYmlRoutingParser().parse(file);
+					} catch (Exception e) {
+
+						System.err.println(e.getMessage());
+					}
+				}
 			}
-			
 		}
-		
 		return true;
-		
 	}	
 }

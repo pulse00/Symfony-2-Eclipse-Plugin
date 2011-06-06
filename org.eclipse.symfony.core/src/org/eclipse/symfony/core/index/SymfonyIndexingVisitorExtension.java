@@ -22,9 +22,8 @@ public class SymfonyIndexingVisitorExtension extends
 		PhpIndexingVisitorExtension {
 	
 	private ClassDeclaration currentClass;
-	private MethodDeclaration currentMethod;
 	
-
+	
 	@Override
 	public boolean visit(TypeDeclaration s) throws Exception {
 
@@ -39,8 +38,6 @@ public class SymfonyIndexingVisitorExtension extends
 	
 		if (currentClass != null) {
 			
-			
-			
 		}
 		
 		
@@ -52,8 +49,6 @@ public class SymfonyIndexingVisitorExtension extends
 	public boolean visit(MethodDeclaration s) throws Exception {
 		
 		if (currentClass != null && "build".equals(s.getName())) {
-
-			currentMethod = s;
 			
 		}
 		return true;
@@ -62,7 +57,6 @@ public class SymfonyIndexingVisitorExtension extends
 	@Override
 	public boolean endvisit(MethodDeclaration s) throws Exception {
 		
-		currentMethod = null;				
 		return true;
 	}	
 }

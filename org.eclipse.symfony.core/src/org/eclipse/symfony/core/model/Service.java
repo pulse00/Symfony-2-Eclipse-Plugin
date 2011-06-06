@@ -15,7 +15,6 @@ import org.eclipse.core.resources.IFile;
 public class Service {
 	
 	private IFile file;
-	private String name;
 	private String clazz;
 	private Bundle bundle;
 	
@@ -23,7 +22,6 @@ public class Service {
 	public Service(IFile resource, String name, String clazz) {
 		
 		file = resource;
-		this.name = name;
 		this.clazz = clazz;				
 		
 	}

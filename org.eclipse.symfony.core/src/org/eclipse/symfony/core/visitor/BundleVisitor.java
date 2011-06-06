@@ -21,12 +21,8 @@ import org.eclipse.symfony.core.model.exception.InvalidBundleException;
 public class BundleVisitor extends PHPASTVisitor {
 	
 
-	private IBuildContext context;
-	
-	private Bundle bundle = null;
-	
-	private String namespace;
-	
+	private IBuildContext context;	
+	private String namespace;	
 	
 	public BundleVisitor(IBuildContext context) {
 		

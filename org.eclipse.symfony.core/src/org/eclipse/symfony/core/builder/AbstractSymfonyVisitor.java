@@ -21,6 +21,20 @@ public abstract class AbstractSymfonyVisitor {
 	
 	private YamlConfigParser ymlParser = null;
 	
+	private YamlRoutingParser ymlRoutingParser = null;
+	
+	
+	protected YamlRoutingParser getYmlRoutingParser() {
+		
+		
+		if (ymlRoutingParser == null)
+			ymlRoutingParser = new YamlRoutingParser();
+		
+		return ymlRoutingParser;
+		
+		
+	}
+	
 	protected XMLConfigParser getXmlParser() {
 		
 		if (xmlParser == null)

@@ -3,7 +3,6 @@ package org.eclipse.symfony.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.core.IScriptProject;
 
 
@@ -130,6 +129,12 @@ public class ModelManager {
 				}
 			}
 		}
+	}
+
+	public void addRoute(Route route) {
+		
+		//TODO: add route to corresponding bundle / app
+		
 	}
 
 }

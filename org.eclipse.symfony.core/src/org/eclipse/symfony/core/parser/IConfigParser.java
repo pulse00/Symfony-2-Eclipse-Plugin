@@ -17,7 +17,8 @@ public interface IConfigParser {
 	 * contribute it to the Symfony2 model.
 	 * 
 	 * @param file
+	 * @throws Exception 
 	 */
-	public void parse(IFile file);
+	public void parse(IFile file) throws Exception;
 
 }

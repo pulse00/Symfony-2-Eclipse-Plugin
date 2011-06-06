@@ -28,7 +28,7 @@ public class XMLConfigParser implements IConfigParser {
 			getParser().parse(file.getContents(), new XMLHandler(file));
 		} catch (Exception e) {		
 			
-			System.out.println("xml parsing error: " + e.getMessage());
+			System.err.println("xml parsing error: " + e.getMessage() + " in " + file.getFullPath().toString());
 //			e.printStackTrace();			
 		}
 	}
