@@ -13,6 +13,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
 import org.eclipse.symfony.core.parser.antlr.SymfonyAnnotationLexer;
 import org.eclipse.symfony.core.parser.antlr.SymfonyAnnotationParser;
 
@@ -21,18 +22,10 @@ import org.eclipse.symfony.core.parser.antlr.SymfonyAnnotationParser;
  * {@link AnnotationVisitor} parses annotations from
  * PHPDocBlocks.
  * 
- * The visitor first parses all UseStatements in php classes
- * to resolve the fully qualified class names in annotations.
+ * This will mainly be used for error reporting purposes
+ * and maybe syntax highlighting.
  * 
- * 
- * This way we can supply code hints ie. 
- * 
- * <pre> 
- * 	/*
- *  * @ORM\| <- code assist
- *  *\/ 
- * </pre>
- * 
+ * For code-assistance in annotations, see {@link AnnotationCompletionStrategy}
  * 
  * @see http://symfony.com/blog/symfony2-annotations-gets-better
  * @author Robert Gruendler <r.gruendler@gmail.com>

@@ -71,7 +71,7 @@
    <extension
          point="org.eclipse.php.core.completionContextResolvers">
       <resolver
-            class="org.eclipse.symfony.core.codeassist.CompletionContextResolver"></resolver>
+            class="org.eclipse.symfony.core.codeassist.AnnotationCompletionContextResolver"></resolver>
    </extension>   
 
 </plugin>

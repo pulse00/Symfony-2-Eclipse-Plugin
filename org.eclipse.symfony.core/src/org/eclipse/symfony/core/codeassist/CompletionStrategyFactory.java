@@ -26,6 +26,8 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		for (ICompletionContext context : contexts) {
 			
 			if (context.getClass() == AnnotationCompletionContext.class) {
+				
+				System.out.println("create annotation completion strategy");
 				result.add(new AnnotationCompletionStrategy(context));
 			}
 		}

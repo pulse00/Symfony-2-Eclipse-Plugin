@@ -1,7 +1,5 @@
 package org.eclipse.symfony.core.builder;
 
-import org.eclipse.core.internal.events.BuildContext;
-import org.eclipse.core.internal.resources.BuildConfiguration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -11,9 +9,8 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
-import org.eclipse.symfony.core.model.ModelManager;
-import org.eclipse.symfony.core.visitor.BundleVisitor;
 import org.eclipse.symfony.core.visitor.AnnotationVisitor;
+import org.eclipse.symfony.core.visitor.BundleVisitor;
 import org.eclipse.symfony.core.visitor.KernelVisitor;
 
 /**
