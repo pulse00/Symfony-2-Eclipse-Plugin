@@ -13,7 +13,7 @@ import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.visitor.BundleVisitor;
-import org.eclipse.symfony.core.visitor.ControllerVisitor;
+import org.eclipse.symfony.core.visitor.AnnotationVisitor;
 import org.eclipse.symfony.core.visitor.KernelVisitor;
 
 /**
@@ -72,7 +72,7 @@ public class SymfonyBuildParticipant implements IBuildParticipant {
 				
 			} else if (file.getName().endsWith("Controller.php")) {
 								
-				getModuleDeclaration(context).traverse(new ControllerVisitor(context));				
+				getModuleDeclaration(context).traverse(new AnnotationVisitor(context));				
 				
 			}
 			

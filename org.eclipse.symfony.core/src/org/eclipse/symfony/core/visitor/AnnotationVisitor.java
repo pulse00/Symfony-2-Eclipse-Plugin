@@ -11,21 +11,35 @@ import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.symfony.core.parser.antlr.SymfonyAnnotationLexer;
 import org.eclipse.symfony.core.parser.antlr.SymfonyAnnotationParser;
 
 /**
  * 
- * {@link ControllerVisitor} parses controller classes
- * for annotations.
- *  
+ * {@link AnnotationVisitor} parses annotations from
+ * PHPDocBlocks.
  * 
+ * The visitor first parses all UseStatements in php classes
+ * to resolve the fully qualified class names in annotations.
+ * 
+ * 
+ * This way we can supply code hints ie. 
+ * 
+ * <pre> 
+ * 	/*
+ *  * @ORM\| <- code assist
+ *  *\/ 
+ * </pre>
+ * 
+ * 
+ * @see http://symfony.com/blog/symfony2-annotations-gets-better
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
 @SuppressWarnings("restriction")
-public class ControllerVisitor extends PHPASTVisitor {
+public class AnnotationVisitor extends PHPASTVisitor {
 
 	
 	private ClassDeclaration currentClass = null;
@@ -35,17 +49,35 @@ public class ControllerVisitor extends PHPASTVisitor {
 	private IBuildContext context;
 	
 	
-	public ControllerVisitor(IBuildContext context) {
+	public AnnotationVisitor(IBuildContext context) {
 		
 		this(context.getContents());
 		this.context = context;
 		
 	}
 	
-	public ControllerVisitor(char[] content) {
+	public AnnotationVisitor(char[] content) {
 		
 		this.content = content;
 	}
+	
+	
+	@Override
+	public boolean visit(UseStatement s) throws Exception {
+		
+		//TODO: store the FQCN and the alias from the UseStatement
+		return true;
+
+	}
+	
+	@Override
+	public boolean endvisit(UseStatement s) throws Exception {
+	
+		
+		return true;
+	
+	}
+	
 	
 	
 	@Override
@@ -115,7 +147,6 @@ public class ControllerVisitor extends PHPASTVisitor {
 	 */
 	public void parseAnnotations(String comment, int sourceStart) {
 		
-		
 		BufferedReader buffer = new BufferedReader(new StringReader(comment));
 		
 		try {
@@ -131,10 +162,6 @@ public class ControllerVisitor extends PHPASTVisitor {
 				
 				if ((start == -1 || end == -1)) continue;
 				
-				if(!line.substring(start).startsWith("@Route(") &&
-                        !line.substring(start).startsWith("@Template(")) continue;
-
-				
 				String annotation = line.substring(start, end+1);
 				CharStream content = new ANTLRStringStream(annotation);             				
 				
@@ -142,23 +169,13 @@ public class ControllerVisitor extends PHPASTVisitor {
                 CommonTokenStream tokenStream = new CommonTokenStream(lexer);
                 SymfonyAnnotationParser parser = new SymfonyAnnotationParser(tokenStream);
                 
-                try {
-                	
+                try { 	
                      System.err.println("resolved annotation ..." + parser.name());
-
-                     
                 } catch (RecognitionException e) {
                 	                	
                 	e.printStackTrace();
                 	
                 }				
-				
-//				if (annotation.startsWith("@Route")) {
-//					Route route = Route.fromAnnotation(context.getFile(), annotation);
-//					ModelManager.getInstance().addRoute(route);
-//				}
-				
-				
 			}
 			
 		} catch (Exception e) {
