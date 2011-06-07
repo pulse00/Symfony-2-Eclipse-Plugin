@@ -3,13 +3,17 @@ package org.eclipse.symfony.core.visitor;
 import java.io.BufferedReader;
 import java.io.StringReader;
 
+import org.antlr.runtime.ANTLRStringStream;
+import org.antlr.runtime.CharStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RecognitionException;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
-import org.eclipse.symfony.core.model.ModelManager;
-import org.eclipse.symfony.core.model.Route;
+import org.eclipse.symfony.core.parser.antlr.SymfonyAnnotationLexer;
+import org.eclipse.symfony.core.parser.antlr.SymfonyAnnotationParser;
 
 /**
  * 
@@ -49,7 +53,7 @@ public class ControllerVisitor extends PHPASTVisitor {
 
 		currentClass = s;
 		
-		System.out.println("visit controller " + s.getName());
+		
 		for (String name : currentClass.getSuperClassNames()) {			
 			if (name.equals("Controller")) {
 			}
@@ -132,17 +136,34 @@ public class ControllerVisitor extends PHPASTVisitor {
 
 				
 				String annotation = line.substring(start, end+1);
+				CharStream content = new ANTLRStringStream(annotation);             				
 				
-				if (annotation.startsWith("@Route")) {
-					Route route = Route.fromAnnotation(context.getFile(), annotation);
-					ModelManager.getInstance().addRoute(route);
-				}
-				System.out.println("found annotation: " + annotation);
+                SymfonyAnnotationLexer lexer = new SymfonyAnnotationLexer(content);
+                CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+                SymfonyAnnotationParser parser = new SymfonyAnnotationParser(tokenStream);
+                
+                try {
+                	
+                     System.err.println("resolved annotation ..." + parser.name());
+
+                     
+                } catch (RecognitionException e) {
+                	                	
+                	e.printStackTrace();
+                	
+                }				
+				
+//				if (annotation.startsWith("@Route")) {
+//					Route route = Route.fromAnnotation(context.getFile(), annotation);
+//					ModelManager.getInstance().addRoute(route);
+//				}
+				
 				
 			}
 			
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}		
 	}
 }

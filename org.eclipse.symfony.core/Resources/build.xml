@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<project name="symfonyAnnotationParser" default="generateParser" basedir=".">
+	<target name="generateParser">
+		<property name="destination" value="../src/org/eclipse/symfony/core/parser/antlr" />
+		<java classpath="antlr-3.3-complete.jar" classname="org.antlr.Tool">
+			<arg value="SymfonyAnnotationLexer.g" />
+			<arg value="SymfonyAnnotationParser.g" />
+		</java>
+		<move file="SymfonyAnnotationParser.tokens" todir="${destination}" />
+		<move file="SymfonyAnnotationLexer.tokens" todir="${destination}" />
+		<move file="SymfonyAnnotationLexer.java" todir="${destination}" />
+		<move file="SymfonyAnnotationParser.java" todir="${destination}" />
+	</target>
+</project>
