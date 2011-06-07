@@ -23,7 +23,7 @@ public class AnnotationCompletionContext extends PHPDocTagContext {
 
 		if (super.isValid(sourceModule, offset, requestor)) {
 
-			//TODO: check if the context is valid
+
 			return true;
 			
 			

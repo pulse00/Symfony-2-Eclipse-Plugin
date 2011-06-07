@@ -1,20 +1,17 @@
 package org.eclipse.symfony.core.codeassist.strategies;
 
-import java.util.Collection;
+import java.util.List;
 
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
-import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.symfony.core.codeassist.contexts.AnnotationCompletionContext;
+import org.eclipse.symfony.core.model.Annotation;
+import org.eclipse.symfony.core.model.ModelManager;
 
 
 /**
@@ -39,41 +36,36 @@ import org.eclipse.symfony.core.codeassist.contexts.AnnotationCompletionContext;
  */
 @SuppressWarnings({ "restriction", "deprecation" })
 public class AnnotationCompletionStrategy extends PHPDocTagStrategy
-		implements ICompletionStrategy {
+implements ICompletionStrategy {
 
 	public AnnotationCompletionStrategy(ICompletionContext context) {
 		super(context);
 
 	}
-	
+
 	@Override
 	public void apply(final ICompletionReporter reporter) throws BadLocationException {
-	
-		AnnotationCompletionContext context = (AnnotationCompletionContext) getContext();
-		ISourceModule sourceModule = context.getSourceModule();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 
+
+		ICompletionContext ctx = getContext();
+
+		if (!(ctx instanceof AnnotationCompletionContext)) {
+			return;
+		}		
+
+		AnnotationCompletionContext context = (AnnotationCompletionContext) ctx;		
 		final SourceRange range = getReplacementRange(context);
-				
-		try {
-			moduleDeclaration.traverse(new PHPASTVisitor() {
-				
-				@Override
-				public boolean visit(UseStatement s) throws Exception {
-					Collection<UsePart> parts = s.getParts();
-					for (UsePart part : parts) {
-						String keyword = part.getAlias().getName() + "\\";						
-						reporter.reportKeyword(keyword, "", range);
-					}
-					return true;
-				}				
-			});
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-			
-		super.apply(reporter);
+		List<Annotation> annotations = ModelManager.getInstance().getAnnotations(context.getSourceModule());
 		
+		for (Annotation annotation : annotations) {
+			if (annotation.getType() != null) {				
+				reporter.reportType(annotation.getType(), "()", range);
+			} else {
+				reporter.reportKeyword(annotation.getName(), "()", range);	
+			}
+		}
+
+		super.apply(reporter);
+
 	}
 }

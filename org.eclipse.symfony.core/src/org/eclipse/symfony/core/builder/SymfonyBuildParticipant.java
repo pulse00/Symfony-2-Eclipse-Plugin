@@ -69,9 +69,15 @@ public class SymfonyBuildParticipant implements IBuildParticipant {
 				
 			} else if (file.getName().endsWith("Controller.php")) {
 								
-				getModuleDeclaration(context).traverse(new AnnotationVisitor(context));				
+			}
+			
+			if (file.getFileExtension().equals("php")) {
+				
+				getModuleDeclaration(context).traverse(new AnnotationVisitor(context));
 				
 			}
+			
+						
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

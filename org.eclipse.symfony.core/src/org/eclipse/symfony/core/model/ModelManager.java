@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceModule;
 
 
 /**
@@ -137,4 +138,24 @@ public class ModelManager {
 		
 	}
 
+	public void addAnnotation(Annotation annotation) {
+
+		for (Project project : projects) {
+			if (project.getPath().isPrefixOf(annotation.getSourceModule().getPath())) {
+				project.addAnnotation(annotation);
+				break;
+			}
+		}
+	}
+
+	public List<Annotation> getAnnotations(ISourceModule sourceModule) {
+
+		for (Project project : projects) {			
+			if (project.equals(sourceModule.getScriptProject())) {				
+				return project.getAnnotations();
+			}
+		}
+		
+		return new ArrayList<Annotation>();
+	}
 }

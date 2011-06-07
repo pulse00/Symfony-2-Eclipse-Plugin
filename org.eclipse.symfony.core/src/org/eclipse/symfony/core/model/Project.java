@@ -17,7 +17,7 @@ import org.eclipse.dltk.core.IScriptProject;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-public class Project  {
+public class Project extends AbstractSymfonyModel {
 
 	
 	public final static int YAML_CONFIG = 0;
@@ -43,9 +43,23 @@ public class Project  {
 	private ArrayList<Bundle> bundles = new ArrayList<Bundle>();
 	
 	
+	/**
+	 * List of annotations declared in this project
+	 */
+	private List<Annotation> annotations = new ArrayList<Annotation>();
+	
+	
 	public Project(IScriptProject project) {
 		
+		super(project);
 		this.project = project;		
+		
+		
+	}
+	
+	public IPath getPath() {
+		
+		return project.getPath();
 		
 	}
 	
@@ -95,4 +109,31 @@ public class Project  {
 		return project.equals(this.project);
 		
 	}
+
+	/**
+	 * 
+	 * Add an annotation to this project. 
+	 * 
+	 * If the annotation has been added already to this project, it will be
+	 * replaced with the new one.
+	 * 
+	 * @param annotation
+	 */
+	public void addAnnotation(Annotation annotation) {
+
+		annotations.remove(annotation);
+		annotations.add(annotation);
+		
+	}
+
+	/**
+	 * Returns all annotations declared in this project
+	 * 
+	 * @return
+	 */
+	public List<Annotation> getAnnotations() {
+		return annotations;
+	}
+
+	
 }

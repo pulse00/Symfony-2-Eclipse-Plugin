@@ -24,17 +24,13 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		List<ICompletionStrategy> result = new LinkedList<ICompletionStrategy>();
 		
 		for (ICompletionContext context : contexts) {
-			
 			if (context.getClass() == AnnotationCompletionContext.class) {
-				
-				System.out.println("create annotation completion strategy");
 				result.add(new AnnotationCompletionStrategy(context));
 			}
 		}
 		
 		return (ICompletionStrategy[]) result
 		        .toArray(new ICompletionStrategy[result.size()]);
-		
 
 	}
 }

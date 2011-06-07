@@ -17,9 +17,9 @@ public class AnnotationCompletionContextResolver extends CompletionContextResolv
 
 	@Override
 	public ICompletionContext[] createContexts() {
-
-		System.out.println("create contexts");
+		
 		return new ICompletionContext[] { new AnnotationCompletionContext() };
+		
 	}
 
 }

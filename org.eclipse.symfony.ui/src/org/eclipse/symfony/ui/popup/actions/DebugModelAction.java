@@ -1,9 +1,12 @@
 package org.eclipse.symfony.ui.popup.actions;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.symfony.core.model.Annotation;
+import org.eclipse.symfony.core.model.AnnotationParameter;
 import org.eclipse.symfony.core.model.Bundle;
 import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Project;
@@ -44,6 +47,27 @@ public class DebugModelAction implements IObjectActionDelegate {
 					System.out.println("----" + service.getPHPClass());					
 				}				
 			}
+			
+			List<Annotation> annotations = project.getAnnotations();
+			
+			System.out.println(project.toDebugString() + " contains " + annotations.size() +  " annotations:");
+			
+			
+			for (Iterator iterator = annotations.iterator(); iterator.hasNext();) {
+				Annotation annotation = (Annotation) iterator.next();
+				
+				List<AnnotationParameter> params = annotation.getParameters();
+				System.out.println("-- " + annotation.getName() + " (" + params.size() + " parameters)");
+				
+				for (Iterator iterator2 = params.iterator(); iterator2
+						.hasNext();) {
+					AnnotationParameter annotationParameter = (AnnotationParameter) iterator2
+							.next();
+					
+					System.out.println("---- " + annotationParameter.getName());
+					
+				}				
+			}		
 		}
 	}
 

@@ -25,7 +25,7 @@ import org.eclipse.symfony.core.visitor.KernelVisitor;
  *
  */
 @SuppressWarnings("restriction")
-public class Bundle {
+public class Bundle extends AbstractSymfonyModel {
 	
 	
 	
@@ -42,7 +42,7 @@ public class Bundle {
 
 	public Bundle(ISourceModule iSourceModule, ClassDeclaration classDeclaration, String namespace) throws InvalidBundleException {
 				
-		
+		super(iSourceModule);
 		basePath = iSourceModule.getPath().removeLastSegments(1);
 		
 		if (iSourceModule.getPath().toString().contains("/Tests/"))

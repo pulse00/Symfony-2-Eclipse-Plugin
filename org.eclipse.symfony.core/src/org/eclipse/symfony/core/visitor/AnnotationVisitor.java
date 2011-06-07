@@ -7,13 +7,19 @@ import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
+import org.eclipse.dltk.ast.ASTListNode;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
+import org.eclipse.symfony.core.model.Annotation;
+import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.parser.antlr.SymfonyAnnotationLexer;
 import org.eclipse.symfony.core.parser.antlr.SymfonyAnnotationParser;
 
@@ -37,6 +43,10 @@ public class AnnotationVisitor extends PHPASTVisitor {
 	
 	private ClassDeclaration currentClass = null;
 	private PHPMethodDeclaration currentMethod = null;
+	private NamespaceDeclaration currentNamespace = null;
+	
+	private Annotation currentAnnotation = null;
+	
 	private boolean isAction = false;
 	private char[] content;
 	private IBuildContext context;
@@ -58,7 +68,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
 	@Override
 	public boolean visit(UseStatement s) throws Exception {
 		
-		//TODO: store the FQCN and the alias from the UseStatement
+		
 		return true;
 
 	}
@@ -71,18 +81,33 @@ public class AnnotationVisitor extends PHPASTVisitor {
 	
 	}
 	
+
+	@Override
+	public boolean visit(NamespaceDeclaration s) throws Exception {
+		
+		currentNamespace = s;		
+		return true;
+	}
 	
+	@Override
+	public boolean endvisit(NamespaceDeclaration s) throws Exception {
+
+		currentNamespace = null;
+		return true;
+	}
 	
 	@Override
 	public boolean visit(ClassDeclaration s) throws Exception {
 
 		currentClass = s;
 		
-		
-		for (String name : currentClass.getSuperClassNames()) {			
-			if (name.equals("Controller")) {
-			}
-			
+		for (Object superclass : currentClass.getSuperClasses().getChilds()) {
+			if (superclass instanceof FullyQualifiedReference) {
+				FullyQualifiedReference ref = (FullyQualifiedReference) superclass;
+				if (ref.getName().equals("Annotation")) {
+					currentAnnotation = new Annotation(context.getSourceModule(), currentNamespace, currentClass);
+				}
+			}			
 		}
 		
 		return true;
@@ -92,8 +117,26 @@ public class AnnotationVisitor extends PHPASTVisitor {
 	@Override
 	public boolean endvisit(ClassDeclaration s) throws Exception {
 
+		if (currentAnnotation != null) {
+			ModelManager.getInstance().addAnnotation(currentAnnotation);	
+		}
+		
 		currentClass = null;
 		return true;
+	}
+	
+	
+	@Override
+	public boolean visit(PHPFieldDeclaration s) throws Exception {
+	
+		
+		if (currentAnnotation == null)
+			return true;
+		
+		currentAnnotation.addParameter(s);
+		
+		return true;
+	
 	}
 	
 	
@@ -163,7 +206,10 @@ public class AnnotationVisitor extends PHPASTVisitor {
                 SymfonyAnnotationParser parser = new SymfonyAnnotationParser(tokenStream);
                 
                 try { 	
-                     System.err.println("resolved annotation ..." + parser.name());
+                	
+                		String name = parser.name();                	
+                		
+//                     System.err.println("resolved annotation ..." + name);
                 } catch (RecognitionException e) {
                 	                	
                 	e.printStackTrace();
