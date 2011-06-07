@@ -31,10 +31,13 @@ public class Annotation extends AbstractSymfonyModel  {
 		super(sourceModule);
 		this.namespace = namespace;
 		this.classDeclaration =classDec;
+		
 		type = sourceModule.getType(classDec.getName());
 		
+		
+		
 	}
-
+	
 	public void addParameter(PHPFieldDeclaration declaration) {
 
 		AnnotationParameter param = new AnnotationParameter(this, sourceModule, declaration);

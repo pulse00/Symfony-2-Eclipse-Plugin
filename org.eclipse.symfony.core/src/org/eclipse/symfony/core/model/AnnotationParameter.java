@@ -29,7 +29,7 @@ public class AnnotationParameter extends AbstractSymfonyModel {
 
 	public String getName() {
 	
-		return declaration.getName();
+		return declaration.getName().replace("$", "");
 
 	}
 
