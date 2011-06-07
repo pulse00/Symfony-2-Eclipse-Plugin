@@ -61,6 +61,17 @@
       <requestor
             class="org.eclipse.symfony.core.compiler.SourceElementRequestor">
       </requestor>
+   </extension>
+   <extension
+         point="org.eclipse.php.core.completionStrategyFactories">
+      <factory
+            class="org.eclipse.symfony.core.codeassist.CompletionStrategyFactory">
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.php.core.completionContextResolvers">
+      <resolver
+            class="org.eclipse.symfony.core.codeassist.CompletionContextResolver"></resolver>
    </extension>   
 
 </plugin>

@@ -7,6 +7,7 @@ Bundle-Activator: org.eclipse.symfony.core.SymfonyCorePlugin
 Bundle-Vendor: Symfony
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.7.100",
+ org.eclipse.jface.text;bundle-version="3.7.0",
  org.eclipse.dltk.core;bundle-version="3.0.0",
  org.eclipse.php.core;bundle-version="3.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
