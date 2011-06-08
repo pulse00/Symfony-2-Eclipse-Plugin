@@ -61,7 +61,7 @@ implements ICompletionStrategy {
 		// which represent them
 		//String suffix = getSuffix(context);
 		
-		String suffix = "";
+		String suffix = "()";
 		
 		IType[] types = getTypes(context);
 		for (IType type : types) {			

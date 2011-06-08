@@ -7,10 +7,11 @@ import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
-import org.eclipse.dltk.ast.ASTListNode;
+import org.eclipse.dltk.compiler.problem.DefaultProblem;
+import org.eclipse.dltk.compiler.problem.IProblem;
+import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
@@ -202,15 +203,26 @@ public class AnnotationVisitor extends PHPASTVisitor {
 				if ((start == -1 || end == -1)) continue;
 				
 				String annotation = line.substring(start, end+1);
-				CharStream content = new ANTLRStringStream(annotation);             				
 				
+				// can be used later to report errors + quick fixes, ie. annotation not resolved  + import via UseStatement
+//				if ("@Table()".equals(annotation)) {
+//					int _line = context.getLineTracker().getLineNumberOfOffset(sourceStart);
+//					UnresolvedAnnotationProblemIdentifier id = new UnresolvedAnnotationProblemIdentifier();
+//					IProblem problem = new DefaultProblem(context.getFile().getName(), "whatever",  IProblem.Syntax, new String[0], ProblemSeverities.Error, sourceStart, sourceStart + annotation.length(), _line);
+//					context.getProblemReporter().reportProblem(problem);
+//				}
+
+				
+				CharStream content = new ANTLRStringStream(annotation);
                 SymfonyAnnotationLexer lexer = new SymfonyAnnotationLexer(content);
                 CommonTokenStream tokenStream = new CommonTokenStream(lexer);
                 SymfonyAnnotationParser parser = new SymfonyAnnotationParser(tokenStream);
                 
                 try { 	
                 	
-                		String name = parser.name();                	
+                		String name = parser.name();
+                		
+                		System.err.println(name);
                 		
 //                     System.err.println("resolved annotation ..." + name);
                 } catch (RecognitionException e) {

@@ -21,7 +21,7 @@ public class YamlRoutingParser implements IConfigParser {
 		
 		try {
 			
-			System.out.println("parse yml file");
+
 			Yaml yaml = new Yaml();
 			Object list = yaml.load(file.getContents());
 			
