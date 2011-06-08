@@ -100,15 +100,18 @@ public class AnnotationVisitor extends PHPASTVisitor {
 	public boolean visit(ClassDeclaration s) throws Exception {
 
 		currentClass = s;
-		
-		for (Object superclass : currentClass.getSuperClasses().getChilds()) {
-			if (superclass instanceof FullyQualifiedReference) {
-				FullyQualifiedReference ref = (FullyQualifiedReference) superclass;
-				if (ref.getName().equals("Annotation")) {
-					currentAnnotation = new Annotation(context.getSourceModule(), currentNamespace, currentClass);
-				}
-			}			
-		}
+
+		// doesn't make sense until something like this:
+		// http://www.doctrine-project.org/jira/browse/DDC-1198
+		// is implemented
+//		for (Object superclass : currentClass.getSuperClasses().getChilds()) {
+//			if (superclass instanceof FullyQualifiedReference) {
+//				FullyQualifiedReference ref = (FullyQualifiedReference) superclass;
+//				if (ref.getName().equals("Annotation")) {
+//					currentAnnotation = new Annotation(context.getSourceModule(), currentNamespace, currentClass);
+//				}
+//			}			
+//		}
 		
 		return true;
 		

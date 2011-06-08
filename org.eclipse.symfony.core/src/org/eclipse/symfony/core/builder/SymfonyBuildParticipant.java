@@ -73,7 +73,9 @@ public class SymfonyBuildParticipant implements IBuildParticipant {
 			
 			if (file.getFileExtension().equals("php")) {
 				
-				getModuleDeclaration(context).traverse(new AnnotationVisitor(context));
+				// we can't really parse anything properly
+				// from the annotations
+				//getModuleDeclaration(context).traverse(new AnnotationVisitor(context));
 				
 			}
 			
