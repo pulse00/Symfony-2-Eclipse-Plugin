@@ -12,6 +12,9 @@ tokens {
 ANNOTATION;
 NAMED_ARG;
 LITERAL_ARG;
+NSPART;
+CLASSNAME;
+FQCN;
 RHTYPE;
 }
 
@@ -25,12 +28,22 @@ package org.eclipse.symfony.core.parser.antlr;
 // by argument list in parentheses
 annotation
   : AT ann_class (PARAM_START arguments PARAM_END)
-    -> ^(ANNOTATION ann_class arguments)
+    ->^(ANNOTATION ann_class arguments)
   ;
 
 
 ann_class
-  : (STRING BSLASH?)+
+  : namespace* classname
+  ;
+  
+namespace
+  : ns=STRING BSLASH
+  	->^(NSPART $ns)
+  ;
+  
+classname
+  : cn=STRING
+    ->^(CLASSNAME $cn)
   ;
 
 arguments

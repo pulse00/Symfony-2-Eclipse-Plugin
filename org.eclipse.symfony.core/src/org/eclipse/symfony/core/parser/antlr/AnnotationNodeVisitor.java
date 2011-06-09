@@ -1,8 +1,14 @@
 package org.eclipse.symfony.core.parser.antlr;
 
+import java.util.Stack;
+
+import org.eclipse.dltk.core.builder.IBuildContext;
+
 
 /**
  * 
+ * {@link AnnotationNodeVisitor} parses the structured elements
+ * from an annotation like namespace classname and parameters.
  * 
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
@@ -10,8 +16,52 @@ package org.eclipse.symfony.core.parser.antlr;
  */
 public class AnnotationNodeVisitor implements IAnnotationNodeVisitor {
 
+	private String className = "";
+	private Stack<String> namespace = new Stack<String>();
+	
+	private IBuildContext context;
+	
+	public AnnotationNodeVisitor(IBuildContext context) {
+
+		this.context = context;
+		
+	}
+
+
 	@Override
 	public void beginVisit(AnnotationCommonTree node) {
+
+		int kind = node.getType();
+		
+		switch(kind) {
+		
+		
+		case SymfonyAnnotationParser.ANNOTATION:
+			
+			break;
+		
+		
+		case SymfonyAnnotationParser.CLASSNAME:
+			
+			assert node.getChildCount() == 1;
+			className = node.getChild(0).toString();
+			break;
+		
+		case SymfonyAnnotationParser.NSPART:
+			
+			assert node.getChildCount() == 1;
+			namespace.push(node.getChild(0).toString());
+			
+			
+			break;
+			
+		default:
+			
+
+			break;
+				
+		}
+
 
 
 	}
@@ -26,15 +76,34 @@ public class AnnotationNodeVisitor implements IAnnotationNodeVisitor {
 		
 		
 		case SymfonyAnnotationParser.ANNOTATION:
-			
-			System.err.println("a: " + node.toString());			
+		
 			break;
-		
-		
-		default:
+
+		}
+	}
+	
+	public String getClassName() {
 			
-			System.err.println("d: " + node.toString());
-				
-		}			
+		return className;
+		
+	}
+	
+	public String getNamespace() {
+
+		
+		String ns = "";
+		
+		for (String part : namespace) {				
+			ns += part + "\\";				
+		}
+		
+		return ns;
+		
+	}
+	
+	public String getFullyQualifiedName() {
+		
+		return getNamespace() + getClassName();
+		
 	}
 }

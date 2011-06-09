@@ -1,4 +1,4 @@
-// $ANTLR 3.3 Nov 30, 2010 12:45:30 SymfonyAnnotationLexer.g 2011-06-09 20:11:02
+// $ANTLR 3.3 Nov 30, 2010 12:45:30 SymfonyAnnotationLexer.g 2011-06-09 22:09:05
 
 package org.eclipse.symfony.core.parser.antlr;
 
@@ -15,17 +15,17 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
     public static final int PARAM_END=6;
     public static final int ASIG=7;
     public static final int COMMA=8;
-    public static final int STRING_CHAR=9;
-    public static final int STRING=10;
-    public static final int NONCONTROL_CHAR=11;
-    public static final int STRING_LITERAL=12;
-    public static final int LOWER=13;
-    public static final int UPPER=14;
-    public static final int DIGIT=15;
-    public static final int UNDER=16;
-    public static final int LETTER=17;
-    public static final int SYMBOL=18;
-    public static final int BSLASH=19;
+    public static final int BSLASH=9;
+    public static final int STRING_CHAR=10;
+    public static final int STRING=11;
+    public static final int NONCONTROL_CHAR=12;
+    public static final int STRING_LITERAL=13;
+    public static final int LOWER=14;
+    public static final int UPPER=15;
+    public static final int DIGIT=16;
+    public static final int UNDER=17;
+    public static final int LETTER=18;
+    public static final int SYMBOL=19;
     public static final int WHITESPACE=20;
 
     // delegates
@@ -126,13 +126,13 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
         try {
             int _type = COMMA;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // SymfonyAnnotationLexer.g:18:7: ( ( ( ' ' )* ',' ( ' ' )* ) )
-            // SymfonyAnnotationLexer.g:18:9: ( ( ' ' )* ',' ( ' ' )* )
+            // SymfonyAnnotationLexer.g:18:8: ( ( ( ' ' )* ',' ( ' ' )* ) )
+            // SymfonyAnnotationLexer.g:18:10: ( ( ' ' )* ',' ( ' ' )* )
             {
-            // SymfonyAnnotationLexer.g:18:9: ( ( ' ' )* ',' ( ' ' )* )
-            // SymfonyAnnotationLexer.g:18:11: ( ' ' )* ',' ( ' ' )*
+            // SymfonyAnnotationLexer.g:18:10: ( ( ' ' )* ',' ( ' ' )* )
+            // SymfonyAnnotationLexer.g:18:12: ( ' ' )* ',' ( ' ' )*
             {
-            // SymfonyAnnotationLexer.g:18:11: ( ' ' )*
+            // SymfonyAnnotationLexer.g:18:12: ( ' ' )*
             loop1:
             do {
                 int alt1=2;
@@ -145,7 +145,7 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // SymfonyAnnotationLexer.g:18:11: ' '
+            	    // SymfonyAnnotationLexer.g:18:12: ' '
             	    {
             	    match(' '); 
 
@@ -158,7 +158,7 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
             } while (true);
 
             match(','); 
-            // SymfonyAnnotationLexer.g:18:20: ( ' ' )*
+            // SymfonyAnnotationLexer.g:18:21: ( ' ' )*
             loop2:
             do {
                 int alt2=2;
@@ -171,7 +171,7 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
 
                 switch (alt2) {
             	case 1 :
-            	    // SymfonyAnnotationLexer.g:18:20: ' '
+            	    // SymfonyAnnotationLexer.g:18:21: ' '
             	    {
             	    match(' '); 
 
@@ -197,15 +197,35 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
     }
     // $ANTLR end "COMMA"
 
+    // $ANTLR start "BSLASH"
+    public final void mBSLASH() throws RecognitionException {
+        try {
+            int _type = BSLASH;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // SymfonyAnnotationLexer.g:19:9: ( '\\\\' )
+            // SymfonyAnnotationLexer.g:19:11: '\\\\'
+            {
+            match('\\'); 
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "BSLASH"
+
     // $ANTLR start "STRING"
     public final void mSTRING() throws RecognitionException {
         try {
             int _type = STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // SymfonyAnnotationLexer.g:22:8: ( ( STRING_CHAR )+ )
-            // SymfonyAnnotationLexer.g:22:10: ( STRING_CHAR )+
+            // SymfonyAnnotationLexer.g:25:8: ( ( STRING_CHAR )+ )
+            // SymfonyAnnotationLexer.g:25:10: ( STRING_CHAR )+
             {
-            // SymfonyAnnotationLexer.g:22:10: ( STRING_CHAR )+
+            // SymfonyAnnotationLexer.g:25:10: ( STRING_CHAR )+
             int cnt3=0;
             loop3:
             do {
@@ -219,7 +239,7 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
 
                 switch (alt3) {
             	case 1 :
-            	    // SymfonyAnnotationLexer.g:22:10: STRING_CHAR
+            	    // SymfonyAnnotationLexer.g:25:10: STRING_CHAR
             	    {
             	    mSTRING_CHAR(); 
 
@@ -251,7 +271,7 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
         try {
             int _type = STRING_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // SymfonyAnnotationLexer.g:25:1: ( '\"' ( NONCONTROL_CHAR )* '\"' | '\\'' ( NONCONTROL_CHAR )* '\\'' )
+            // SymfonyAnnotationLexer.g:31:1: ( '\"' ( NONCONTROL_CHAR )* '\"' | '\\'' ( NONCONTROL_CHAR )* '\\'' )
             int alt6=2;
             int LA6_0 = input.LA(1);
 
@@ -269,10 +289,10 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
             }
             switch (alt6) {
                 case 1 :
-                    // SymfonyAnnotationLexer.g:25:3: '\"' ( NONCONTROL_CHAR )* '\"'
+                    // SymfonyAnnotationLexer.g:31:3: '\"' ( NONCONTROL_CHAR )* '\"'
                     {
                     match('\"'); 
-                    // SymfonyAnnotationLexer.g:25:7: ( NONCONTROL_CHAR )*
+                    // SymfonyAnnotationLexer.g:31:7: ( NONCONTROL_CHAR )*
                     loop4:
                     do {
                         int alt4=2;
@@ -285,7 +305,7 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
 
                         switch (alt4) {
                     	case 1 :
-                    	    // SymfonyAnnotationLexer.g:25:7: NONCONTROL_CHAR
+                    	    // SymfonyAnnotationLexer.g:31:7: NONCONTROL_CHAR
                     	    {
                     	    mNONCONTROL_CHAR(); 
 
@@ -302,10 +322,10 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
                     }
                     break;
                 case 2 :
-                    // SymfonyAnnotationLexer.g:26:3: '\\'' ( NONCONTROL_CHAR )* '\\''
+                    // SymfonyAnnotationLexer.g:32:3: '\\'' ( NONCONTROL_CHAR )* '\\''
                     {
                     match('\''); 
-                    // SymfonyAnnotationLexer.g:26:8: ( NONCONTROL_CHAR )*
+                    // SymfonyAnnotationLexer.g:32:8: ( NONCONTROL_CHAR )*
                     loop5:
                     do {
                         int alt5=2;
@@ -318,7 +338,7 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
 
                         switch (alt5) {
                     	case 1 :
-                    	    // SymfonyAnnotationLexer.g:26:8: NONCONTROL_CHAR
+                    	    // SymfonyAnnotationLexer.g:32:8: NONCONTROL_CHAR
                     	    {
                     	    mNONCONTROL_CHAR(); 
 
@@ -347,7 +367,7 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
     // $ANTLR start "STRING_CHAR"
     public final void mSTRING_CHAR() throws RecognitionException {
         try {
-            // SymfonyAnnotationLexer.g:29:23: ( LOWER | UPPER | DIGIT | UNDER )
+            // SymfonyAnnotationLexer.g:35:23: ( LOWER | UPPER | DIGIT | UNDER )
             // SymfonyAnnotationLexer.g:
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
@@ -371,7 +391,7 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
     // $ANTLR start "NONCONTROL_CHAR"
     public final void mNONCONTROL_CHAR() throws RecognitionException {
         try {
-            // SymfonyAnnotationLexer.g:30:25: ( LETTER | DIGIT | SYMBOL )
+            // SymfonyAnnotationLexer.g:36:25: ( LETTER | DIGIT | SYMBOL )
             // SymfonyAnnotationLexer.g:
             {
             if ( input.LA(1)=='-'||(input.LA(1)>='/' && input.LA(1)<=':')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='{')||input.LA(1)=='}' ) {
@@ -395,7 +415,7 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
     // $ANTLR start "LETTER"
     public final void mLETTER() throws RecognitionException {
         try {
-            // SymfonyAnnotationLexer.g:31:17: ( LOWER | UPPER )
+            // SymfonyAnnotationLexer.g:37:17: ( LOWER | UPPER )
             // SymfonyAnnotationLexer.g:
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
@@ -419,8 +439,8 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
     // $ANTLR start "LOWER"
     public final void mLOWER() throws RecognitionException {
         try {
-            // SymfonyAnnotationLexer.g:32:16: ( 'a' .. 'z' )
-            // SymfonyAnnotationLexer.g:32:18: 'a' .. 'z'
+            // SymfonyAnnotationLexer.g:38:16: ( 'a' .. 'z' )
+            // SymfonyAnnotationLexer.g:38:18: 'a' .. 'z'
             {
             matchRange('a','z'); 
 
@@ -435,8 +455,8 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
     // $ANTLR start "UPPER"
     public final void mUPPER() throws RecognitionException {
         try {
-            // SymfonyAnnotationLexer.g:33:16: ( 'A' .. 'Z' )
-            // SymfonyAnnotationLexer.g:33:18: 'A' .. 'Z'
+            // SymfonyAnnotationLexer.g:39:16: ( 'A' .. 'Z' )
+            // SymfonyAnnotationLexer.g:39:18: 'A' .. 'Z'
             {
             matchRange('A','Z'); 
 
@@ -451,8 +471,8 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
     // $ANTLR start "DIGIT"
     public final void mDIGIT() throws RecognitionException {
         try {
-            // SymfonyAnnotationLexer.g:34:16: ( '0' .. '9' )
-            // SymfonyAnnotationLexer.g:34:18: '0' .. '9'
+            // SymfonyAnnotationLexer.g:40:16: ( '0' .. '9' )
+            // SymfonyAnnotationLexer.g:40:18: '0' .. '9'
             {
             matchRange('0','9'); 
 
@@ -464,27 +484,11 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
     }
     // $ANTLR end "DIGIT"
 
-    // $ANTLR start "BSLASH"
-    public final void mBSLASH() throws RecognitionException {
-        try {
-            // SymfonyAnnotationLexer.g:35:17: ( '\\\\' )
-            // SymfonyAnnotationLexer.g:35:19: '\\\\'
-            {
-            match('\\'); 
-
-            }
-
-        }
-        finally {
-        }
-    }
-    // $ANTLR end "BSLASH"
-
     // $ANTLR start "UNDER"
     public final void mUNDER() throws RecognitionException {
         try {
-            // SymfonyAnnotationLexer.g:36:16: ( '_' )
-            // SymfonyAnnotationLexer.g:36:18: '_'
+            // SymfonyAnnotationLexer.g:41:16: ( '_' )
+            // SymfonyAnnotationLexer.g:41:18: '_'
             {
             match('_'); 
 
@@ -499,7 +503,7 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
     // $ANTLR start "SYMBOL"
     public final void mSYMBOL() throws RecognitionException {
         try {
-            // SymfonyAnnotationLexer.g:37:16: ( UNDER | '-' | '/' | ':' | '{' | '}' )
+            // SymfonyAnnotationLexer.g:42:16: ( UNDER | '-' | '/' | ':' | '{' | '}' )
             // SymfonyAnnotationLexer.g:
             {
             if ( input.LA(1)=='-'||input.LA(1)=='/'||input.LA(1)==':'||input.LA(1)=='_'||input.LA(1)=='{'||input.LA(1)=='}' ) {
@@ -525,10 +529,10 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
         try {
             int _type = WHITESPACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // SymfonyAnnotationLexer.g:39:12: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
-            // SymfonyAnnotationLexer.g:39:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+            // SymfonyAnnotationLexer.g:44:12: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
+            // SymfonyAnnotationLexer.g:44:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
             {
-            // SymfonyAnnotationLexer.g:39:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+            // SymfonyAnnotationLexer.g:44:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
             int cnt7=0;
             loop7:
             do {
@@ -579,8 +583,8 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
     // $ANTLR end "WHITESPACE"
 
     public void mTokens() throws RecognitionException {
-        // SymfonyAnnotationLexer.g:1:8: ( AT | PARAM_START | PARAM_END | ASIG | COMMA | STRING | STRING_LITERAL | WHITESPACE )
-        int alt8=8;
+        // SymfonyAnnotationLexer.g:1:8: ( AT | PARAM_START | PARAM_END | ASIG | COMMA | BSLASH | STRING | STRING_LITERAL | WHITESPACE )
+        int alt8=9;
         alt8 = dfa8.predict(input);
         switch (alt8) {
             case 1 :
@@ -619,21 +623,28 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
                 }
                 break;
             case 6 :
-                // SymfonyAnnotationLexer.g:1:46: STRING
+                // SymfonyAnnotationLexer.g:1:46: BSLASH
+                {
+                mBSLASH(); 
+
+                }
+                break;
+            case 7 :
+                // SymfonyAnnotationLexer.g:1:53: STRING
                 {
                 mSTRING(); 
 
                 }
                 break;
-            case 7 :
-                // SymfonyAnnotationLexer.g:1:53: STRING_LITERAL
+            case 8 :
+                // SymfonyAnnotationLexer.g:1:60: STRING_LITERAL
                 {
                 mSTRING_LITERAL(); 
 
                 }
                 break;
-            case 8 :
-                // SymfonyAnnotationLexer.g:1:68: WHITESPACE
+            case 9 :
+                // SymfonyAnnotationLexer.g:1:75: WHITESPACE
                 {
                 mWHITESPACE(); 
 
@@ -647,26 +658,27 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
 
     protected DFA8 dfa8 = new DFA8(this);
     static final String DFA8_eotS =
-        "\5\uffff\1\11\4\uffff";
+        "\5\uffff\1\12\5\uffff";
     static final String DFA8_eofS =
-        "\12\uffff";
+        "\13\uffff";
     static final String DFA8_minS =
-        "\1\11\4\uffff\1\40\4\uffff";
+        "\1\11\4\uffff\1\40\5\uffff";
     static final String DFA8_maxS =
-        "\1\172\4\uffff\1\54\4\uffff";
+        "\1\172\4\uffff\1\54\5\uffff";
     static final String DFA8_acceptS =
-        "\1\uffff\1\1\1\2\1\3\1\4\1\uffff\1\5\1\6\1\7\1\10";
+        "\1\uffff\1\1\1\2\1\3\1\4\1\uffff\1\5\1\6\1\7\1\10\1\11";
     static final String DFA8_specialS =
-        "\12\uffff}>";
+        "\13\uffff}>";
     static final String[] DFA8_transitionS = {
-            "\2\11\1\uffff\2\11\22\uffff\1\5\1\uffff\1\10\4\uffff\1\10\1"+
-            "\2\1\3\2\uffff\1\6\3\uffff\12\7\3\uffff\1\4\2\uffff\1\1\32\7"+
-            "\4\uffff\1\7\1\uffff\32\7",
+            "\2\12\1\uffff\2\12\22\uffff\1\5\1\uffff\1\11\4\uffff\1\11\1"+
+            "\2\1\3\2\uffff\1\6\3\uffff\12\10\3\uffff\1\4\2\uffff\1\1\32"+
+            "\10\1\uffff\1\7\2\uffff\1\10\1\uffff\32\10",
             "",
             "",
             "",
             "",
             "\1\5\13\uffff\1\6",
+            "",
             "",
             "",
             "",
@@ -703,7 +715,7 @@ public class SymfonyAnnotationLexer extends AbstractAnnotationLexer {
             this.transition = DFA8_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( AT | PARAM_START | PARAM_END | ASIG | COMMA | STRING | STRING_LITERAL | WHITESPACE );";
+            return "1:1: Tokens : ( AT | PARAM_START | PARAM_END | ASIG | COMMA | BSLASH | STRING | STRING_LITERAL | WHITESPACE );";
         }
     }
  

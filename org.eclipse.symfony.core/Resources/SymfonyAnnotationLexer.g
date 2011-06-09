@@ -15,11 +15,17 @@ AT			: '@';
 PARAM_START	: '(';
 PARAM_END	: ')';
 ASIG 		: '=';
-COMMA	: ( ' '* ',' ' '*);
+COMMA		: ( ' '* ',' ' '*);
+BSLASH		: '\\';
 
 
 // strings
+
+
 STRING : STRING_CHAR+;
+
+
+
 
 STRING_LITERAL
 : '"' NONCONTROL_CHAR* '"'
@@ -32,7 +38,6 @@ fragment LETTER	: LOWER | UPPER;
 fragment LOWER	: 'a'..'z';
 fragment UPPER	: 'A'..'Z';
 fragment DIGIT	: '0'..'9';
-fragment BSLASH	: '\\';
 fragment UNDER : '_';
 fragment SYMBOL: UNDER | '-' | '/' | ':' | '{' | '}';
 

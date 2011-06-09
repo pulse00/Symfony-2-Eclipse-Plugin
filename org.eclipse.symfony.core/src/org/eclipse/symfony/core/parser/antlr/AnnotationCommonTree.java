@@ -1,5 +1,7 @@
 package org.eclipse.symfony.core.parser.antlr;
 
+import java.util.List;
+
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.CommonTree;
@@ -36,6 +38,13 @@ public class AnnotationCommonTree extends CommonTree {
     public CommonToken getToken() {
         return (CommonToken)token;
     }
+    
+    @SuppressWarnings("unchecked")
+	public List<AnnotationCommonTree> getChildTrees() {
+    	    	
+    	return (List<AnnotationCommonTree>) getChildren();
+    	
+    }
 
     /**
      * Traverse the annotation tree.
@@ -44,6 +53,14 @@ public class AnnotationCommonTree extends CommonTree {
      */
 	public void accept(IAnnotationNodeVisitor visitor) {
 
+		switch (getType()) {
+		
+//		case SymfonyAnnotationParser.
+		
+		
+		
+		}
+		
 		visitor.beginVisit(this);
 		
 		for (int i = 0; i < getChildCount(); i++) {

@@ -2,6 +2,7 @@ package org.eclipse.symfony.core.visitor;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.Stack;
 
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CharStream;
@@ -12,6 +13,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
@@ -50,6 +52,8 @@ public class AnnotationVisitor extends PHPASTVisitor {
 	private boolean isAction = false;
 	private char[] content;
 	private IBuildContext context;
+	
+	private Stack<UseStatement> useStatements = new Stack<UseStatement>();
 
 
 	public AnnotationVisitor(IBuildContext context) {
@@ -68,6 +72,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
 	@Override
 	public boolean visit(UseStatement s) throws Exception {
 
+		useStatements.push(s);
 
 		return true;
 
@@ -225,8 +230,11 @@ public class AnnotationVisitor extends PHPASTVisitor {
 
 					SymfonyAnnotationParser.annotation_return retValue = parser.annotation();
 					AnnotationCommonTree tree = (AnnotationCommonTree) retValue.getTree();
-					AnnotationNodeVisitor visitor = new AnnotationNodeVisitor();
+					AnnotationNodeVisitor visitor = new AnnotationNodeVisitor(context);
 					tree.accept(visitor);
+					
+					System.err.println("parsed annotation: " + visitor.getFullyQualifiedName());
+					
 					
 				} catch (Exception e) {
 					e.printStackTrace();
