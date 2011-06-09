@@ -222,6 +222,10 @@ public class AnnotationVisitor extends PHPASTVisitor {
                 	
                 		String name = parser.name();
                 		
+                		//name = parser.annotation();
+                		
+                		//name = parser.name();
+                		
                 		System.err.println(name);
                 		
 //                     System.err.println("resolved annotation ..." + name);
