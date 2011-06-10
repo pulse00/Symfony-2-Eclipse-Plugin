@@ -17,7 +17,6 @@ import org.eclipse.symfony.core.parser.YamlConfigParser;
  */
 public abstract class AbstractSymfonyVisitor {
 
-	private XMLConfigParser xmlParser = null;
 	
 	private YamlConfigParser ymlParser = null;
 	
@@ -32,16 +31,6 @@ public abstract class AbstractSymfonyVisitor {
 		
 		return ymlRoutingParser;
 		
-		
-	}
-	
-	protected XMLConfigParser getXmlParser() {
-		
-		if (xmlParser == null)
-			xmlParser = new XMLConfigParser();
-		
-		
-		return xmlParser;
 		
 	}
 	

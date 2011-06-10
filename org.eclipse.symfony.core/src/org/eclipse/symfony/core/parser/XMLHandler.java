@@ -3,8 +3,6 @@ package org.eclipse.symfony.core.parser;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -20,22 +18,25 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class XMLHandler extends DefaultHandler {
 
-	private IFile file;
-
+	
 	private String currentValue;
 	private String currentParameter;
 	private String currentServiceClass;
 	private String currentServiceId;
 	private HashMap<String, String> parameters = new HashMap<String, String>();
 	private HashMap<String, String> services = new HashMap<String, String>();
+	
+	private Service currentService = null;
+	
+	public HashMap<String, String> getServices() {
+		return services;
+	}
+
 	private HashMap<String, String> aliases = new HashMap<String, String>();	
 
 
 	Boolean isServiceContainer = null;
 
-	public XMLHandler(IFile file) {
-		this.file = file;
-	}
 
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {
@@ -146,7 +147,9 @@ public class XMLHandler extends DefaultHandler {
 				String name = (String) it.next();
 				String clazz = services.get(name);
 				
-				ModelManager.getInstance().addService(new Service(file, name, clazz));				
+				
+				//TODO: move this outside of the class to avoid the dependency on ModelManager
+				//ModelManager.getInstance().addService(new Service(file, name, clazz));				
 				
 			}
 			

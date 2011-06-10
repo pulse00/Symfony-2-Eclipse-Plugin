@@ -25,12 +25,12 @@ public class AnnotationErrorReporter implements IAnnotationErrorReporter {
 
 	}
 
+
 	@Override
+	@SuppressWarnings("deprecation")	
 	public void reportError(String header, String message, RecognitionException e) {
 
-		System.err.println("report error");
-
-		if (context == null)  {
+		if (context == null || e.token == null)  {
 
 			return;
 		}

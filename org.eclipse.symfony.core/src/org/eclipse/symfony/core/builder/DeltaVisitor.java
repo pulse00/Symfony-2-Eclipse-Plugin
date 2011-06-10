@@ -5,6 +5,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.symfony.core.parser.XMLConfigParser;
 
 /**
  * 
@@ -35,7 +36,14 @@ public class DeltaVisitor extends AbstractSymfonyVisitor
 
 				if (resource.getFileExtension().equals("xml")) {
 
-					getXmlParser().parse(file);
+					try {
+						XMLConfigParser parser;
+						parser = new XMLConfigParser(file.getContents());
+						parser.parse();					
+					} catch (Exception e) {
+
+						e.printStackTrace();
+					}
 
 				} else if (resource.getFileExtension().equals("yml")) {
 

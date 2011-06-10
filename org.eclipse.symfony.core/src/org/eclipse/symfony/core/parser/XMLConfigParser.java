@@ -1,11 +1,21 @@
 package org.eclipse.symfony.core.parser;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
 
-import org.eclipse.core.resources.IFile;
-import org.xml.sax.SAXException;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * 
@@ -18,27 +28,179 @@ import org.xml.sax.SAXException;
  */
 public class XMLConfigParser implements IConfigParser {
 
-	private SAXParserFactory parserFactory;
+	private XPath xPath;
+	private Document doc;
+	
+	private HashMap<String, String> parameters;
+	private HashMap<String, String> services;
+
+
+	public XMLConfigParser(InputStream file) throws Exception {
+
+		xPath = XPathFactory.newInstance().newXPath();
+		doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+		parameters = new HashMap<String, String>();
+		services = new HashMap<String, String>();
+
+	}
+	
 
 	@Override
-	public void parse(IFile file) {
+	public void parse() {
 
-		try {			
-//			System.out.println("parse xml config file: " + file.getFullPath().toString());
-			getParser().parse(file.getContents(), new XMLHandler(file));
-		} catch (Exception e) {		
+		try {
+
+			// get parameters
+			parseParameters();
+
+			// get services
+			parseServices();
 			
-			System.err.println("xml parsing error: " + e.getMessage() + " in " + file.getFullPath().toString());
-//			e.printStackTrace();			
+			// get aliased services
+			parseAliases();
+
+		} catch (Exception e) {
+
+			System.err.println(e.getMessage());
+			//	e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * Parse the service parameters from the XML file.
+	 * 
+	 * 
+	 * @throws Exception
+	 */
+	private void parseParameters() throws Exception {
+
+		String expr = "/container/parameters/parameter";
+		XPathExpression xpathExpr = xPath.compile(expr);			
+
+		Object result = xpathExpr.evaluate(doc,XPathConstants.NODESET);
+		NodeList nodes = (NodeList) result;
+
+		for (int i = 0; i < nodes.getLength(); i++) {			
+			Node node = nodes.item(i);
+			NamedNodeMap atts = node.getAttributes();			
+			for (int j = 0; j < atts.getLength(); j++) {
+				Attr attr = (Attr) atts.item(i);				
+				if (attr.getName().equals("key")) {					
+					parameters.put(attr.getValue(), node.getTextContent());
+					break;					
+				}
+			}
 		}
 	}
 
+	/**
+	 * Parse services if available from the xml file.
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("rawtypes")
+	private void parseServices() throws Exception {
 
-	private SAXParser getParser() throws ParserConfigurationException,
-		SAXException {
-		if (parserFactory == null) {
-			parserFactory = SAXParserFactory.newInstance();
+		String servicePath = "/container/services/service[@class]";
+		NodeList serviceNodes = getNodes(servicePath);
+
+		for (int i = 0; i < serviceNodes.getLength(); i++) {
+
+			Element service = (Element) serviceNodes.item(i);
+
+			String id = service.getAttribute("id");
+			String phpClass = service.getAttribute("class");
+
+			if (phpClass != null && id != null) {
+
+				if (phpClass.startsWith("%") && phpClass.endsWith("%")) {
+
+					String placeHolder = phpClass.replace("%", "");
+					Iterator it = parameters.keySet().iterator();
+
+					while (it.hasNext()) {
+
+						String key = (String) it.next();						
+						String val = (String) parameters.get(key);
+
+						if (placeHolder.equals(key)) {							
+							services.put(id, val);							
+						}
+
+					}
+				} else {
+					services.put(id, phpClass);
+				}			
+			}
 		}
-		return parserFactory.newSAXParser();
 	}
+
+	@SuppressWarnings("rawtypes")
+	private void parseAliases() throws Exception {
+
+		String servicePath = "/container/services/service[@alias]";
+		NodeList serviceNodes = getNodes(servicePath);
+
+		for (int i = 0; i < serviceNodes.getLength(); i++) {
+
+			Element service = (Element) serviceNodes.item(i);
+
+			String id = service.getAttribute("id");
+			String alias = service.getAttribute("alias");
+
+			if (alias != null && id != null) {
+
+				Iterator it = services.keySet().iterator();
+
+				while (it.hasNext()) {
+
+					String aliasID = (String) it.next();						
+					String phpClass = (String) services.get(aliasID);
+					
+					if (alias.equals(aliasID)) {						
+						services.put(id, phpClass);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Retrieve a list of nodes for a given xpath expression
+	 * 
+	 * @param path
+	 * @return
+	 * @throws Exception
+	 */
+	private NodeList getNodes(String path) throws Exception {
+
+		XPathExpression xpathExpr = xPath.compile(path);
+		Object result = xpathExpr.evaluate(doc,XPathConstants.NODESET);
+		return (NodeList) result;
+
+	}
+
+	/**
+	 * Get all loades services.
+	 * 
+	 * 
+	 * @return
+	 */
+	public HashMap<String, String> getServices() {
+		return services;
+	}
+	
+
+	/**
+	 * Did the parser find any services definitions?
+	 * 
+	 * @return
+	 */
+	public boolean hasServices() {
+		
+		return services.size() > 0;
+	}
+
+	
 }

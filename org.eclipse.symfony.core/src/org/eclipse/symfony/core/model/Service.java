@@ -16,13 +16,15 @@ public class Service {
 	
 	private IFile file;
 	private String clazz;
+	private String id;
 	private Bundle bundle;
 	
 	
-	public Service(IFile resource, String name, String clazz) {
+	public Service(IFile resource, String id, String clazz) {
 		
 		file = resource;
-		this.clazz = clazz;				
+		this.clazz = clazz;
+		this.id = id;
 		
 	}
 
@@ -43,5 +45,11 @@ public class Service {
 
 	public void setBundle(Bundle bundle) {
 		this.bundle = bundle;
-	}	
+	}
+
+	public String getId() {
+		return id;
+	}
+
+
 }

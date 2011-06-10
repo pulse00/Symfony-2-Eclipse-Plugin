@@ -158,4 +158,23 @@ public class ModelManager {
 		
 		return new ArrayList<Annotation>();
 	}
+
+	public Service getService(String className) {
+
+		
+		for (Project project : projects) {
+			for(Bundle bundle : project.getBundles()) {
+				for(Service service : bundle.getServices()) {
+
+					System.out.println(service.getId());
+					
+					if (service.getId().equals(className))
+						return service;
+					
+				}
+			}
+		}
+		
+		return null;
+	}
 }

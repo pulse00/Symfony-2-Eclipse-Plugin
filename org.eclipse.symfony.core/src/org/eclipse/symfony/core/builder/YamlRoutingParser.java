@@ -14,42 +14,42 @@ public class YamlRoutingParser implements IConfigParser {
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void parse(IFile file) throws Exception {
+	public void parse() throws Exception {
 		
-		if (file.getFullPath().toString().contains("skeleton"))
-			throw new InvalidYamlFileException("Cannot add skeleton files to the model " + file.getFullPath().toString());
-		
-		try {
-			
-
-			Yaml yaml = new Yaml();
-			Object list = yaml.load(file.getContents());
-			
-			if (list instanceof LinkedHashMap) {
-				
-				LinkedHashMap map = (LinkedHashMap) list;
-				
-				Iterator it = map.keySet().iterator();
-				
-				while(it.hasNext()) {
-					
-					Object key = it.next();					
-					Object val = map.get(key);
-					
-					System.out.println(key);
-					System.out.println(val);
-					
-					
-				}
-				
-			}
-			
-			System.out.println(list.getClass());
-			
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
+//		if (file.getFullPath().toString().contains("skeleton"))
+//			throw new InvalidYamlFileException("Cannot add skeleton files to the model " + file.getFullPath().toString());
+//		
+//		try {
+//			
+//
+//			Yaml yaml = new Yaml();
+//			Object list = yaml.load(file.getContents());
+//			
+//			if (list instanceof LinkedHashMap) {
+//				
+//				LinkedHashMap map = (LinkedHashMap) list;
+//				
+//				Iterator it = map.keySet().iterator();
+//				
+//				while(it.hasNext()) {
+//					
+//					Object key = it.next();					
+//					Object val = map.get(key);
+//					
+//					System.out.println(key);
+//					System.out.println(val);
+//					
+//					
+//				}
+//				
+//			}
+//			
+//			System.out.println(list.getClass());
+//			
+//		} catch (CoreException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}		
 
 	}
 

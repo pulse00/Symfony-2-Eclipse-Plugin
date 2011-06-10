@@ -1,4 +1,4 @@
-// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-06-10 20:19:49
+// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-06-10 20:29:10
 
 package org.eclipse.symfony.core.parser.antlr;
 

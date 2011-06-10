@@ -25,8 +25,6 @@ public class DebugModelAction implements IObjectActionDelegate {
 	@Override
 	public void run(IAction action) {
 		
-		System.out.println("run action");
-		
 		List<Project> projects = ModelManager.getInstance().getProjects();
 		
 		System.out.println("The current workspace contains " + projects.size() + " projects");
@@ -39,9 +37,8 @@ public class DebugModelAction implements IObjectActionDelegate {
 			
 			for (Bundle bundle : bundles) {
 				
-				System.out.println("-- " + bundle.getName());
 				List<Service> services = bundle.getServices();
-				System.out.println("-- " + bundle.getName() + " contains " + services.size() + " services");
+				System.out.println("-- " + bundle.getName() + " (contains " + services.size() + " services)");
 				
 				for (Service service : services) {					
 					System.out.println("----" + service.getPHPClass());					

@@ -10,22 +10,22 @@ public class YamlConfigParser implements IConfigParser {
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public void parse(IFile file) {
+	public void parse() {
 
 		
-		try {
-			
-			System.out.println("parse yml file");
-			Yaml yaml = new Yaml();
-			List<String> list = (List<String>) yaml.load(file.getContents());
-			
-			System.out.println(list);
-			
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+//		try {
+//			
+//			System.out.println("parse yml file");
+//			Yaml yaml = new Yaml();
+//			List<String> list = (List<String>) yaml.load(file.getContents());
+//			
+//			System.out.println(list);
+//			
+//		} catch (CoreException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
 
 	}
 

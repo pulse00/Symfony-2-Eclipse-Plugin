@@ -72,6 +72,13 @@
          point="org.eclipse.php.core.completionContextResolvers">
       <resolver
             class="org.eclipse.symfony.core.codeassist.AnnotationCompletionContextResolver"></resolver>
+   </extension>
+   <extension
+         point="org.eclipse.php.core.goalEvaluatorFactories">
+      <factory
+            class="org.eclipse.symfony.core.ControllerGoalEvaluatorFactory"
+            priority="100">
+      </factory>
    </extension>   
 
 </plugin>
