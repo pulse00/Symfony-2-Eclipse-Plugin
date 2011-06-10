@@ -1,16 +1,19 @@
-package org.eclipse.symfony.core;
+package org.eclipse.symfony.core.goals;
 
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
-import org.eclipse.symfony.core.goal.ServiceGoalEvaluator;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
 
@@ -34,11 +37,15 @@ public class ControllerGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 	@Override
 	public GoalEvaluator createEvaluator(IGoal goal) {
 
-		GoalEvaluator evaluator = evaluateServiceCalls(goal);
-		
-		//TODO: add more evaluators... 
-		return evaluator;
-
+		try {
+			GoalEvaluator evaluator = evaluateServiceCalls(goal);
+			
+			//TODO: add more evaluators... 
+			return evaluator;
+			
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 
@@ -58,10 +65,19 @@ public class ControllerGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 	private GoalEvaluator evaluateServiceCalls(IGoal goal) {
 
 		Class<?>goalClass = goal.getClass();
-
+		
+		if (!(goal.getContext() instanceof MethodContext)) {
+			return null;
+		}
+		
+		// MethodContext context = (MethodContext) goal.getContext();		
+		// PHPClassType classType = (PHPClassType) context.getInstanceType();
+		// System.err.println(classType.subtypeOf(ModelManager.getInstance().getControllerType()));
+		
 		if (goalClass == ExpressionTypeGoal.class) {
 
 			ASTNode expression = ((ExpressionTypeGoal) goal).getExpression();
+			
 
 			// only call expressions ($this->foo) need to be evaluated for services
 			if (expression instanceof PHPCallExpression) {
@@ -86,6 +102,7 @@ public class ControllerGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 
 							if (first instanceof Scalar && ((Scalar)first).getScalarType() == Scalar.TYPE_STRING) {
 
+								
 								//TODO: check if there are PDT utils for stripping away quotes from
 								// string literals.
 								String className = ((Scalar)first).getValue().replace("'", "").replace("\"", "");

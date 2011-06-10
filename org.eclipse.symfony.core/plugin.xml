@@ -76,7 +76,7 @@
    <extension
          point="org.eclipse.php.core.goalEvaluatorFactories">
       <factory
-            class="org.eclipse.symfony.core.ControllerGoalEvaluatorFactory"
+            class="org.eclipse.symfony.core.goals.ControllerGoalEvaluatorFactory"
             priority="100">
       </factory>
    </extension>   

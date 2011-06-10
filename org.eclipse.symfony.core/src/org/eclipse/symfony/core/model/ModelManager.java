@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.symfony.core.goals.ControllerGoalEvaluatorFactory;
 
 
 /**
@@ -175,6 +177,22 @@ public class ModelManager {
 			}
 		}
 		
+		return null;
+	}
+
+	
+	/**
+	 * 
+	 * @see ControllerGoalEvaluatorFactory
+	 * 
+	 * @return
+	 */
+	public IEvaluatedType getControllerType() {
+		
+		
+		//TOOD: find a way to get the IEvaluatedType of the Controller class,
+		// so it can be checked against in goal evaluators
+
 		return null;
 	}
 }

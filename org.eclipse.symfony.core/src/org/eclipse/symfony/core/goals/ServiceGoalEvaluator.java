@@ -1,4 +1,4 @@
-package org.eclipse.symfony.core.goal;
+package org.eclipse.symfony.core.goals;
 
 
 import org.eclipse.dltk.ti.GoalState;

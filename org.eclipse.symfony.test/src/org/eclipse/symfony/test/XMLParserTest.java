@@ -4,7 +4,6 @@ package org.eclipse.symfony.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import junit.framework.TestCase;
 

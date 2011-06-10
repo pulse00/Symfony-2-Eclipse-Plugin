@@ -84,10 +84,11 @@ implements ICompletionStrategy {
 	
 	private IType[] getTypes(AnnotationCompletionContext context) {
 		
-//		String prefix = context.getPrefix();
-//		if (prefix.startsWith("$")) {
-//			return EMPTY;
-//		}
+
+		//TODO: this is basically just c/p from ClassInstantiationStrategy
+		// 
+		// check if we're in the right scope in here and what those
+		// trueFlag / falseFlags actually do.
 		String prefix = "";
 
 		IDLTKSearchScope scope = createSearchScope();
