@@ -52,7 +52,8 @@ public abstract class AbstractAnnotationParser extends Parser {
 	@Override
 	public void reportError(RecognitionException e) {
 		
-
+		state.syntaxErrors++;
+		
 		if(context != null)
 		{
 			if(lineNo == 1)

@@ -28,6 +28,11 @@ public class AnnotationNodeVisitor implements IAnnotationNodeVisitor {
 	}
 
 
+	public AnnotationNodeVisitor() {
+
+	}
+
+
 	@Override
 	public void beginVisit(AnnotationCommonTree node) {
 

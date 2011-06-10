@@ -14,7 +14,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.symfony.core,
  org.eclipse.symfony.core.builder,
- org.eclipse.symfony.core.model
+ org.eclipse.symfony.core.model,
+ org.eclipse.symfony.core.parser.antlr
 Bundle-ClassPath: .,
  Resources/antlr-runtime-3.3.jar,
  Resources/snakeyaml-1.8.jar
