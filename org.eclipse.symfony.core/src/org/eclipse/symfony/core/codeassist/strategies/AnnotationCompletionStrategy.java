@@ -1,12 +1,20 @@
 package org.eclipse.symfony.core.codeassist.strategies;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.ClassInstantiationStrategy;
+import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.symfony.core.codeassist.contexts.AnnotationCompletionContext;
 
 
@@ -31,10 +39,12 @@ import org.eclipse.symfony.core.codeassist.contexts.AnnotationCompletionContext;
  *
  */
 @SuppressWarnings({ "restriction", "deprecation" })
-public class AnnotationCompletionStrategy extends ClassInstantiationStrategy
+public class AnnotationCompletionStrategy extends PHPDocTagStrategy
 implements ICompletionStrategy {
 	
-	public static final String[] EXTRA_ANNOTATIONS = { "Template", "Route", "ParamConverter", "Cache" };	
+	public static final String[] EXTRA_ANNOTATIONS = { "Template", "Route", "ParamConverter", "Cache" };
+	private int trueFlag = 0;
+	private int falseFlag = 0;
 
 	public AnnotationCompletionStrategy(ICompletionContext context) {
 		super(context);
@@ -53,6 +63,7 @@ implements ICompletionStrategy {
 		AnnotationCompletionContext context = (AnnotationCompletionContext) ctx;
 		SourceRange replaceRange = getReplacementRange(context);
 		
+		
 		// getting the parameter suffix from the class constructor
 		// makes no sense in this context, as we can't parse
 		// the annotation parameters from PHP classes
@@ -61,6 +72,8 @@ implements ICompletionStrategy {
 		// which represent them
 		//String suffix = getSuffix(context);
 		
+//		System.err.println("prev: " + context.getPrefix());
+		
 		String suffix = "()";
 		
 		IType[] types = getTypes(context);
@@ -68,4 +81,34 @@ implements ICompletionStrategy {
 			reporter.reportType(type, suffix, replaceRange);
 		}		
 	}
+	
+	private IType[] getTypes(AnnotationCompletionContext context) {
+		
+//		String prefix = context.getPrefix();
+//		if (prefix.startsWith("$")) {
+//			return EMPTY;
+//		}
+		String prefix = "";
+
+		IDLTKSearchScope scope = createSearchScope();
+		if (context.getCompletionRequestor().isContextInformationMode()) {
+			return PhpModelAccess.getDefault().findTypes(prefix,
+					MatchRule.EXACT, trueFlag, falseFlag, scope, null);
+		}
+
+		List<IType> result = new LinkedList<IType>();
+		if (prefix.length() > 1 && prefix.toUpperCase().equals(prefix)) {
+			// Search by camel-case
+			IType[] types = PhpModelAccess.getDefault().findTypes(prefix,
+					MatchRule.CAMEL_CASE, trueFlag, falseFlag, scope, null);
+			result.addAll(Arrays.asList(types));
+		}
+		IType[] types = PhpModelAccess.getDefault().findTypes(null, prefix,
+				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
+		result.addAll(Arrays.asList(types));
+
+		return (IType[]) result.toArray(new IType[result.size()]);		
+		
+	}
+	
 }

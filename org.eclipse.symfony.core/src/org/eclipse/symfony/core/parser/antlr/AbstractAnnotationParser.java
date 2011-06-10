@@ -71,7 +71,7 @@ public abstract class AbstractAnnotationParser extends Parser {
 			int start = sourceStart+e.token.getCharPositionInLine();
 			int end = start+e.token.getText().length();
 			IProblem problem = new DefaultProblem(filename, message, IProblem.Syntax,
-					new String[0], ProblemSeverities.Error, start+1, end+1, lineNo);
+					new String[0], ProblemSeverities.Warning, start+1, end+1, lineNo);
 			context.getProblemReporter().reportProblem(problem);
 		} else {
 			super.reportError(e);

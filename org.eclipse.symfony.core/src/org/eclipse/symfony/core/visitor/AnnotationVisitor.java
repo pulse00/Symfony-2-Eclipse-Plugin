@@ -348,7 +348,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
 			
 			@SuppressWarnings("deprecation")
 			IProblem problem = new DefaultProblem(filename, message, IProblem.ImportRelated,
-					new String[0], ProblemSeverities.Error, start+1, end+1, lineNo);
+					new String[0], ProblemSeverities.Warning, start+1, end+1, lineNo);
 			
 			context.getProblemReporter().reportProblem(problem);
 
