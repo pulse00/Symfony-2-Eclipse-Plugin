@@ -35,9 +35,12 @@ implements IResourceVisitor {
 
 			file = (IFile) resource;
 
-			if (resource.getFileExtension().equals("xml")) {
+			if (resource.getFileExtension().equals("xml"))
+			{				
 				loadXML();
-			} else if (resource.getFileExtension().equals("yml")) {
+				
+			} else if (resource.getFileExtension().equals("yml")) 
+			{
 				loadYaml();
 			}
 		}
@@ -73,7 +76,8 @@ implements IResourceVisitor {
 
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			System.err.println("xml error: " + e.getMessage());
+			//e.printStackTrace();
 		}
 
 

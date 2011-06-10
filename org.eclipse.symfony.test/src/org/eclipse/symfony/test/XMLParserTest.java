@@ -4,6 +4,7 @@ package org.eclipse.symfony.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import junit.framework.TestCase;
 
@@ -40,10 +41,9 @@ public class XMLParserTest extends TestCase {
 	@Test	
 	public void testServices() {
 
-		String dir = System.getProperty("user.dir") + "/Resources/config/services1.xml";
-		
 		try {
 		
+			String dir = System.getProperty("user.dir") + "/Resources/config/services1.xml";
 			FileInputStream input = new FileInputStream(new File(dir));
 			XMLConfigParser parser = new XMLConfigParser(input);
 			parser.parse();
@@ -75,5 +75,52 @@ public class XMLParserTest extends TestCase {
 			fail();
 			
 		}		
+	}
+	
+	@Test
+	public void testORMServices() {
+		
+		
+		try {
+			
+			String dir = System.getProperty("user.dir") + "/Resources/config/orm.xml";
+			FileInputStream input = new FileInputStream(new File(dir));
+			XMLConfigParser parser = new XMLConfigParser(input);
+			parser.parse();
+			
+			HashMap<String, String>services = parser.getServices();			
+			HashMap<String, String> parameters = parser.getParameters();
+			
+			
+			assertTrue(services.size() == 7);
+			assertTrue(parameters.size() == 19);
+			
+			String managerID = "doctrine.orm.entity_manager.abstract";
+			String formID = "form.type.entity";
+			String readerID= "doctrine.orm.metadata.annotation_reader";
+			
+			String managerClass = "Doctrine\\ORM\\EntityManager";
+			String formClass = "Symfony\\Bridge\\Doctrine\\Form\\Type\\EntityType";
+			String readerClass = "Symfony\\Bundle\\DoctrineBundle\\Annotations\\IndexedReader";
+			
+			assertTrue(services.containsKey(managerID));
+			assertEquals(managerClass, services.get(managerID));
+			
+			assertTrue(services.containsKey(formID));
+			assertEquals(formClass, services.get(formID));
+
+			assertTrue(services.containsKey(readerID));
+			assertEquals(readerClass, services.get(readerID));
+			
+			
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			fail();
+			
+		}		
+		
+		
 	}
 }

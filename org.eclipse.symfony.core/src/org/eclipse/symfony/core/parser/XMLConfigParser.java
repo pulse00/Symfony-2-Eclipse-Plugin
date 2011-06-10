@@ -30,7 +30,7 @@ public class XMLConfigParser implements IConfigParser {
 
 	private XPath xPath;
 	private Document doc;
-	
+
 	private HashMap<String, String> parameters;
 	private HashMap<String, String> services;
 
@@ -43,27 +43,19 @@ public class XMLConfigParser implements IConfigParser {
 		services = new HashMap<String, String>();
 
 	}
-	
+
 
 	@Override
-	public void parse() {
+	public void parse() throws Exception {
 
-		try {
+		// get parameters
+		parseParameters();
 
-			// get parameters
-			parseParameters();
+		// get services
+		parseServices();
 
-			// get services
-			parseServices();
-			
-			// get aliased services
-			parseAliases();
-
-		} catch (Exception e) {
-
-			System.err.println(e.getMessage());
-			//	e.printStackTrace();
-		}
+		// get aliased services
+		parseAliases();
 
 	}
 
@@ -75,7 +67,7 @@ public class XMLConfigParser implements IConfigParser {
 	 */
 	private void parseParameters() throws Exception {
 
-		String expr = "/container/parameters/parameter";
+		String expr = "/container/parameters/parameter[@key]";
 		XPathExpression xpathExpr = xPath.compile(expr);			
 
 		Object result = xpathExpr.evaluate(doc,XPathConstants.NODESET);
@@ -85,8 +77,10 @@ public class XMLConfigParser implements IConfigParser {
 			Node node = nodes.item(i);
 			NamedNodeMap atts = node.getAttributes();			
 			for (int j = 0; j < atts.getLength(); j++) {
-				Attr attr = (Attr) atts.item(i);				
-				if (attr.getName().equals("key")) {					
+				
+				Attr attr = (Attr) atts.item(j);	
+				
+				if (attr != null && attr.getName() != null && attr.getName().equals("key")) {
 					parameters.put(attr.getValue(), node.getTextContent());
 					break;					
 				}
@@ -117,12 +111,12 @@ public class XMLConfigParser implements IConfigParser {
 				if (phpClass.startsWith("%") && phpClass.endsWith("%")) {
 
 					String placeHolder = phpClass.replace("%", "");
-					Iterator it = parameters.keySet().iterator();
+					Iterator it = getParameters().keySet().iterator();
 
 					while (it.hasNext()) {
 
 						String key = (String) it.next();						
-						String val = (String) parameters.get(key);
+						String val = (String) getParameters().get(key);
 
 						if (placeHolder.equals(key)) {							
 							services.put(id, val);							
@@ -157,7 +151,7 @@ public class XMLConfigParser implements IConfigParser {
 
 					String aliasID = (String) it.next();						
 					String phpClass = (String) services.get(aliasID);
-					
+
 					if (alias.equals(aliasID)) {						
 						services.put(id, phpClass);
 					}
@@ -190,7 +184,7 @@ public class XMLConfigParser implements IConfigParser {
 	public HashMap<String, String> getServices() {
 		return services;
 	}
-	
+
 
 	/**
 	 * Did the parser find any services definitions?
@@ -198,9 +192,13 @@ public class XMLConfigParser implements IConfigParser {
 	 * @return
 	 */
 	public boolean hasServices() {
-		
+
 		return services.size() > 0;
 	}
 
-	
+
+	public HashMap<String, String> getParameters() {
+		return parameters;
+	}
+
 }
