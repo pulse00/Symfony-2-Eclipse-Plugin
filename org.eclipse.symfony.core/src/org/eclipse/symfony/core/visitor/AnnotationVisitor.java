@@ -9,15 +9,9 @@ import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
-import org.eclipse.dltk.compiler.problem.DefaultProblemFactory;
-import org.eclipse.dltk.compiler.problem.DefaultProblemIdentifier;
-import org.eclipse.dltk.compiler.problem.DefaultProblemIdentifierFactory;
 import org.eclipse.dltk.compiler.problem.IProblem;
-import org.eclipse.dltk.compiler.problem.IProblemFactory;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
-import org.eclipse.dltk.core.DLTKLanguageManager;
-import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
@@ -33,9 +27,10 @@ import org.eclipse.symfony.core.codeassist.strategies.AnnotationCompletionStrate
 import org.eclipse.symfony.core.model.Annotation;
 import org.eclipse.symfony.core.parser.antlr.AnnotationCommonTree;
 import org.eclipse.symfony.core.parser.antlr.AnnotationCommonTreeAdaptor;
+import org.eclipse.symfony.core.parser.antlr.AnnotationLexer;
 import org.eclipse.symfony.core.parser.antlr.AnnotationNodeVisitor;
-import org.eclipse.symfony.core.parser.antlr.SymfonyAnnotationLexer;
-import org.eclipse.symfony.core.parser.antlr.SymfonyAnnotationParser;
+import org.eclipse.symfony.core.parser.antlr.AnnotationParser;
+import org.eclipse.symfony.core.parser.antlr.error.AnnotationErrorReporter;
 
 /**
  * 
@@ -235,13 +230,11 @@ public class AnnotationVisitor extends PHPASTVisitor {
 					int s = sourceStart-line.toCharArray().length+line.indexOf('@');
 					CharStream content = new ANTLRStringStream(annotation);
 
-					SymfonyAnnotationLexer lexer = new SymfonyAnnotationLexer(content);
-					lexer.setContext(context,s);
-					SymfonyAnnotationParser parser = new SymfonyAnnotationParser(new CommonTokenStream(lexer));
-					parser.setContext(context, s);
+					AnnotationErrorReporter reporter = new AnnotationErrorReporter(context);
+					AnnotationLexer lexer = new AnnotationLexer(content, reporter);
+					AnnotationParser parser = new AnnotationParser(new CommonTokenStream(lexer), reporter);
 					parser.setTreeAdaptor(new AnnotationCommonTreeAdaptor());
-
-					SymfonyAnnotationParser.annotation_return root = parser.annotation();
+					AnnotationParser.annotation_return root = parser.annotation();
 					AnnotationCommonTree tree = (AnnotationCommonTree) root.getTree();
 					AnnotationNodeVisitor visitor = new AnnotationNodeVisitor(context);
 					tree.accept(visitor);

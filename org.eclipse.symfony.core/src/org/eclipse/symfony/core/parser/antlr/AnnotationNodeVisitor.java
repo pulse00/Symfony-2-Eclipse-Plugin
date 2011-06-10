@@ -41,18 +41,18 @@ public class AnnotationNodeVisitor implements IAnnotationNodeVisitor {
 		switch(kind) {
 		
 		
-		case SymfonyAnnotationParser.ANNOTATION:
+		case AnnotationParser.ANNOTATION:
 			
 			break;
 		
 		
-		case SymfonyAnnotationParser.CLASSNAME:
+		case AnnotationParser.CLASSNAME:
 			
 			assert node.getChildCount() == 1;
 			className = node.getChild(0).toString();
 			break;
 		
-		case SymfonyAnnotationParser.NSPART:
+		case AnnotationParser.NSPART:
 			
 			assert node.getChildCount() == 1;
 			namespace.push(node.getChild(0).toString());
@@ -80,7 +80,7 @@ public class AnnotationNodeVisitor implements IAnnotationNodeVisitor {
 		switch(kind) {
 		
 		
-		case SymfonyAnnotationParser.ANNOTATION:
+		case AnnotationParser.ANNOTATION:
 		
 			break;
 

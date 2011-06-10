@@ -3,12 +3,12 @@
 	<target name="generateParser">
 		<property name="destination" value="../src/org/eclipse/symfony/core/parser/antlr" />
 		<java classpath="antlr-3.3-complete.jar" classname="org.antlr.Tool">
-			<arg value="SymfonyAnnotationLexer.g" />
-			<arg value="SymfonyAnnotationParser.g" />
+			<arg value="AnnotationLexer.g" />
+			<arg value="AnnotationParser.g" />
 		</java>
-		<move file="SymfonyAnnotationParser.tokens" todir="${destination}" />
-		<move file="SymfonyAnnotationLexer.tokens" todir="${destination}" />
-		<move file="SymfonyAnnotationLexer.java" todir="${destination}" />
-		<move file="SymfonyAnnotationParser.java" todir="${destination}" />
+		<move file="AnnotationParser.tokens" todir="${destination}" />
+		<move file="AnnotationLexer.tokens" todir="${destination}" />
+		<move file="AnnotationLexer.java" todir="${destination}" />
+		<move file="AnnotationParser.java" todir="${destination}" />
 	</target>
 </project>

@@ -8,22 +8,29 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.eclipse.symfony.core.parser.antlr.AnnotationCommonTree;
 import org.eclipse.symfony.core.parser.antlr.AnnotationCommonTreeAdaptor;
+import org.eclipse.symfony.core.parser.antlr.AnnotationLexer;
 import org.eclipse.symfony.core.parser.antlr.AnnotationNodeVisitor;
-import org.eclipse.symfony.core.parser.antlr.SymfonyAnnotationLexer;
-import org.eclipse.symfony.core.parser.antlr.SymfonyAnnotationParser;
+import org.eclipse.symfony.core.parser.antlr.AnnotationParser;
+import org.eclipse.symfony.test.reporter.DebugErrorReporter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class AnnotationParserTest extends TestCase {
 
+	
+	private DebugErrorReporter reporter = new DebugErrorReporter();
+	
 	@Before
 	public void setUp() throws Exception {
+		
+		reporter.reset();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		
+	
+		reporter.reset();
 		
 	}
 
@@ -48,19 +55,32 @@ public class AnnotationParserTest extends TestCase {
 		
 	}
 	
-	
 	@Test
 	public void testSyntaxError() {
 
-		AnnotationNodeVisitor root;		
-		root = getRootNode("* @Ro+--ute(name='test\")", true);		
-		assertNull(root);
+		AnnotationNodeVisitor root;
+		root = getRootNode("* @Ro+--ute(name='test\")", true);			
+		assertNotNull(root);
+		assertTrue(reporter.hasErrors());
 		
+		reporter.reset();
+		
+		root = getRootNode("* @Route(name=)", true);
+		assertNotNull(root);
+		assertTrue(reporter.hasErrors());		
+
+		reporter.reset();
+		
+		root = getRootNode("* @Template(name='foo' bar)", true);
+		assertNotNull(root);
+		assertTrue(reporter.hasErrors());		
+
 		
 	}
 	
 	private AnnotationNodeVisitor getRootNode(String line, boolean expectFail) {
 
+		
 		try {
 			
 			int start = line.indexOf('@');
@@ -68,18 +88,26 @@ public class AnnotationParserTest extends TestCase {
 			
 			String annotation = line.substring(start, end+1);
 			CharStream content = new ANTLRStringStream(annotation);
-			SymfonyAnnotationLexer lexer = new SymfonyAnnotationLexer(content);
-			SymfonyAnnotationParser parser = new SymfonyAnnotationParser(new CommonTokenStream(lexer));
+			
+			AnnotationLexer lexer = new AnnotationLexer(content, reporter);
+			
+			AnnotationParser parser = new AnnotationParser(new CommonTokenStream(lexer));
+			parser.setErrorReporter(reporter);
+			
 			parser.setTreeAdaptor(new AnnotationCommonTreeAdaptor());
-			SymfonyAnnotationParser.annotation_return root;
+			AnnotationParser.annotation_return root;
 			
 			root = parser.annotation();
 			AnnotationCommonTree tree = (AnnotationCommonTree) root.getTree();
 			AnnotationNodeVisitor visitor = new AnnotationNodeVisitor();
 			tree.accept(visitor);
-						
-			if (expectFail)
+				
+			if (expectFail && reporter.hasErrors() == false) {
+				
+				System.err.println(line + " " + reporter.hasErrors());
 				fail();
+			}
+				
 			
 			return visitor;
 			
@@ -88,7 +116,7 @@ public class AnnotationParserTest extends TestCase {
 						
 		}
 
-		if (!expectFail)
+		if (!expectFail && reporter.hasErrors())
 			fail();
 		
 		return null;		

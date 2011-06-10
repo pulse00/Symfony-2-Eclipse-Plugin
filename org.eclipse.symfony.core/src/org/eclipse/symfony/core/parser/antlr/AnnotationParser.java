@@ -1,6 +1,8 @@
-// $ANTLR 3.3 Nov 30, 2010 12:45:30 SymfonyAnnotationParser.g 2011-06-10 11:08:31
+// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-06-10 20:19:49
 
 package org.eclipse.symfony.core.parser.antlr;
+
+import org.eclipse.symfony.core.parser.antlr.error.IAnnotationErrorReporter;
 
 
 import org.antlr.runtime.*;
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 
 import org.antlr.runtime.tree.*;
 
-public class SymfonyAnnotationParser extends AbstractAnnotationParser {
+public class AnnotationParser extends Parser {
     public static final String[] tokenNames = new String[] {
         "<invalid>", "<EOR>", "<DOWN>", "<UP>", "AT", "PARAM_START", "PARAM_END", "ASIG", "COMMA", "BSLASH", "STRING_CHAR", "STRING", "NONCONTROL_CHAR", "STRING_LITERAL", "LOWER", "UPPER", "DIGIT", "UNDER", "LETTER", "SYMBOL", "WHITESPACE", "ANNOTATION", "ARGUMENT_LIST", "NAMED_ARG", "LITERAL_ARG", "NSPART", "CLASSNAME", "FQCN", "RHTYPE"
     };
@@ -46,10 +48,10 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
     // delegators
 
 
-        public SymfonyAnnotationParser(TokenStream input) {
+        public AnnotationParser(TokenStream input) {
             this(input, new RecognizerSharedState());
         }
-        public SymfonyAnnotationParser(TokenStream input, RecognizerSharedState state) {
+        public AnnotationParser(TokenStream input, RecognizerSharedState state) {
             super(input, state);
              
         }
@@ -63,8 +65,43 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
         return adaptor;
     }
 
-    public String[] getTokenNames() { return SymfonyAnnotationParser.tokenNames; }
-    public String getGrammarFileName() { return "SymfonyAnnotationParser.g"; }
+    public String[] getTokenNames() { return AnnotationParser.tokenNames; }
+    public String getGrammarFileName() { return "AnnotationParser.g"; }
+
+
+
+        private IAnnotationErrorReporter errorReporter = null;
+        
+        public AnnotationParser(TokenStream input, IAnnotationErrorReporter errorReporter) {
+            this(input, new RecognizerSharedState());
+            this.errorReporter = errorReporter;
+        }
+
+    	public void displayRecognitionError(String[] tokenNames,
+                                            RecognitionException e) {
+            
+    		String hdr = getErrorHeader(e);
+            String msg = getErrorMessage(e, tokenNames);        
+            errorReporter.reportError(hdr,msg,e);
+            
+        }    
+        
+        public void setErrorReporter(IAnnotationErrorReporter errorReporter) {
+            this.errorReporter = errorReporter;
+        }
+        
+    	protected Object recoverFromMismatchedToken(IntStream input,
+    				int ttype, BitSet follow) throws RecognitionException
+    	{   
+    	    throw new MismatchedTokenException(ttype, input);
+    	}       
+    	
+        public Object recoverFromMismatchedSet(IntStream input,
+        			RecognitionException e, BitSet follow) throws RecognitionException 
+        { 
+    		throw new MismatchedSetException(follow, input);
+       	}
+    	
 
 
     public static class annotation_return extends ParserRuleReturnScope {
@@ -73,17 +110,17 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
     };
 
     // $ANTLR start "annotation"
-    // SymfonyAnnotationParser.g:30:1: annotation : AT ann_class argument_list -> ^( ANNOTATION ann_class argument_list ) ;
-    public final SymfonyAnnotationParser.annotation_return annotation() throws RecognitionException {
-        SymfonyAnnotationParser.annotation_return retval = new SymfonyAnnotationParser.annotation_return();
+    // AnnotationParser.g:68:1: annotation : AT ann_class argument_list -> ^( ANNOTATION ann_class argument_list ) ;
+    public final AnnotationParser.annotation_return annotation() throws RecognitionException {
+        AnnotationParser.annotation_return retval = new AnnotationParser.annotation_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
         CommonToken AT1=null;
-        SymfonyAnnotationParser.ann_class_return ann_class2 = null;
+        AnnotationParser.ann_class_return ann_class2 = null;
 
-        SymfonyAnnotationParser.argument_list_return argument_list3 = null;
+        AnnotationParser.argument_list_return argument_list3 = null;
 
 
         AnnotationCommonTree AT1_tree=null;
@@ -91,19 +128,19 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
         RewriteRuleSubtreeStream stream_argument_list=new RewriteRuleSubtreeStream(adaptor,"rule argument_list");
         RewriteRuleSubtreeStream stream_ann_class=new RewriteRuleSubtreeStream(adaptor,"rule ann_class");
         try {
-            // SymfonyAnnotationParser.g:31:3: ( AT ann_class argument_list -> ^( ANNOTATION ann_class argument_list ) )
-            // SymfonyAnnotationParser.g:31:5: AT ann_class argument_list
+            // AnnotationParser.g:69:3: ( AT ann_class argument_list -> ^( ANNOTATION ann_class argument_list ) )
+            // AnnotationParser.g:69:5: AT ann_class argument_list
             {
-            AT1=(CommonToken)match(input,AT,FOLLOW_AT_in_annotation85);  
+            AT1=(CommonToken)match(input,AT,FOLLOW_AT_in_annotation87);  
             stream_AT.add(AT1);
 
-            pushFollow(FOLLOW_ann_class_in_annotation87);
+            pushFollow(FOLLOW_ann_class_in_annotation89);
             ann_class2=ann_class();
 
             state._fsp--;
 
             stream_ann_class.add(ann_class2.getTree());
-            pushFollow(FOLLOW_argument_list_in_annotation89);
+            pushFollow(FOLLOW_argument_list_in_annotation91);
             argument_list3=argument_list();
 
             state._fsp--;
@@ -122,9 +159,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 32:5: -> ^( ANNOTATION ann_class argument_list )
+            // 70:5: -> ^( ANNOTATION ann_class argument_list )
             {
-                // SymfonyAnnotationParser.g:32:7: ^( ANNOTATION ann_class argument_list )
+                // AnnotationParser.g:70:7: ^( ANNOTATION ann_class argument_list )
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ANNOTATION, "ANNOTATION"), root_1);
@@ -164,16 +201,16 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
     };
 
     // $ANTLR start "argument_list"
-    // SymfonyAnnotationParser.g:36:1: argument_list : ( PARAM_START ( arguments )? PARAM_END )? -> ^( ARGUMENT_LIST ( arguments )? ) ;
-    public final SymfonyAnnotationParser.argument_list_return argument_list() throws RecognitionException {
-        SymfonyAnnotationParser.argument_list_return retval = new SymfonyAnnotationParser.argument_list_return();
+    // AnnotationParser.g:74:1: argument_list : ( PARAM_START ( arguments )? PARAM_END )? -> ^( ARGUMENT_LIST ( arguments )? ) ;
+    public final AnnotationParser.argument_list_return argument_list() throws RecognitionException {
+        AnnotationParser.argument_list_return retval = new AnnotationParser.argument_list_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
         CommonToken PARAM_START4=null;
         CommonToken PARAM_END6=null;
-        SymfonyAnnotationParser.arguments_return arguments5 = null;
+        AnnotationParser.arguments_return arguments5 = null;
 
 
         AnnotationCommonTree PARAM_START4_tree=null;
@@ -182,10 +219,10 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
         RewriteRuleTokenStream stream_PARAM_END=new RewriteRuleTokenStream(adaptor,"token PARAM_END");
         RewriteRuleSubtreeStream stream_arguments=new RewriteRuleSubtreeStream(adaptor,"rule arguments");
         try {
-            // SymfonyAnnotationParser.g:37:3: ( ( PARAM_START ( arguments )? PARAM_END )? -> ^( ARGUMENT_LIST ( arguments )? ) )
-            // SymfonyAnnotationParser.g:37:5: ( PARAM_START ( arguments )? PARAM_END )?
+            // AnnotationParser.g:75:3: ( ( PARAM_START ( arguments )? PARAM_END )? -> ^( ARGUMENT_LIST ( arguments )? ) )
+            // AnnotationParser.g:75:5: ( PARAM_START ( arguments )? PARAM_END )?
             {
-            // SymfonyAnnotationParser.g:37:5: ( PARAM_START ( arguments )? PARAM_END )?
+            // AnnotationParser.g:75:5: ( PARAM_START ( arguments )? PARAM_END )?
             int alt2=2;
             int LA2_0 = input.LA(1);
 
@@ -194,12 +231,12 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
             }
             switch (alt2) {
                 case 1 :
-                    // SymfonyAnnotationParser.g:37:6: PARAM_START ( arguments )? PARAM_END
+                    // AnnotationParser.g:75:6: PARAM_START ( arguments )? PARAM_END
                     {
-                    PARAM_START4=(CommonToken)match(input,PARAM_START,FOLLOW_PARAM_START_in_argument_list117);  
+                    PARAM_START4=(CommonToken)match(input,PARAM_START,FOLLOW_PARAM_START_in_argument_list119);  
                     stream_PARAM_START.add(PARAM_START4);
 
-                    // SymfonyAnnotationParser.g:37:18: ( arguments )?
+                    // AnnotationParser.g:75:18: ( arguments )?
                     int alt1=2;
                     int LA1_0 = input.LA(1);
 
@@ -208,9 +245,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
                     }
                     switch (alt1) {
                         case 1 :
-                            // SymfonyAnnotationParser.g:37:18: arguments
+                            // AnnotationParser.g:75:18: arguments
                             {
-                            pushFollow(FOLLOW_arguments_in_argument_list119);
+                            pushFollow(FOLLOW_arguments_in_argument_list121);
                             arguments5=arguments();
 
                             state._fsp--;
@@ -222,7 +259,7 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
 
                     }
 
-                    PARAM_END6=(CommonToken)match(input,PARAM_END,FOLLOW_PARAM_END_in_argument_list122);  
+                    PARAM_END6=(CommonToken)match(input,PARAM_END,FOLLOW_PARAM_END_in_argument_list124);  
                     stream_PARAM_END.add(PARAM_END6);
 
 
@@ -244,14 +281,14 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 38:5: -> ^( ARGUMENT_LIST ( arguments )? )
+            // 76:5: -> ^( ARGUMENT_LIST ( arguments )? )
             {
-                // SymfonyAnnotationParser.g:38:8: ^( ARGUMENT_LIST ( arguments )? )
+                // AnnotationParser.g:76:8: ^( ARGUMENT_LIST ( arguments )? )
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ARGUMENT_LIST, "ARGUMENT_LIST"), root_1);
 
-                // SymfonyAnnotationParser.g:38:24: ( arguments )?
+                // AnnotationParser.g:76:24: ( arguments )?
                 if ( stream_arguments.hasNext() ) {
                     adaptor.addChild(root_1, stream_arguments.nextTree());
 
@@ -290,26 +327,26 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
     };
 
     // $ANTLR start "ann_class"
-    // SymfonyAnnotationParser.g:41:1: ann_class : ( namespace )* classname ;
-    public final SymfonyAnnotationParser.ann_class_return ann_class() throws RecognitionException {
-        SymfonyAnnotationParser.ann_class_return retval = new SymfonyAnnotationParser.ann_class_return();
+    // AnnotationParser.g:79:1: ann_class : ( namespace )* classname ;
+    public final AnnotationParser.ann_class_return ann_class() throws RecognitionException {
+        AnnotationParser.ann_class_return retval = new AnnotationParser.ann_class_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        SymfonyAnnotationParser.namespace_return namespace7 = null;
+        AnnotationParser.namespace_return namespace7 = null;
 
-        SymfonyAnnotationParser.classname_return classname8 = null;
+        AnnotationParser.classname_return classname8 = null;
 
 
 
         try {
-            // SymfonyAnnotationParser.g:42:3: ( ( namespace )* classname )
-            // SymfonyAnnotationParser.g:42:5: ( namespace )* classname
+            // AnnotationParser.g:80:3: ( ( namespace )* classname )
+            // AnnotationParser.g:80:5: ( namespace )* classname
             {
             root_0 = (AnnotationCommonTree)adaptor.nil();
 
-            // SymfonyAnnotationParser.g:42:5: ( namespace )*
+            // AnnotationParser.g:80:5: ( namespace )*
             loop3:
             do {
                 int alt3=2;
@@ -328,9 +365,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
 
                 switch (alt3) {
             	case 1 :
-            	    // SymfonyAnnotationParser.g:42:5: namespace
+            	    // AnnotationParser.g:80:5: namespace
             	    {
-            	    pushFollow(FOLLOW_namespace_in_ann_class150);
+            	    pushFollow(FOLLOW_namespace_in_ann_class152);
             	    namespace7=namespace();
 
             	    state._fsp--;
@@ -345,7 +382,7 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
                 }
             } while (true);
 
-            pushFollow(FOLLOW_classname_in_ann_class153);
+            pushFollow(FOLLOW_classname_in_ann_class155);
             classname8=classname();
 
             state._fsp--;
@@ -378,9 +415,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
     };
 
     // $ANTLR start "namespace"
-    // SymfonyAnnotationParser.g:45:1: namespace : ns= STRING BSLASH -> ^( NSPART $ns) ;
-    public final SymfonyAnnotationParser.namespace_return namespace() throws RecognitionException {
-        SymfonyAnnotationParser.namespace_return retval = new SymfonyAnnotationParser.namespace_return();
+    // AnnotationParser.g:83:1: namespace : ns= STRING BSLASH -> ^( NSPART $ns) ;
+    public final AnnotationParser.namespace_return namespace() throws RecognitionException {
+        AnnotationParser.namespace_return retval = new AnnotationParser.namespace_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
@@ -394,13 +431,13 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
         RewriteRuleTokenStream stream_STRING=new RewriteRuleTokenStream(adaptor,"token STRING");
 
         try {
-            // SymfonyAnnotationParser.g:46:3: (ns= STRING BSLASH -> ^( NSPART $ns) )
-            // SymfonyAnnotationParser.g:46:5: ns= STRING BSLASH
+            // AnnotationParser.g:84:3: (ns= STRING BSLASH -> ^( NSPART $ns) )
+            // AnnotationParser.g:84:5: ns= STRING BSLASH
             {
-            ns=(CommonToken)match(input,STRING,FOLLOW_STRING_in_namespace170);  
+            ns=(CommonToken)match(input,STRING,FOLLOW_STRING_in_namespace172);  
             stream_STRING.add(ns);
 
-            BSLASH9=(CommonToken)match(input,BSLASH,FOLLOW_BSLASH_in_namespace172);  
+            BSLASH9=(CommonToken)match(input,BSLASH,FOLLOW_BSLASH_in_namespace174);  
             stream_BSLASH.add(BSLASH9);
 
 
@@ -417,9 +454,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 47:4: -> ^( NSPART $ns)
+            // 85:4: -> ^( NSPART $ns)
             {
-                // SymfonyAnnotationParser.g:47:6: ^( NSPART $ns)
+                // AnnotationParser.g:85:6: ^( NSPART $ns)
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(NSPART, "NSPART"), root_1);
@@ -458,9 +495,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
     };
 
     // $ANTLR start "classname"
-    // SymfonyAnnotationParser.g:50:1: classname : cn= STRING -> ^( CLASSNAME $cn) ;
-    public final SymfonyAnnotationParser.classname_return classname() throws RecognitionException {
-        SymfonyAnnotationParser.classname_return retval = new SymfonyAnnotationParser.classname_return();
+    // AnnotationParser.g:88:1: classname : cn= STRING -> ^( CLASSNAME $cn) ;
+    public final AnnotationParser.classname_return classname() throws RecognitionException {
+        AnnotationParser.classname_return retval = new AnnotationParser.classname_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
@@ -471,10 +508,10 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
         RewriteRuleTokenStream stream_STRING=new RewriteRuleTokenStream(adaptor,"token STRING");
 
         try {
-            // SymfonyAnnotationParser.g:51:3: (cn= STRING -> ^( CLASSNAME $cn) )
-            // SymfonyAnnotationParser.g:51:5: cn= STRING
+            // AnnotationParser.g:89:3: (cn= STRING -> ^( CLASSNAME $cn) )
+            // AnnotationParser.g:89:5: cn= STRING
             {
-            cn=(CommonToken)match(input,STRING,FOLLOW_STRING_in_classname200);  
+            cn=(CommonToken)match(input,STRING,FOLLOW_STRING_in_classname202);  
             stream_STRING.add(cn);
 
 
@@ -491,9 +528,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 52:5: -> ^( CLASSNAME $cn)
+            // 90:5: -> ^( CLASSNAME $cn)
             {
-                // SymfonyAnnotationParser.g:52:7: ^( CLASSNAME $cn)
+                // AnnotationParser.g:90:7: ^( CLASSNAME $cn)
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(CLASSNAME, "CLASSNAME"), root_1);
@@ -532,34 +569,34 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
     };
 
     // $ANTLR start "arguments"
-    // SymfonyAnnotationParser.g:55:1: arguments : argument ( COMMA ( argument ) )* ;
-    public final SymfonyAnnotationParser.arguments_return arguments() throws RecognitionException {
-        SymfonyAnnotationParser.arguments_return retval = new SymfonyAnnotationParser.arguments_return();
+    // AnnotationParser.g:93:1: arguments : argument ( COMMA ( argument ) )* ;
+    public final AnnotationParser.arguments_return arguments() throws RecognitionException {
+        AnnotationParser.arguments_return retval = new AnnotationParser.arguments_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
         CommonToken COMMA11=null;
-        SymfonyAnnotationParser.argument_return argument10 = null;
+        AnnotationParser.argument_return argument10 = null;
 
-        SymfonyAnnotationParser.argument_return argument12 = null;
+        AnnotationParser.argument_return argument12 = null;
 
 
         AnnotationCommonTree COMMA11_tree=null;
 
         try {
-            // SymfonyAnnotationParser.g:56:3: ( argument ( COMMA ( argument ) )* )
-            // SymfonyAnnotationParser.g:56:5: argument ( COMMA ( argument ) )*
+            // AnnotationParser.g:94:3: ( argument ( COMMA ( argument ) )* )
+            // AnnotationParser.g:94:5: argument ( COMMA ( argument ) )*
             {
             root_0 = (AnnotationCommonTree)adaptor.nil();
 
-            pushFollow(FOLLOW_argument_in_arguments225);
+            pushFollow(FOLLOW_argument_in_arguments227);
             argument10=argument();
 
             state._fsp--;
 
             adaptor.addChild(root_0, argument10.getTree());
-            // SymfonyAnnotationParser.g:56:15: ( COMMA ( argument ) )*
+            // AnnotationParser.g:94:15: ( COMMA ( argument ) )*
             loop4:
             do {
                 int alt4=2;
@@ -572,16 +609,16 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
 
                 switch (alt4) {
             	case 1 :
-            	    // SymfonyAnnotationParser.g:56:16: COMMA ( argument )
+            	    // AnnotationParser.g:94:16: COMMA ( argument )
             	    {
-            	    COMMA11=(CommonToken)match(input,COMMA,FOLLOW_COMMA_in_arguments229); 
+            	    COMMA11=(CommonToken)match(input,COMMA,FOLLOW_COMMA_in_arguments231); 
             	    COMMA11_tree = (AnnotationCommonTree)adaptor.create(COMMA11);
             	    adaptor.addChild(root_0, COMMA11_tree);
 
-            	    // SymfonyAnnotationParser.g:56:22: ( argument )
-            	    // SymfonyAnnotationParser.g:56:23: argument
+            	    // AnnotationParser.g:94:22: ( argument )
+            	    // AnnotationParser.g:94:23: argument
             	    {
-            	    pushFollow(FOLLOW_argument_in_arguments232);
+            	    pushFollow(FOLLOW_argument_in_arguments234);
             	    argument12=argument();
 
             	    state._fsp--;
@@ -626,21 +663,21 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
     };
 
     // $ANTLR start "argument"
-    // SymfonyAnnotationParser.g:59:1: argument : ( literal_argument | named_argument );
-    public final SymfonyAnnotationParser.argument_return argument() throws RecognitionException {
-        SymfonyAnnotationParser.argument_return retval = new SymfonyAnnotationParser.argument_return();
+    // AnnotationParser.g:97:1: argument : ( literal_argument | named_argument );
+    public final AnnotationParser.argument_return argument() throws RecognitionException {
+        AnnotationParser.argument_return retval = new AnnotationParser.argument_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        SymfonyAnnotationParser.literal_argument_return literal_argument13 = null;
+        AnnotationParser.literal_argument_return literal_argument13 = null;
 
-        SymfonyAnnotationParser.named_argument_return named_argument14 = null;
+        AnnotationParser.named_argument_return named_argument14 = null;
 
 
 
         try {
-            // SymfonyAnnotationParser.g:60:1: ( literal_argument | named_argument )
+            // AnnotationParser.g:98:1: ( literal_argument | named_argument )
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -658,11 +695,11 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
             }
             switch (alt5) {
                 case 1 :
-                    // SymfonyAnnotationParser.g:60:3: literal_argument
+                    // AnnotationParser.g:98:3: literal_argument
                     {
                     root_0 = (AnnotationCommonTree)adaptor.nil();
 
-                    pushFollow(FOLLOW_literal_argument_in_argument246);
+                    pushFollow(FOLLOW_literal_argument_in_argument248);
                     literal_argument13=literal_argument();
 
                     state._fsp--;
@@ -672,11 +709,11 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
                     }
                     break;
                 case 2 :
-                    // SymfonyAnnotationParser.g:60:22: named_argument
+                    // AnnotationParser.g:98:22: named_argument
                     {
                     root_0 = (AnnotationCommonTree)adaptor.nil();
 
-                    pushFollow(FOLLOW_named_argument_in_argument250);
+                    pushFollow(FOLLOW_named_argument_in_argument252);
                     named_argument14=named_argument();
 
                     state._fsp--;
@@ -711,9 +748,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
     };
 
     // $ANTLR start "literal_argument"
-    // SymfonyAnnotationParser.g:64:1: literal_argument : param= STRING_LITERAL -> ^( LITERAL_ARG $param) ;
-    public final SymfonyAnnotationParser.literal_argument_return literal_argument() throws RecognitionException {
-        SymfonyAnnotationParser.literal_argument_return retval = new SymfonyAnnotationParser.literal_argument_return();
+    // AnnotationParser.g:102:1: literal_argument : param= STRING_LITERAL -> ^( LITERAL_ARG $param) ;
+    public final AnnotationParser.literal_argument_return literal_argument() throws RecognitionException {
+        AnnotationParser.literal_argument_return retval = new AnnotationParser.literal_argument_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
@@ -724,10 +761,10 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
         RewriteRuleTokenStream stream_STRING_LITERAL=new RewriteRuleTokenStream(adaptor,"token STRING_LITERAL");
 
         try {
-            // SymfonyAnnotationParser.g:65:3: (param= STRING_LITERAL -> ^( LITERAL_ARG $param) )
-            // SymfonyAnnotationParser.g:65:5: param= STRING_LITERAL
+            // AnnotationParser.g:103:3: (param= STRING_LITERAL -> ^( LITERAL_ARG $param) )
+            // AnnotationParser.g:103:5: param= STRING_LITERAL
             {
-            param=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_literal_argument264);  
+            param=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_literal_argument266);  
             stream_STRING_LITERAL.add(param);
 
 
@@ -744,9 +781,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 66:5: -> ^( LITERAL_ARG $param)
+            // 104:5: -> ^( LITERAL_ARG $param)
             {
-                // SymfonyAnnotationParser.g:66:8: ^( LITERAL_ARG $param)
+                // AnnotationParser.g:104:8: ^( LITERAL_ARG $param)
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(LITERAL_ARG, "LITERAL_ARG"), root_1);
@@ -785,16 +822,16 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
     };
 
     // $ANTLR start "named_argument"
-    // SymfonyAnnotationParser.g:69:1: named_argument : lht= STRING ASIG rhtype -> ^( NAMED_ARG $lht rhtype ) ;
-    public final SymfonyAnnotationParser.named_argument_return named_argument() throws RecognitionException {
-        SymfonyAnnotationParser.named_argument_return retval = new SymfonyAnnotationParser.named_argument_return();
+    // AnnotationParser.g:107:1: named_argument : lht= STRING ASIG rhtype -> ^( NAMED_ARG $lht rhtype ) ;
+    public final AnnotationParser.named_argument_return named_argument() throws RecognitionException {
+        AnnotationParser.named_argument_return retval = new AnnotationParser.named_argument_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
         CommonToken lht=null;
         CommonToken ASIG15=null;
-        SymfonyAnnotationParser.rhtype_return rhtype16 = null;
+        AnnotationParser.rhtype_return rhtype16 = null;
 
 
         AnnotationCommonTree lht_tree=null;
@@ -803,16 +840,16 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
         RewriteRuleTokenStream stream_STRING=new RewriteRuleTokenStream(adaptor,"token STRING");
         RewriteRuleSubtreeStream stream_rhtype=new RewriteRuleSubtreeStream(adaptor,"rule rhtype");
         try {
-            // SymfonyAnnotationParser.g:70:3: (lht= STRING ASIG rhtype -> ^( NAMED_ARG $lht rhtype ) )
-            // SymfonyAnnotationParser.g:70:5: lht= STRING ASIG rhtype
+            // AnnotationParser.g:108:3: (lht= STRING ASIG rhtype -> ^( NAMED_ARG $lht rhtype ) )
+            // AnnotationParser.g:108:5: lht= STRING ASIG rhtype
             {
-            lht=(CommonToken)match(input,STRING,FOLLOW_STRING_in_named_argument292);  
+            lht=(CommonToken)match(input,STRING,FOLLOW_STRING_in_named_argument294);  
             stream_STRING.add(lht);
 
-            ASIG15=(CommonToken)match(input,ASIG,FOLLOW_ASIG_in_named_argument294);  
+            ASIG15=(CommonToken)match(input,ASIG,FOLLOW_ASIG_in_named_argument296);  
             stream_ASIG.add(ASIG15);
 
-            pushFollow(FOLLOW_rhtype_in_named_argument296);
+            pushFollow(FOLLOW_rhtype_in_named_argument298);
             rhtype16=rhtype();
 
             state._fsp--;
@@ -821,7 +858,7 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
 
 
             // AST REWRITE
-            // elements: lht, rhtype
+            // elements: rhtype, lht
             // token labels: lht
             // rule labels: retval
             // token list labels: 
@@ -832,9 +869,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 71:5: -> ^( NAMED_ARG $lht rhtype )
+            // 109:5: -> ^( NAMED_ARG $lht rhtype )
             {
-                // SymfonyAnnotationParser.g:71:8: ^( NAMED_ARG $lht rhtype )
+                // AnnotationParser.g:109:8: ^( NAMED_ARG $lht rhtype )
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(NAMED_ARG, "NAMED_ARG"), root_1);
@@ -874,9 +911,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
     };
 
     // $ANTLR start "rhtype"
-    // SymfonyAnnotationParser.g:74:1: rhtype : (param= STRING -> ^( RHTYPE $param) | param= STRING_LITERAL -> ^( RHTYPE $param) );
-    public final SymfonyAnnotationParser.rhtype_return rhtype() throws RecognitionException {
-        SymfonyAnnotationParser.rhtype_return retval = new SymfonyAnnotationParser.rhtype_return();
+    // AnnotationParser.g:112:1: rhtype : (param= STRING -> ^( RHTYPE $param) | param= STRING_LITERAL -> ^( RHTYPE $param) );
+    public final AnnotationParser.rhtype_return rhtype() throws RecognitionException {
+        AnnotationParser.rhtype_return retval = new AnnotationParser.rhtype_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
@@ -888,7 +925,7 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
         RewriteRuleTokenStream stream_STRING=new RewriteRuleTokenStream(adaptor,"token STRING");
 
         try {
-            // SymfonyAnnotationParser.g:75:3: (param= STRING -> ^( RHTYPE $param) | param= STRING_LITERAL -> ^( RHTYPE $param) )
+            // AnnotationParser.g:113:3: (param= STRING -> ^( RHTYPE $param) | param= STRING_LITERAL -> ^( RHTYPE $param) )
             int alt6=2;
             int LA6_0 = input.LA(1);
 
@@ -906,9 +943,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
             }
             switch (alt6) {
                 case 1 :
-                    // SymfonyAnnotationParser.g:75:5: param= STRING
+                    // AnnotationParser.g:113:5: param= STRING
                     {
-                    param=(CommonToken)match(input,STRING,FOLLOW_STRING_in_rhtype326);  
+                    param=(CommonToken)match(input,STRING,FOLLOW_STRING_in_rhtype328);  
                     stream_STRING.add(param);
 
 
@@ -925,9 +962,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (AnnotationCommonTree)adaptor.nil();
-                    // 76:5: -> ^( RHTYPE $param)
+                    // 114:5: -> ^( RHTYPE $param)
                     {
-                        // SymfonyAnnotationParser.g:76:8: ^( RHTYPE $param)
+                        // AnnotationParser.g:114:8: ^( RHTYPE $param)
                         {
                         AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                         root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(RHTYPE, "RHTYPE"), root_1);
@@ -943,9 +980,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
                     }
                     break;
                 case 2 :
-                    // SymfonyAnnotationParser.g:77:5: param= STRING_LITERAL
+                    // AnnotationParser.g:115:5: param= STRING_LITERAL
                     {
-                    param=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_rhtype347);  
+                    param=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_rhtype349);  
                     stream_STRING_LITERAL.add(param);
 
 
@@ -962,9 +999,9 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (AnnotationCommonTree)adaptor.nil();
-                    // 78:5: -> ^( RHTYPE $param)
+                    // 116:5: -> ^( RHTYPE $param)
                     {
-                        // SymfonyAnnotationParser.g:78:8: ^( RHTYPE $param)
+                        // AnnotationParser.g:116:8: ^( RHTYPE $param)
                         {
                         AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                         root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(RHTYPE, "RHTYPE"), root_1);
@@ -1004,27 +1041,27 @@ public class SymfonyAnnotationParser extends AbstractAnnotationParser {
 
  
 
-    public static final BitSet FOLLOW_AT_in_annotation85 = new BitSet(new long[]{0x0000000000000800L});
-    public static final BitSet FOLLOW_ann_class_in_annotation87 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_argument_list_in_annotation89 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_PARAM_START_in_argument_list117 = new BitSet(new long[]{0x0000000000002840L});
-    public static final BitSet FOLLOW_arguments_in_argument_list119 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_PARAM_END_in_argument_list122 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_namespace_in_ann_class150 = new BitSet(new long[]{0x0000000000000800L});
-    public static final BitSet FOLLOW_classname_in_ann_class153 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_in_namespace170 = new BitSet(new long[]{0x0000000000000200L});
-    public static final BitSet FOLLOW_BSLASH_in_namespace172 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_in_classname200 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_argument_in_arguments225 = new BitSet(new long[]{0x0000000000000102L});
-    public static final BitSet FOLLOW_COMMA_in_arguments229 = new BitSet(new long[]{0x0000000000002800L});
-    public static final BitSet FOLLOW_argument_in_arguments232 = new BitSet(new long[]{0x0000000000000102L});
-    public static final BitSet FOLLOW_literal_argument_in_argument246 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_named_argument_in_argument250 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_literal_argument264 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_in_named_argument292 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_ASIG_in_named_argument294 = new BitSet(new long[]{0x0000000000002800L});
-    public static final BitSet FOLLOW_rhtype_in_named_argument296 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_in_rhtype326 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_rhtype347 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_AT_in_annotation87 = new BitSet(new long[]{0x0000000000000800L});
+    public static final BitSet FOLLOW_ann_class_in_annotation89 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_argument_list_in_annotation91 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_PARAM_START_in_argument_list119 = new BitSet(new long[]{0x0000000000002840L});
+    public static final BitSet FOLLOW_arguments_in_argument_list121 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_PARAM_END_in_argument_list124 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_namespace_in_ann_class152 = new BitSet(new long[]{0x0000000000000800L});
+    public static final BitSet FOLLOW_classname_in_ann_class155 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_in_namespace172 = new BitSet(new long[]{0x0000000000000200L});
+    public static final BitSet FOLLOW_BSLASH_in_namespace174 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_in_classname202 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_argument_in_arguments227 = new BitSet(new long[]{0x0000000000000102L});
+    public static final BitSet FOLLOW_COMMA_in_arguments231 = new BitSet(new long[]{0x0000000000002800L});
+    public static final BitSet FOLLOW_argument_in_arguments234 = new BitSet(new long[]{0x0000000000000102L});
+    public static final BitSet FOLLOW_literal_argument_in_argument248 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_named_argument_in_argument252 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_LITERAL_in_literal_argument266 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_in_named_argument294 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_ASIG_in_named_argument296 = new BitSet(new long[]{0x0000000000002800L});
+    public static final BitSet FOLLOW_rhtype_in_named_argument298 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_in_rhtype328 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_LITERAL_in_rhtype349 = new BitSet(new long[]{0x0000000000000002L});
 
 }
