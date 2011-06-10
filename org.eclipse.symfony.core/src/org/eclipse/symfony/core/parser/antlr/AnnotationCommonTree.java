@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.Token;
+import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.eclipse.symfony.core.visitor.AnnotationVisitor;
 
@@ -23,6 +24,10 @@ public class AnnotationCommonTree extends CommonTree {
 	
     public AnnotationCommonTree(Token payload) {
     	super(payload);
+	}
+
+	public AnnotationCommonTree(TokenStream input, Token start, Token stop) {
+
 	}
 
 	@Override
@@ -53,14 +58,6 @@ public class AnnotationCommonTree extends CommonTree {
      */
 	public void accept(IAnnotationNodeVisitor visitor) {
 
-		switch (getType()) {
-		
-//		case SymfonyAnnotationParser.
-		
-		
-		
-		}
-		
 		visitor.beginVisit(this);
 		
 		for (int i = 0; i < getChildCount(); i++) {

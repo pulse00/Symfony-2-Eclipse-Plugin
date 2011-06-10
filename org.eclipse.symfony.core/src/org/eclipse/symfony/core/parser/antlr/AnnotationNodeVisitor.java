@@ -106,4 +106,13 @@ public class AnnotationNodeVisitor implements IAnnotationNodeVisitor {
 		return getNamespace() + getClassName();
 		
 	}
+	
+	public String getFirstNamespacePart() {
+		
+		if (namespace.size() > 0) {
+			return namespace.get(0);
+		}
+		
+		return null;
+	}
 }

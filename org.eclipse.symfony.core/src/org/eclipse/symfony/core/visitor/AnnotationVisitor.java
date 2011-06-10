@@ -7,8 +7,21 @@ import java.util.Stack;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
+import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.compiler.problem.DefaultProblem;
+import org.eclipse.dltk.compiler.problem.DefaultProblemFactory;
+import org.eclipse.dltk.compiler.problem.DefaultProblemIdentifier;
+import org.eclipse.dltk.compiler.problem.DefaultProblemIdentifierFactory;
+import org.eclipse.dltk.compiler.problem.IProblem;
+import org.eclipse.dltk.compiler.problem.IProblemFactory;
+import org.eclipse.dltk.compiler.problem.IProblemReporter;
+import org.eclipse.dltk.compiler.problem.ProblemSeverities;
+import org.eclipse.dltk.core.DLTKLanguageManager;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.builder.IBuildContext;
+import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
@@ -18,7 +31,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
 import org.eclipse.symfony.core.model.Annotation;
-import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.parser.antlr.AnnotationCommonTree;
 import org.eclipse.symfony.core.parser.antlr.AnnotationCommonTreeAdaptor;
 import org.eclipse.symfony.core.parser.antlr.AnnotationNodeVisitor;
@@ -52,7 +64,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
 	private boolean isAction = false;
 	private char[] content;
 	private IBuildContext context;
-	
+
 	private Stack<UseStatement> useStatements = new Stack<UseStatement>();
 
 
@@ -79,15 +91,6 @@ public class AnnotationVisitor extends PHPASTVisitor {
 	}
 
 	@Override
-	public boolean endvisit(UseStatement s) throws Exception {
-
-
-		return true;
-
-	}
-
-
-	@Override
 	public boolean visit(NamespaceDeclaration s) throws Exception {
 
 		currentNamespace = s;		
@@ -101,23 +104,21 @@ public class AnnotationVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+
+	/**
+	 * This could be used to parse Annotationclasses themselves
+	 * to build up an internal model about the annotation.
+	 * 
+	 * However, there's no clean way at the moment as pretty much
+	 * any class can be used as an annotation and there's no proper
+	 * way to detect the semantics of the annotation from the php code.
+	 * 
+	 * @see http://www.doctrine-project.org/jira/browse/DDC-1198
+	 */
 	@Override
 	public boolean visit(ClassDeclaration s) throws Exception {
 
 		currentClass = s;
-
-		// doesn't make sense until something like this:
-		// http://www.doctrine-project.org/jira/browse/DDC-1198
-		// is implemented
-		//		for (Object superclass : currentClass.getSuperClasses().getChilds()) {
-		//			if (superclass instanceof FullyQualifiedReference) {
-		//				FullyQualifiedReference ref = (FullyQualifiedReference) superclass;
-		//				if (ref.getName().equals("Annotation")) {
-		//					currentAnnotation = new Annotation(context.getSourceModule(), currentNamespace, currentClass);
-		//				}
-		//			}			
-		//		}
-
 		return true;
 
 	}
@@ -125,9 +126,9 @@ public class AnnotationVisitor extends PHPASTVisitor {
 	@Override
 	public boolean endvisit(ClassDeclaration s) throws Exception {
 
-		if (currentAnnotation != null) {
-			ModelManager.getInstance().addAnnotation(currentAnnotation);	
-		}
+		//		if (currentAnnotation != null) {
+		//			ModelManager.getInstance().addAnnotation(currentAnnotation);	
+		//		}
 
 		currentClass = null;
 		return true;
@@ -149,11 +150,16 @@ public class AnnotationVisitor extends PHPASTVisitor {
 
 
 
+	/**
+	 * Parses annotations from method declarations.
+	 */
 	@Override
 	public boolean visit(PHPMethodDeclaration method) throws Exception {
 
 		currentMethod = method;
 		isAction = currentMethod.getName().endsWith("Action");
+
+
 
 		if (currentClass == null || isAction == false)
 			return true;
@@ -161,7 +167,9 @@ public class AnnotationVisitor extends PHPASTVisitor {
 
 		PHPDocBlock comment = method.getPHPDoc();
 
+
 		if (comment != null) {
+
 
 			int start = comment.sourceStart();
 			int end = comment.sourceEnd();
@@ -202,41 +210,46 @@ public class AnnotationVisitor extends PHPASTVisitor {
 				sourceStart += line.toCharArray().length;
 
 				int start = line.indexOf('@');
-				int end = line.lastIndexOf(')');
+				int end = line.length()-1;
 
 				if ((start == -1 || end == -1)) continue;
 
-				String annotation = line.substring(start, end+1);
 
-				// can be used later to report errors + quick fixes, ie. annotation not resolved  + import via UseStatement
-				//				if ("@Table()".equals(annotation)) {
-				//					int _line = context.getLineTracker().getLineNumberOfOffset(sourceStart);
-				//					UnresolvedAnnotationProblemIdentifier id = new UnresolvedAnnotationProblemIdentifier();
-				//					IProblem problem = new DefaultProblem(context.getFile().getName(), "whatever",  IProblem.Syntax, new String[0], ProblemSeverities.Error, sourceStart, sourceStart + annotation.length(), _line);
-				//					context.getProblemReporter().reportProblem(problem);
-				//				}
+				boolean isTag = false;				
+				String aTag = line.substring(start +1);
 
+				// check for built-int phpdoc tags and don't parse them
+				// as annotations
+				for(String tag : PHPDocTagStrategy.PHPDOC_TAGS) {					
+					if (tag.equals(aTag)) {
+						isTag = true;
+						break;
+					}					
+				}
 
-				int s = sourceStart-line.toCharArray().length+line.indexOf('@');
-				CharStream content = new ANTLRStringStream(annotation);
-				SymfonyAnnotationLexer lexer = new SymfonyAnnotationLexer(content);
-				lexer.setContext(context,s);
-				CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-				SymfonyAnnotationParser parser = new SymfonyAnnotationParser(tokenStream);
-				parser.setContext(context, s);
-				parser.setTreeAdaptor(new AnnotationCommonTreeAdaptor());
+				if (isTag) continue;
 
 				try { 	
 
-					SymfonyAnnotationParser.annotation_return retValue = parser.annotation();
-					AnnotationCommonTree tree = (AnnotationCommonTree) retValue.getTree();
+					String annotation = line.substring(start, end+1);
+					int s = sourceStart-line.toCharArray().length+line.indexOf('@');
+					CharStream content = new ANTLRStringStream(annotation);
+
+					SymfonyAnnotationLexer lexer = new SymfonyAnnotationLexer(content);
+					lexer.setContext(context,s);
+					SymfonyAnnotationParser parser = new SymfonyAnnotationParser(new CommonTokenStream(lexer));
+					parser.setContext(context, s);
+					parser.setTreeAdaptor(new AnnotationCommonTreeAdaptor());
+
+					SymfonyAnnotationParser.annotation_return root = parser.annotation();
+					AnnotationCommonTree tree = (AnnotationCommonTree) root.getTree();
 					AnnotationNodeVisitor visitor = new AnnotationNodeVisitor(context);
 					tree.accept(visitor);
-					
-					System.err.println("parsed annotation: " + visitor.getFullyQualifiedName());
-					
-					
+
+					reportUnresolvableAnnotation(visitor, s);
+
 				} catch (Exception e) {
+
 					e.printStackTrace();
 				}				
 			}
@@ -245,5 +258,101 @@ public class AnnotationVisitor extends PHPASTVisitor {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}		
+	}
+
+	
+	/**
+	 * Checks if an annotation can be resolved via a {@link UseStatement}
+	 * and adds an {@link IProblem} to the {@link IProblemReporter}
+	 * if the annotation cannot be resolved.
+	 * 
+	 * 
+	 * @param visitor
+	 * @param sourceStart
+	 */
+	private void reportUnresolvableAnnotation(AnnotationNodeVisitor visitor, int sourceStart) {
+
+		String annotationClass = visitor.getClassName();
+		String annotationNamespace = visitor.getNamespace();
+		String fqcn = visitor.getFullyQualifiedName();
+
+		boolean found = false;
+
+		for (UseStatement statement : useStatements) {
+			for (UsePart part : statement.getParts()) {
+				SimpleReference alias = part.getAlias();				
+				FullyQualifiedReference namespace = part.getNamespace();
+
+				//statement has no alias and classname no namespace, simply
+				// compare them to each other
+				if (alias == null && annotationNamespace.length() == 0) {
+
+					if (namespace.getName().equals(annotationClass)) {
+						found = true;
+					}
+
+					/*
+					 * something like
+					 * 
+					 * use use Doctrine\Common\Mapping as SomeMapping;
+					 * 
+					 * @SomeMapping
+					 * 
+					 */
+				} else if (alias != null && annotationNamespace.length() == 0) {
+
+					
+					if (alias.getName().equals(annotationClass))
+						found = true;
+					/*
+					 * something like
+					 * 
+					 * use use Doctrine\Common\Mapping as ORM;
+					 * 
+					 * @ORM\Table
+					 * 
+					 */
+
+				} else if (alias != null && annotationNamespace.length() > 0) {
+
+					if (alias.equals(visitor.getFirstNamespacePart())) {
+						
+						//TODO: search for matching classes using PDT SearchEngine
+						
+					}
+				}
+
+				if (found == true)
+					break;
+
+			}
+
+			if (found == true)
+				break;		
+		}
+
+		if (found == false) {
+
+
+			int start = sourceStart;
+			int end = sourceStart + visitor.getFullyQualifiedName().length() + 1;
+			String filename = context.getFile().getName();
+			String message = "Unable to resolve " + fqcn;
+			int lineNo = context.getLineTracker().getLineInformationOfOffset(sourceStart).getOffset();
+
+			/**
+			 * this should be the way to create the problem without the deprecation
+			 * warning, but then our QuickFixProcessor doesn't get called.
+			 */
+			//IProblem newProblem = new DefaultProblem(filename, message, DefaultProblemIdentifier.NULL, new String[0], ProblemSeverities.Error, start+1, end+1, lineNo, start);
+			
+			@SuppressWarnings("deprecation")
+			IProblem problem = new DefaultProblem(filename, message, IProblem.ImportRelated,
+					new String[0], ProblemSeverities.Error, start+1, end+1, lineNo);
+			
+			context.getProblemReporter().reportProblem(problem);
+
+
+		}
 	}
 }

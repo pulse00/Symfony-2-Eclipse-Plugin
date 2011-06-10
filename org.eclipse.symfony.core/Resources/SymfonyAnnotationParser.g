@@ -10,6 +10,7 @@ tokenVocab=SymfonyAnnotationLexer;
 
 tokens {
 ANNOTATION;
+ARGUMENT_LIST;
 NAMED_ARG;
 LITERAL_ARG;
 NSPART;
@@ -27,10 +28,15 @@ package org.eclipse.symfony.core.parser.antlr;
 // the name of the annotation optionally followed 
 // by argument list in parentheses
 annotation
-  : AT ann_class (PARAM_START arguments PARAM_END)
-    ->^(ANNOTATION ann_class arguments)
+  : AT ann_class argument_list
+    ->^(ANNOTATION ann_class argument_list)
   ;
 
+
+argument_list
+  : (PARAM_START arguments? PARAM_END)?
+    -> ^(ARGUMENT_LIST arguments?)
+  ;
 
 ann_class
   : namespace* classname
