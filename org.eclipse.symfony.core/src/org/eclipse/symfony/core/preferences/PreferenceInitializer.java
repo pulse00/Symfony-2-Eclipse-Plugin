@@ -1,10 +1,7 @@
-package org.eclipse.symfony.ui.preferences;
+package org.eclipse.symfony.core.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.jface.preference.IPreferenceStore;
-
 import org.eclipse.symfony.core.SymfonyCoreConstants;
-import org.eclipse.symfony.ui.SymfonyUiPlugin;
 
 /**
  * Class used to initialize default preference values.
@@ -18,8 +15,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	 */
 	public void initializeDefaultPreferences() {
 		
-		IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
-		store.setDefault(SymfonyCoreConstants.ANNOTATION_PROBLEMS, "warning");
+		SymfonyCoreConstants.initializeDefaultValues();
 		
 	}
 

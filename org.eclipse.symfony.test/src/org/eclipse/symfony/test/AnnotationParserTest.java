@@ -69,12 +69,20 @@ public class AnnotationParserTest extends TestCase {
 		assertNotNull(root);
 		assertTrue(reporter.hasErrors());		
 
+		
 		reporter.reset();
 		
 		root = getRootNode("* @Template(name='foo' bar)", true);
 		assertNotNull(root);
 		assertTrue(reporter.hasErrors());		
 
+		
+		reporter.reset();
+		
+		root = getRootNode("* @Template(aho=')", true);
+		assertNotNull(root);
+		assertTrue(reporter.hasErrors());		
+		
 		
 	}
 	

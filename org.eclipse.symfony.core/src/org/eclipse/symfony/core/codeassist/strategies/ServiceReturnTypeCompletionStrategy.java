@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
@@ -47,7 +47,6 @@ public class ServiceReturnTypeCompletionStrategy extends ClassMembersStrategy {
 	@Override
 	public void apply(ICompletionReporter reporter) throws Exception {
 
-		
 		ServiceReturnTypeContext context = (ServiceReturnTypeContext) getContext();
 		String source = SymfonyTextSequenceUtilities.getServiceFromMethodParam(context.getStatementText());
 		

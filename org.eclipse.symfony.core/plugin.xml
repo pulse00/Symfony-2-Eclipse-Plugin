@@ -79,6 +79,12 @@
             class="org.eclipse.symfony.core.goals.ContainerAwareGoalEvaluatorFactory"
             priority="100">
       </factory>
-   </extension>   
+   </extension>
+   
+    <!-- Preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+    	<initializer class="org.eclipse.symfony.core.preferences.PreferenceInitializer">
+    	</initializer>
+ 	</extension>      
 
 </plugin>

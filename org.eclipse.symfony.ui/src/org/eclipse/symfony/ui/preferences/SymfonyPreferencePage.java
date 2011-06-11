@@ -1,10 +1,11 @@
 package org.eclipse.symfony.ui.preferences;
 
-import org.eclipse.jface.preference.*;
-import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.jface.preference.ComboFieldEditor;
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
 import org.eclipse.symfony.ui.SymfonyUiPlugin;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPreferencePage;
 
 /**
  * This class represents a preference page that
@@ -26,8 +27,9 @@ public class SymfonyPreferencePage
 
 	public SymfonyPreferencePage() {
 		super(GRID);
+		
 		setPreferenceStore(SymfonyUiPlugin.getDefault().getPreferenceStore());
-		setDescription("A demonstration of a preference page implementation");
+		setDescription("Symfony2 preferences");
 	}
 	
 	/**
@@ -41,12 +43,12 @@ public class SymfonyPreferencePage
 		
 		String[][] options = new String[][] 
 		{ 
-				{ "Error", "error" }, 
-				{ "Warning", "warning" },
-				{ "Ignore", "ignore" },				
+				{ SymfonyCoreConstants.ANNOTATION_ERROR, SymfonyCoreConstants.ANNOTATION_ERROR }, 
+				{ SymfonyCoreConstants.ANNOTATION_WARNING, SymfonyCoreConstants.ANNOTATION_WARNING },
+				{ SymfonyCoreConstants.ANNOTATION_IGNORE, SymfonyCoreConstants.ANNOTATION_IGNORE },				
 		};
 		
-		addField(new ComboFieldEditor(SymfonyCoreConstants.ANNOTATION_PROBLEMS, 
+		addField(new ComboFieldEditor(SymfonyCoreConstants.ANNOTATION_PROBLEM_SEVERITY, 
 				"Annotation Problems", options, getFieldEditorParent()));
 	}
 

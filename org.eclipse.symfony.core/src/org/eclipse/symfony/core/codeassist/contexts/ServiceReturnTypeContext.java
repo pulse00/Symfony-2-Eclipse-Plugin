@@ -32,8 +32,9 @@ public class ServiceReturnTypeContext extends ClassMemberContext {
 			CompletionRequestor requestor) {
 
 		if (super.isValid(sourceModule, offset, requestor)) 
-		{								
-			return SymfonyTextSequenceUtilities.isInServiceContainerFunction(getStatementText()) > -1;			
+		{											
+			return SymfonyTextSequenceUtilities.isInServiceContainerFunction(getStatementText()) > -1;
+
 		}
 		
 		return false;

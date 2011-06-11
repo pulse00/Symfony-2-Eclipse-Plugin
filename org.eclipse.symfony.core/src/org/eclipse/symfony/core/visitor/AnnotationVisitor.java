@@ -229,10 +229,11 @@ public class AnnotationVisitor extends PHPASTVisitor {
 				try { 	
 
 					String annotation = line.substring(start, end+1);
-					int s = sourceStart-line.toCharArray().length+line.indexOf('@');
+					int sStart = sourceStart-line.toCharArray().length+line.indexOf('@');
 					CharStream content = new ANTLRStringStream(annotation);
 
-					AnnotationErrorReporter reporter = new AnnotationErrorReporter(context);
+										
+					AnnotationErrorReporter reporter = new AnnotationErrorReporter(context, sStart);
 					AnnotationLexer lexer = new AnnotationLexer(content, reporter);
 					AnnotationParser parser = new AnnotationParser(new CommonTokenStream(lexer), reporter);
 					parser.setTreeAdaptor(new AnnotationCommonTreeAdaptor());
@@ -241,7 +242,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
 					AnnotationNodeVisitor visitor = new AnnotationNodeVisitor(context);
 					tree.accept(visitor);
 
-					reportUnresolvableAnnotation(visitor, s);
+					reportUnresolvableAnnotation(visitor, sStart);
 
 				} catch (Exception e) {
 

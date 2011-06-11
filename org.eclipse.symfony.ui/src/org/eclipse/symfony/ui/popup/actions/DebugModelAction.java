@@ -24,7 +24,7 @@ public class DebugModelAction implements IObjectActionDelegate {
 	public void run(IAction action) {
 		
 		IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
-		String warnType = store.getString(SymfonyCoreConstants.ANNOTATION_PROBLEMS);
+		String warnType = store.getString(SymfonyCoreConstants.ANNOTATION_PROBLEM_SEVERITY);
 		
 		System.err.println(warnType);
 				

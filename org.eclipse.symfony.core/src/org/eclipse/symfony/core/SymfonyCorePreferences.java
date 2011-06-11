@@ -20,19 +20,29 @@ public class SymfonyCorePreferences {
 	 * @return {@link ProblemSeverity}
 	 */
 	public static ProblemSeverity getAnnotationSeverity() {
-				
-		String severity = Platform.getPreferencesService().getString(
-				SymfonyCorePlugin.ID,SymfonyCoreConstants.ANNOTATION_PROBLEMS, "warning", null);
 		
-		if (severity.equals("error")) 
+		
+		//TODO: check if there's a cleaner way to get the preferences from the ui
+		// plugin than hardcoding the ID
+		String severity = Platform.getPreferencesService().getString("org.eclipse.symfony.ui", 
+				SymfonyCoreConstants.ANNOTATION_PROBLEM_SEVERITY, SymfonyCoreConstants.ANNOTATION_WARNING, null);
+		
+		if (severity == null) {			
+			
+			System.err.println("could not get");
+			severity = SymfonyCoreConstants.ANNOTATION_WARNING;
+		}
+		
+		
+		if (severity.equals(SymfonyCoreConstants.ANNOTATION_ERROR)) 
 		{	
 			return ProblemSeverity.ERROR;
 			
-		} else if(severity.equals("warning"))
-		{			
+		} else if(severity.equals(SymfonyCoreConstants.ANNOTATION_WARNING))
+		{				
 			return ProblemSeverity.WARNING;
 		}
-				
+		
 		return ProblemSeverity.IGNORE;
 		
 	}
