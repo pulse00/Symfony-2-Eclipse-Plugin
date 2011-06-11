@@ -195,4 +195,18 @@ public class ModelManager {
 
 		return null;
 	}
+
+	public List<Service> getServices(IScriptProject scriptProject) {
+
+		for (Project project : projects) {
+			
+			if (project.equals(scriptProject)) {
+				
+				return project.getServices();
+			}
+		}
+
+		return null;
+		
+	}
 }

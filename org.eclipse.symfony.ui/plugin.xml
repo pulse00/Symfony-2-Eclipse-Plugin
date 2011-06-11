@@ -39,5 +39,19 @@
 	<extension point="org.dadacoalition.yedit.sourceViewerConfigurationContribution">
     	<sourceViewerConfiguration class="org.eclipse.symfony.ui.editor.YamlSourceViewerConfiguration"/>
 	</extension>
+ <extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+          class="org.eclipse.symfony.ui.preferences.SymfonyPreferencePage"
+          id="org.eclipse.symfony.ui.preferences.SymfonyPreferencePage"
+          name="Symfony">
+    </page>
+ </extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.eclipse.symfony.ui.preferences.PreferenceInitializer">
+    </initializer>
+ </extension>
 
 </plugin>

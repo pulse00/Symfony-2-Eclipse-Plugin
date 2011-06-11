@@ -135,5 +135,22 @@ public class Project extends AbstractSymfonyModel {
 		return annotations;
 	}
 
-	
+	/**
+	 * Get all services declared in this project.
+	 * 
+	 * 
+	 * @return the list of services
+	 */
+	public List<Service> getServices() {
+		
+		List<Service> services = new ArrayList<Service>();
+		
+		for (Bundle bundle : bundles) {			
+			for(Service service : bundle.getServices()) {				
+				services.add(service);
+			}
+		}	
+
+		return services;
+	}
 }

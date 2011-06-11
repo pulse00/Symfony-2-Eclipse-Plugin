@@ -7,7 +7,9 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.core.codeassist.ICompletionStrategyFactory;
 import org.eclipse.symfony.core.codeassist.contexts.AnnotationCompletionContext;
+import org.eclipse.symfony.core.codeassist.contexts.ServiceContainerCompletionContext;
 import org.eclipse.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
+import org.eclipse.symfony.core.codeassist.strategies.ServiceContainerCompletionStrategy;
 
 /**
  * 
@@ -26,6 +28,8 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		for (ICompletionContext context : contexts) {
 			if (context.getClass() == AnnotationCompletionContext.class) {
 				result.add(new AnnotationCompletionStrategy(context));
+			} else if (context.getClass() == ServiceContainerCompletionContext.class) {				
+				result.add(new ServiceContainerCompletionStrategy(context));
 			}
 		}
 		

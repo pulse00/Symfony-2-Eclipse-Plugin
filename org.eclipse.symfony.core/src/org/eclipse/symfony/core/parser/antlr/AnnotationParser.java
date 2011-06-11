@@ -1,4 +1,4 @@
-// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-06-10 20:29:10
+// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-06-11 01:56:43
 
 package org.eclipse.symfony.core.parser.antlr;
 
@@ -858,7 +858,7 @@ public class AnnotationParser extends Parser {
 
 
             // AST REWRITE
-            // elements: rhtype, lht
+            // elements: lht, rhtype
             // token labels: lht
             // rule labels: retval
             // token list labels: 
