@@ -46,7 +46,7 @@ public class ModelManager {
 
 		projects = new ArrayList<Project>();
 
-		System.out.println("clearing model");
+		
 		for (IModelClearListener listener : modelClearListeners) {
 			listener.modelCleared();			
 		}
@@ -63,7 +63,7 @@ public class ModelManager {
 
 	public void addProject(Project project) {
 
-		System.out.println("Creating project: " + project.getName());
+		
 		
 		for (Project proj : projects) {			
 			if (proj == project) {
@@ -161,16 +161,23 @@ public class ModelManager {
 		return new ArrayList<Annotation>();
 	}
 
-	public Service getService(String className) {
+	
+	/**
+	 * 
+	 * @param Retrieve a single service by service id
+	 * 
+	 * 
+	 * @return
+	 */
+	public Service getService(String id) {
 
+		// TODO: pass in the ScriptProject so we can check
+		// for the correct project scope.
 		
 		for (Project project : projects) {
 			for(Bundle bundle : project.getBundles()) {
 				for(Service service : bundle.getServices()) {
-
-					System.out.println(service.getId());
-					
-					if (service.getId().equals(className))
+					if (service.getId().equals(id))
 						return service;
 					
 				}
@@ -196,12 +203,18 @@ public class ModelManager {
 		return null;
 	}
 
+	
+	/**
+	 * Return all services of a {@link Project} or null if the
+	 * project hasn't been found.
+	 * 
+	 * @param scriptProject
+	 * @return
+	 */
 	public List<Service> getServices(IScriptProject scriptProject) {
 
-		for (Project project : projects) {
-			
-			if (project.equals(scriptProject)) {
-				
+		for (Project project : projects) {			
+			if (project.equals(scriptProject)) {				
 				return project.getServices();
 			}
 		}

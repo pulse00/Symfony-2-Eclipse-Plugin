@@ -3,6 +3,8 @@ package org.eclipse.symfony.core.codeassist.contexts;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.codeassist.contexts.QuotesContext;
+import org.eclipse.php.internal.core.util.text.TextSequence;
+import org.eclipse.symfony.core.util.text.SymfonyTextSequenceUtilities;
 
 
 /**
@@ -20,7 +22,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.QuotesContext;
  *
  */
 @SuppressWarnings("restriction")
-public class ServiceContainerCompletionContext extends
+public class ServiceContainerContext extends
 	QuotesContext {
 	
 	
@@ -28,15 +30,20 @@ public class ServiceContainerCompletionContext extends
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
 
-		
 		if (super.isValid(sourceModule, offset, requestor)) {
-		
-			return true;
-			
-		}
-		
-		
+			try {
+				
+				TextSequence statementText = getStatementText();
+				if (SymfonyTextSequenceUtilities.isInServiceContainerFunction(statementText) > -1) {
+					
+					//TODO: check if the containing class is implementing a ContainerAware Interface
+					return true;
+				}
+				
+			} catch (Exception e) {				
+				e.printStackTrace();				
+			}
+		}		
 		return false;
 	}
-
 }

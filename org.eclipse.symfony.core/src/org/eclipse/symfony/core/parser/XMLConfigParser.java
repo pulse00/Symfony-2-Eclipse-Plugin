@@ -103,9 +103,10 @@ public class XMLConfigParser implements IConfigParser {
 
 			Element service = (Element) serviceNodes.item(i);
 
+			//TODO: Check the services visibility and if it's abstract
 			String id = service.getAttribute("id");
 			String phpClass = service.getAttribute("class");
-
+			
 			if (phpClass != null && id != null) {
 
 				if (phpClass.startsWith("%") && phpClass.endsWith("%")) {

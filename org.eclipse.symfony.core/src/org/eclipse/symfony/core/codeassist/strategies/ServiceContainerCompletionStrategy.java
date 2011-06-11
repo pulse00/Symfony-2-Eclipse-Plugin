@@ -7,12 +7,23 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
-import org.eclipse.symfony.core.codeassist.contexts.ServiceContainerCompletionContext;
+import org.eclipse.symfony.core.codeassist.contexts.ServiceContainerContext;
 import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
 
 
 /**
+ * CompletionStrategy to provide service names for DI::get calls like
+ * 
+ * 
+ * <pre>
+ * 
+ *  // inside a ContainerAware interface
+ * 	$this->get('| 
+ *  $this->container->get('| 
+ * 
+ * </pre>
+ * 
  * 
  * 
  * @author "Robert Gruendler <r.gruendler@gmail.com>"
@@ -30,29 +41,22 @@ public class ServiceContainerCompletionStrategy extends
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
-		if (!(getContext() instanceof ServiceContainerCompletionContext)) {
-			System.err.println("no context");
+		if (!(getContext() instanceof ServiceContainerContext)) {
 			return;
 		}
 		
-		ServiceContainerCompletionContext context = (ServiceContainerCompletionContext) getContext();
-		List<Service> services = ModelManager.getInstance().getServices(context.getSourceModule().getScriptProject());
+		ServiceContainerContext context = (ServiceContainerContext) getContext();
+		ModelManager manager = ModelManager.getInstance();
+		List<Service> services = manager.getServices(context.getSourceModule().getScriptProject());
 		SourceRange range = getReplacementRange(context);
 		
-		
-		reporter.reportKeyword("doctrine", "", range);
-		reporter.reportKeyword("twig", "", range);
-		reporter.reportKeyword("assetic", "", range);
-		
-		
 		if (services == null) {
-			
-			System.out.println("no services");
 			return;
 		}
-		System.err.println(services.size());
+
 		for(Service service : services) {
-			System.err.println("reort " + service.getId());			
+
+			//TODO: filter by visibility |Êabstract services
 			reporter.reportKeyword(service.getId(), "", range);
 		}
 	}
