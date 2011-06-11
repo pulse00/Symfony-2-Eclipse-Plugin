@@ -31,11 +31,7 @@ public class SymfonyTextSequenceUtilities {
 
 	private static final Pattern SERVICE_PATTERN = Pattern.compile("(\\$this->get\\(|\\$this->container->get\\()");
 	
-
-	
 	private SymfonyTextSequenceUtilities() {
-		
-		
 		
 	}
 	
