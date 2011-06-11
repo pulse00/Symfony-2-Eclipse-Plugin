@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.symfony.core.SymfonyCoreConstants;
 import org.eclipse.symfony.core.model.Annotation;
 import org.eclipse.symfony.core.model.AnnotationParameter;
 import org.eclipse.symfony.core.model.Bundle;
@@ -13,25 +14,17 @@ import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Project;
 import org.eclipse.symfony.core.model.Service;
 import org.eclipse.symfony.ui.SymfonyUiPlugin;
-import org.eclipse.symfony.ui.preferences.PreferenceConstants;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
 public class DebugModelAction implements IObjectActionDelegate {
 
-	
-	private ISelection selection;
-	private IWorkbenchPart part;
-	
-	
-
 	@Override
+	@SuppressWarnings("rawtypes")	
 	public void run(IAction action) {
 		
-		System.err.println("####################");
-		
 		IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
-		String warnType = store.getString(PreferenceConstants.ANNOTATION_PROBLEMS);
+		String warnType = store.getString(SymfonyCoreConstants.ANNOTATION_PROBLEMS);
 		
 		System.err.println(warnType);
 				
@@ -81,15 +74,11 @@ public class DebugModelAction implements IObjectActionDelegate {
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-	
-		this.selection = selection;
 
 	}
 
 	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-
-		this.part = targetPart;
 
 	}
 

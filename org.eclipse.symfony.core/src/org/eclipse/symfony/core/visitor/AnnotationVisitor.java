@@ -12,6 +12,7 @@ import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
+import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
@@ -23,6 +24,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.symfony.core.SymfonyCorePreferences;
 import org.eclipse.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
 import org.eclipse.symfony.core.model.Annotation;
 import org.eclipse.symfony.core.parser.antlr.AnnotationCommonTree;
@@ -263,6 +265,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
 	 * @param visitor
 	 * @param sourceStart
 	 */
+	@SuppressWarnings("deprecation")
 	private void reportUnresolvableAnnotation(AnnotationNodeVisitor visitor, int sourceStart) {
 
 		String annotationClass = visitor.getClassName();
@@ -339,9 +342,10 @@ public class AnnotationVisitor extends PHPASTVisitor {
 			 */
 			//IProblem newProblem = new DefaultProblem(filename, message, DefaultProblemIdentifier.NULL, new String[0], ProblemSeverities.Error, start+1, end+1, lineNo, start);
 			
-			@SuppressWarnings("deprecation")
+			ProblemSeverity severity = SymfonyCorePreferences.getAnnotationSeverity();
+			
 			IProblem problem = new DefaultProblem(filename, message, IProblem.ImportRelated,
-					new String[0], ProblemSeverities.Warning, start+1, end+1, lineNo);
+					new String[0], severity, start+1, end+1, lineNo);
 			
 			context.getProblemReporter().reportProblem(problem);
 

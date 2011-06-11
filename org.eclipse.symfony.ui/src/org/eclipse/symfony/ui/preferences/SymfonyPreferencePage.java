@@ -3,6 +3,7 @@ package org.eclipse.symfony.ui.preferences;
 import org.eclipse.jface.preference.*;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.symfony.core.SymfonyCoreConstants;
 import org.eclipse.symfony.ui.SymfonyUiPlugin;
 
 /**
@@ -45,7 +46,7 @@ public class SymfonyPreferencePage
 				{ "Ignore", "ignore" },				
 		};
 		
-		addField(new ComboFieldEditor(PreferenceConstants.ANNOTATION_PROBLEMS, 
+		addField(new ComboFieldEditor(SymfonyCoreConstants.ANNOTATION_PROBLEMS, 
 				"Annotation Problems", options, getFieldEditorParent()));
 	}
 
