@@ -65,18 +65,18 @@
    <extension
          point="org.eclipse.php.core.completionStrategyFactories">
       <factory
-            class="org.eclipse.symfony.core.codeassist.CompletionStrategyFactory">
+            class="org.eclipse.symfony.core.codeassist.SymfonyCompletionStrategyFactory">
       </factory>
    </extension>
    <extension
          point="org.eclipse.php.core.completionContextResolvers">
       <resolver
-            class="org.eclipse.symfony.core.codeassist.AnnotationCompletionContextResolver"></resolver>
+            class="org.eclipse.symfony.core.codeassist.SymfonyCompletionContextResolver"></resolver>
    </extension>
    <extension
          point="org.eclipse.php.core.goalEvaluatorFactories">
       <factory
-            class="org.eclipse.symfony.core.goals.ControllerGoalEvaluatorFactory"
+            class="org.eclipse.symfony.core.goals.ContainerAwareGoalEvaluatorFactory"
             priority="100">
       </factory>
    </extension>   

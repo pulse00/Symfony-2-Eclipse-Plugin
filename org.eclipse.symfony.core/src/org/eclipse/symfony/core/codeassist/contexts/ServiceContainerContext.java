@@ -30,6 +30,7 @@ public class ServiceContainerContext extends
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
 
+		
 		if (super.isValid(sourceModule, offset, requestor)) {
 			try {
 				
@@ -44,6 +45,7 @@ public class ServiceContainerContext extends
 				e.printStackTrace();				
 			}
 		}		
+		
 		return false;
 	}
 }

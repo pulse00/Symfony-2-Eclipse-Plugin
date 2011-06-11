@@ -3,6 +3,8 @@ package org.eclipse.symfony.core.util.text;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 
@@ -22,6 +24,8 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  * 
  * </pre>
  * 
+ * 
+ * @see PHPTextSequenceUtilities
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
@@ -44,10 +48,39 @@ public class SymfonyTextSequenceUtilities {
 		
 		Matcher matcher = SERVICE_PATTERN.matcher(sequence);
 		
-		while (matcher.find()) {		
-			return matcher.start();			
+		while (matcher.find()) {	
+			
+			int pos = matcher.end();
+			
+			int lastMethodCall = sequence.toString().lastIndexOf("(");
+			
+			if (lastMethodCall > pos)
+				return -1;
+			
+			return pos;
 		}
 		return -1;		
 		
+	}
+	
+	public static String removeQuotes(String source) {
+				
+		return source.replace("'", "").replace("\"", "");
+		
+	}
+
+	public static String getServiceFromMethodParam(TextSequence sequence) {
+
+		String source = sequence.toString();
+		
+		int start = source.indexOf("(") +1;
+		int end = source.indexOf(")") -1;
+		
+		if (start < 0 || end < 0 || (end < start))
+			return null;
+		
+		
+		return removeQuotes(source.substring(start, end)); 
+
 	}
 }

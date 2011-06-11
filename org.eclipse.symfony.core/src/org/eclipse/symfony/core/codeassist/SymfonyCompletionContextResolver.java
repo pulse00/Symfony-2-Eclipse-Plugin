@@ -5,6 +5,7 @@ import org.eclipse.php.core.codeassist.ICompletionContextResolver;
 import org.eclipse.php.internal.core.codeassist.contexts.CompletionContextResolver;
 import org.eclipse.symfony.core.codeassist.contexts.AnnotationCompletionContext;
 import org.eclipse.symfony.core.codeassist.contexts.ServiceContainerContext;
+import org.eclipse.symfony.core.codeassist.contexts.ServiceReturnTypeContext;
 
 /**
  * 
@@ -12,7 +13,7 @@ import org.eclipse.symfony.core.codeassist.contexts.ServiceContainerContext;
  *
  */
 @SuppressWarnings("restriction")
-public class AnnotationCompletionContextResolver extends CompletionContextResolver 
+public class SymfonyCompletionContextResolver extends CompletionContextResolver 
 	implements ICompletionContextResolver {
 
 
@@ -21,7 +22,8 @@ public class AnnotationCompletionContextResolver extends CompletionContextResolv
 		
 		return new ICompletionContext[] { 
 				new AnnotationCompletionContext(),
-				new ServiceContainerContext()
+				new ServiceContainerContext(),
+				new ServiceReturnTypeContext(),
 		};
 		
 	}

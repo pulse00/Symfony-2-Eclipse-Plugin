@@ -15,17 +15,44 @@ import org.eclipse.core.resources.IFile;
 public class Service {
 	
 	private IFile file;
-	private String clazz;
+	
+	/**
+	 * The fully qualified class name.
+	 */
+	private String fqcn;
+	
+	/***
+	 * The namespace only.
+	 */
+	private String namespace;
+	
+	
+	/**
+	 * The name of the PHP class
+	 */
+	private String className;
+	
+
 	private String id;
+	
 	private Bundle bundle;
 	
 	
 	public Service(IFile resource, String id, String clazz) {
 		
 		file = resource;
-		this.clazz = clazz;
+		this.fqcn = clazz;
 		this.id = id;
 		
+		int lastPart = clazz.lastIndexOf("\\");
+				
+		if (lastPart == -1) {			
+			namespace = "";
+			className = clazz;
+		} else {
+			namespace = clazz.substring(0,lastPart);
+			className = clazz.substring(lastPart + 1);
+		}
 	}
 
 	public IFile getFile() {
@@ -33,9 +60,9 @@ public class Service {
 		return file;
 	}
 
-	public String getPHPClass() {
+	public String getFullyQualifiedName() {
 
-		return clazz;
+		return fqcn;
 		
 	}
 
@@ -51,5 +78,13 @@ public class Service {
 		return id;
 	}
 
-
+	public String getNamespace() {
+		
+		return namespace;
+	}
+	
+	public String getClassName() {
+		return className;
+	}
+	
 }

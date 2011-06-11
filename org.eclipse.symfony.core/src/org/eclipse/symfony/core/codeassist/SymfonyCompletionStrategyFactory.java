@@ -8,8 +8,10 @@ import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.core.codeassist.ICompletionStrategyFactory;
 import org.eclipse.symfony.core.codeassist.contexts.AnnotationCompletionContext;
 import org.eclipse.symfony.core.codeassist.contexts.ServiceContainerContext;
+import org.eclipse.symfony.core.codeassist.contexts.ServiceReturnTypeContext;
 import org.eclipse.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
 import org.eclipse.symfony.core.codeassist.strategies.ServiceContainerCompletionStrategy;
+import org.eclipse.symfony.core.codeassist.strategies.ServiceReturnTypeCompletionStrategy;
 
 /**
  * 
@@ -17,7 +19,7 @@ import org.eclipse.symfony.core.codeassist.strategies.ServiceContainerCompletion
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-public class CompletionStrategyFactory implements ICompletionStrategyFactory {
+public class SymfonyCompletionStrategyFactory implements ICompletionStrategyFactory {
 
 
 	@Override
@@ -30,6 +32,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 				result.add(new AnnotationCompletionStrategy(context));
 			} else if (context.getClass() == ServiceContainerContext.class) {				
 				result.add(new ServiceContainerCompletionStrategy(context));
+			} else if (context.getClass() == ServiceReturnTypeContext.class) {
+				
+				result.add(new ServiceReturnTypeCompletionStrategy(context));
 			}
 		}
 		

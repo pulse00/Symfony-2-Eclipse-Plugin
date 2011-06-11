@@ -38,7 +38,7 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 
-		return null;
+		return IGoal.NO_GOALS;
 	}
 	
 	@Override
@@ -47,7 +47,7 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 		if (service == null)
 			return null;
 				
-		return new PHPClassType(service.getPHPClass());
+		return new PHPClassType(service.getFullyQualifiedName());
 		
 	}
 }

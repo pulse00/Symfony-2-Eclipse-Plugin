@@ -52,7 +52,7 @@ public class DebugModelAction implements IObjectActionDelegate {
 				System.out.println("-- " + bundle.getName() + " (contains " + services.size() + " services)");
 				
 				for (Service service : services) {					
-					System.out.println("----" + service.getPHPClass());					
+					System.out.println("----" + service.getFullyQualifiedName());					
 				}				
 			}
 			

@@ -3,24 +3,22 @@ package org.eclipse.symfony.core.goals;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
+import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
 
 
 /**
  * 
- * {@link ControllerGoalEvaluatorFactory} is the first evaluator
+ * {@link ContainerAwareGoalEvaluatorFactory} is the first evaluator
  * 
  * to add code hints in actual php code. At the moment it evaluates
  * service goals, ie $em-> | where $em is a service retrieved from the
@@ -31,7 +29,7 @@ import org.eclipse.symfony.core.model.Service;
  *
  */
 @SuppressWarnings("restriction")
-public class ControllerGoalEvaluatorFactory implements IGoalEvaluatorFactory {
+public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 
 
 	@Override
@@ -47,8 +45,8 @@ public class ControllerGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			return null;
 		}
 	}
-
-
+	
+	
 	
 	/**
 	 * Evaluates goals for
@@ -73,15 +71,17 @@ public class ControllerGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		// MethodContext context = (MethodContext) goal.getContext();		
 		// PHPClassType classType = (PHPClassType) context.getInstanceType();
 		// System.err.println(classType.subtypeOf(ModelManager.getInstance().getControllerType()));
+				
 		
 		if (goalClass == ExpressionTypeGoal.class) {
-
-			ASTNode expression = ((ExpressionTypeGoal) goal).getExpression();
 			
-
-			// only call expressions ($this->foo) need to be evaluated for services
+			ExpressionTypeGoal expGoal = (ExpressionTypeGoal) goal;			
+			ASTNode expression = expGoal.getExpression();
+			
+			// we're inside a call expression in the form $em->| 
 			if (expression instanceof PHPCallExpression) {
 
+								
 				PHPCallExpression exp = (PHPCallExpression) expression;
 				ASTNode receiver = exp.getReceiver();
 
@@ -102,7 +102,6 @@ public class ControllerGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 
 							if (first instanceof Scalar && ((Scalar)first).getScalarType() == Scalar.TYPE_STRING) {
 
-								
 								//TODO: check if there are PDT utils for stripping away quotes from
 								// string literals.
 								String className = ((Scalar)first).getValue().replace("'", "").replace("\"", "");
@@ -117,8 +116,17 @@ public class ControllerGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 					}
 				}
 			}
+		// we're checking a PHPDocMethodReturnTypeGoal like $em = $this->get('doctrine')->| 
+		// to support fluent interfaces.			
+		}  else if (goalClass == PHPDocMethodReturnTypeGoal.class) {
+			
+//			PHPDocMethodReturnTypeGoal mGoal = (PHPDocMethodReturnTypeGoal) goal;
+//			if (mGoal.getMethodName().equals("get")) {
+//				return new ContainerMethodReturnTypeEvaluator(mGoal);
+//			}
 		}
+		
+		// Give the control to the default PHP goal evaluator
 		return null;
 	}
-
 }

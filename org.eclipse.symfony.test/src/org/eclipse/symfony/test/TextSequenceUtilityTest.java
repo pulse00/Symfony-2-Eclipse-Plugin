@@ -43,6 +43,11 @@ public class TextSequenceUtilityTest extends TestCase {
 		sequence = "$this->getLine('";
 		contains = SymfonyTextSequenceUtilities.isInServiceContainerFunction(sequence);
 		assertTrue(contains == -1);
+
+		
+		sequence = "$this->get('doctrine')->getConnection()->";
+		contains = SymfonyTextSequenceUtilities.isInServiceContainerFunction(sequence);
+		assertTrue(contains == -1);
 		
 
 	}
