@@ -3,9 +3,6 @@
  */
 package org.eclipse.symfony.core.builder;
 
-import org.eclipse.symfony.core.model.ModelManager;
-import org.eclipse.symfony.core.parser.XMLConfigParser;
-import org.eclipse.symfony.core.parser.YamlConfigParser;
 
 /**
  *
@@ -18,33 +15,4 @@ import org.eclipse.symfony.core.parser.YamlConfigParser;
 public abstract class AbstractSymfonyVisitor {
 
 	
-	private YamlConfigParser ymlParser = null;
-	
-	private YamlRoutingParser ymlRoutingParser = null;
-	
-	
-	protected YamlRoutingParser getYmlRoutingParser() {
-		
-		
-		if (ymlRoutingParser == null)
-			ymlRoutingParser = new YamlRoutingParser();
-		
-		return ymlRoutingParser;
-		
-		
-	}
-	
-	protected YamlConfigParser getYamlParser() {
-		
-		if (ymlParser == null)
-			ymlParser = new YamlConfigParser();
-		
-		return ymlParser;
-	}
-	
-	protected ModelManager getModel() {
-
-		return ModelManager.getInstance();
-		
-	}
 }

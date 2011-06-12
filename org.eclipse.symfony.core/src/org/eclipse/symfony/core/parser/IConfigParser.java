@@ -1,5 +1,7 @@
 package org.eclipse.symfony.core.parser;
 
+import java.util.HashMap;
+
 
 /**
  * 
@@ -17,6 +19,14 @@ public interface IConfigParser {
 	 * 
 	 * @throws Exception 
 	 */
-	public void parse() throws Exception;
+	void parse() throws Exception;
+	
+	
+	/**
+	 * Retrieve the services detected by the parser.
+	 * 
+	 * @return {@link HashMap}
+	 */
+	HashMap<String, String> getServices();
 
 }

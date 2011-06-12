@@ -1,10 +1,8 @@
 package org.eclipse.symfony.core.builder;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.builder.IBuildContext;
@@ -50,7 +48,8 @@ public class SymfonyBuildParticipant implements IBuildParticipant {
 			
 			if (file.getFileExtension().equals("php")) {
 				
-				getModuleDeclaration(context).traverse(new AnnotationVisitor(context));
+				ModuleDeclaration module = getModuleDeclaration(context);
+				module.traverse(new AnnotationVisitor(context));
 				
 			}
 		} catch (Exception e) {

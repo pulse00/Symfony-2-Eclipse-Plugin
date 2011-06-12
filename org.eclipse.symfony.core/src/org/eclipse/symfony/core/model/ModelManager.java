@@ -107,12 +107,17 @@ public class ModelManager {
 		
 		for (Project project : projects) {
 			for (Bundle bundle : project.getBundles()) {
-				
-
 				if (bundle.getBasePath().isPrefixOf(service.getFile().getFullPath())) {				
 					bundle.addService(service);
 					return;
 				}
+			}
+		}
+		
+		for (Project project : projects) {
+			if (project.getPath().isPrefixOf(service.getFile().getFullPath())) {
+				project.addService(service);				
+				
 			}
 		}
 	}
@@ -174,6 +179,14 @@ public class ModelManager {
 
 		// TODO: pass in the ScriptProject so we can check
 		// for the correct project scope.
+
+		
+		// check for a project-scoped service first
+		for (Project project : projects) {			
+			if(project.hasService(id)) {				
+				return project.getService(id);
+			}
+		}
 		
 		for (Project project : projects) {
 			for(Bundle bundle : project.getBundles()) {

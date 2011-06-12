@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
 import org.eclipse.symfony.core.parser.XMLConfigParser;
+import org.eclipse.symfony.core.parser.YamlConfigParser;
 
 
 /**
@@ -51,15 +52,20 @@ implements IResourceVisitor {
 
 	private void loadYaml() {
 
-		if (file.getName().contains("routing")) {
+		try {
+			
+			YamlConfigParser parser = new YamlConfigParser(file.getContents());
+			parser.parse();
+			
+			
+			loadServices(parser.getServices());
+			
+		} catch (Exception e1) {
+			
+			System.err.println(e1.getMessage());
 
-			try {
-				//getYmlRoutingParser().parse(file);
-			} catch (Exception e) {
-
-				System.err.println(e.getMessage());
-			}
 		}
+		
 	}
 
 	private void loadXML() {
@@ -76,8 +82,7 @@ implements IResourceVisitor {
 
 		} catch (Exception e) {
 
-			System.err.println("xml error: " + e.getMessage());
-			//e.printStackTrace();
+			//System.err.println("xml error: " + e.getMessage());
 		}
 
 
@@ -96,6 +101,8 @@ implements IResourceVisitor {
 			String value = services.get(id);
 
 			Service service = new Service(file, id, value);
+			
+			
 			ModelManager.getInstance().addService(service);
 
 		}

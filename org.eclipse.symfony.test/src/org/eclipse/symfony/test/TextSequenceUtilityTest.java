@@ -7,20 +7,38 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+
+/**
+ * 
+ * Tests for the {@link SymfonyTextSequenceUtilities}.
+ * 
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 public class TextSequenceUtilityTest extends TestCase {
+
+	/**
+	 * The Sequence under test
+	 */
+	private CharSequence sequence;
+	
 
 	@Before
 	public void setUp() throws Exception {
+		
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		
 	}
 
 	@Test
-	public void test() {
+	public void testIsInServiceContainerFunction() {
 		
-		CharSequence sequence = "$this->get(";
+		sequence = "$this->get(";
 		int contains = SymfonyTextSequenceUtilities.isInServiceContainerFunction(sequence);
 		assertTrue(contains > -1);
 		

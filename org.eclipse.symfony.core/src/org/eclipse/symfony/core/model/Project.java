@@ -2,6 +2,7 @@ package org.eclipse.symfony.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.IScriptProject;
@@ -35,6 +36,13 @@ public class Project extends AbstractSymfonyModel {
 	
 	//TODO: parse the configuration type (xml/yml) from the php sources
 	private int configType;
+	
+
+	/**
+	 * Services declared in the project scope - not in bundles
+	 * ie. app/config/config.yml
+	 */
+	private Stack<Service> services = new Stack<Service>();
 	
 	
 	/**
@@ -136,21 +144,93 @@ public class Project extends AbstractSymfonyModel {
 	}
 
 	/**
-	 * Get all services declared in this project.
+	 * Get all services declared in this project - 
+	 * including inside bundles.
 	 * 
 	 * 
 	 * @return the list of services
 	 */
 	public List<Service> getServices() {
 		
-		List<Service> services = new ArrayList<Service>();
+		List<Service> _services = getBundleServices();
+		_services.addAll(services);
+		return _services;
+	}
+	
+	
+	/**
+	 * Return a list of services declared only in the projects scope,
+	 * ie. app/config/config.yml
+	 * 
+	 * 
+	 * @return {@link List}
+	 */
+	public List<Service> getProjectScopedServices() {
+		
+		return services;		
+		
+	}
+	
+	/**
+	 * Return a list of services declared in bundles only.
+	 * 
+	 * 
+	 * @return {@link List}
+	 */
+	public List<Service> getBundleServices() {
+	
+		
+		List<Service> _services = new ArrayList<Service>();
 		
 		for (Bundle bundle : bundles) {			
 			for(Service service : bundle.getServices()) {				
-				services.add(service);
+				_services.add(service);
 			}
-		}	
+		}
+		
+		return _services;
+		
+		 
+	}
 
-		return services;
+
+	/**
+	 * Add a {@link Service} to the project scoped services.
+	 * 
+	 * 
+	 * @param service
+	 */
+	public void addService(Service service) {
+
+		services.add(service);
+		
+	}
+
+	public boolean hasService(String id) {
+
+		for(Service service : services) {			
+			if (service.getId().equals(id))
+				return true;
+		}
+		
+		return false;
+	}
+
+	/**
+	 * Get a specific service by id.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Service getService(String id) {
+
+		for (Service service : services) {
+			
+			if(service.getId().equals(id)) {
+				return service;
+			}			
+		}
+		
+		return null;
 	}
 }

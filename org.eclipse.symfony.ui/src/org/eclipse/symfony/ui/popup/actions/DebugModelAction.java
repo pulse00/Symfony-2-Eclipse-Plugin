@@ -2,6 +2,7 @@ package org.eclipse.symfony.ui.popup.actions;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -35,6 +36,15 @@ public class DebugModelAction implements IObjectActionDelegate {
 			
 		for (Project project : ModelManager.getInstance().getProjects()) {
 			
+			List<Service> projectServices = project.getProjectScopedServices();
+			
+			if (projectServices.size() > 0) {
+				
+				System.err.println("The project " + project.toDebugString() + " contains " + projectServices.size() + " project-scoped services");
+				for(Service service : projectServices) {
+					System.out.println("-- " + service.getId() + " => " + service.getFullyQualifiedName());
+				}
+			}
 			
 			List<Bundle> bundles = project.getBundles();			
 			System.out.println(project.toDebugString() + " contains " + bundles.size() + " bundles)");		

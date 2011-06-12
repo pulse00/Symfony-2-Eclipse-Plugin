@@ -10,9 +10,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
-import org.eclipse.php.internal.core.codeassist.strategies.ClassInstantiationStrategy;
 import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.symfony.core.codeassist.contexts.AnnotationCompletionContext;
@@ -39,10 +37,8 @@ import org.eclipse.symfony.core.codeassist.contexts.AnnotationCompletionContext;
  *
  */
 @SuppressWarnings({ "restriction", "deprecation" })
-public class AnnotationCompletionStrategy extends PHPDocTagStrategy
-implements ICompletionStrategy {
+public class AnnotationCompletionStrategy extends PHPDocTagStrategy {
 	
-	public static final String[] EXTRA_ANNOTATIONS = { "Template", "Route", "ParamConverter", "Cache" };
 	private int trueFlag = 0;
 	private int falseFlag = 0;
 

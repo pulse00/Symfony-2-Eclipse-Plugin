@@ -13,7 +13,8 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({ AnnotationParserTest.class, XMLParserTest.class, TextSequenceUtilityTest.class })
+@SuiteClasses({ AnnotationParserTest.class, XMLParserTest.class, 
+	TextSequenceUtilityTest.class, YamlTest.class })
 public class AllTests {
 
 }

@@ -107,6 +107,10 @@ public class XMLConfigParser implements IConfigParser {
 			String id = service.getAttribute("id");
 			String phpClass = service.getAttribute("class");
 			
+			
+			//TODO: How shall we handle synthetic services?
+			// As they are injected during runtime, it's pretty unpossible
+			// to parse their types from the php sources...
 			if (phpClass != null && id != null) {
 
 				if (phpClass.startsWith("%") && phpClass.endsWith("%")) {

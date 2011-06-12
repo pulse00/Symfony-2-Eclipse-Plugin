@@ -242,6 +242,13 @@ public class AnnotationVisitor extends PHPASTVisitor {
 					AnnotationNodeVisitor visitor = new AnnotationNodeVisitor(context);
 					tree.accept(visitor);
 
+					String className = visitor.getClassName();
+					// do not report errors on built in tag names
+					for (String tag : PHPDocTagStrategy.PHPDOC_TAGS) {
+						if (tag.equals(className))
+							return;						
+					}
+					
 					reportUnresolvableAnnotation(visitor, sStart);
 
 				} catch (Exception e) {
