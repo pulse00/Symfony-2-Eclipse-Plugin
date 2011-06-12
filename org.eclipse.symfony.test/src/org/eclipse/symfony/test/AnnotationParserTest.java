@@ -16,10 +16,22 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+
+/**
+ *  
+ * Tests the {@link AnnotationLexer} and {@link AnnotationParser}
+ * classes.
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 public class AnnotationParserTest extends TestCase {
 
 	
-	private DebugErrorReporter reporter = new DebugErrorReporter();
+	private DebugErrorReporter reporter = new DebugErrorReporter();	
+	private AnnotationNodeVisitor root;
+	
 	
 	@Before
 	public void setUp() throws Exception {
@@ -36,75 +48,94 @@ public class AnnotationParserTest extends TestCase {
 
 	
 	@Test
-	public void testAnnotation() {
+	public void testEmpty() {
 		
-		AnnotationNodeVisitor root;
-		
-		reporter.reset();
 		root = getRootNode("* @Route()", false);
 		
 		assertNotNull(root);
 		assertEquals("Route", root.getClassName());			
 		assertTrue(root.getNamespace().length() == 0);
 		
-		reporter.reset();
+	}
+	
+	@Test
+	public void testNSEmpty() {
+		
 		root = getRootNode("* @ORM\\Foo()", false);
 		
 		assertEquals("Foo", root.getClassName());
 		assertEquals("ORM\\", root.getNamespace());
 		assertEquals("ORM\\Foo", root.getFullyQualifiedName());
 		
+	}
+
+	@Test
+	public void testJson() {
 		
-		reporter.reset();
 		root = getRootNode("@Route(\"/hello\", defaults={\"name\"=\"World\"})", false);
 		
 		assertNotNull(root);
 		assertEquals("Route",root.getClassName());		
 		assertFalse(reporter.hasErrors());
 		
+	}
+	
+	@Test
+	public void testRouteVariable() {
 		
-		reporter.reset();
 		root = getRootNode("* @Route(\"/hello/{name}\", name=\"_demo_secured_hello\")", false);
 		
 		assertNotNull(root);
 		assertEquals("Route",root.getClassName());		
 		assertFalse(reporter.hasErrors());
 		
-		
-		
 	}
+	
 	
 	@Test
 	public void testSyntaxError() {
 
-		AnnotationNodeVisitor root;
 		root = getRootNode("* @Ro+--ute(name='test\")", true);			
 		assertNotNull(root);
 		assertTrue(reporter.hasErrors());
 		
-		reporter.reset();
+	}
+
+	@Test
+	public void testMissingArgument() {
 		
 		root = getRootNode("* @Route(name=)", true);
 		assertNotNull(root);
 		assertTrue(reporter.hasErrors());		
-
 		
-		reporter.reset();
+	}
+	
+	@Test
+	public void testMissingComma() {
 		
 		root = getRootNode("* @Template(name='foo' bar)", true);
 		assertNotNull(root);
 		assertTrue(reporter.hasErrors());		
-
-		
-		reporter.reset();
-		
-		root = getRootNode("* @Template(aho=')", true);
-		assertNotNull(root);
-		assertTrue(reporter.hasErrors());		
-		
 		
 	}
 	
+	@Test
+	public void testUnclosedQuote() {
+		
+		root = getRootNode("* @Template(aho=')", true);
+		assertNotNull(root);
+		assertTrue(reporter.hasErrors());				
+		
+	}
+	
+	
+	/**
+	 * Parse an annotation and return the NodeVisitor to test against.
+	 *  
+	 * @param line
+	 * @param expectFail if the parsing process is expected to fail
+	 * @return {@link AnnotationNodeVisitor}
+	 */
 	private AnnotationNodeVisitor getRootNode(String line, boolean expectFail) {
 
 		
