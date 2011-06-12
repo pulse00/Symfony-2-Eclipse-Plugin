@@ -54,7 +54,8 @@ PARAM_END	: ')';
 ASIG 		: '=';
 COMMA		: ( ' '* ',' ' '*);
 BSLASH		: '\\';
-
+JSON_START  : '{' ;
+JSON_END	: '}' ;
 
 // strings
 

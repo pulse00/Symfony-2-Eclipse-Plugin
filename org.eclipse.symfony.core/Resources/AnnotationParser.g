@@ -95,7 +95,7 @@ arguments
   ;
 
 argument
-: literal_argument | named_argument
+: literal_argument | named_argument | json
 ;
 
 
@@ -109,9 +109,22 @@ named_argument
     -> ^(NAMED_ARG $lht rhtype)
   ;
 
+json
+  : JSON_START json_arguments? JSON_END
+  ;
+  
+json_arguments
+  : json_argument (COMMA (json_argument))*
+  ;
+  
+json_argument
+  : STRING_LITERAL ASIG STRING_LITERAL
+  ;
+
 rhtype
   : param=STRING
     -> ^(RHTYPE $param)
   | param=STRING_LITERAL
     -> ^(RHTYPE $param)
+  | json
   ;

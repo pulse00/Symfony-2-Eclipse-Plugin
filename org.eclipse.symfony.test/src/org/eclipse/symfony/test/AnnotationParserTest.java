@@ -40,17 +40,36 @@ public class AnnotationParserTest extends TestCase {
 		
 		AnnotationNodeVisitor root;
 		
+		reporter.reset();
 		root = getRootNode("* @Route()", false);
 		
 		assertNotNull(root);
 		assertEquals("Route", root.getClassName());			
 		assertTrue(root.getNamespace().length() == 0);
 		
+		reporter.reset();
 		root = getRootNode("* @ORM\\Foo()", false);
 		
 		assertEquals("Foo", root.getClassName());
 		assertEquals("ORM\\", root.getNamespace());
 		assertEquals("ORM\\Foo", root.getFullyQualifiedName());
+		
+		
+		reporter.reset();
+		root = getRootNode("@Route(\"/hello\", defaults={\"name\"=\"World\"})", false);
+		
+		assertNotNull(root);
+		assertEquals("Route",root.getClassName());		
+		assertFalse(reporter.hasErrors());
+		
+		
+		reporter.reset();
+		root = getRootNode("* @Route(\"/hello/{name}\", name=\"_demo_secured_hello\")", false);
+		
+		assertNotNull(root);
+		assertEquals("Route",root.getClassName());		
+		assertFalse(reporter.hasErrors());
+		
 		
 		
 	}

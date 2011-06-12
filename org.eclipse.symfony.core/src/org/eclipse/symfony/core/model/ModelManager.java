@@ -7,6 +7,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.symfony.core.goals.ContainerAwareGoalEvaluatorFactory;
+import org.eclipse.symfony.core.model.listener.IModelClearListener;
 
 
 /**

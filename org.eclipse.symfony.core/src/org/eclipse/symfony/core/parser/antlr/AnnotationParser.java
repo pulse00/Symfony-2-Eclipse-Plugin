@@ -1,4 +1,4 @@
-// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-06-11 01:56:43
+// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-06-12 11:00:21
 
 package org.eclipse.symfony.core.parser.antlr;
 
@@ -15,7 +15,7 @@ import org.antlr.runtime.tree.*;
 
 public class AnnotationParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "AT", "PARAM_START", "PARAM_END", "ASIG", "COMMA", "BSLASH", "STRING_CHAR", "STRING", "NONCONTROL_CHAR", "STRING_LITERAL", "LOWER", "UPPER", "DIGIT", "UNDER", "LETTER", "SYMBOL", "WHITESPACE", "ANNOTATION", "ARGUMENT_LIST", "NAMED_ARG", "LITERAL_ARG", "NSPART", "CLASSNAME", "FQCN", "RHTYPE"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "AT", "PARAM_START", "PARAM_END", "ASIG", "COMMA", "BSLASH", "JSON_START", "JSON_END", "STRING_CHAR", "STRING", "NONCONTROL_CHAR", "STRING_LITERAL", "LOWER", "UPPER", "DIGIT", "UNDER", "LETTER", "SYMBOL", "WHITESPACE", "ANNOTATION", "ARGUMENT_LIST", "NAMED_ARG", "LITERAL_ARG", "NSPART", "CLASSNAME", "FQCN", "RHTYPE"
     };
     public static final int EOF=-1;
     public static final int AT=4;
@@ -24,25 +24,27 @@ public class AnnotationParser extends Parser {
     public static final int ASIG=7;
     public static final int COMMA=8;
     public static final int BSLASH=9;
-    public static final int STRING_CHAR=10;
-    public static final int STRING=11;
-    public static final int NONCONTROL_CHAR=12;
-    public static final int STRING_LITERAL=13;
-    public static final int LOWER=14;
-    public static final int UPPER=15;
-    public static final int DIGIT=16;
-    public static final int UNDER=17;
-    public static final int LETTER=18;
-    public static final int SYMBOL=19;
-    public static final int WHITESPACE=20;
-    public static final int ANNOTATION=21;
-    public static final int ARGUMENT_LIST=22;
-    public static final int NAMED_ARG=23;
-    public static final int LITERAL_ARG=24;
-    public static final int NSPART=25;
-    public static final int CLASSNAME=26;
-    public static final int FQCN=27;
-    public static final int RHTYPE=28;
+    public static final int JSON_START=10;
+    public static final int JSON_END=11;
+    public static final int STRING_CHAR=12;
+    public static final int STRING=13;
+    public static final int NONCONTROL_CHAR=14;
+    public static final int STRING_LITERAL=15;
+    public static final int LOWER=16;
+    public static final int UPPER=17;
+    public static final int DIGIT=18;
+    public static final int UNDER=19;
+    public static final int LETTER=20;
+    public static final int SYMBOL=21;
+    public static final int WHITESPACE=22;
+    public static final int ANNOTATION=23;
+    public static final int ARGUMENT_LIST=24;
+    public static final int NAMED_ARG=25;
+    public static final int LITERAL_ARG=26;
+    public static final int NSPART=27;
+    public static final int CLASSNAME=28;
+    public static final int FQCN=29;
+    public static final int RHTYPE=30;
 
     // delegates
     // delegators
@@ -149,7 +151,7 @@ public class AnnotationParser extends Parser {
 
 
             // AST REWRITE
-            // elements: argument_list, ann_class
+            // elements: ann_class, argument_list
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -240,7 +242,7 @@ public class AnnotationParser extends Parser {
                     int alt1=2;
                     int LA1_0 = input.LA(1);
 
-                    if ( (LA1_0==STRING||LA1_0==STRING_LITERAL) ) {
+                    if ( (LA1_0==JSON_START||LA1_0==STRING||LA1_0==STRING_LITERAL) ) {
                         alt1=1;
                     }
                     switch (alt1) {
@@ -663,7 +665,7 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "argument"
-    // AnnotationParser.g:97:1: argument : ( literal_argument | named_argument );
+    // AnnotationParser.g:97:1: argument : ( literal_argument | named_argument | json );
     public final AnnotationParser.argument_return argument() throws RecognitionException {
         AnnotationParser.argument_return retval = new AnnotationParser.argument_return();
         retval.start = input.LT(1);
@@ -674,25 +676,36 @@ public class AnnotationParser extends Parser {
 
         AnnotationParser.named_argument_return named_argument14 = null;
 
+        AnnotationParser.json_return json15 = null;
+
 
 
         try {
-            // AnnotationParser.g:98:1: ( literal_argument | named_argument )
-            int alt5=2;
-            int LA5_0 = input.LA(1);
-
-            if ( (LA5_0==STRING_LITERAL) ) {
+            // AnnotationParser.g:98:1: ( literal_argument | named_argument | json )
+            int alt5=3;
+            switch ( input.LA(1) ) {
+            case STRING_LITERAL:
+                {
                 alt5=1;
-            }
-            else if ( (LA5_0==STRING) ) {
+                }
+                break;
+            case STRING:
+                {
                 alt5=2;
-            }
-            else {
+                }
+                break;
+            case JSON_START:
+                {
+                alt5=3;
+                }
+                break;
+            default:
                 NoViableAltException nvae =
                     new NoViableAltException("", 5, 0, input);
 
                 throw nvae;
             }
+
             switch (alt5) {
                 case 1 :
                     // AnnotationParser.g:98:3: literal_argument
@@ -719,6 +732,20 @@ public class AnnotationParser extends Parser {
                     state._fsp--;
 
                     adaptor.addChild(root_0, named_argument14.getTree());
+
+                    }
+                    break;
+                case 3 :
+                    // AnnotationParser.g:98:39: json
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_json_in_argument256);
+                    json15=json();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, json15.getTree());
 
                     }
                     break;
@@ -764,7 +791,7 @@ public class AnnotationParser extends Parser {
             // AnnotationParser.g:103:3: (param= STRING_LITERAL -> ^( LITERAL_ARG $param) )
             // AnnotationParser.g:103:5: param= STRING_LITERAL
             {
-            param=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_literal_argument266);  
+            param=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_literal_argument270);  
             stream_STRING_LITERAL.add(param);
 
 
@@ -830,12 +857,12 @@ public class AnnotationParser extends Parser {
         AnnotationCommonTree root_0 = null;
 
         CommonToken lht=null;
-        CommonToken ASIG15=null;
-        AnnotationParser.rhtype_return rhtype16 = null;
+        CommonToken ASIG16=null;
+        AnnotationParser.rhtype_return rhtype17 = null;
 
 
         AnnotationCommonTree lht_tree=null;
-        AnnotationCommonTree ASIG15_tree=null;
+        AnnotationCommonTree ASIG16_tree=null;
         RewriteRuleTokenStream stream_ASIG=new RewriteRuleTokenStream(adaptor,"token ASIG");
         RewriteRuleTokenStream stream_STRING=new RewriteRuleTokenStream(adaptor,"token STRING");
         RewriteRuleSubtreeStream stream_rhtype=new RewriteRuleSubtreeStream(adaptor,"rule rhtype");
@@ -843,18 +870,18 @@ public class AnnotationParser extends Parser {
             // AnnotationParser.g:108:3: (lht= STRING ASIG rhtype -> ^( NAMED_ARG $lht rhtype ) )
             // AnnotationParser.g:108:5: lht= STRING ASIG rhtype
             {
-            lht=(CommonToken)match(input,STRING,FOLLOW_STRING_in_named_argument294);  
+            lht=(CommonToken)match(input,STRING,FOLLOW_STRING_in_named_argument298);  
             stream_STRING.add(lht);
 
-            ASIG15=(CommonToken)match(input,ASIG,FOLLOW_ASIG_in_named_argument296);  
-            stream_ASIG.add(ASIG15);
+            ASIG16=(CommonToken)match(input,ASIG,FOLLOW_ASIG_in_named_argument300);  
+            stream_ASIG.add(ASIG16);
 
-            pushFollow(FOLLOW_rhtype_in_named_argument298);
-            rhtype16=rhtype();
+            pushFollow(FOLLOW_rhtype_in_named_argument302);
+            rhtype17=rhtype();
 
             state._fsp--;
 
-            stream_rhtype.add(rhtype16.getTree());
+            stream_rhtype.add(rhtype17.getTree());
 
 
             // AST REWRITE
@@ -905,13 +932,246 @@ public class AnnotationParser extends Parser {
     }
     // $ANTLR end "named_argument"
 
+    public static class json_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "json"
+    // AnnotationParser.g:112:1: json : JSON_START ( json_arguments )? JSON_END ;
+    public final AnnotationParser.json_return json() throws RecognitionException {
+        AnnotationParser.json_return retval = new AnnotationParser.json_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        CommonToken JSON_START18=null;
+        CommonToken JSON_END20=null;
+        AnnotationParser.json_arguments_return json_arguments19 = null;
+
+
+        AnnotationCommonTree JSON_START18_tree=null;
+        AnnotationCommonTree JSON_END20_tree=null;
+
+        try {
+            // AnnotationParser.g:113:3: ( JSON_START ( json_arguments )? JSON_END )
+            // AnnotationParser.g:113:5: JSON_START ( json_arguments )? JSON_END
+            {
+            root_0 = (AnnotationCommonTree)adaptor.nil();
+
+            JSON_START18=(CommonToken)match(input,JSON_START,FOLLOW_JSON_START_in_json330); 
+            JSON_START18_tree = (AnnotationCommonTree)adaptor.create(JSON_START18);
+            adaptor.addChild(root_0, JSON_START18_tree);
+
+            // AnnotationParser.g:113:16: ( json_arguments )?
+            int alt6=2;
+            int LA6_0 = input.LA(1);
+
+            if ( (LA6_0==STRING_LITERAL) ) {
+                alt6=1;
+            }
+            switch (alt6) {
+                case 1 :
+                    // AnnotationParser.g:113:16: json_arguments
+                    {
+                    pushFollow(FOLLOW_json_arguments_in_json332);
+                    json_arguments19=json_arguments();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, json_arguments19.getTree());
+
+                    }
+                    break;
+
+            }
+
+            JSON_END20=(CommonToken)match(input,JSON_END,FOLLOW_JSON_END_in_json335); 
+            JSON_END20_tree = (AnnotationCommonTree)adaptor.create(JSON_END20);
+            adaptor.addChild(root_0, JSON_END20_tree);
+
+
+            }
+
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "json"
+
+    public static class json_arguments_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "json_arguments"
+    // AnnotationParser.g:116:1: json_arguments : json_argument ( COMMA ( json_argument ) )* ;
+    public final AnnotationParser.json_arguments_return json_arguments() throws RecognitionException {
+        AnnotationParser.json_arguments_return retval = new AnnotationParser.json_arguments_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        CommonToken COMMA22=null;
+        AnnotationParser.json_argument_return json_argument21 = null;
+
+        AnnotationParser.json_argument_return json_argument23 = null;
+
+
+        AnnotationCommonTree COMMA22_tree=null;
+
+        try {
+            // AnnotationParser.g:117:3: ( json_argument ( COMMA ( json_argument ) )* )
+            // AnnotationParser.g:117:5: json_argument ( COMMA ( json_argument ) )*
+            {
+            root_0 = (AnnotationCommonTree)adaptor.nil();
+
+            pushFollow(FOLLOW_json_argument_in_json_arguments350);
+            json_argument21=json_argument();
+
+            state._fsp--;
+
+            adaptor.addChild(root_0, json_argument21.getTree());
+            // AnnotationParser.g:117:19: ( COMMA ( json_argument ) )*
+            loop7:
+            do {
+                int alt7=2;
+                int LA7_0 = input.LA(1);
+
+                if ( (LA7_0==COMMA) ) {
+                    alt7=1;
+                }
+
+
+                switch (alt7) {
+            	case 1 :
+            	    // AnnotationParser.g:117:20: COMMA ( json_argument )
+            	    {
+            	    COMMA22=(CommonToken)match(input,COMMA,FOLLOW_COMMA_in_json_arguments353); 
+            	    COMMA22_tree = (AnnotationCommonTree)adaptor.create(COMMA22);
+            	    adaptor.addChild(root_0, COMMA22_tree);
+
+            	    // AnnotationParser.g:117:26: ( json_argument )
+            	    // AnnotationParser.g:117:27: json_argument
+            	    {
+            	    pushFollow(FOLLOW_json_argument_in_json_arguments356);
+            	    json_argument23=json_argument();
+
+            	    state._fsp--;
+
+            	    adaptor.addChild(root_0, json_argument23.getTree());
+
+            	    }
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop7;
+                }
+            } while (true);
+
+
+            }
+
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "json_arguments"
+
+    public static class json_argument_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "json_argument"
+    // AnnotationParser.g:120:1: json_argument : STRING_LITERAL ASIG STRING_LITERAL ;
+    public final AnnotationParser.json_argument_return json_argument() throws RecognitionException {
+        AnnotationParser.json_argument_return retval = new AnnotationParser.json_argument_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        CommonToken STRING_LITERAL24=null;
+        CommonToken ASIG25=null;
+        CommonToken STRING_LITERAL26=null;
+
+        AnnotationCommonTree STRING_LITERAL24_tree=null;
+        AnnotationCommonTree ASIG25_tree=null;
+        AnnotationCommonTree STRING_LITERAL26_tree=null;
+
+        try {
+            // AnnotationParser.g:121:3: ( STRING_LITERAL ASIG STRING_LITERAL )
+            // AnnotationParser.g:121:5: STRING_LITERAL ASIG STRING_LITERAL
+            {
+            root_0 = (AnnotationCommonTree)adaptor.nil();
+
+            STRING_LITERAL24=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_json_argument374); 
+            STRING_LITERAL24_tree = (AnnotationCommonTree)adaptor.create(STRING_LITERAL24);
+            adaptor.addChild(root_0, STRING_LITERAL24_tree);
+
+            ASIG25=(CommonToken)match(input,ASIG,FOLLOW_ASIG_in_json_argument376); 
+            ASIG25_tree = (AnnotationCommonTree)adaptor.create(ASIG25);
+            adaptor.addChild(root_0, ASIG25_tree);
+
+            STRING_LITERAL26=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_json_argument378); 
+            STRING_LITERAL26_tree = (AnnotationCommonTree)adaptor.create(STRING_LITERAL26);
+            adaptor.addChild(root_0, STRING_LITERAL26_tree);
+
+
+            }
+
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "json_argument"
+
     public static class rhtype_return extends ParserRuleReturnScope {
         AnnotationCommonTree tree;
         public Object getTree() { return tree; }
     };
 
     // $ANTLR start "rhtype"
-    // AnnotationParser.g:112:1: rhtype : (param= STRING -> ^( RHTYPE $param) | param= STRING_LITERAL -> ^( RHTYPE $param) );
+    // AnnotationParser.g:124:1: rhtype : (param= STRING -> ^( RHTYPE $param) | param= STRING_LITERAL -> ^( RHTYPE $param) | json );
     public final AnnotationParser.rhtype_return rhtype() throws RecognitionException {
         AnnotationParser.rhtype_return retval = new AnnotationParser.rhtype_return();
         retval.start = input.LT(1);
@@ -919,33 +1179,44 @@ public class AnnotationParser extends Parser {
         AnnotationCommonTree root_0 = null;
 
         CommonToken param=null;
+        AnnotationParser.json_return json27 = null;
+
 
         AnnotationCommonTree param_tree=null;
         RewriteRuleTokenStream stream_STRING_LITERAL=new RewriteRuleTokenStream(adaptor,"token STRING_LITERAL");
         RewriteRuleTokenStream stream_STRING=new RewriteRuleTokenStream(adaptor,"token STRING");
 
         try {
-            // AnnotationParser.g:113:3: (param= STRING -> ^( RHTYPE $param) | param= STRING_LITERAL -> ^( RHTYPE $param) )
-            int alt6=2;
-            int LA6_0 = input.LA(1);
-
-            if ( (LA6_0==STRING) ) {
-                alt6=1;
-            }
-            else if ( (LA6_0==STRING_LITERAL) ) {
-                alt6=2;
-            }
-            else {
+            // AnnotationParser.g:125:3: (param= STRING -> ^( RHTYPE $param) | param= STRING_LITERAL -> ^( RHTYPE $param) | json )
+            int alt8=3;
+            switch ( input.LA(1) ) {
+            case STRING:
+                {
+                alt8=1;
+                }
+                break;
+            case STRING_LITERAL:
+                {
+                alt8=2;
+                }
+                break;
+            case JSON_START:
+                {
+                alt8=3;
+                }
+                break;
+            default:
                 NoViableAltException nvae =
-                    new NoViableAltException("", 6, 0, input);
+                    new NoViableAltException("", 8, 0, input);
 
                 throw nvae;
             }
-            switch (alt6) {
+
+            switch (alt8) {
                 case 1 :
-                    // AnnotationParser.g:113:5: param= STRING
+                    // AnnotationParser.g:125:5: param= STRING
                     {
-                    param=(CommonToken)match(input,STRING,FOLLOW_STRING_in_rhtype328);  
+                    param=(CommonToken)match(input,STRING,FOLLOW_STRING_in_rhtype393);  
                     stream_STRING.add(param);
 
 
@@ -962,9 +1233,9 @@ public class AnnotationParser extends Parser {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (AnnotationCommonTree)adaptor.nil();
-                    // 114:5: -> ^( RHTYPE $param)
+                    // 126:5: -> ^( RHTYPE $param)
                     {
-                        // AnnotationParser.g:114:8: ^( RHTYPE $param)
+                        // AnnotationParser.g:126:8: ^( RHTYPE $param)
                         {
                         AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                         root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(RHTYPE, "RHTYPE"), root_1);
@@ -980,9 +1251,9 @@ public class AnnotationParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // AnnotationParser.g:115:5: param= STRING_LITERAL
+                    // AnnotationParser.g:127:5: param= STRING_LITERAL
                     {
-                    param=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_rhtype349);  
+                    param=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_rhtype414);  
                     stream_STRING_LITERAL.add(param);
 
 
@@ -999,9 +1270,9 @@ public class AnnotationParser extends Parser {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (AnnotationCommonTree)adaptor.nil();
-                    // 116:5: -> ^( RHTYPE $param)
+                    // 128:5: -> ^( RHTYPE $param)
                     {
-                        // AnnotationParser.g:116:8: ^( RHTYPE $param)
+                        // AnnotationParser.g:128:8: ^( RHTYPE $param)
                         {
                         AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                         root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(RHTYPE, "RHTYPE"), root_1);
@@ -1014,6 +1285,20 @@ public class AnnotationParser extends Parser {
                     }
 
                     retval.tree = root_0;
+                    }
+                    break;
+                case 3 :
+                    // AnnotationParser.g:129:5: json
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_json_in_rhtype433);
+                    json27=json();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, json27.getTree());
+
                     }
                     break;
 
@@ -1041,27 +1326,38 @@ public class AnnotationParser extends Parser {
 
  
 
-    public static final BitSet FOLLOW_AT_in_annotation87 = new BitSet(new long[]{0x0000000000000800L});
+    public static final BitSet FOLLOW_AT_in_annotation87 = new BitSet(new long[]{0x0000000000002000L});
     public static final BitSet FOLLOW_ann_class_in_annotation89 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_argument_list_in_annotation91 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_PARAM_START_in_argument_list119 = new BitSet(new long[]{0x0000000000002840L});
+    public static final BitSet FOLLOW_PARAM_START_in_argument_list119 = new BitSet(new long[]{0x000000000000A440L});
     public static final BitSet FOLLOW_arguments_in_argument_list121 = new BitSet(new long[]{0x0000000000000040L});
     public static final BitSet FOLLOW_PARAM_END_in_argument_list124 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_namespace_in_ann_class152 = new BitSet(new long[]{0x0000000000000800L});
+    public static final BitSet FOLLOW_namespace_in_ann_class152 = new BitSet(new long[]{0x0000000000002000L});
     public static final BitSet FOLLOW_classname_in_ann_class155 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_STRING_in_namespace172 = new BitSet(new long[]{0x0000000000000200L});
     public static final BitSet FOLLOW_BSLASH_in_namespace174 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_STRING_in_classname202 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_argument_in_arguments227 = new BitSet(new long[]{0x0000000000000102L});
-    public static final BitSet FOLLOW_COMMA_in_arguments231 = new BitSet(new long[]{0x0000000000002800L});
+    public static final BitSet FOLLOW_COMMA_in_arguments231 = new BitSet(new long[]{0x000000000000A400L});
     public static final BitSet FOLLOW_argument_in_arguments234 = new BitSet(new long[]{0x0000000000000102L});
     public static final BitSet FOLLOW_literal_argument_in_argument248 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_named_argument_in_argument252 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_literal_argument266 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_in_named_argument294 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_ASIG_in_named_argument296 = new BitSet(new long[]{0x0000000000002800L});
-    public static final BitSet FOLLOW_rhtype_in_named_argument298 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_in_rhtype328 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_rhtype349 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_json_in_argument256 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_LITERAL_in_literal_argument270 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_in_named_argument298 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_ASIG_in_named_argument300 = new BitSet(new long[]{0x000000000000A400L});
+    public static final BitSet FOLLOW_rhtype_in_named_argument302 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_JSON_START_in_json330 = new BitSet(new long[]{0x0000000000008800L});
+    public static final BitSet FOLLOW_json_arguments_in_json332 = new BitSet(new long[]{0x0000000000000800L});
+    public static final BitSet FOLLOW_JSON_END_in_json335 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_json_argument_in_json_arguments350 = new BitSet(new long[]{0x0000000000000102L});
+    public static final BitSet FOLLOW_COMMA_in_json_arguments353 = new BitSet(new long[]{0x0000000000008000L});
+    public static final BitSet FOLLOW_json_argument_in_json_arguments356 = new BitSet(new long[]{0x0000000000000102L});
+    public static final BitSet FOLLOW_STRING_LITERAL_in_json_argument374 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_ASIG_in_json_argument376 = new BitSet(new long[]{0x0000000000008000L});
+    public static final BitSet FOLLOW_STRING_LITERAL_in_json_argument378 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_in_rhtype393 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_LITERAL_in_rhtype414 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_json_in_rhtype433 = new BitSet(new long[]{0x0000000000000002L});
 
 }

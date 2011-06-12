@@ -1,4 +1,4 @@
-package org.eclipse.symfony.core.model;
+package org.eclipse.symfony.core.model.listener;
 
 /**
  * 
