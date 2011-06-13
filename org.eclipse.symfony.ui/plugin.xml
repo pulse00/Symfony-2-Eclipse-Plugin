@@ -49,5 +49,11 @@
           name="Symfony">
     </page>
  </extension>
+ <extension
+       point="org.eclipse.twig.completion.provider">
+    <provider
+          class="org.eclipse.symfony.ui.twig.SymfonyTwigCompletionProvider">
+    </provider>
+ </extension>
  
 </plugin>
