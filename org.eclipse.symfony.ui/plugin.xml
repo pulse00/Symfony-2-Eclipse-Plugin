@@ -37,9 +37,6 @@
       </objectContribution>
    </extension>
 
-	<extension point="org.dadacoalition.yedit.sourceViewerConfigurationContribution">
-    	<sourceViewerConfiguration class="org.eclipse.symfony.ui.editor.YamlSourceViewerConfiguration"/>
-	</extension>
 
  <extension
        point="org.eclipse.ui.preferencePages">
@@ -48,12 +45,6 @@
           id="org.eclipse.symfony.ui.preferences.SymfonyPreferencePage"
           name="Symfony">
     </page>
- </extension>
- <extension
-       point="org.eclipse.twig.completion.provider">
-    <provider
-          class="org.eclipse.symfony.ui.twig.SymfonyTwigCompletionProvider">
-    </provider>
  </extension>
  
 </plugin>
