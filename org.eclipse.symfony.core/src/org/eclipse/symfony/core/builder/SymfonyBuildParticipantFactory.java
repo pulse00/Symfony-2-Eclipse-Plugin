@@ -1,5 +1,6 @@
 package org.eclipse.symfony.core.builder;
 
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
@@ -7,7 +8,10 @@ import org.eclipse.dltk.core.builder.IBuildParticipantFactory;
 
 /**
  * 
- * DLTK BuildParticipant extension point.
+ * DLTK BuildParticipant extension point. 
+ * 
+ * Creates a {@link SymfonyBuildParticipant} for
+ * projects with the {@link SymfonyNature}.
  * 
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
@@ -20,7 +24,14 @@ public class SymfonyBuildParticipantFactory implements IBuildParticipantFactory 
 	public IBuildParticipant createBuildParticipant(IScriptProject project)
 			throws CoreException {
 		
-		return new SymfonyBuildParticipant();
+		IProjectNature nature = project.getProject().getNature(SymfonyNature.NATURE_ID);
+			
+		if (nature instanceof SymfonyNature) {			
+			return new SymfonyBuildParticipant();			
+		}
+		
+		return null;		
+		
 	}
 
 }

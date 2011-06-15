@@ -1,9 +1,11 @@
 package org.eclipse.symfony.core.codeassist.contexts;
 
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
 import org.eclipse.php.internal.core.util.text.TextSequence;
+import org.eclipse.symfony.core.builder.SymfonyNature;
 
 /**
  * 
@@ -26,6 +28,13 @@ public class AnnotationCompletionContext extends PHPDocTagContext {
 			return false;
 
 		try {
+			
+			IProjectNature nature = sourceModule.getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID);
+			
+			// wrong nature
+			if(!(nature instanceof SymfonyNature)) {
+				return false;	
+			}
 			
 			TextSequence sequence = getStatementText();
 			int start = sequence.toString().lastIndexOf("@");

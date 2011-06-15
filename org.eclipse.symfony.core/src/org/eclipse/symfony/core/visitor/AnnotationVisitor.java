@@ -258,8 +258,8 @@ public class AnnotationVisitor extends PHPASTVisitor {
 			}
 
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
-			e.printStackTrace();
+//			System.err.println(e.getMessage());
+//			e.printStackTrace();
 		}		
 	}
 

@@ -29,7 +29,6 @@ public class SymfonyCorePreferences {
 		
 		if (severity == null) {			
 			
-			System.err.println("could not get");
 			severity = SymfonyCoreConstants.ANNOTATION_WARNING;
 		}
 		

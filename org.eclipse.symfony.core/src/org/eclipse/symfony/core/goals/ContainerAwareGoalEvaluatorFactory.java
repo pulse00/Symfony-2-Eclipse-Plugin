@@ -36,6 +36,10 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
 	public GoalEvaluator createEvaluator(IGoal goal) {
 
 		try {
+			
+			//TODO: find a way to check project nature
+			// and return null if it's not a symfonyNature
+			// goal.getContext().getLangNature() always returns the PHPNature...
 			GoalEvaluator evaluator = evaluateServiceCalls(goal);
 			
 			//TODO: add more evaluators... 

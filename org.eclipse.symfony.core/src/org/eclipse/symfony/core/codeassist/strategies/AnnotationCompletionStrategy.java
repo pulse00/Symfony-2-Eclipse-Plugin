@@ -51,7 +51,7 @@ public class AnnotationCompletionStrategy extends PHPDocTagStrategy {
 	public void apply(final ICompletionReporter reporter) throws BadLocationException {
 
 		ICompletionContext ctx = getContext();
-
+		
 		if (!(ctx instanceof AnnotationCompletionContext)) {
 			return;
 		}		

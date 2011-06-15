@@ -30,15 +30,8 @@ public class ContainerMethodReturnTypeEvaluator extends
 					
 			try {
 				if (method.getParameters().length == 1) {
-										
 					IParameter[] params = method.getParameters();					
 					IParameter param = params[0];
-					
-					
-					System.out.println(param.toString());
-					System.out.println(param.getName());
-					
-					System.err.println("bingo");
 				}
 			} catch (ModelException e) {
 			

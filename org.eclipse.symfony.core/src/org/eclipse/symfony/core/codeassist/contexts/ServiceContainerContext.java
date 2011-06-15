@@ -1,9 +1,11 @@
 package org.eclipse.symfony.core.codeassist.contexts;
 
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.codeassist.contexts.QuotesContext;
 import org.eclipse.php.internal.core.util.text.TextSequence;
+import org.eclipse.symfony.core.builder.SymfonyNature;
 import org.eclipse.symfony.core.util.text.SymfonyTextSequenceUtilities;
 
 
@@ -33,6 +35,14 @@ public class ServiceContainerContext extends
 		
 		if (super.isValid(sourceModule, offset, requestor)) {
 			try {
+				
+				IProjectNature nature = sourceModule.getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID);
+				
+				// wrong nature
+				if(!(nature instanceof SymfonyNature)) {
+					return false;	
+				}
+				
 				
 				TextSequence statementText = getStatementText();
 				if (SymfonyTextSequenceUtilities.isInServiceContainerFunction(statementText) > -1) {

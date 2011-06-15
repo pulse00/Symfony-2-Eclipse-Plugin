@@ -1,8 +1,0 @@
-// some code parts i found in PDT sourcode that might be usefule later on.
-
-
-
-//  get a preference option from the core plugin:
-
-	Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
-				PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, false, null);
