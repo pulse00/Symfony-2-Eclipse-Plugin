@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.eclipse.symfony.feature_1.0.1.201106152149.jar" id="org.eclipse.symfony.feature" version="1.0.1.201106152149">
+   <feature url="features/org.eclipse.symfony.feature_1.0.1.201106152152.jar" id="org.eclipse.symfony.feature" version="1.0.1.201106152152">
       <category name="org.eclipse.symfony"/>
    </feature>
    <category-def name="org.eclipse.symfony" label="Symfony"/>
