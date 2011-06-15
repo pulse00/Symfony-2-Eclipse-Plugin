@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.symfony.feature"
-      label="Feature"
+      label="Symfony2 Feature"
       version="1.0.0.qualifier"
       provider-name="https://github.com/pulse00/Symfony-2-Eclipse-Plugin">
 
@@ -18,6 +18,7 @@
    </license>
 
    <url>
+      <update label="http://pulse00.github.com/Symfony-2-Eclipse-Plugin/" url="http://pulse00.github.com/Symfony-2-Eclipse-Plugin/"/>
       <discovery label="Symfony2" url="http://symfony.com/"/>
    </url>
 
