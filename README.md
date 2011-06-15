@@ -71,9 +71,13 @@ code-assistance in twig templates can be added to the featurelist ;)
 ## FAQ
 
 Q: How do i know a PHP project is symfony-aware?
+
 A: Check for a "Symfony Builder" in the projects builders (Project -> Properties -> Builders). If it's not there, run the "Add/Remove Symfony Nature" (right-click on the project -> Symfony).
 
+
+
 Q: There's no additional codeassistance showing up, what can i do?
+
 A: The plugin indexes services and annotation during the build process. Try to clean the project (Project -> clean). If it's still not working, check if the project has a Symfony nature.
 
 
