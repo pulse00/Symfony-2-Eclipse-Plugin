@@ -130,11 +130,9 @@ public class Bundle extends AbstractSymfonyModel {
 
 	public void addController(Controller controller) {
 
-		System.err.println("adding controller " + controller.getName() + " to bundle " + this.getName());
 		if (controllers.contains(controller)) {
 			Controller existing = controllers.get(controllers.indexOf(controller));			
 			if(existing.equals(controller)) {
-				System.out.println("controller exists " + controller.getName());
 				return;			
 			}
 			
