@@ -11,6 +11,7 @@ import org.eclipse.symfony.core.SymfonyCoreConstants;
 import org.eclipse.symfony.core.model.Annotation;
 import org.eclipse.symfony.core.model.AnnotationParameter;
 import org.eclipse.symfony.core.model.Bundle;
+import org.eclipse.symfony.core.model.Controller;
 import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Project;
 import org.eclipse.symfony.core.model.Service;
@@ -52,16 +53,26 @@ public class DebugModelAction implements IObjectActionDelegate {
 			for (Bundle bundle : bundles) {
 				
 				List<Service> services = bundle.getServices();
-				System.out.println("-- " + bundle.getName() + " (contains " + services.size() + " services)");
+				System.err.println("-- " + bundle.getName() + " (contains " + services.size() + " services)");
 				
 				for (Service service : services) {					
-					System.out.println("----" + service.getFullyQualifiedName());					
-				}				
+					System.out.println("---- " + service.getFullyQualifiedName());					
+				}
+				
+				List<Controller> controllers = bundle.getControllers();
+				
+				System.err.println("-- " + bundle.getName() + " contains " + controllers.size() + " controllers: ");
+				
+				for (Controller controller : controllers) {
+					System.out.println("---- " + controller.getName());
+				}
+				
+				
 			}
 			
 			List<Annotation> annotations = project.getAnnotations();
 			
-			System.out.println(project.toDebugString() + " contains " + annotations.size() +  " annotations:");
+			System.err.println(project.toDebugString() + " contains " + annotations.size() +  " annotations:");
 			
 			
 			for (Iterator iterator = annotations.iterator(); iterator.hasNext();) {

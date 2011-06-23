@@ -7,10 +7,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.symfony.core.model.exception.InvalidBundleException;
+import org.eclipse.symfony.core.util.PathUtils;
 import org.eclipse.symfony.core.visitor.KernelVisitor;
 
 /**
@@ -36,6 +35,8 @@ public class Bundle extends AbstractSymfonyModel {
 	private ISourceModule sourceModule;
 	
 	private List<Service> services = new ArrayList<Service>();
+	private List<Controller> controllers = new ArrayList<Controller>();
+			
 	private IPath basePath;
 	
 	private boolean isActive;
@@ -127,4 +128,59 @@ public class Bundle extends AbstractSymfonyModel {
 		return namespace;
 	}
 
+	public void addController(Controller controller) {
+
+		System.err.println("adding controller " + controller.getName() + " to bundle " + this.getName());
+		if (controllers.contains(controller)) {
+			Controller existing = controllers.get(controllers.indexOf(controller));			
+			if(existing.equals(controller)) {
+				System.out.println("controller exists " + controller.getName());
+				return;			
+			}
+			
+			controllers.remove(existing);
+		}
+		
+		controllers.add(controller);
+		
+	}
+
+	public List<Controller> getControllers() {
+
+		return controllers;
+	}
+
+	public List<TemplateVariable> getTemplateVariables(
+			ISourceModule sourceModule) {
+
+		IPath path = sourceModule.getPath();
+		String controller = PathUtils.getControllerFromTemplatePath(path);
+		
+		if (controller == null) {
+			System.err.println("Unable to extract controller name from template path");
+			return null;
+		}
+
+		
+		String viewName = PathUtils.getViewFromTemplatePath(path);
+		
+		if (viewName == null) {			
+			System.err.println("Unable to retrieve viewName from templat path");
+			return null;
+		}
+		
+		System.err.println("controllers: " + controllers.size());
+		for (Controller ctrl : controllers) {
+
+			System.out.println(ctrl.getName() + " " + viewName);
+			if (ctrl.getName().equals(controller)) {
+				
+				return ctrl.getTemplateVariables(viewName);
+				
+			}
+		}
+		
+		System.err.println("getting template variables for controller " + controller + " " + viewName);		
+		return null;
+	}
 }

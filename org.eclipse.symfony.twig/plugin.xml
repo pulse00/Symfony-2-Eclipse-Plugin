@@ -7,5 +7,11 @@
             class="org.eclipse.symfony.twig.codeassist.TwigCompletionStrategyFactory">
       </resolver>
    </extension>
+   <extension
+         point="org.eclipse.twig.core.completionContextResolvers">
+      <resolver
+            class="org.eclipse.symfony.twig.codeassist.TwigCompletionContextResolver">
+      </resolver>
+   </extension>
 
 </plugin>

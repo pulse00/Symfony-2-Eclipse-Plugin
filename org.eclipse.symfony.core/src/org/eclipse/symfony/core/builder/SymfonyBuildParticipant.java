@@ -7,8 +7,11 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
+import org.eclipse.symfony.core.model.Controller;
+import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.visitor.AnnotationVisitor;
 import org.eclipse.symfony.core.visitor.BundleVisitor;
+import org.eclipse.symfony.core.visitor.ControllerVisitor;
 import org.eclipse.symfony.core.visitor.KernelVisitor;
 
 /**
@@ -34,28 +37,39 @@ public class SymfonyBuildParticipant implements IBuildParticipant {
 			
 		try {
 			
-			
 			IFile file = context.getFile();
+			
+			ModelManager model = ModelManager.getInstance();
+			ModuleDeclaration module = getModuleDeclaration(context);			
 						
 			if (file.getName().endsWith("Bundle.php") && !file.getName().equals("Bundle.php")) {				
-				getModuleDeclaration(context).traverse(new BundleVisitor(context));
+				module.traverse(new BundleVisitor(context));
 				
 			} else if (file.getName().equals("AppKernel.php")) {
-				getModuleDeclaration(context).traverse(new KernelVisitor(context));
+				
+				module.traverse(new KernelVisitor(context));
+				
 			} else if (file.getName().endsWith("Controller.php")) {
-								
+				
+				ControllerVisitor visitor = new ControllerVisitor(context);
+				module.traverse(visitor);
+				
+				Controller ctrl = visitor.getController();
+				
+				if (ctrl != null) {
+					model.addController(ctrl);
+				}
 			}
 			
 			if (file.getFileExtension().equals("php")) {
 				
-				ModuleDeclaration module = getModuleDeclaration(context);
-				module.traverse(new AnnotationVisitor(context));
+				module.traverse(new AnnotationVisitor(context));				
 				
 			}
+			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
-
 }

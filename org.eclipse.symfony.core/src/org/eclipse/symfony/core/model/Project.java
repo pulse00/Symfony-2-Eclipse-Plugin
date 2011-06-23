@@ -233,4 +233,15 @@ public class Project extends AbstractSymfonyModel {
 		
 		return null;
 	}
+
+	public void addController(Controller controller) {
+		
+		for (Bundle bundle : bundles) {
+			if (bundle.getBasePath().isPrefixOf(controller.getPath())) {
+				bundle.addController(controller);
+				break;				
+				
+			}
+		}
+	}
 }

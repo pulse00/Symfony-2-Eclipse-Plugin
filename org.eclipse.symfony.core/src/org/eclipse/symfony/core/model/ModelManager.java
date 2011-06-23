@@ -236,4 +236,45 @@ public class ModelManager {
 		return null;
 		
 	}
+
+	public void addController(Controller controller) {
+		
+		IScriptProject project = controller.getProject();
+		
+		for (Project p : projects) {
+			
+			if (p.equals(project)) {
+				p.addController(controller);
+				break;
+			}			
+		}		
+	}
+
+	public List<TemplateVariable> getTemplateVariables(ISourceModule sourceModule) {
+
+		Bundle bundle = getBundle(sourceModule);
+		
+		if (bundle == null) {
+			System.err.println("No matching bundle found for viewvariable fetching");
+			return null;
+		}
+		
+		return bundle.getTemplateVariables(sourceModule);
+		
+		
+	}
+
+	private Bundle getBundle(ISourceModule sourceModule) {
+
+		for (Project project : projects) {
+			
+			for (Bundle bundle : project.getBundles()) {
+				
+				if (bundle.getBasePath().isPrefixOf(sourceModule.getPath()))
+					return bundle;
+			}
+		}
+		
+		return null;
+	}
 }
