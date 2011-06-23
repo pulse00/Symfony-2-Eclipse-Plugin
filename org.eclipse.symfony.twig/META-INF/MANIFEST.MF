@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Symfony Twig Plugin
+Bundle-SymbolicName: org.eclipse.symfony.twig;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipse.symfony.twig.SymfonyTwigPlugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.dltk.core,
+ org.eclipse.php.core,
+ org.eclipse.symfony.core,
+ org.eclipse.twig.core
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
