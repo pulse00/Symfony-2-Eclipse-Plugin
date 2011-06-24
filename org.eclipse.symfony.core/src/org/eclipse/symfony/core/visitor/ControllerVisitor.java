@@ -8,7 +8,9 @@ import java.util.Iterator;
 
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
+import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.builder.IBuildContext;
+import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
@@ -71,6 +73,13 @@ public class ControllerVisitor extends PHPASTVisitor {
 	}
 
 
+	/**
+	 * TODO: needs to parse more structures like $this->render() etc.
+	 * 
+	 * Currently only parses array return statements without checking
+	 * for the @Template() annotation
+	 * 
+	 */
 	@Override
 	public boolean visit(PHPMethodDeclaration method) throws Exception {
 
@@ -102,23 +111,33 @@ public class ControllerVisitor extends PHPASTVisitor {
 				}				
 			}
 
-
-			// check the return statement for template variables
-			method.traverse(new TemplateVariableVisitor(method));
-
+			// TODO: only use this Visitor when the @Template annotaiton is used
+			// TODO: create additional visitors for ->render() calls
+			method.traverse(new ReturnStatementVariableVisitor(method));
 
 		}
+		
 		return true;
 	}
 
-	private class TemplateVariableVisitor extends ServiceContainerVisitor {
+	
+	/**
+	 * 
+	 * The {@link ReturnStatementVariableVisitor} checks the {@link ReturnStatement}
+	 * of an {@link IMethod}. If it's an {@link ArrayCreation} it
+	 * tries to infer the previously detected variables.
+	 * 
+	 * If variables match, they are added to the corresponding {@link Controller} of the
+	 * {@link SourceModule}.
+	 * 
+	 */
+	private class ReturnStatementVariableVisitor extends TemplateVariableVisitor {
 
 		private PHPMethodDeclaration method;
 
-		public TemplateVariableVisitor(PHPMethodDeclaration method) {
-
+		public ReturnStatementVariableVisitor(PHPMethodDeclaration method) {
+			super(ControllerVisitor.this.context);
 			this.method = method;
-
 		}
 		
 
@@ -127,6 +146,8 @@ public class ControllerVisitor extends PHPASTVisitor {
 		@SuppressWarnings("rawtypes")
 		public boolean visit(ReturnStatement statement) throws Exception {
 
+			//TODO: Only parse ARRAY_CREATION return types when
+			// the Template() annotation is set
 			if (statement.getExpr().getKind() == ASTNodeKinds.ARRAY_CREATION) {
 
 				Action action = new Action(controller, method);
@@ -148,24 +169,15 @@ public class ControllerVisitor extends PHPASTVisitor {
 
 						} else if(value.getClass() == PHPCallExpression.class) {
 
-							Iterator it = services.keySet().iterator();
+							Iterator it = templateVariables.keySet().iterator();
 							
-							while(it.hasNext()) {
-								
+							while(it.hasNext()) {								
 								String var = (String) it.next();
-								
-								String scalar = varName.getValue().replace("\"", "").replace("'", "");
 								var = var.replace("$", "");
+								TemplateVariable variable = templateVariables.get(var);								
+								action.addTemplateVariable(variable);								
 								
-								if (var.equals(scalar)) {
-									
-									System.err.println("create template variable");
-									TemplateVariable variable = new TemplateVariable(context.getSourceModule(), var);
-									action.addTemplateVariable(variable);
-								} else {
-									System.out.println("no scalar " + var + " " + scalar);
-								}
-							}
+							}							
 						}
 					}
 				}

@@ -89,8 +89,6 @@ public class Bundle extends AbstractSymfonyModel {
 
 	public void addService(Service service) {
 
-		//System.out.println("creating service from " + service.getFile().getFullPath().toString());
-		
 		service.setBundle(this);
 		services.remove(service);
 		services.add(service);
@@ -155,7 +153,6 @@ public class Bundle extends AbstractSymfonyModel {
 		String controller = PathUtils.getControllerFromTemplatePath(path);
 		
 		if (controller == null) {
-			System.err.println("Unable to extract controller name from template path");
 			return null;
 		}
 
@@ -163,22 +160,48 @@ public class Bundle extends AbstractSymfonyModel {
 		String viewName = PathUtils.getViewFromTemplatePath(path);
 		
 		if (viewName == null) {			
-			System.err.println("Unable to retrieve viewName from templat path");
 			return null;
 		}
 		
 
 		for (Controller ctrl : controllers) {
 
-			System.out.println(ctrl.getName() + " " + viewName);
 			if (ctrl.getName().equals(controller)) {
 				
 				return ctrl.getTemplateVariables(viewName);
 				
 			}
 		}
+				
+		return null;
+	}
+
+	public TemplateVariable getTemplateVariable(ISourceModule sourceModule2,
+			String varName) {
 		
-		System.err.println("getting template variables for controller " + controller + " " + viewName);		
+		IPath path = sourceModule2.getPath();
+		String controller = PathUtils.getControllerFromTemplatePath(path);
+		
+		if (controller == null) {
+			return null;
+		}
+
+		
+		String viewName = PathUtils.getViewFromTemplatePath(path);
+		
+		if (viewName == null) {			
+			return null;
+		}
+		
+
+		for (Controller ctrl : controllers) {
+			if (ctrl.getName().equals(controller)) {				
+				return ctrl.getTemplateVariable(viewName, varName);
+				
+			}
+		}
+				
+
 		return null;
 	}
 }

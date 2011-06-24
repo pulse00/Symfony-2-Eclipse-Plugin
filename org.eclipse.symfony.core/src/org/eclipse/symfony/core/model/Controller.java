@@ -68,7 +68,8 @@ public class Controller {
 		Controller other = (Controller) obj;
 		
 		//TODO: add a more sophisticted equals check...
-		return this.getName() == other.getName() && other.getActions().size() == actions.size();
+		return this.getName() == other.getName() && 
+				other.getActions().size() == actions.size();
 		
 	}
 
@@ -81,13 +82,23 @@ public class Controller {
 	public List<TemplateVariable> getTemplateVariables(String viewName) {
 		
 		for (Action action : actions) {
-			if (action.getName().equals(viewName)) {
-				
-				System.out.println(viewName + " => "  + action.getName());
+			if (action.getName().equals(viewName)) {				
 				return action.getTemplateVariables();
 			}			
 		}
 
+		return null;
+	}
+
+	public TemplateVariable getTemplateVariable(String viewName, String varName) {
+
+		
+		for (Action action :actions) {
+
+			if (action.getName().equals(viewName)) {
+				return action.getTemplateVariable(varName);
+			}
+		}
 		return null;
 	}
 }

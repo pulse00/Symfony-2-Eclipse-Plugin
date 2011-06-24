@@ -5,6 +5,18 @@ import java.util.List;
 
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 
+
+/**
+ * 
+ * The {@link Action} class represents a Symfony2
+ * action (aka controller) in a {@link Controller} (aka controller object).
+ * 
+ * 
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 @SuppressWarnings("restriction")
 public class Action {
 
@@ -26,9 +38,8 @@ public class Action {
 
 	public void addTemplateVariable(TemplateVariable variable) {
 		
-		
 		templateVars.add(variable);
-		System.err.println("add template var " + variable.getName("") + " in " + getName() + " " + templateVars.size() );
+
 		
 	}
 
@@ -39,9 +50,16 @@ public class Action {
 
 	public List<TemplateVariable> getTemplateVariables() {
 
-		System.out.println("template variables: " + templateVars.size() + " " + getName());
 		return templateVars;
 	}
 
+	public TemplateVariable getTemplateVariable(String varName) {
 
+		// probably should store the TemplateVars in a <String, TemplateVariable> Map
+		for (TemplateVariable var : templateVars) {			
+			if (var.getName("").equals(varName))
+				return var;
+		}
+		return null;
+	}
 }

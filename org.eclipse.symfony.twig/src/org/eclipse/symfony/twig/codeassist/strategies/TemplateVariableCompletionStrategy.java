@@ -61,18 +61,16 @@ public class TemplateVariableCompletionStrategy extends AbstractTwigCompletionSt
 
 		try {
 			
+			System.err.println("complet template variable");
 			AbstractTwigCompletionContext ctx = (AbstractTwigCompletionContext) getContext();
 			ModelManager model = ModelManager.getInstance();
-			List<TemplateVariable> variables = model.getTemplateVariables(ctx.getSourceModule());
+			List<TemplateVariable> variables = model.findTemplateVariables(ctx.getSourceModule());
 			
 			if (variables == null) {
 				return;
 			}
 			
 			SourceRange range = getReplacementRange(ctx);
-			
-			System.err.println("retrieved " + variables.size());			
-			
 			for (TemplateVariable variable : variables) {
 				
 				FakeField field = new FakeField((ModelElement) variable.getSourceModule(), variable.getName(""), Modifiers.AccPublic);

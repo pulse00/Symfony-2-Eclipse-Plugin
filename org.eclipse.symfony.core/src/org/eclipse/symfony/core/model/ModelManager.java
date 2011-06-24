@@ -250,7 +250,16 @@ public class ModelManager {
 		}		
 	}
 
-	public List<TemplateVariable> getTemplateVariables(ISourceModule sourceModule) {
+	/**
+	 * 
+	 * Search for all template variables that have been set in Controllers
+	 * for this sourceModule.
+	 * 
+	 * 
+	 * @param sourceModule
+	 * @return
+	 */
+	public List<TemplateVariable> findTemplateVariables(ISourceModule sourceModule) {
 
 		Bundle bundle = getBundle(sourceModule);
 		
@@ -276,5 +285,16 @@ public class ModelManager {
 		}
 		
 		return null;
+	}
+
+	public TemplateVariable findTemplateVariable(ISourceModule sourceModule, String varName) {
+		
+		Bundle bundle = getBundle(sourceModule);
+		
+		if (bundle == null)
+			return null;
+		
+		return bundle.getTemplateVariable(sourceModule, varName);
+		
 	}
 }

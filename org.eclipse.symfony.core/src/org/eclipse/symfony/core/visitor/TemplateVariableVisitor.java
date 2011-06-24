@@ -6,31 +6,42 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
+import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
+import org.eclipse.symfony.core.model.SymfonyModelAccess;
+import org.eclipse.symfony.core.model.TemplateVariable;
 
 
 
 /**
  * 
+ * The {@link TemplateVariableVisitor} parses {@link Assignment}
+ * statements for object instantiations which could be potentially
+ * be passed to templates as variables.
  * 
  * 
  * @author "Robert Gruendler <r.gruendler@gmail.com>"
  *
  */
 @SuppressWarnings("restriction")
-public class ServiceContainerVisitor extends PHPASTVisitor {
+public class TemplateVariableVisitor extends PHPASTVisitor {
 
-	protected Map<String, Service> services = new HashMap<String, Service>();
+	protected Map<String, TemplateVariable> templateVariables = new HashMap<String, TemplateVariable>();
+	protected IBuildContext context = null;
 
-	public Map<String, Service> getServices() {
-		return services;
+	public TemplateVariableVisitor(IBuildContext context) {
+		
+		this.context = context;
+		
 	}
+	
 
 	@Override
 	public boolean visit(Assignment s) throws Exception {
@@ -41,7 +52,7 @@ public class ServiceContainerVisitor extends PHPASTVisitor {
 		if (s.getVariable().getClass() == VariableReference.class) {
 
 			VariableReference var = (VariableReference) s.getVariable();			
-			varName = var.getName();
+			varName = var.getName().replace("$", "");
 
 			if (s.getValue().getClass() == PHPCallExpression.class) {
 
@@ -49,29 +60,38 @@ public class ServiceContainerVisitor extends PHPASTVisitor {
 
 				// are we calling a method named "get" ?
 				if (exp.getName().equals("get")) {
+					
 					service = extractServiceFromCall(exp);
+					
+					if (service != null && service.getClassName() != null && service.getNamespace() != null) {					
+						TemplateVariable tempVar = new TemplateVariable(context.getSourceModule(), service.getClassName(), service.getNamespace(), varName);
+						templateVariables.put(varName, tempVar);
+					}
+
 				} else {
 
 					if (exp.getReceiver().getClass() == PHPCallExpression.class) {
 
 						service = extractServiceFromCall((PHPCallExpression) exp.getReceiver());
-
-						if (service != null)
-							System.err.println("got service " + service.getClassName());
-						else System.err.println("no service");
-
+						
+						if (service == null || context == null || exp.getCallName() == null) {
+							return true;
+						}
+						
+						SimpleReference callName = exp.getCallName();
+						TemplateVariable tempVar = SymfonyModelAccess.getDefault().createTemplateVariableByReturnType(context.getSourceModule(), callName.toString(), service.getClassName(), service.getNamespace(), varName);
+						
+						if (tempVar != null) {
+							templateVariables.put(varName, tempVar);
+						}
+						
 					}
 				}
 			}
 		}
-		
-		if(service != null && varName != null) {			
-			services.put(varName, service);
-		}
-
 		return true;
-
 	}
+	
 
 	@SuppressWarnings("rawtypes")
 	private Service extractServiceFromCall(PHPCallExpression call) {
