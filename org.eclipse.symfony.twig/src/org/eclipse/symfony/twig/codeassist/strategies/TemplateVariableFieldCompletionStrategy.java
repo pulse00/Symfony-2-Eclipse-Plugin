@@ -49,6 +49,7 @@ VariableFieldStrategy {
 
 		ModelManager model = ModelManager.getInstance();
 
+		System.err.println("get variable for " + varName);
 		TemplateVariable var = model.findTemplateVariable(ctx.getSourceModule(), varName);
 
 		if (var == null) {
@@ -74,8 +75,7 @@ VariableFieldStrategy {
 				for (IField field : type.getFields()) {
 					reporter.reportField(field, "", range, true);
 				}
-			}
-			
+			}			
 		}
 	}
 }

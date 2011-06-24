@@ -9,11 +9,16 @@ import org.eclipse.dltk.core.ISourceModule;
  * being passed from a {@link Controller} to a 
  * Symfony template.
  *  
+ *  
+ * TODO: there needs to be a mapping between the template for which
+ * a Variable has been declared. Currently each variable declared
+ * in an action of a controller is considered to be a template variable
+ * of the controllers default template.
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-public class TemplateVariable {
+public class TemplateVariable implements ISymfonyModelElement {
 
 
 	private String name;
@@ -62,5 +67,12 @@ public class TemplateVariable {
 		
 		return className;
 		
+	}
+
+
+	@Override
+	public String getName() {
+
+		return getName("");
 	}
 }

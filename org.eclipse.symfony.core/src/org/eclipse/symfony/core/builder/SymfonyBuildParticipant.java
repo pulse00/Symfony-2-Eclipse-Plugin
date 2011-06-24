@@ -23,6 +23,9 @@ import org.eclipse.symfony.core.visitor.KernelVisitor;
  */
 public class SymfonyBuildParticipant implements IBuildParticipant {
 
+	
+	
+	
 	private ModuleDeclaration getModuleDeclaration(IBuildContext context) {
 		
 		ISourceModule sourceModule = context.getSourceModule();		
@@ -56,7 +59,10 @@ public class SymfonyBuildParticipant implements IBuildParticipant {
 				
 				Controller ctrl = visitor.getController();
 				
+				
+				
 				if (ctrl != null) {
+					System.err.println("++++ add controller to model " + ctrl.getName());
 					model.addController(ctrl);
 				}
 			}

@@ -128,13 +128,8 @@ public class Bundle extends AbstractSymfonyModel {
 
 	public void addController(Controller controller) {
 
-		if (controllers.contains(controller)) {
-			Controller existing = controllers.get(controllers.indexOf(controller));			
-			if(existing.equals(controller)) {
-				return;			
-			}
-			
-			controllers.remove(existing);
+		if (controllers.contains(controller)) {			
+			controllers.remove(controller);
 		}
 		
 		controllers.add(controller);
@@ -203,5 +198,17 @@ public class Bundle extends AbstractSymfonyModel {
 				
 
 		return null;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+
+		if (!(obj instanceof Bundle))
+			return false;
+		
+
+		Bundle other = (Bundle) obj;
+		
+		return other.getName().equals(this.getName());
 	}
 }

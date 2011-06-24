@@ -18,7 +18,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
  *
  */
 @SuppressWarnings("restriction")
-public class Action {
+public class Action implements ISymfonyModelElement {
 
 	
 	private List<TemplateVariable> templateVars = new ArrayList<TemplateVariable>();
@@ -38,6 +38,8 @@ public class Action {
 
 	public void addTemplateVariable(TemplateVariable variable) {
 		
+		
+		System.err.println(getName() + " adding tvariable " + variable.getName("") + " " + variable.getClassName() + " " + variable.getNamespace());
 		templateVars.add(variable);
 
 		
@@ -55,6 +57,7 @@ public class Action {
 
 	public TemplateVariable getTemplateVariable(String varName) {
 
+		System.err.println(getName() + " getting template variable " + varName + " searching in " + templateVars.size());
 		// probably should store the TemplateVars in a <String, TemplateVariable> Map
 		for (TemplateVariable var : templateVars) {			
 			if (var.getName("").equals(varName))

@@ -79,10 +79,15 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 						}
 						
 						SimpleReference callName = exp.getCallName();
+						
+						System.out.println("getting template variable for: " + varName);
 						TemplateVariable tempVar = SymfonyModelAccess.getDefault().createTemplateVariableByReturnType(context.getSourceModule(), callName.toString(), service.getClassName(), service.getNamespace(), varName);
 						
 						if (tempVar != null) {
+							System.out.println("addint variable");
 							templateVariables.put(varName, tempVar);
+						} else {
+							System.out.println("no variable found");
 						}
 						
 					}

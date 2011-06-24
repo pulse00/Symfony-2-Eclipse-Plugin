@@ -9,7 +9,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 
 @SuppressWarnings("restriction")
-public class Controller {
+public class Controller implements ISymfonyModelElement {
 
 
 	private ISourceModule sourceModule;
@@ -73,7 +73,7 @@ public class Controller {
 		
 	}
 
-	private List<Action> getActions() {
+	public List<Action> getActions() {
 
 		return actions;
 

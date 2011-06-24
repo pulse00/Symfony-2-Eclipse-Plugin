@@ -2,12 +2,10 @@ package org.eclipse.symfony.core.model;
 
 import org.eclipse.dltk.core.IModelElement;
 
-abstract public class AbstractSymfonyModel {
+abstract public class AbstractSymfonyModel implements ISymfonyModelElement {
 	
 	
 	protected IModelElement sourceModule;
-	
-	
 	
 	
 	public AbstractSymfonyModel(IModelElement sourceModule) {

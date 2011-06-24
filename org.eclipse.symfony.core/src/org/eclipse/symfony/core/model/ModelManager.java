@@ -7,6 +7,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.symfony.core.goals.ContainerAwareGoalEvaluatorFactory;
+import org.eclipse.symfony.core.model.listener.IModelChangedListener;
 import org.eclipse.symfony.core.model.listener.IModelClearListener;
 
 
@@ -29,6 +30,7 @@ public class ModelManager {
 	private List<Project> projects = new ArrayList<Project>();
 	
 	private List<IModelClearListener> modelClearListeners = new ArrayList<IModelClearListener>();
+	private List<IModelChangedListener> modelChangeListeners = new ArrayList<IModelChangedListener>();
 	
 	private ModelManager() {			
 		
@@ -64,8 +66,6 @@ public class ModelManager {
 
 	public void addProject(Project project) {
 
-		
-		
 		for (Project proj : projects) {			
 			if (proj == project) {
 				projects.remove(proj);
@@ -74,6 +74,7 @@ public class ModelManager {
 		}
 		
 		projects.add(project);
+		fireModelChangedEvent();
 		
 	}
 
@@ -87,7 +88,7 @@ public class ModelManager {
 			
 			if (project.equals(scriptProject)) {
 				project.addBundle(bundle);				
-				dispatchChangeListener();
+				fireModelChangedEvent();
 				found = true;
 				break;
 				
@@ -98,7 +99,7 @@ public class ModelManager {
 			Project project = new Project(scriptProject);			
 			project.addBundle(bundle);
 			addProject(project);
-			dispatchChangeListener();
+			fireModelChangedEvent();
 		}
 	}
 	
@@ -109,6 +110,7 @@ public class ModelManager {
 			for (Bundle bundle : project.getBundles()) {
 				if (bundle.getBasePath().isPrefixOf(service.getFile().getFullPath())) {				
 					bundle.addService(service);
+					fireModelChangedEvent();
 					return;
 				}
 			}
@@ -120,14 +122,10 @@ public class ModelManager {
 				
 			}
 		}
+		
+		fireModelChangedEvent();
 	}
 	
-	private void dispatchChangeListener() {
-		
-		//TODO: implement model change listener logic
-		
-	}
-
 	public void activateBundle(String fullyQualifiedName) {
 
 		
@@ -151,6 +149,7 @@ public class ModelManager {
 		for (Project project : projects) {
 			if (project.getPath().isPrefixOf(annotation.getSourceModule().getPath())) {
 				project.addAnnotation(annotation);
+				fireModelChangedEvent();
 				break;
 			}
 		}
@@ -245,7 +244,9 @@ public class ModelManager {
 			
 			if (p.equals(project)) {
 				p.addController(controller);
+				fireModelChangedEvent();
 				break;
+				
 			}			
 		}		
 	}
@@ -295,6 +296,20 @@ public class ModelManager {
 			return null;
 		
 		return bundle.getTemplateVariable(sourceModule, varName);
+		
+	}
+	
+	private void fireModelChangedEvent() {
+		
+		for (IModelChangedListener listener : modelChangeListeners) {
+			listener.modelChanged();
+		}
+		
+	}
+
+	public void addModelChangeListener(IModelChangedListener listener) {
+
+		modelChangeListeners.add(listener);
 		
 	}
 }
