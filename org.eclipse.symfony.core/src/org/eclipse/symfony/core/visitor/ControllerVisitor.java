@@ -4,6 +4,7 @@ package org.eclipse.symfony.core.visitor;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.Iterator;
 
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
@@ -101,25 +102,29 @@ public class ControllerVisitor extends PHPASTVisitor {
 				}				
 			}
 
+
 			// check the return statement for template variables
-			method.traverse(new ReturnStatementVisitor(method));
+			method.traverse(new TemplateVariableVisitor(method));
 
 
 		}
 		return true;
 	}
 
-	private class ReturnStatementVisitor extends PHPASTVisitor {
+	private class TemplateVariableVisitor extends ServiceContainerVisitor {
 
 		private PHPMethodDeclaration method;
 
-		public ReturnStatementVisitor(PHPMethodDeclaration method) {
+		public TemplateVariableVisitor(PHPMethodDeclaration method) {
 
 			this.method = method;
 
 		}
+		
 
+		
 		@Override
+		@SuppressWarnings("rawtypes")
 		public boolean visit(ReturnStatement statement) throws Exception {
 
 			if (statement.getExpr().getKind() == ASTNodeKinds.ARRAY_CREATION) {
@@ -129,27 +134,38 @@ public class ControllerVisitor extends PHPASTVisitor {
 
 				for (ArrayElement element : array.getElements()) {
 
-					//					System.err.println(element.getKey().getClass() + " " + element.getValue().getClass());
-
 					Expression key = element.getKey();
 					Expression value = element.getValue();
-
+					
 					if (key.getClass() == Scalar.class) {
 
 						Scalar varName = (Scalar) key;
 
 						if (value.getClass() == VariableReference.class) {
 
-							VariableReference var = (VariableReference) element.getValue();						
-							TemplateVariable variable = new TemplateVariable(context.getSourceModule(), varName, var);						
+							TemplateVariable variable = new TemplateVariable(context.getSourceModule(), varName.getValue().replace("\"", "").replace("'", ""));						
 							action.addTemplateVariable(variable);
 
-
 						} else if(value.getClass() == PHPCallExpression.class) {
+
+							Iterator it = services.keySet().iterator();
 							
-							PHPCallExpression call = (PHPCallExpression) value;
-
-
+							while(it.hasNext()) {
+								
+								String var = (String) it.next();
+								
+								String scalar = varName.getValue().replace("\"", "").replace("'", "");
+								var = var.replace("$", "");
+								
+								if (var.equals(scalar)) {
+									
+									System.err.println("create template variable");
+									TemplateVariable variable = new TemplateVariable(context.getSourceModule(), var);
+									action.addTemplateVariable(variable);
+								} else {
+									System.out.println("no scalar " + var + " " + scalar);
+								}
+							}
 						}
 					}
 				}

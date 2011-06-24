@@ -85,8 +85,10 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
 			// we're inside a call expression in the form $em->| 
 			if (expression instanceof PHPCallExpression) {
 
+				
 								
 				PHPCallExpression exp = (PHPCallExpression) expression;
+				
 				ASTNode receiver = exp.getReceiver();
 
 				// are we calling a method named "get" ?

@@ -71,10 +71,12 @@ public class TemplateVariableCompletionStrategy extends AbstractTwigCompletionSt
 			
 			SourceRange range = getReplacementRange(ctx);
 			
+			System.err.println("retrieved " + variables.size());			
+			
 			for (TemplateVariable variable : variables) {
 				
 				FakeField field = new FakeField((ModelElement) variable.getSourceModule(), variable.getName(""), Modifiers.AccPublic);
-				reporter.reportField(field, "", range, true);						
+				reporter.reportField(field, "", range, true);								
 				
 			}
 			

@@ -167,7 +167,7 @@ public class Bundle extends AbstractSymfonyModel {
 			return null;
 		}
 		
-		System.err.println("controllers: " + controllers.size());
+
 		for (Controller ctrl : controllers) {
 
 			System.out.println(ctrl.getName() + " " + viewName);

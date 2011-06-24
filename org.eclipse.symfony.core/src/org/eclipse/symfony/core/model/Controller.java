@@ -80,14 +80,12 @@ public class Controller {
 
 	public List<TemplateVariable> getTemplateVariables(String viewName) {
 		
-		
 		for (Action action : actions) {
-
 			if (action.getName().equals(viewName)) {
 				
+				System.out.println(viewName + " => "  + action.getName());
 				return action.getTemplateVariables();
-			}
-			
+			}			
 		}
 
 		return null;

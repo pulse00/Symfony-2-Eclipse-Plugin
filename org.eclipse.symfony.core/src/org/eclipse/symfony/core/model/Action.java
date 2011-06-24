@@ -26,7 +26,9 @@ public class Action {
 
 	public void addTemplateVariable(TemplateVariable variable) {
 		
+		
 		templateVars.add(variable);
+		System.err.println("add template var " + variable.getName("") + " in " + getName() + " " + templateVars.size() );
 		
 	}
 
@@ -37,6 +39,7 @@ public class Action {
 
 	public List<TemplateVariable> getTemplateVariables() {
 
+		System.out.println("template variables: " + templateVars.size() + " " + getName());
 		return templateVars;
 	}
 

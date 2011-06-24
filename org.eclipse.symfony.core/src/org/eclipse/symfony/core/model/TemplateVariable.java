@@ -7,21 +7,18 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 @SuppressWarnings("restriction")
 public class TemplateVariable {
 
-	private Scalar scalar;
-	private VariableReference reference;
-	
+
 	private String name;
 	private ISourceModule sourceModule;
 	
 	
-	public TemplateVariable(ISourceModule iSourceModule, Scalar varName, VariableReference var) {
+	public TemplateVariable(ISourceModule iSourceModule, String varName) {
 		
-		scalar = varName;
-		reference = var;
-		name = scalar.getValue().replace("\"", "").replace("'", "");
+		name = varName;
 		this.sourceModule = iSourceModule;
 
 	}
+
 
 	public String getName(String prefix) {
 
