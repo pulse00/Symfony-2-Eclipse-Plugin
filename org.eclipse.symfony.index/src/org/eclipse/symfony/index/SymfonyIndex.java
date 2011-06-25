@@ -4,6 +4,14 @@ import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
+/**
+ * The {@link SymfonyIndex} plugin. Holds
+ * the SQL index.
+ * 
+ * 
+ * @author "Robert Gruendler <r.gruendler@gmail.com>"
+ *
+ */
 public class SymfonyIndex extends Plugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.symfony.index"; //$NON-NLS-1$

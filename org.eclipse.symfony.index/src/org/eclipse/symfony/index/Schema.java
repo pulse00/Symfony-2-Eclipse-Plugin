@@ -19,10 +19,19 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.symfony.index.preferences.SymfonyIndexPreferences;
 import org.osgi.service.prefs.BackingStoreException;
 
+
+/**
+ * 
+ * 
+ * 
+ * 
+ * @author "Robert Gruendler <r.gruendler@gmail.com>"
+ *
+ */
 public class Schema {
 
 
-	public static final String VERSION = "0.1"; //$NON-NLS-1$
+	public static final String VERSION = "0.2"; //$NON-NLS-1$
 
 	/** Contains already created tables names */
 	private static final Set<String> TABLES_CACHE = new HashSet<String>();

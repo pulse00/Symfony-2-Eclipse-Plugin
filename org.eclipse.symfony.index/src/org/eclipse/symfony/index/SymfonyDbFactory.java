@@ -13,7 +13,14 @@ import org.eclipse.symfony.index.preferences.SymfonyIndexPreferences;
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.h2.tools.DeleteDbFiles;
 
-
+/**
+ * 
+ * Database Factory for the SQL Index.
+ * 
+ * 
+ * @author "Robert Gruendler <r.gruendler@gmail.com>"
+ *
+ */
 public class SymfonyDbFactory  {
 
 	private static ILock instanceLock = Job.getJobManager().newLock();	
