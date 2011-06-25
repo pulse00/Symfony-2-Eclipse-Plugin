@@ -1,10 +1,8 @@
 package org.eclipse.symfony.core.builder;
 
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
@@ -12,8 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.symfony.core.parser.XMLConfigParser;
 import org.eclipse.symfony.core.parser.YamlConfigParser;
-import org.eclipse.symfony.index.IServiceDao;
-import org.eclipse.symfony.index.SymfonyDbFactory;
+import org.eclipse.symfony.index.SymfonyIndexer;
 
 
 /**
@@ -28,33 +25,39 @@ import org.eclipse.symfony.index.SymfonyDbFactory;
 public class ResourceVisitor extends AbstractSymfonyVisitor 
 implements IResourceVisitor {
 
-
 	private IFile file;
 	private IPath path;
-	private IResource resource;
-	private IContainer resourceContainer;
-
+	private SymfonyIndexer indexer;
+	private int timestamp;
 
 	@Override
 	public boolean visit(IResource resource) throws CoreException {
+		
+		try {
 
-		if (resource instanceof IFile && resource.getFileExtension() != null) {
+			if (resource instanceof IFile && resource.getFileExtension() != null) {
 
-			file = (IFile) resource;
-			path = resource.getFullPath();
-			this.resource = resource;
+				indexer = SymfonyIndexer.getInstance();
+				file = (IFile) resource;
+				path = resource.getFullPath();
+				resource.getParent();
+				timestamp = (int) resource.getLocalTimeStamp();
+				indexer.startIndexing(path.toString());
 
-			resourceContainer = resource.getParent();
+				if (resource.getFileExtension().equals("xml"))
+				{				
+					loadXML();
 
-
-			if (resource.getFileExtension().equals("xml"))
-			{				
-				loadXML();
-
-			} else if (resource.getFileExtension().equals("yml")) 
-			{
-				loadYaml();
+				} else if (resource.getFileExtension().equals("yml")) 
+				{
+					loadYaml();
+				}
+				
+				indexer.commit();
 			}
+		} catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 		return true;
@@ -68,8 +71,7 @@ implements IResourceVisitor {
 			YamlConfigParser parser = new YamlConfigParser(file.getContents());
 			parser.parse();
 
-
-			loadServices(parser.getServices());
+			indexServices(parser.getServices());
 
 		} catch (Exception e1) {
 
@@ -88,53 +90,32 @@ implements IResourceVisitor {
 			parser.parse();
 
 			if (parser.hasServices()) {
-				loadServices(parser.getServices());
+				indexServices(parser.getServices());
 			}
 
 		} catch (Exception e) {
 
 			//System.err.println("xml error: " + e.getMessage());
 		}
-
-
 	}
 
-
 	@SuppressWarnings("rawtypes")
-	private void loadServices(HashMap<String, String> services) {
-
-		Connection connection = null;
+	private void indexServices(HashMap<String, String> services) {
 
 		try {
-
-			SymfonyDbFactory factory = SymfonyDbFactory.getInstance();
-			connection = factory.createConnection();
-			IServiceDao serviceDao = factory.getServiceDao();
 
 			Iterator it = services.keySet().iterator();
 
 			while(it.hasNext()) {
 
 				String id = (String) it.next();
-				String value = services.get(id);
-				
-				serviceDao.insert(connection, path.toString(), id, value, (int) resource.getLocalTimeStamp());
+				String phpClass = services.get(id);
+				indexer.addService(id, phpClass, path.toString(), timestamp);
 
 			}
-
-
 
 		} catch (Exception e) {
-
 			e.printStackTrace();
-		} finally {
-
-			try {				
-				if (connection != null)
-					connection.close();
-			} catch (Exception e2) {
-				// TODO: handle exception
-			}
 		}
 	}
 }

@@ -16,6 +16,8 @@ import org.eclipse.osgi.util.NLS;
  * {@link ServiceDao} Data Access Object for 
  * Symfony services.
  * 
+ * TODO: implement Cache layer
+ * 
  * 
  * @author "Robert Gruendler <r.gruendler@gmail.com>"
  *
@@ -42,8 +44,8 @@ public class ServiceDao implements IServiceDao {
 	public void insert(Connection connection, String path, String name, String phpclass, int timestamp)
 			throws SQLException {
 
-		String tableName = TABLENAME;
 
+		String tableName = TABLENAME;
 		String query;
 
 		query = D_INSERT_QUERY_CACHE.get(tableName);
@@ -75,6 +77,10 @@ public class ServiceDao implements IServiceDao {
 		statement.setInt(++param, timestamp);
 		statement.addBatch();
 		
+		if (Debug.debugSql) {			
+			System.err.println(statement.toString());
+		}		
+		
 		//
 		//		if (!isReference) {
 		//			H2Cache.addElement(new Element(type, flags, offset, length,
@@ -89,6 +95,7 @@ public class ServiceDao implements IServiceDao {
 		try {
 			Statement statement = connection.createStatement();
 			statement.execute("TRUNCATE TABLE SERVICES");
+			connection.commit();
 			
 		} catch (SQLException e) {
 
@@ -171,5 +178,21 @@ public class ServiceDao implements IServiceDao {
 		
 		return null;
 
+	}
+
+	@Override
+	public void deleteServices(Connection connection, String path) {
+
+		try {
+			Statement statement = connection.createStatement();
+			statement.execute("DELETE FROM SERVICES WHERE PATH = '" + path + "'");
+			connection.commit();
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		
 	}
 }

@@ -15,4 +15,6 @@ public interface IServiceDao {
 
 	Service find(Connection connection, String string);
 
+	void deleteServices(Connection connection, String path);
+
 }
