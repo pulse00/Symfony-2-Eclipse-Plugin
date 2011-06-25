@@ -111,7 +111,7 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
 								//TODO: check if there are PDT utils for stripping away quotes from
 								// string literals.
 								String className = ((Scalar)first).getValue().replace("'", "").replace("\"", "");
-								Service service = ModelManager.getInstance().getService(className);
+								Service service = ModelManager.getInstance().findService(className);
 
 								// we got a service match, return the goalevaluator.
 								if (service != null) {

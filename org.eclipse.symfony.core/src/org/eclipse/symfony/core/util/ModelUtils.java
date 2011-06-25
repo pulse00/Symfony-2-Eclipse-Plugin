@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.references.VariableReference;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.symfony.core.model.ModelManager;
@@ -17,6 +19,7 @@ public class ModelUtils {
 
 		ASTNode receiver = call.getReceiver();
 
+		
 		if (receiver instanceof VariableReference) {
 
 			VariableReference ref = (VariableReference) receiver;
@@ -38,13 +41,10 @@ public class ModelUtils {
 						// string literals.
 						String className = ((Scalar)first).getValue().replace("'", "").replace("\"", "");
 
-						//System.err.println(className);
-						
-						Service service = ModelManager.getInstance().getService(className);
+						Service service = ModelManager.getInstance().findService(className);
 
 						// we got a service match, return the goalevaluator.
 						if (service != null) {
-							System.err.println("found service");
 							return service;
 						}
 					}							

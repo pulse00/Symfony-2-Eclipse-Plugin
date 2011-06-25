@@ -71,8 +71,8 @@ public class IndexTest extends TestCase {
 			serviceDao.findAll(connection, new IServiceHandler() {
 				
 				@Override
-				public void handle(Service service) {					
-					services.add(service);
+				public void handle(String id, String phpClass, String path) {					
+					services.add(new Service(id, phpClass, path));
 					
 				}
 			});

@@ -3,12 +3,16 @@ package org.eclipse.symfony.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.symfony.core.goals.ContainerAwareGoalEvaluatorFactory;
 import org.eclipse.symfony.core.model.listener.IModelChangedListener;
 import org.eclipse.symfony.core.model.listener.IModelClearListener;
+import org.eclipse.symfony.index.IServiceHandler;
+import org.eclipse.symfony.index.SymfonyIndexer;
+
 
 
 /**
@@ -31,9 +35,20 @@ public class ModelManager {
 	
 	private List<IModelClearListener> modelClearListeners = new ArrayList<IModelClearListener>();
 	private List<IModelChangedListener> modelChangeListeners = new ArrayList<IModelChangedListener>();
+
+	private SymfonyIndexer index;
 	
-	private ModelManager() {			
-		
+	
+
+	
+	private ModelManager() {	
+
+		try {
+			index = SymfonyIndexer.getInstance();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static ModelManager getInstance() {
@@ -175,28 +190,22 @@ public class ModelManager {
 	 * 
 	 * @return
 	 */
-	public Service getService(String id) {
-
-		// TODO: pass in the ScriptProject so we can check
-		// for the correct project scope.
-
+	public Service findService(String id, IPath path) {
 		
-		// check for a project-scoped service first
-		for (Project project : projects) {
-			if(project.hasService(id)) {				
-				return project.getService(id);
-			}
-		}
+		final List<Service> services = new ArrayList<Service>();		
+		String pathString = path == null ? "" : path.toString();
 		
-		for (Project project : projects) {
-			for(Bundle bundle : project.getBundles()) {
-				for(Service service : bundle.getServices()) {
-					if (service.getId().equals(id))
-						return service;
-					
-				}
+		index.findService(id, pathString, new IServiceHandler() {
+			
+			@Override
+			public void handle(String id, String phpClass, String path) {
+				services.add(new Service(id, phpClass, path));				
 			}
-		}
+		});
+		
+		
+		if (services.size() == 1)
+			return services.get(0);
 		
 		return null;
 	}
@@ -217,23 +226,28 @@ public class ModelManager {
 		return null;
 	}
 
-	
+
 	/**
 	 * Return all services of a {@link Project} or null if the
 	 * project hasn't been found.
 	 * 
-	 * @param scriptProject
+	 * @param path
 	 * @return
 	 */
-	public List<Service> getServices(IScriptProject scriptProject) {
+	public List<Service> findServices(IPath path) {
 
-		for (Project project : projects) {			
-			if (project.equals(scriptProject)) {				
-				return project.getServices();
+		final List<Service> services = new ArrayList<Service>();
+		
+		index.findServices(path.toString(), new IServiceHandler() {
+			
+			@Override
+			public void handle(String id, String phpClass, String path) {
+				services.add(new Service(id, phpClass, path));
+				
 			}
-		}
-
-		return null;
+		});
+		
+		return services;
 		
 	}
 
@@ -311,6 +325,12 @@ public class ModelManager {
 	public void addModelChangeListener(IModelChangedListener listener) {
 
 		modelChangeListeners.add(listener);
+		
+	}
+
+	public Service findService(String className) {
+
+		return findService(className, null);
 		
 	}
 }

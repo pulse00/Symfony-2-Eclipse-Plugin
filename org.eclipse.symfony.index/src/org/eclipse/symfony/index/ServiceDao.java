@@ -120,10 +120,8 @@ public class ServiceDao implements IServiceDao {
 				int columnIndex = 0;
 				String path = result.getString(++columnIndex);
 				String name = result.getString(++columnIndex);
-				String phpClass = result.getString(++columnIndex);
-				
-				Service service = new Service(name, phpClass, path);
-				handler.handle(service);
+				String phpClass = result.getString(++columnIndex);				
+				handler.handle(name, path, phpClass);
 
 			}
 		} catch(Exception e) {
@@ -194,5 +192,61 @@ public class ServiceDao implements IServiceDao {
 		}
 
 		
+	}
+
+	@Override
+	public void findServicesByPath(Connection connection, String path, IServiceHandler handler) {
+
+		try {
+			
+			Statement statement = connection.createStatement();
+			String query = "SELECT NAME, PHPCLASS, PATH FROM SERVICES WHERE PATH LIKE '" + path + "%'";
+
+			ResultSet result = statement.executeQuery(query.toString());
+			
+			while (result.next()) {
+				
+				int columnIndex = 0;
+				String id= result.getString(++columnIndex);
+				String phpClass = result.getString(++columnIndex);
+				String _path = result.getString(++columnIndex);
+				handler.handle(id, phpClass, _path);
+
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void findService(Connection connection, String id, String path,
+			IServiceHandler handler) {
+
+		try {
+			
+			Statement statement = connection.createStatement();
+			StringBuilder builder = new StringBuilder("SELECT NAME, PHPCLASS, PATH FROM SERVICES WHERE PATH LIKE '");
+			builder.append(path);
+			builder.append("%' AND NAME = '");
+			builder.append(id);
+			builder.append("'");
+
+			ResultSet result = statement.executeQuery(builder.toString());
+			
+			result.first();
+			
+			if (!result.isFirst()) {
+				return;
+			}
+
+			String _id= result.getString(1);
+			String _phpClass = result.getString(2);
+			String _path = result.getString(3);
+			
+			handler.handle(_id, _phpClass, _path);			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

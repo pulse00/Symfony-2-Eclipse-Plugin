@@ -11,5 +11,5 @@ package org.eclipse.symfony.index;
  */
 public interface IServiceHandler {
 	
-	void handle(Service service);
+	void handle(String id, String phpClass, String path);
 }

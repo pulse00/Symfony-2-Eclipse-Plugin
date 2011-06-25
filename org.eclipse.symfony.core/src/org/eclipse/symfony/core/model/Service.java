@@ -1,6 +1,8 @@
 package org.eclipse.symfony.core.model;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 
 /**
@@ -36,6 +38,8 @@ public class Service {
 	private String id;
 	
 	private Bundle bundle;
+
+	private IPath path;
 	
 	
 	public Service(IFile resource, String id, String clazz) {
@@ -53,6 +57,14 @@ public class Service {
 			namespace = clazz.substring(0,lastPart);
 			className = clazz.substring(lastPart + 1);
 		}
+	}
+
+	public Service(String id, String phpClass, String path) {
+
+		this.fqcn = phpClass;
+		this.id = id;
+		this.path = new Path(path);		
+		
 	}
 
 	public IFile getFile() {
@@ -85,6 +97,13 @@ public class Service {
 	
 	public String getClassName() {
 		return className;
+	}
+
+	public static Service fromIndex(org.eclipse.symfony.index.Service s) {
+	
+		Service service = new Service(s.id, s.phpClass, s.path);
+		return service;
+
 	}
 	
 }

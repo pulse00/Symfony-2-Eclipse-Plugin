@@ -6,9 +6,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
@@ -48,12 +50,14 @@ public class ServiceReturnTypeCompletionStrategy extends ClassMembersStrategy {
 	public void apply(ICompletionReporter reporter) throws Exception {
 
 		ServiceReturnTypeContext context = (ServiceReturnTypeContext) getContext();
+		
+		IScriptProject project = context.getSourceModule().getScriptProject();
 		String source = SymfonyTextSequenceUtilities.getServiceFromMethodParam(context.getStatementText());
 		
 		if (source == null)
 			return;
 		
-		Service service = ModelManager.getInstance().getService(source);
+		Service service = ModelManager.getInstance().findService(source, project.getPath());
 
 		if (service == null)
 			return;

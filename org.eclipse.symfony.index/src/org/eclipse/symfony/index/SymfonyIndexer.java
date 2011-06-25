@@ -2,6 +2,7 @@ package org.eclipse.symfony.index;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 public class SymfonyIndexer {
 	
@@ -49,6 +50,22 @@ public class SymfonyIndexer {
 	public void commit() throws Exception {
 		
 		serviceDao.commitInsertions();
+		
+	}
+
+
+	public void findServices(String string, IServiceHandler iServiceHandler) {
+
+		serviceDao.findServicesByPath(connection, string, iServiceHandler);		
+
+	}
+
+
+	public void findService(String id, String path,
+			IServiceHandler iServiceHandler) {
+
+		
+		serviceDao.findService(connection, id, path, iServiceHandler);
 		
 	}
 }

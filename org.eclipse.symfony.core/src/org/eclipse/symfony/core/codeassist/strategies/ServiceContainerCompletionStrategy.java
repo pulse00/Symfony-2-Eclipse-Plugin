@@ -2,6 +2,7 @@ package org.eclipse.symfony.core.codeassist.strategies;
 
 import java.util.List;
 
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
@@ -46,8 +47,10 @@ public class ServiceContainerCompletionStrategy extends
 		}
 		
 		ServiceContainerContext context = (ServiceContainerContext) getContext();
+		IScriptProject project = context.getSourceModule().getScriptProject();
+		
 		ModelManager manager = ModelManager.getInstance();
-		List<Service> services = manager.getServices(context.getSourceModule().getScriptProject());
+		List<Service> services = manager.findServices(project.getPath());
 		SourceRange range = getReplacementRange(context);
 		
 		if (services == null) {
