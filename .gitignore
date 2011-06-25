@@ -3,3 +3,4 @@ org.eclipse.symfony.core/bin/*
 org.eclipse.symfony.ui/bin/*
 org.eclipse.symfony.twig/bin/*
 org.eclipse.symfony.test/bin/*
+org.eclipse.symfony.index/bin/*

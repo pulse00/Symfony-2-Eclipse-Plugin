@@ -48,14 +48,6 @@ PhpIndexingVisitorExtension {
 	
 	
 	@Override
-	public void setRequestor(IIndexingRequestor requestor) {
-	
-		this.requestor = requestor;
-	
-	}
-
-
-	@Override
 	public boolean visit(ModuleDeclaration s) throws Exception {
 	
 		return true;
