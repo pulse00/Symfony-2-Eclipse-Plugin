@@ -34,10 +34,15 @@ public class SymfonyNature extends ScriptNature {
 		}
 
 		ICommand[] newCommands = new ICommand[commands.length + 1];
-		System.arraycopy(commands, 0, newCommands, 0, commands.length);
+		
+		// put the SymfonyBuilder on the first position as we need to 
+		// parse the xml/yml files before the php sources are being parses
+		// so the definitions for ie. services can be resolved.
+		System.arraycopy(commands, 0, newCommands, 1, commands.length);
+		
 		ICommand command = desc.newCommand();
 		command.setBuilderName(SymfonyBuilder.BUILDER_ID);
-		newCommands[newCommands.length - 1] = command;
+		newCommands[0] = command;
 		desc.setBuildSpec(newCommands);
 		getProject().setDescription(desc, null);
 	}
@@ -65,7 +70,4 @@ public class SymfonyNature extends ScriptNature {
 			}
 		}
 	}
-
-
-
 }

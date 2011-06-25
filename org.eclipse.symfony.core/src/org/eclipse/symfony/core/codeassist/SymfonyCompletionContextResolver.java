@@ -6,6 +6,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.CompletionContextResolv
 import org.eclipse.symfony.core.codeassist.contexts.AnnotationCompletionContext;
 import org.eclipse.symfony.core.codeassist.contexts.ServiceContainerContext;
 import org.eclipse.symfony.core.codeassist.contexts.ServiceReturnTypeContext;
+import org.eclipse.symfony.core.codeassist.contexts.TemplateVariableContext;
 
 /**
  * 
@@ -24,8 +25,7 @@ public class SymfonyCompletionContextResolver extends CompletionContextResolver
 				new AnnotationCompletionContext(),
 				new ServiceContainerContext(),
 				new ServiceReturnTypeContext(),
-		};
-		
+				new TemplateVariableContext(),
+		};		
 	}
-
 }

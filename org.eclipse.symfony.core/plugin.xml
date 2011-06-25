@@ -40,13 +40,15 @@
  	</extension>   
  	
 	<!-- The Symfony2 dltk builder - traverses AST nodes during building to parse model elements like Bundles/AppKernel etc. -->	
+	
+	<!-- org.eclipse.php.core.PHPNature -->
    <extension
          point="org.eclipse.dltk.core.buildParticipant">
       <buildParticipant
             class="org.eclipse.symfony.core.builder.SymfonyBuildParticipantFactory"
             id="org.eclipse.symfony.core.buildParticipant"
             name="Symfony Builder"
-            nature="org.eclipse.php.core.PHPNature">
+            nature="org.eclipse.symfony.core.symfonyNature">
       </buildParticipant>
    </extension>
    

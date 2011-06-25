@@ -106,6 +106,7 @@ public class ModelManager {
 	
 	public void addService(Service service) {
 		
+//		System.err.println("+++ adding service " + service.getClassName());
 		for (Project project : projects) {
 			for (Bundle bundle : project.getBundles()) {
 				if (bundle.getBasePath().isPrefixOf(service.getFile().getFullPath())) {				
@@ -181,7 +182,7 @@ public class ModelManager {
 
 		
 		// check for a project-scoped service first
-		for (Project project : projects) {			
+		for (Project project : projects) {
 			if(project.hasService(id)) {				
 				return project.getService(id);
 			}

@@ -1,24 +1,22 @@
 package org.eclipse.symfony.core;
 
-import org.osgi.framework.BundleActivator;
+import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-public class SymfonyCorePlugin implements BundleActivator {
+public class SymfonyCorePlugin extends Plugin {
 
-	private static BundleContext context;
-	
 	public static String ID = "org.eclipse.symfony.core";
+	private static SymfonyCorePlugin plugin;
 
-	static BundleContext getContext() {
-		return context;
-	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
-		SymfonyCorePlugin.context = bundleContext;
+		super.start(bundleContext);
+
+		plugin = this;
 	}
 
 	/*
@@ -26,7 +24,13 @@ public class SymfonyCorePlugin implements BundleActivator {
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
-		SymfonyCorePlugin.context = null;
+		super.stop(bundleContext);
+		plugin = null;
+	}
+	
+	public static SymfonyCorePlugin getDefault() {
+		
+		return plugin;
 	}
 
 }

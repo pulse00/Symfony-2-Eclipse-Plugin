@@ -26,6 +26,7 @@ public class SymfonyBuildParticipantFactory implements IBuildParticipantFactory 
 		
 		IProjectNature nature = project.getProject().getNature(SymfonyNature.NATURE_ID);
 			
+		
 		if (nature instanceof SymfonyNature) {			
 			return new SymfonyBuildParticipant();			
 		}

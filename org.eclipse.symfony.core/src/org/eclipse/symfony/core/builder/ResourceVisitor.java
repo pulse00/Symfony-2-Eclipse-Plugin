@@ -1,16 +1,19 @@
 package org.eclipse.symfony.core.builder;
 
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.symfony.core.model.ModelManager;
-import org.eclipse.symfony.core.model.Service;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.symfony.core.parser.XMLConfigParser;
 import org.eclipse.symfony.core.parser.YamlConfigParser;
+import org.eclipse.symfony.index.IServiceDao;
+import org.eclipse.symfony.index.SymfonyDbFactory;
 
 
 /**
@@ -27,6 +30,9 @@ implements IResourceVisitor {
 
 
 	private IFile file;
+	private IPath path;
+	private IResource resource;
+	private IContainer resourceContainer;
 
 
 	@Override
@@ -35,17 +41,22 @@ implements IResourceVisitor {
 		if (resource instanceof IFile && resource.getFileExtension() != null) {
 
 			file = (IFile) resource;
+			path = resource.getFullPath();
+			this.resource = resource;
+
+			resourceContainer = resource.getParent();
+
 
 			if (resource.getFileExtension().equals("xml"))
 			{				
 				loadXML();
-				
+
 			} else if (resource.getFileExtension().equals("yml")) 
 			{
 				loadYaml();
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -53,19 +64,19 @@ implements IResourceVisitor {
 	private void loadYaml() {
 
 		try {
-			
+
 			YamlConfigParser parser = new YamlConfigParser(file.getContents());
 			parser.parse();
-			
-			
+
+
 			loadServices(parser.getServices());
-			
+
 		} catch (Exception e1) {
-			
+
 			System.err.println(e1.getMessage());
 
 		}
-		
+
 	}
 
 	private void loadXML() {
@@ -92,21 +103,38 @@ implements IResourceVisitor {
 	@SuppressWarnings("rawtypes")
 	private void loadServices(HashMap<String, String> services) {
 
+		Connection connection = null;
 
-		Iterator it = services.keySet().iterator();
+		try {
 
-		while(it.hasNext()) {
+			SymfonyDbFactory factory = SymfonyDbFactory.getInstance();
+			connection = factory.createConnection();
+			IServiceDao serviceDao = factory.getServiceDao();
 
-			String id = (String) it.next();
-			String value = services.get(id);
+			Iterator it = services.keySet().iterator();
 
-			Service service = new Service(file, id, value);
-			
-			
-			ModelManager.getInstance().addService(service);
+			while(it.hasNext()) {
 
+				String id = (String) it.next();
+				String value = services.get(id);
+				
+				serviceDao.insert(connection, path.toString(), id, value, (int) resource.getLocalTimeStamp());
+
+			}
+
+
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		} finally {
+
+			try {				
+				if (connection != null)
+					connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
 		}
-
-
 	}
 }

@@ -39,6 +39,11 @@ public class SymfonyCoreConstants {
 	
 	public static final String TEMPLATE_ANNOTATION	= "@Template";
 	
+	
+	// namespaces
+	
+	public static final String CONTROLLER_NS		="Symfony\\Bundle\\FrameworkBundle\\Controller";
+	
 
 	public static void initializeDefaultValues() {
 

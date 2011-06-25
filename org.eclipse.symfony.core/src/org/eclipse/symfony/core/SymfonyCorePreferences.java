@@ -13,6 +13,8 @@ import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 public class SymfonyCorePreferences {
 
 	
+	public static final String SCHEMA_VERSION = "schema_version";
+
 	/**
 	 * Get the severity level for annotation problems.
 	 * 
