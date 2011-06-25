@@ -91,6 +91,10 @@
             class="org.eclipse.symfony.core.goals.ContainerAwareGoalEvaluatorFactory"
             priority="100">
       </factory>
+      <factory
+            class="org.eclipse.symfony.core.goals.TemplateGoalEvaluatorFactory"
+            priority="100">
+      </factory>
    </extension>
    <!-- End code assist -->
    

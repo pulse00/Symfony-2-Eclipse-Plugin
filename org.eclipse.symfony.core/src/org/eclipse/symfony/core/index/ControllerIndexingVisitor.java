@@ -3,7 +3,6 @@ package org.eclipse.symfony.core.index;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dltk.ast.ASTNode;
@@ -21,8 +20,9 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
-import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
+import org.eclipse.symfony.core.model.SymfonyModelAccess;
+import org.eclipse.symfony.core.model.TemplateVariable;
 import org.eclipse.symfony.core.util.ModelUtils;
 
 
@@ -42,10 +42,10 @@ import org.eclipse.symfony.core.util.ModelUtils;
 @SuppressWarnings("restriction")
 public class ControllerIndexingVisitor extends PHPASTVisitor {
 
-	private Map<Scalar, String> templateVariables = new HashMap<Scalar, String>();
+	private Map<ASTNode, String> templateVariables = new HashMap<ASTNode, String>();
 
 
-	public Map<Scalar, String> getTemplateVariables() {
+	public Map<ASTNode, String> getTemplateVariables() {
 		return templateVariables;
 	}
 
@@ -96,7 +96,7 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 		//TODO: Only parse ARRAY_CREATION return types when
 		// the Template() annotation is set
-		
+
 		if (statement.getExpr().getKind() == ASTNodeKinds.ARRAY_CREATION) {
 
 			//Action action = new Action(controller, method);
@@ -106,14 +106,14 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 				Expression key = element.getKey();
 				Expression value = element.getValue();
-				
+
 
 				if (key.getClass() == Scalar.class) {
 
 					Scalar varName = (Scalar) key;
 
 					if (value.getClass() == VariableReference.class) {
-						
+
 						templateVariables.put(varName, "");
 
 
@@ -158,14 +158,16 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 				if (s.getValue().getClass() == PHPCallExpression.class) {
 
 					PHPCallExpression exp = (PHPCallExpression) s.getValue();
-					
+
 
 					// are we calling a method named "get" ?
 					if (exp.getName().equals("get")) {
 
 						service = ModelUtils.extractServiceFromCall(exp);
 
-						if (service != null && service.getClassName() != null && service.getNamespace() != null) {					
+						if (service != null) {
+
+							System.err.println("found service in assignment " + service.getId());
 							//						TemplateVariable tempVar = new TemplateVariable(context.getSourceModule(), service.getClassName(), service.getNamespace(), varName);
 							//						templateVariables.put(varName, tempVar);
 						}
@@ -181,16 +183,17 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 							}
 
 							SimpleReference callName = exp.getCallName();
+							
+							TemplateVariable tempVar = SymfonyModelAccess.getDefault()
+									.createTemplateVariableByReturnType(callName.toString(), 
+											service.getClassName(), service.getNamespace(), varName);
 
-							//System.out.println("getting template variable for: " + varName);
-							//						TemplateVariable tempVar = SymfonyModelAccess.getDefault().createTemplateVariableByReturnType(context.getSourceModule(), callName.toString(), service.getClassName(), service.getNamespace(), varName);
-							//						
-							//						if (tempVar != null) {
-							//							System.out.println("addint variable");
-							//							templateVariables.put(varName, tempVar);
-							//						} else {
-							//							System.out.println("no variable found");
-							//						}
+							if (tempVar != null) {
+								System.out.println("adding variable " + varName + " " + tempVar.getClassName());								
+								templateVariables.put(var, service.getFullyQualifiedName());
+							} else {
+								System.out.println("no variable found");
+							}
 
 						}
 					}
@@ -199,8 +202,4 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 		}
 		return true;
 	}
-
-
-
-
 }

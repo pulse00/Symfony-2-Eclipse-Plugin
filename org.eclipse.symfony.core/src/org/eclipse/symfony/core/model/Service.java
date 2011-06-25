@@ -1,8 +1,11 @@
 package org.eclipse.symfony.core.model;
 
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 
 /**
@@ -14,6 +17,7 @@ import org.eclipse.core.runtime.Path;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
+@SuppressWarnings("restriction")
 public class Service {
 	
 	private IFile file;
@@ -28,6 +32,7 @@ public class Service {
 	 */
 	private String namespace;
 	
+	private Scalar scalar;	
 	
 	/**
 	 * The name of the PHP class
@@ -59,11 +64,24 @@ public class Service {
 		}
 	}
 
-	public Service(String id, String phpClass, String path) {
+	public Service(String id, String phpClass, String path, Scalar scalar) {
 
+		this.namespace = PHPModelUtils.extractNameSapceName(phpClass);
+		this.className = PHPModelUtils.extractElementName(phpClass);		
 		this.fqcn = phpClass;
 		this.id = id;
-		this.path = new Path(path);		
+		this.path = new Path(path);
+		this.scalar = scalar;
+		
+	}
+	
+	public Service(String id2, String phpClass, String path2) {
+		this(id2,phpClass,path2, null);
+	}
+
+	public Scalar getScalar() {
+		
+		return scalar;
 		
 	}
 
@@ -101,7 +119,7 @@ public class Service {
 
 	public static Service fromIndex(org.eclipse.symfony.index.Service s) {
 	
-		Service service = new Service(s.id, s.phpClass, s.path);
+		Service service = new Service(s.id, s.phpClass, s.path, null);
 		return service;
 
 	}

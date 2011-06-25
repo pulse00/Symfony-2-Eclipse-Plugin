@@ -1,5 +1,6 @@
 package org.eclipse.symfony.core.model;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import org.eclipse.symfony.index.SymfonyIndexer;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
+@SuppressWarnings("restriction")
 public class ModelManager {
 	
 	private static ModelManager instance;
@@ -190,7 +192,7 @@ public class ModelManager {
 	 * 
 	 * @return
 	 */
-	public Service findService(String id, IPath path) {
+	public Service findService(final String id, IPath path) {
 		
 		final List<Service> services = new ArrayList<Service>();		
 		String pathString = path == null ? "" : path.toString();
@@ -199,7 +201,7 @@ public class ModelManager {
 			
 			@Override
 			public void handle(String id, String phpClass, String path) {
-				services.add(new Service(id, phpClass, path));				
+				services.add(new Service(id, phpClass, path, null));				
 			}
 		});
 		
@@ -328,9 +330,9 @@ public class ModelManager {
 		
 	}
 
+
 	public Service findService(String className) {
 
 		return findService(className, null);
-		
 	}
 }

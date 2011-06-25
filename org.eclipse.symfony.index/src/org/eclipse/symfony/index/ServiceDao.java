@@ -228,7 +228,7 @@ public class ServiceDao implements IServiceDao {
 			StringBuilder builder = new StringBuilder("SELECT NAME, PHPCLASS, PATH FROM SERVICES WHERE PATH LIKE '");
 			builder.append(path);
 			builder.append("%' AND NAME = '");
-			builder.append(id);
+			builder.append(id.replaceAll("['\"]", ""));
 			builder.append("'");
 
 			ResultSet result = statement.executeQuery(builder.toString());

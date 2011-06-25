@@ -16,7 +16,7 @@ import org.eclipse.symfony.core.codeassist.strategies.ServiceReturnTypeCompletio
 import org.eclipse.symfony.core.codeassist.strategies.TemplateVariableStrategy;
 
 /**
- * 
+ * Factory class for CompletionStrategies. 
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *

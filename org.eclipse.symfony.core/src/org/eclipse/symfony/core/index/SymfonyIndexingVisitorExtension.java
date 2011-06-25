@@ -3,21 +3,22 @@ package org.eclipse.symfony.core.index;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.expressions.Literal;
+import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.index2.IIndexingRequestor;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.DeclarationInfo;
 import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
 
 
@@ -44,7 +45,7 @@ PhpIndexingVisitorExtension {
 	private NamespaceDeclaration namespace;
 	private ControllerIndexingVisitor controllerIndexer;
 	
-	private IIndexingRequestor requestor;
+
 	
 	
 	@Override
@@ -109,35 +110,35 @@ PhpIndexingVisitorExtension {
 
 		if (controllerIndexer != null) {
 
-			Map<Scalar, String> variables = controllerIndexer.getTemplateVariables();			
+			
+			Map<ASTNode, String> variables = controllerIndexer.getTemplateVariables();			
 			Iterator it = variables.keySet().iterator();
 			
 			while(it.hasNext()) {
 				
-				
-				Scalar variable = (Scalar) it.next();
+				ASTNode variable = (ASTNode) it.next();
 				int start = variable.sourceStart();
 				int length = variable.sourceEnd() - variable.sourceStart();
-				String name = variable.getValue().replaceAll("['\"]", "");
 				
+				String name = null;
+				
+				if (variable instanceof SimpleReference) {
+					name = ((SimpleReference) variable).getName().replaceAll("['\"]", "");
+				} else if (variable instanceof Literal) {
+					name = ((Literal) variable).getValue().replaceAll("['\"]", "");	
+				}
 				
 				DeclarationInfo info = new DeclarationInfo(IModelElement.FIELD, 
 						Modifiers.AccPublic, start, length, start, length, name, 
 						null, null, namespace.getName(), currentClass.getName());		
 				
-				if (requestor != null) {					
-					System.err.println("added method declaration in " + namespace.getName() + " "
+				if (requestor != null && name != null) {					
+					System.err.println("added field declaration in " + namespace.getName() + " "
 							+ currentClass.getName() + " for " + name + " from " + start + " to " + (start + length));				
 					
 					requestor.addDeclaration(info);
 				}
-				
-				
-				
 			}
-			
-			//System.out.println("controller indexer found " + controllerIndexer.getTemplateVariables().size() + " variables");
-			
 		}
 		
 		inController = false;

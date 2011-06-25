@@ -37,9 +37,9 @@ public class ModelUtils {
 
 						//TODO: check if there are PDT utils for stripping away quotes from
 						// string literals.
-						String className = ((Scalar)first).getValue().replace("'", "").replace("\"", "");
 
-						Service service = ModelManager.getInstance().findService(className);
+						Service service = ModelManager.getInstance().findService(((Scalar)first).getValue());
+						
 
 						// we got a service match, return the goalevaluator.
 						if (service != null) {

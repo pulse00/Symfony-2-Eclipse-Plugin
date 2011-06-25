@@ -10,6 +10,7 @@ import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
@@ -43,10 +44,10 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	}
 
 
-	public TemplateVariable createTemplateVariableByReturnType(ISourceModule sourceModule,
-			String callName, String className, String namespace, String variableName) {
+	public TemplateVariable createTemplateVariableByReturnType(String callName, 
+			String className, String namespace, String variableName) {
 
-		IDLTKSearchScope scope = createSearchScope(sourceModule);
+		IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
 
 		if (scope == null)
 			return null;
@@ -75,7 +76,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		if (visitor.className == null || visitor.namespace == null)
 			return null;
 		
-		return new TemplateVariable(sourceModule, variableName, visitor.namespace, visitor.className);
+		return new TemplateVariable(type.getSourceModule(), variableName, visitor.namespace, visitor.className);
 		
 	}
 
