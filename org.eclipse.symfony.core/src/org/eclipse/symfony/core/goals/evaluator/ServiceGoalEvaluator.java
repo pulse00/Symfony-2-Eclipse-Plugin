@@ -1,4 +1,4 @@
-package org.eclipse.symfony.core.goals;
+package org.eclipse.symfony.core.goals.evaluator;
 
 
 import org.eclipse.dltk.ti.GoalState;
@@ -19,10 +19,6 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 
 	private Service service;
 	
-	public ServiceGoalEvaluator(IGoal goal) {
-		super(goal);
-
-	}
 
 	public ServiceGoalEvaluator(IGoal goal, Service service) {
 		super(goal);

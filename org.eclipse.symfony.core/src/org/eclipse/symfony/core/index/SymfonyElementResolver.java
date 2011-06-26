@@ -11,7 +11,18 @@ import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.php.internal.core.index.IPHPDocAwareElement;
 import org.eclipse.php.internal.core.index.PhpElementResolver;
+import org.eclipse.symfony.core.util.JsonUtils;
+import org.json.simple.JSONObject;
 
+
+/**
+ * 
+ * 
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 @SuppressWarnings("restriction")
 public class SymfonyElementResolver extends PhpElementResolver {
 
@@ -25,17 +36,29 @@ public class SymfonyElementResolver extends PhpElementResolver {
 
 		if (elementType == IModelElement.USER_ELEMENT) {
 
-			ModelElement parentElement = (ModelElement) sourceModule;
+			try {				
+				if (JsonUtils.getElementType(metadata).equals("reference")) {
+					
+					JSONObject data = JsonUtils.getReferenceData(metadata);
+					System.out.println(data.get("elementName"));
+					System.out.println(data.get("qualifier"));
+					
+					ModelElement parentElement = (ModelElement) sourceModule;
 
-			if (qualifier != null) {
-				parentElement = new ControllerType(parentElement, qualifier,
-						Modifiers.AccNameSpace, 0, 0, 0, 0, null, doc);
+					if (qualifier != null) {
+						parentElement = new ControllerType(parentElement, qualifier,
+								Modifiers.AccNameSpace, 0, 0, 0, 0, null, doc);
 
-				return new TemplateField(parentElement, elementName, flags, offset,
-						length, nameOffset, nameLength, doc);
+						return new TemplateField(parentElement, elementName, flags, offset,
+								length, nameOffset, nameLength, doc);
 
-			}			
-
+					}			
+					
+					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return super
@@ -48,8 +71,7 @@ public class SymfonyElementResolver extends PhpElementResolver {
 		private int flags;
 		private ISourceRange sourceRange;
 		private ISourceRange nameRange;
-		private String doc;
-
+		
 		public TemplateField(ModelElement parent, String name, int flags,
 				int offset, int length, int nameOffset, int nameLength,
 				String doc) {
@@ -57,7 +79,6 @@ public class SymfonyElementResolver extends PhpElementResolver {
 			this.flags = flags;
 			this.sourceRange = new SourceRange(offset, length);
 			this.nameRange = new SourceRange(nameOffset, nameLength);
-			this.doc = doc;
 		}
 
 		public int getFlags() throws ModelException {
@@ -71,14 +92,6 @@ public class SymfonyElementResolver extends PhpElementResolver {
 		public ISourceRange getSourceRange() throws ModelException {
 			return sourceRange;
 		}
-
-		public boolean isDeprecated() {
-			return PhpElementResolver.isDeprecated(doc);
-		}
-
-		public String[] getReturnTypes() {
-			return null;
-		}
 	}
 
 	private static class ControllerType extends SourceType implements
@@ -86,7 +99,6 @@ public class SymfonyElementResolver extends PhpElementResolver {
 
 		private int flags;
 		private ISourceRange sourceRange;
-		private ISourceRange nameRange;
 		private String[] superClassNames;
 		private String doc;
 
@@ -96,7 +108,7 @@ public class SymfonyElementResolver extends PhpElementResolver {
 			super(parent, name);
 			this.flags = flags;
 			this.sourceRange = new SourceRange(offset, length);
-			this.nameRange = new SourceRange(nameOffset, nameLength);
+			new SourceRange(nameOffset, nameLength);
 			this.superClassNames = superClassNames;
 			this.doc = doc;
 		}

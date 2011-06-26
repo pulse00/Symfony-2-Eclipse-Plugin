@@ -1,4 +1,4 @@
-package org.eclipse.symfony.core.goals;
+package org.eclipse.symfony.core.goals.evaluator;
 
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IParameter;

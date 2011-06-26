@@ -1,12 +1,8 @@
 package org.eclipse.symfony.core.index;
 
-import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.util.TokenBuffer;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -24,7 +20,9 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
+import org.eclipse.symfony.core.util.JsonUtils;
 import org.eclipse.symfony.index.SymfonyIndexer;
+import org.json.simple.JSONObject;
 
 
 /**
@@ -98,10 +96,12 @@ PhpIndexingVisitorExtension {
 							&& */superReference.getName().equals(SymfonyCoreConstants.CONTROLLER_CLASS)) {
 
 						inController = true;						
+						
+						// the ControllerIndexer does the actual work of parsing the
+						// the relevant elements inside the controller
+						// which are then being collected in the endVisit() method
 						controllerIndexer = new ControllerIndexingVisitor();
 						currentClass.traverse(controllerIndexer);
-						
-
 
 					} 
 				} 
@@ -113,7 +113,7 @@ PhpIndexingVisitorExtension {
 		return true; 
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public boolean endvisit(TypeDeclaration s) throws Exception {
 
@@ -132,49 +132,22 @@ PhpIndexingVisitorExtension {
 				String name = null;				
 				
 				if (variable instanceof SimpleReference) {
+					
 					name = ((SimpleReference) variable).getName().replaceAll("['\"]", "");
 
 					String phpClass = PHPModelUtils.extractElementName(fqcn);
 					String namespace = PHPModelUtils.extractNameSapceName(fqcn);
+					String metadata = JsonUtils.createReference(phpClass, namespace);
 					
-					JsonFactory factory = new JsonFactory();
-					StringWriter writer = new StringWriter();
-					JsonGenerator jg = factory.createJsonGenerator(writer);
-					
-					jg.writeString(phpClass);
-					jg.writeString(namespace);					
-					jg.flush();
-					jg.close();
-					
-					
-					ReferenceInfo info = new ReferenceInfo(IModelElement.USER_ELEMENT, start, length, name, writer.getBuffer().toString(), namespace);
+					ReferenceInfo info = new ReferenceInfo(IModelElement.USER_ELEMENT, start, length, name, metadata, namespace);
 					requestor.addReference(info);
 					
-					System.err.println("added reference info to requestor " + writer.getBuffer().toString());
-					
-//					indexer.addTemplateVariable(name, phpClass, namespace, "");						
-//					System.err.println("added variable " + name + " to indexer");
+					System.err.println("added reference info to requestor " + metadata);
 					
 				} else if (variable instanceof Literal) {
 					name = ((Literal) variable).getValue().replaceAll("['\"]", "");	
 				}
-				
-				
-				
-				
-//				DeclarationInfo info = new DeclarationInfo(IModelElement.FIELD, 
-//						Modifiers.AccPublic, start, length, start, length, name, 
-//						null, null, namespace.getName(), currentClass.getName());		
-//				
-//				if (requestor != null && name != null) {					
-//					System.err.println("added field declaration in " + namespace.getName() + " "
-//							+ currentClass.getName() + " for " + name + " from " + start + " to " + (start + length));				
-//					
-//					requestor.addDeclaration(info);
-//				}
 			}
-			
-//			indexer.commitVariables();
 		}
 		
 		inController = false;
@@ -192,15 +165,10 @@ PhpIndexingVisitorExtension {
 			PHPMethodDeclaration method = (PHPMethodDeclaration) s;
 			if (inController) {
 				
-//				System.err.println("method in controller " + s.getName() + " " + namespace.getName() + " " + currentClass.getName());
 			}
 
 
 		}
 		return true;
 	}
-		
-
-
-	
 }

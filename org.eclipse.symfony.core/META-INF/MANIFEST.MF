@@ -26,4 +26,4 @@ Export-Package: org.eclipse.symfony.core,
 Bundle-ClassPath: .,
  Resources/antlr-runtime-3.3.jar,
  Resources/snakeyaml-1.8.jar,
- lib/jackson-all-1.8.2.jar
+ lib/json_simple-1.1.jar

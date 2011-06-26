@@ -9,6 +9,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
@@ -178,7 +179,7 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 							service = ModelUtils.extractServiceFromCall((PHPCallExpression) exp.getReceiver());
 
-							if (service == null || /*context == null ||*/ exp.getCallName() == null) {
+							if (service == null || exp.getCallName() == null) {
 								return true;
 							}
 
@@ -189,10 +190,10 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 											service.getClassName(), service.getNamespace(), varName);
 
 							if (tempVar != null) {
-								System.out.println("adding variable " + varName + " " + tempVar.getClassName());								
+//								System.out.println("adding variable " + varName + " " + tempVar.getClassName());								
 								templateVariables.put(var, service.getFullyQualifiedName());
 							} else {
-								System.out.println("no variable found");
+//								System.out.println("no variable found");
 							}
 
 						}

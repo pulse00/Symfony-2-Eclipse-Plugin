@@ -6,6 +6,6 @@
 	<classpathentry kind="lib" path="Resources/antlr-runtime-3.3.jar"/>
 	<classpathentry kind="lib" path="Resources/snakeyaml-1.8.jar" sourcepath="Resources/snakeyaml-1.8-sources.jar"/>
 	<classpathentry kind="lib" path="Resources/antlr-3.3-complete.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-all-1.8.2.jar"/>
+	<classpathentry kind="lib" path="lib/json_simple-1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

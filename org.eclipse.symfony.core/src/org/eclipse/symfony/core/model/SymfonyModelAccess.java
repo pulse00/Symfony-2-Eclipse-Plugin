@@ -1,13 +1,22 @@
 package org.eclipse.symfony.core.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.index2.IElementResolver;
+import org.eclipse.dltk.core.index2.search.ISearchEngine;
+import org.eclipse.dltk.core.index2.search.ISearchRequestor;
+import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.SearchFor;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
@@ -18,6 +27,8 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.symfony.core.SymfonyLanguageToolkit;
+import org.eclipse.symfony.core.util.PathUtils;
 
 /**
  * 
@@ -127,5 +138,134 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		}				
 		
 	}
+	
+	
+	/**
+	 * 
+	 * Resolve TemplateVariables for a controller.
+	 * 
+	 * 
+	 * @param controller
+	 * @return
+	 */
+	public List<IModelElement> findTemplateVariables(IType controller) {
 
+		// create a searchscope for the Controller class only
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(controller);
+
+		if(scope == null) {
+			return null;
+		}
+		
+		final List<IModelElement> variables = new ArrayList<IModelElement>();
+		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());		
+		final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
+		
+		engine.search(IModelElement.USER_ELEMENT, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+			
+			@Override
+			public void match(int elementType, int flags, int offset, int length,
+					int nameOffset, int nameLength, String elementName,
+					String metadata, String doc, String qualifier, String parent,
+					ISourceModule sourceModule, boolean isReference) {
+
+				IModelElement element = resolver.resolve(elementType, flags, offset, length, nameOffset, nameLength, elementName, metadata, doc, qualifier, parent, sourceModule);
+				
+				if (element != null) {
+					variables.add(element);
+				}
+			}
+		}, null);
+		
+		return variables;
+		
+		
+	}
+
+
+	/**
+	 * Try to find the corresponding controller IType for 
+	 * a given template.
+	 * 
+	 * @param module
+	 * @return
+	 */
+	public IType findControllerByTemplate(ISourceModule module) {
+
+		// get the name of the Controller to search for
+		String controller = PathUtils.getControllerFromTemplatePath(module.getPath());
+
+		if (controller == null) {
+			return null;
+		}
+
+		// find the type
+		IType types[] = PhpModelAccess.getDefault().findTypes(controller, 
+				MatchRule.EXACT, 0, 0, 
+				SearchEngine.createSearchScope(module.getScriptProject()), null);
+
+		// type is ambigous
+		if (types.length != 1)
+			return null;
+		
+		
+		return types[0];
+		
+
+	}
+
+
+	/**
+	 * 
+	 * 
+	 * 
+	 * @param variableName
+	 * @param sourceModule
+	 * @return
+	 */
+	public IModelElement findTemplateVariableType(String variableName, ISourceModule sourceModule) {
+
+
+		// find the corresponding controller for the template
+		IType controller = findControllerByTemplate(sourceModule);
+		
+		if (controller == null)
+			return null;
+		
+		// create a searchscope for the Controller class only		
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(controller);
+
+		if(scope == null) {
+			return null;
+		}
+		
+		final List<IModelElement> variables = new ArrayList<IModelElement>();
+		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());		
+		final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
+		
+		
+		engine.search(IModelElement.USER_ELEMENT, null, variableName, 0, 0, 100, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
+			
+			@Override
+			public void match(int elementType, int flags, int offset, int length,
+					int nameOffset, int nameLength, String elementName,
+					String metadata, String doc, String qualifier, String parent,
+					ISourceModule sourceModule, boolean isReference) {
+
+				IModelElement element = resolver.resolve(elementType, flags, offset, length, nameOffset, nameLength, elementName, metadata, doc, qualifier, parent, sourceModule);
+				
+				if (element != null) {
+					variables.add(element);
+				}
+			}
+		}, null);
+		
+
+
+		if (variables.size() == 1)
+			return variables.get(0);
+		
+		return null;
+		
+	}
 }
