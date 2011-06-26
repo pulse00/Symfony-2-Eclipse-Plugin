@@ -18,11 +18,12 @@ public class JsonUtils {
 	private static JSONParser parser = new JSONParser();
 	
 	@SuppressWarnings("unchecked")
-	public static String createReference(String elementName, String qualifier) {
+	public static String createReference(String elementName, String qualifier, String method) {
 		
 		JSONObject data = new JSONObject();
 		data.put("elementName", elementName);
 		data.put("qualifier", qualifier);
+		data.put("method", method);
 		
 		JSONObject header = new JSONObject();
 		header.put("type", "reference");

@@ -17,8 +17,9 @@ import org.json.simple.JSONObject;
 
 /**
  * 
- * 
- * 
+ * {@link SymfonyElementResolver} resolves {@link IModelElement} 
+ * types from the H2 index with the Type {@link IModelElement.USER_ELEMENT}
+ *  
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
@@ -34,14 +35,18 @@ public class SymfonyElementResolver extends PhpElementResolver {
 			ISourceModule sourceModule) {
 
 
+		// this is a Symfony2 element, try to resolve it
 		if (elementType == IModelElement.USER_ELEMENT) {
 
 			try {				
+				// we can only handle references at the moment
 				if (JsonUtils.getElementType(metadata).equals("reference")) {
 					
 					JSONObject data = JsonUtils.getReferenceData(metadata);
-					System.out.println(data.get("elementName"));
-					System.out.println(data.get("qualifier"));
+					
+					String className = (String) data.get("elementName");
+					String q = (String) data.get("qualifier");
+					String method = (String) data.get("method");
 					
 					ModelElement parentElement = (ModelElement) sourceModule;
 
@@ -49,12 +54,9 @@ public class SymfonyElementResolver extends PhpElementResolver {
 						parentElement = new ControllerType(parentElement, qualifier,
 								Modifiers.AccNameSpace, 0, 0, 0, 0, null, doc);
 
-						return new TemplateField(parentElement, elementName, flags, offset,
-								length, nameOffset, nameLength, doc);
+						return new TemplateField(parentElement, elementName, q, className, method);
 
 					}			
-					
-					
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -66,31 +68,31 @@ public class SymfonyElementResolver extends PhpElementResolver {
 						elementName, metadata, doc, qualifier, parent, sourceModule);
 	}
 
-	private static class TemplateField extends SourceField  {
+	public static class TemplateField extends SourceField  {
 
-		private int flags;
-		private ISourceRange sourceRange;
-		private ISourceRange nameRange;
+		private String qualifier;
+		private String className;
+		private String method;
 		
-		public TemplateField(ModelElement parent, String name, int flags,
-				int offset, int length, int nameOffset, int nameLength,
-				String doc) {
+		public TemplateField(ModelElement parent, String name, String qualifier, String className, String method) {
 			super(parent, name);
-			this.flags = flags;
-			this.sourceRange = new SourceRange(offset, length);
-			this.nameRange = new SourceRange(nameOffset, nameLength);
+
+			this.qualifier = qualifier;
+			this.className = className;
+			this.method = method;
+
+
+		}
+		
+		public String getQualifier() {
+			return qualifier;
 		}
 
-		public int getFlags() throws ModelException {
-			return flags;
+		public String getClassName() {
+			return className;
 		}
-
-		public ISourceRange getNameRange() throws ModelException {
-			return nameRange;
-		}
-
-		public ISourceRange getSourceRange() throws ModelException {
-			return sourceRange;
+		public String getMethod() {
+			return method;
 		}
 	}
 

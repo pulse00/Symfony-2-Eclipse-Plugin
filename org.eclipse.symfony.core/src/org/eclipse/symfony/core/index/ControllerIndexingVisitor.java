@@ -5,11 +5,9 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
@@ -43,10 +41,11 @@ import org.eclipse.symfony.core.util.ModelUtils;
 @SuppressWarnings("restriction")
 public class ControllerIndexingVisitor extends PHPASTVisitor {
 
-	private Map<ASTNode, String> templateVariables = new HashMap<ASTNode, String>();
+	private Map<TemplateVariable, String> templateVariables = new HashMap<TemplateVariable, String>();
+	
+	private PHPMethodDeclaration currentMethod;
 
-
-	public Map<ASTNode, String> getTemplateVariables() {
+	public Map<TemplateVariable, String> getTemplateVariables() {
 		return templateVariables;
 	}
 
@@ -55,6 +54,9 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 	@Override
 	public boolean visit(PHPMethodDeclaration method) throws Exception {
 
+		
+		currentMethod = method;
+		
 		if (method.getName().endsWith(SymfonyCoreConstants.ACTION_SUFFIX)) {
 
 			inAction = true;
@@ -70,7 +72,8 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 					while((line = buffer.readLine()) != null) {
 
 						//TODO: parse @Template() parameters
-						if (line.startsWith(SymfonyCoreConstants.TEMPLATE_ANNOTATION)) {							
+						if (line.startsWith(SymfonyCoreConstants.TEMPLATE_ANNOTATION)) {
+							
 							foundAnnotation = true;
 							break;
 
@@ -78,7 +81,7 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
-				}				
+				}
 			}
 		}
 
@@ -88,6 +91,7 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 	@Override
 	public boolean endvisit(PHPMethodDeclaration s) throws Exception {
 
+		currentMethod = null;
 		inAction = false;
 		return true;
 	}
@@ -115,7 +119,8 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 					if (value.getClass() == VariableReference.class) {
 
-						templateVariables.put(varName, "");
+						TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), varName.sourceStart(), varName.sourceEnd(), null, null);
+						templateVariables.put(variable, "");
 
 
 					} else if(value.getClass() == PHPCallExpression.class) {
@@ -168,7 +173,6 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 						if (service != null) {
 
-							System.err.println("found service in assignment " + service.getId());
 							//						TemplateVariable tempVar = new TemplateVariable(context.getSourceModule(), service.getClassName(), service.getNamespace(), varName);
 							//						templateVariables.put(varName, tempVar);
 						}
@@ -186,16 +190,12 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 							SimpleReference callName = exp.getCallName();
 							
 							TemplateVariable tempVar = SymfonyModelAccess.getDefault()
-									.createTemplateVariableByReturnType(callName.toString(), 
-											service.getClassName(), service.getNamespace(), varName);
+									.createTemplateVariableByReturnType(currentMethod, callName, 
+											service.getClassName(), service.getNamespace(), var.getName());
 
-							if (tempVar != null) {
-//								System.out.println("adding variable " + varName + " " + tempVar.getClassName());								
-								templateVariables.put(var, service.getFullyQualifiedName());
-							} else {
-//								System.out.println("no variable found");
+							if (tempVar != null) {								
+								templateVariables.put(tempVar, tempVar.getClassName());
 							}
-
 						}
 					}
 				}

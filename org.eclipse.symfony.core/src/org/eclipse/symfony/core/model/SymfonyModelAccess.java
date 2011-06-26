@@ -55,7 +55,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	}
 
 
-	public TemplateVariable createTemplateVariableByReturnType(String callName, 
+	public TemplateVariable createTemplateVariableByReturnType(PHPMethodDeclaration controllerMethod, SimpleReference callName, 
 			String className, String namespace, String variableName) {
 
 		IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
@@ -70,7 +70,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 
 		IType type = types[0];
 
-		final IMethod method = type.getMethod(callName);
+		final IMethod method = type.getMethod(callName.getName());
 
 		if (method == null)
 			return null;
@@ -87,7 +87,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		if (visitor.className == null || visitor.namespace == null)
 			return null;
 		
-		return new TemplateVariable(type.getSourceModule(), variableName, visitor.namespace, visitor.className);
+		return new TemplateVariable(controllerMethod, variableName, callName.sourceStart(), callName.sourceEnd(), visitor.namespace, visitor.className);
 		
 	}
 

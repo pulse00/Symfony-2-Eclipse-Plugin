@@ -1,15 +1,29 @@
 package org.eclipse.symfony.core.goals.evaluator;
 
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.symfony.core.index.SymfonyElementResolver.TemplateField;
 
+
+/**
+ * 
+ * Evaluates templatevariables.
+ * 
+ * $form->|  <-- evalutates to Symfony\Component\Form\Form 
+ * if it's instantiated in the corresponding controller
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
+@SuppressWarnings("restriction")
 public class TemplateVariableGoalEvaluator extends GoalEvaluator {
 
-	private IModelElement element;
+	private TemplateField element;
 	
-	public TemplateVariableGoalEvaluator(IGoal goal, IModelElement element) {
+	public TemplateVariableGoalEvaluator(IGoal goal, TemplateField element) {
 		super(goal);
 		
 		this.element = element;
@@ -30,15 +44,10 @@ public class TemplateVariableGoalEvaluator extends GoalEvaluator {
 
 	@Override
 	public Object produceResult() {
-
 		
 		if (element == null)
 			return null;
 		
-		System.err.println(element.getParent().toString());
-				
-
-		return null;
+		return new PHPClassType(element.getQualifier(), element.getClassName());
 	}
-
 }

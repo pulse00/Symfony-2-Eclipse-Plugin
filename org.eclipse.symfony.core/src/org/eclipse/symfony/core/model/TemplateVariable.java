@@ -1,6 +1,6 @@
 package org.eclipse.symfony.core.model;
 
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 
 
 /**
@@ -18,30 +18,34 @@ import org.eclipse.dltk.core.ISourceModule;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
+@SuppressWarnings("restriction")
 public class TemplateVariable implements ISymfonyModelElement {
 
 
 	private String name;
-	private ISourceModule sourceModule;
 	private String namespace = null;
 	private String className = null;
+	private PHPMethodDeclaration method;
 	
+	private int sourceStart;
+	private int sourceEnd;
 	
 
-	public TemplateVariable(ISourceModule iSourceModule, String varName) {
-		
-		name = varName;
-		this.sourceModule = iSourceModule;
-
+	public PHPMethodDeclaration getMethod() {
+		return method;
 	}
 
 
-	public TemplateVariable(ISourceModule sourceModule2, String var,
-			String namespace, String className) {
+	public TemplateVariable(PHPMethodDeclaration method, String var,
+			int sourceStart, int sourceEnd, String namespace, String className) {
 		
-		this(sourceModule2, var);		
+
 		this.namespace = namespace;
-		this.className = className;		
+		this.className = className;
+		this.method = method;
+		this.sourceStart = sourceStart;
+		this.sourceEnd = sourceEnd;
+		this.name = var;
 		
 	}
 
@@ -52,11 +56,6 @@ public class TemplateVariable implements ISymfonyModelElement {
 
 	}
 
-	public ISourceModule getSourceModule() {
-
-		return  sourceModule;
-
-	}
 	
 	public String getNamespace() {
 		
@@ -74,5 +73,24 @@ public class TemplateVariable implements ISymfonyModelElement {
 	public String getName() {
 
 		return getName("");
+	}
+
+
+	public int sourceStart() {
+
+		return sourceStart;
+	}
+
+
+	public int sourceEnd() {
+
+		return sourceEnd;
+	}
+
+
+	public boolean isReference() {
+
+		return namespace != null && className != null;
+		
 	}
 }

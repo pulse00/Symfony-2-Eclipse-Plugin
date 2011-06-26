@@ -3,13 +3,10 @@ package org.eclipse.symfony.core.index;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
-import org.eclipse.dltk.ast.expressions.Literal;
-import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
@@ -18,11 +15,10 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
+import org.eclipse.symfony.core.model.TemplateVariable;
 import org.eclipse.symfony.core.util.JsonUtils;
 import org.eclipse.symfony.index.SymfonyIndexer;
-import org.json.simple.JSONObject;
 
 
 /**
@@ -61,7 +57,6 @@ PhpIndexingVisitorExtension {
 	@Override
 	public boolean visit(Statement s) throws Exception {
 
-		//System.err.println(s.getClass());
 		return true;
 
 	}
@@ -70,7 +65,7 @@ PhpIndexingVisitorExtension {
 	@Override
 	public boolean visit(Expression s) throws Exception {
 
-		//System.err.println("expression:  " + s.getClass());
+
 		return super.visit(s);
 	}
 
@@ -95,7 +90,9 @@ PhpIndexingVisitorExtension {
 					if (/*superReference.getNamespace().equals(SymfonyCoreConstants.CONTROLLER_NS) 
 							&& */superReference.getName().equals(SymfonyCoreConstants.CONTROLLER_CLASS)) {
 
-						inController = true;						
+						inController = true;
+						
+						
 						
 						// the ControllerIndexer does the actual work of parsing the
 						// the relevant elements inside the controller
@@ -113,39 +110,34 @@ PhpIndexingVisitorExtension {
 		return true; 
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public boolean endvisit(TypeDeclaration s) throws Exception {
 
 		if (controllerIndexer != null) {
 
-			Map<ASTNode, String> variables = controllerIndexer.getTemplateVariables();			
+			Map<TemplateVariable, String> variables = controllerIndexer.getTemplateVariables();			
 			Iterator it = variables.keySet().iterator();
 			
 			while(it.hasNext()) {
 				
-				ASTNode variable = (ASTNode) it.next();
+				TemplateVariable variable = (TemplateVariable) it.next();
 				int start = variable.sourceStart();
 				int length = variable.sourceEnd() - variable.sourceStart();
-				String fqcn = variables.get(variable);
-				
 				String name = null;				
 				
-				if (variable instanceof SimpleReference) {
+				if (variable.isReference()) {
 					
-					name = ((SimpleReference) variable).getName().replaceAll("['\"]", "");
+					name = variable.getName();
 
-					String phpClass = PHPModelUtils.extractElementName(fqcn);
-					String namespace = PHPModelUtils.extractNameSapceName(fqcn);
-					String metadata = JsonUtils.createReference(phpClass, namespace);
+					String phpClass = variable.getClassName();
+					String namespace = variable.getNamespace();
+					String method = variable.getMethod().getName();
+					String metadata = JsonUtils.createReference(phpClass, namespace, method);
 					
 					ReferenceInfo info = new ReferenceInfo(IModelElement.USER_ELEMENT, start, length, name, metadata, namespace);
 					requestor.addReference(info);
 					
-					System.err.println("added reference info to requestor " + metadata);
-					
-				} else if (variable instanceof Literal) {
-					name = ((Literal) variable).getValue().replaceAll("['\"]", "");	
 				}
 			}
 		}

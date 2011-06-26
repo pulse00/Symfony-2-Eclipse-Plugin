@@ -9,10 +9,14 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.symfony.core.goals.evaluator.TemplateVariableGoalEvaluator;
+import org.eclipse.symfony.core.index.SymfonyElementResolver.TemplateField;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
 
 /**
  * 
+ * 
+ * 
+ * @see TemplateVariableGoalEvaluator
  * 
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
@@ -43,8 +47,9 @@ public class TemplateGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 					VariableReference variable = (VariableReference) node;
 					 IModelElement element = SymfonyModelAccess.getDefault().findTemplateVariableType(variable.toString(), context.getSourceModule());
 					 
-					 if (element != null) {
-						 return new TemplateVariableGoalEvaluator(goal, element);
+					 if (element != null && (element instanceof TemplateField)) {
+						 
+						 return new TemplateVariableGoalEvaluator(goal, (TemplateField) element);
 					 }
 				}
 			}			
