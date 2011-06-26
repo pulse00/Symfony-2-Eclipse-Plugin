@@ -200,26 +200,12 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 						if (instance.getClassName().getClass() == FullyQualifiedReference.class) {
 
 							FullyQualifiedReference fqcn = (FullyQualifiedReference) instance.getClassName();
-
-							boolean found = false;
-
-							for (UseStatement use : useStatements) {
-								for (UsePart part : use.getParts()) {					
-									if (part.getNamespace().getName().equals(fqcn.getName())) {
-
-										String name = fqcn.getName();
-										String qualifier = part.getNamespace().getNamespace().getName();
-
-										TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), 
-												varName.sourceStart(), varName.sourceEnd(), qualifier, name);
-										templateVariables.put(variable, "");
-										found = true;
-										break;
-									}
-								}								
-
-								if (found)
-									break;
+							NamespaceReference nsRef = createFromFQCN(fqcn);
+							
+							if (nsRef != null) {
+								TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), 
+										varName.sourceStart(), varName.sourceEnd(), nsRef.getNamespace(), nsRef.getClassName());
+								templateVariables.put(variable, "");
 							}
 						}
 					} else {
@@ -238,6 +224,13 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	/**
+	 * 
+	 * Collect all Assignments inside a {@link PHPMethodDeclaration}
+	 * to infer them in the ReturnStatements and add it to the
+	 * templateVariables.
+	 * 
+	 */
 	@Override
 	public boolean visit(Assignment s) throws Exception {
 
@@ -281,9 +274,62 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 							}
 						}
 					}
+				} else if (s.getValue().getClass() == ClassInstanceCreation.class) {
+					
+					ClassInstanceCreation instance = (ClassInstanceCreation) s.getValue();
+					
+					if (instance.getClassName().getClass() == FullyQualifiedReference.class) {
+
+						FullyQualifiedReference fqcn = (FullyQualifiedReference) instance.getClassName();
+						NamespaceReference nsRef = createFromFQCN(fqcn);
+						
+						if (nsRef != null) {
+							TemplateVariable variable = new TemplateVariable(currentMethod, var.getName(), 
+									var.sourceStart(), var.sourceEnd(), nsRef.getNamespace(), nsRef.getClassName());
+							deferredVariables.push(variable);
+						}
+					}
 				}
 			}
 		}
 		return true;
+	}
+	
+	private NamespaceReference createFromFQCN(FullyQualifiedReference fqcn) {
+		
+		for (UseStatement use : useStatements) {
+			for (UsePart part : use.getParts()) {					
+				if (part.getNamespace().getName().equals(fqcn.getName())) {
+
+					String name = fqcn.getName();
+					String qualifier = part.getNamespace().getNamespace().getName();
+					
+					return new NamespaceReference(qualifier, name);
+				}
+			}								
+		}
+		
+		return null;
+	}
+	
+	private class NamespaceReference {		
+		
+		private String namespace;
+		private String className;
+		
+		public NamespaceReference(String qualifier, String name) {
+
+			this.namespace = qualifier;
+			this.className = name;
+		}
+		
+		public String getNamespace() {
+			return namespace;
+		}
+		
+		public String getClassName() {
+			return className;
+		}
+		
 	}
 }
