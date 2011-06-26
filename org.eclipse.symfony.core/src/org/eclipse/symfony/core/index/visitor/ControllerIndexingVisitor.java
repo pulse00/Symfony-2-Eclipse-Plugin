@@ -1,8 +1,9 @@
-package org.eclipse.symfony.core.index;
+package org.eclipse.symfony.core.index.visitor;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -12,12 +13,17 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
 import org.eclipse.symfony.core.model.Service;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
@@ -44,12 +50,29 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 	private Map<TemplateVariable, String> templateVariables = new HashMap<TemplateVariable, String>();
 	
 	private PHPMethodDeclaration currentMethod;
+	
+	final private List<UseStatement> useStatements;
+
+	public ControllerIndexingVisitor(List<UseStatement> useStatements) {
+
+		this.useStatements = useStatements;
+	}
 
 	public Map<TemplateVariable, String> getTemplateVariables() {
 		return templateVariables;
 	}
 
 	private boolean inAction = false;
+	
+	
+	@Override
+	public boolean visit(UseStatement s) throws Exception {
+		
+		
+		System.err.println("ahoi use statemtn " + s.toString());
+
+		return true;
+	}
 
 	@Override
 	public boolean visit(PHPMethodDeclaration method) throws Exception {
@@ -124,6 +147,7 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 
 					} else if(value.getClass() == PHPCallExpression.class) {
+						
 
 						//						Iterator it = templateVariables.keySet().iterator();
 						//						
@@ -134,13 +158,50 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 						//							action.addTemplateVariable(variable);								
 						//							
 						//						}							
+					} else if (value.getClass() == ClassInstanceCreation.class) {
+						
+						ClassInstanceCreation instance = (ClassInstanceCreation) value;
+						
+						if (instance.getClassName().getClass() == FullyQualifiedReference.class) {
+							
+							FullyQualifiedReference fqcn = (FullyQualifiedReference) instance.getClassName();
+							
+							for (UseStatement use : useStatements) {
+								for (UsePart part : use.getParts()) {					
+									if (part.getNamespace().getName().equals(fqcn.getName())) {
+										
+										String name = fqcn.getName();
+										String qualifier = part.getNamespace().getNamespace().getName();
+										
+										
+										TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), 
+										varName.sourceStart(), varName.sourceEnd(), qualifier, name);
+										
+										if (!templateVariables.containsKey(variable))
+											templateVariables.put(variable, "");
+										break;
+									}
+								}								
+							}
+							
+//							TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), 
+//									varName.sourceStart(), varName.sourceEnd(), fqcn.getNamespace().getName(), fqcn.getName());
+//							
+//							templateVariables.put(variable, "");
+							
+							
+						}
+
+					
+
+					
 					}
 				}
 			}
 
 			//			controller.addAction(action);
 		}	
-		return false;
+		return true;
 	}		
 
 	@Override

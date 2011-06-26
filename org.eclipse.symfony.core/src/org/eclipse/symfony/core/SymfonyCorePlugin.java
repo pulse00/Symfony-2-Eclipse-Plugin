@@ -1,12 +1,15 @@
 package org.eclipse.symfony.core;
 
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.symfony.core.index.SymfonyIndexingVisitorExtension;
 import org.osgi.framework.BundleContext;
 
 public class SymfonyCorePlugin extends Plugin {
 
 	public static String ID = "org.eclipse.symfony.core";
 	private static SymfonyCorePlugin plugin;
+	
+	public static boolean DEBUG = true;
 
 
 	/*
@@ -31,6 +34,14 @@ public class SymfonyCorePlugin extends Plugin {
 	public static SymfonyCorePlugin getDefault() {
 		
 		return plugin;
+	}
+
+	public static void debug(Class clazz, String message) {
+
+		if (DEBUG) {
+			System.err.println(clazz.toString() + ": " + message);
+		}
+		
 	}
 
 }

@@ -1,12 +1,16 @@
 package org.eclipse.symfony.core.index;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
@@ -15,7 +19,11 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
+import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
+import org.eclipse.symfony.core.SymfonyCorePlugin;
+import org.eclipse.symfony.core.index.visitor.ControllerIndexingVisitor;
 import org.eclipse.symfony.core.model.TemplateVariable;
 import org.eclipse.symfony.core.util.JsonUtils;
 import org.eclipse.symfony.index.SymfonyIndexer;
@@ -45,7 +53,14 @@ PhpIndexingVisitorExtension {
 	private ControllerIndexingVisitor controllerIndexer;
 	private SymfonyIndexer indexer;
 	
+	private List<UseStatement> useStatements = new ArrayList<UseStatement>();
+	
 
+	@Override
+	public boolean visit(ASTNode s) throws Exception {
+
+		return true;
+	}
 	
 	
 	@Override
@@ -60,18 +75,31 @@ PhpIndexingVisitorExtension {
 		return true;
 
 	}
-	
 
 	@Override
 	public boolean visit(Expression s) throws Exception {
 
+		if (s.getClass() == Block.class) {
+			
+			s.traverse(new PHPASTVisitor() {
+				
+				@Override
+				public boolean visit(UseStatement s) throws Exception {
+					useStatements.add(s);
+					return true;
+				}
+			});
+		}
 
 		return super.visit(s);
 	}
+	
 
 	@Override
 	public boolean visit(TypeDeclaration s) throws Exception {
 
+
+		
 		if (indexer == null)
 			indexer = SymfonyIndexer.getInstance();
 
@@ -97,7 +125,7 @@ PhpIndexingVisitorExtension {
 						// the ControllerIndexer does the actual work of parsing the
 						// the relevant elements inside the controller
 						// which are then being collected in the endVisit() method
-						controllerIndexer = new ControllerIndexingVisitor();
+						controllerIndexer = new ControllerIndexingVisitor(useStatements);
 						currentClass.traverse(controllerIndexer);
 
 					} 
@@ -114,6 +142,7 @@ PhpIndexingVisitorExtension {
 	@Override
 	public boolean endvisit(TypeDeclaration s) throws Exception {
 
+
 		if (controllerIndexer != null) {
 
 			Map<TemplateVariable, String> variables = controllerIndexer.getTemplateVariables();			
@@ -126,6 +155,8 @@ PhpIndexingVisitorExtension {
 				int length = variable.sourceEnd() - variable.sourceStart();
 				String name = null;				
 				
+
+				
 				if (variable.isReference()) {
 					
 					name = variable.getName();
@@ -134,6 +165,8 @@ PhpIndexingVisitorExtension {
 					String namespace = variable.getNamespace();
 					String method = variable.getMethod().getName();
 					String metadata = JsonUtils.createReference(phpClass, namespace, method);
+					
+					SymfonyCorePlugin.debug(this.getClass(), "add reference info: " + name +  " " + metadata + " " + namespace);
 					
 					ReferenceInfo info = new ReferenceInfo(IModelElement.USER_ELEMENT, start, length, name, metadata, namespace);
 					requestor.addReference(info);
@@ -152,6 +185,7 @@ PhpIndexingVisitorExtension {
 	@Override
 	public boolean visit(MethodDeclaration s) throws Exception {
 
+		
 		if (s instanceof PHPMethodDeclaration) {
 
 			PHPMethodDeclaration method = (PHPMethodDeclaration) s;

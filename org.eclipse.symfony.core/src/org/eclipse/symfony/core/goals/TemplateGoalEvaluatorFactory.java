@@ -7,10 +7,12 @@ import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.symfony.core.goals.evaluator.TemplateVariableGoalEvaluator;
 import org.eclipse.symfony.core.index.SymfonyElementResolver.TemplateField;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
+import org.eclipse.symfony.core.util.PathUtils;
 
 /**
  * 
@@ -49,7 +51,11 @@ public class TemplateGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 					 
 					 if (element != null && (element instanceof TemplateField)) {
 						 
-						 return new TemplateVariableGoalEvaluator(goal, (TemplateField) element);
+						 TemplateField field = (TemplateField) element;
+						 String viewName = PathUtils.getViewFromTemplatePath(context.getSourceModule().getPath());
+						 
+						 if (CodeAssistUtils.startsWithIgnoreCase(field.getMethod(), viewName))
+							 return new TemplateVariableGoalEvaluator(goal, field);
 					 }
 				}
 			}			

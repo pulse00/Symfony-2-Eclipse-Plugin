@@ -28,6 +28,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.symfony.core.SymfonyLanguageToolkit;
+import org.eclipse.symfony.core.index.SymfonyElementResolver.TemplateField;
 import org.eclipse.symfony.core.util.PathUtils;
 
 /**
@@ -148,7 +149,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	 * @param controller
 	 * @return
 	 */
-	public List<IModelElement> findTemplateVariables(IType controller) {
+	public List<TemplateField> findTemplateVariables(IType controller) {
 
 		// create a searchscope for the Controller class only
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(controller);
@@ -157,7 +158,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 			return null;
 		}
 		
-		final List<IModelElement> variables = new ArrayList<IModelElement>();
+		final List<TemplateField> variables = new ArrayList<TemplateField>();
 		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());		
 		final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
 		
@@ -172,7 +173,8 @@ public class SymfonyModelAccess extends PhpModelAccess {
 				IModelElement element = resolver.resolve(elementType, flags, offset, length, nameOffset, nameLength, elementName, metadata, doc, qualifier, parent, sourceModule);
 				
 				if (element != null) {
-					variables.add(element);
+					if (element instanceof TemplateField)
+						variables.add((TemplateField) element);
 				}
 			}
 		}, null);
@@ -243,7 +245,6 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());		
 		final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
 		
-		
 		engine.search(IModelElement.USER_ELEMENT, null, variableName, 0, 0, 100, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
 			
 			@Override
@@ -255,14 +256,15 @@ public class SymfonyModelAccess extends PhpModelAccess {
 				IModelElement element = resolver.resolve(elementType, flags, offset, length, nameOffset, nameLength, elementName, metadata, doc, qualifier, parent, sourceModule);
 				
 				if (element != null) {
-					variables.add(element);
-				}
+					variables.add(element);					
+				} 
 			}
 		}, null);
 		
 
-
-		if (variables.size() == 1)
+		// TODO: ensure unique constraint for IModelElement.USER_ELEMENT + Path
+		// during indexing
+		if (variables.size() > 0)
 			return variables.get(0);
 		
 		return null;

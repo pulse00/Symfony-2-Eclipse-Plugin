@@ -45,8 +45,18 @@ public class TemplateVariable implements ISymfonyModelElement {
 		this.method = method;
 		this.sourceStart = sourceStart;
 		this.sourceEnd = sourceEnd;
-		this.name = var;
+		setName(var);
 		
+	}
+	
+	
+	public void setName(String name) {
+
+		if (name.startsWith("$")) {
+			this.name = name;
+		} else {
+			this.name = "$" + name.replaceAll("['\"]", "");	
+		}
 	}
 
 	
