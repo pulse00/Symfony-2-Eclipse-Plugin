@@ -78,5 +78,15 @@
        </view>
     </perspectiveExtension>
  </extension>
+ <extension
+       point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+    <hyperlinkDetector
+          activate="true"
+          class="org.eclipse.symfony.ui.editor.hyperlink.SymfonyHyperlinkDetector"
+          id="org.eclipse.symfony.ui.hyperlinkDetector"
+          name="%hyperlinkDetector.name"
+          targetId="org.eclipse.php.core.phpsource">
+    </hyperlinkDetector>
+ </extension>
  
 </plugin>
