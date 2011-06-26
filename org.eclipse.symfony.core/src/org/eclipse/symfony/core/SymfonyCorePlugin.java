@@ -1,7 +1,6 @@
 package org.eclipse.symfony.core;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.symfony.core.index.SymfonyIndexingVisitorExtension;
 import org.osgi.framework.BundleContext;
 
 public class SymfonyCorePlugin extends Plugin {
@@ -36,12 +35,21 @@ public class SymfonyCorePlugin extends Plugin {
 		return plugin;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static void debug(Class clazz, String message) {
 
-		if (DEBUG) {
-			System.err.println(clazz.toString() + ": " + message);
-		}
-		
+		if (DEBUG) {			
+//			System.err.print(clazz.toString() + ": " );
+			System.out.println(message);
+		}	
 	}
 
+	public static void debug(String message) {
+
+		if (DEBUG) {			
+			System.out.println(message);
+		}	
+		
+		
+	}
 }

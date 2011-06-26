@@ -5,6 +5,7 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
@@ -25,6 +26,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
+import org.eclipse.symfony.core.SymfonyCorePlugin;
 import org.eclipse.symfony.core.model.Service;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
 import org.eclipse.symfony.core.model.TemplateVariable;
@@ -142,6 +144,9 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 					if (value.getClass() == VariableReference.class) {
 
+						SymfonyCorePlugin.debug("is value " + varName.getValue());
+						
+						SymfonyCorePlugin.debug(value.toString());
 						TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), varName.sourceStart(), varName.sourceEnd(), null, null);
 						templateVariables.put(variable, "");
 
@@ -166,6 +171,8 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 							
 							FullyQualifiedReference fqcn = (FullyQualifiedReference) instance.getClassName();
 							
+							boolean found = false;
+							
 							for (UseStatement use : useStatements) {
 								for (UsePart part : use.getParts()) {					
 									if (part.getNamespace().getName().equals(fqcn.getName())) {
@@ -173,28 +180,27 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 										String name = fqcn.getName();
 										String qualifier = part.getNamespace().getNamespace().getName();
 										
-										
 										TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), 
 										varName.sourceStart(), varName.sourceEnd(), qualifier, name);
-										
-										if (!templateVariables.containsKey(variable))
-											templateVariables.put(variable, "");
+										templateVariables.put(variable, "");
+										found = true;
 										break;
 									}
 								}								
+								
+								if (found)
+									break;
 							}
 							
 //							TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), 
 //									varName.sourceStart(), varName.sourceEnd(), fqcn.getNamespace().getName(), fqcn.getName());
 //							
-//							templateVariables.put(variable, "");
-							
+//							templateVariables.put(variable, "");							
 							
 						}
-
-					
-
-					
+					} else {
+						
+						SymfonyCorePlugin.debug(this.getClass(), "array value: " + value.getClass());
 					}
 				}
 			}
@@ -215,21 +221,18 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 		if (inAction) {
 			Service service = null;
-			String varName = null;
-
 			if (s.getVariable().getClass() == VariableReference.class) {
 
 				VariableReference var = (VariableReference) s.getVariable();			
-				varName = var.getName().replace("$", "");
-
 				if (s.getValue().getClass() == PHPCallExpression.class) {
 
 					PHPCallExpression exp = (PHPCallExpression) s.getValue();
 
-
 					// are we calling a method named "get" ?
 					if (exp.getName().equals("get")) {
 
+						
+						System.err.println("get " + exp.toString());
 						service = ModelUtils.extractServiceFromCall(exp);
 
 						if (service != null) {
@@ -255,6 +258,8 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 											service.getClassName(), service.getNamespace(), var.getName());
 
 							if (tempVar != null) {								
+								
+
 								templateVariables.put(tempVar, tempVar.getClassName());
 							}
 						}
