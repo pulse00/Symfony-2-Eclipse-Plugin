@@ -56,22 +56,18 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 	final private List<UseStatement> useStatements;
 
 	private boolean inAction = false;
-	
-	
+
+
 	public ControllerIndexingVisitor(List<UseStatement> useStatements) {
 
 		this.useStatements = useStatements;
 	}
 
+
 	public Map<TemplateVariable, String> getTemplateVariables() {
 		return templateVariables;
 	}
 
-	@Override
-	public boolean visit(UseStatement s) throws Exception {
-
-		return true;
-	}
 
 	@Override
 	public boolean visit(PHPMethodDeclaration method) throws Exception {
@@ -119,12 +115,17 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	
+	/**
+	 * Parse {@link ReturnStatement}s and try to evaluate
+	 * the variables.
+	 * 
+	 */
 	@Override
 	public boolean visit(ReturnStatement statement) throws Exception {
 
 		//TODO: Only parse ARRAY_CREATION return types when
 		// the Template() annotation is set
-
 		if (statement.getExpr().getKind() == ASTNodeKinds.ARRAY_CREATION) {
 
 			//Action action = new Action(controller, method);
@@ -147,7 +148,7 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 						VariableReference ref = (VariableReference) value;
 
 						for (TemplateVariable variable : deferredVariables) {
-							
+
 							// we got the variable, add it the the templateVariables
 							if (ref.getName().equals(variable.getName())) {								
 								// alter the variable name
@@ -157,42 +158,40 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 							}							
 						}
 
-					// this is more complicated, something like:
-					// return array('form' => $form->createView());
-					// we need to infer $form and then check the returntype of createView()
+						// this is more complicated, something like:
+						// return array('form' => $form->createView());
+						// we need to infer $form and then check the returntype of createView()
 					} else if(value.getClass() == PHPCallExpression.class) {
 
 						PHPCallExpression callExp = (PHPCallExpression) value;
-						
 						VariableReference varRef = (VariableReference) callExp.getReceiver();
-						
+
 						if (varRef == null) {
 							continue;
 						}
-						
+
 						SimpleReference callName = callExp.getCallName();
-						
+
 						// we got the variable name (in this case $form)
-						// now search for the defferedVariable:
-						
+						// now search for the defferedVariable:						
 						for (TemplateVariable deferred : deferredVariables) {
-							
+
 							// we got it, find the returntype of the
 							// callExpression
 							if (deferred.getName().equals(varRef.getName())) {
-								
+
 								TemplateVariable tempVar = SymfonyModelAccess.getDefault()
 										.createTemplateVariableByReturnType(currentMethod, 
 												callName, deferred.getClassName(), deferred.getNamespace(), 
 												varRef.getName());
-								
+
 								templateVariables.put(tempVar, "");
 								break;
 							}
 						}
-						
-					// this is a direct ClassInstanceCreation, ie:
-					// return array('user' => new User());
+
+						// this is a direct ClassInstanceCreation, ie:
+						// return array('user' => new User());
 					} else if (value.getClass() == ClassInstanceCreation.class) {
 
 						ClassInstanceCreation instance = (ClassInstanceCreation) value;
@@ -201,7 +200,7 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 							FullyQualifiedReference fqcn = (FullyQualifiedReference) instance.getClassName();
 							NamespaceReference nsRef = createFromFQCN(fqcn);
-							
+
 							if (nsRef != null) {
 								TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), 
 										varName.sourceStart(), varName.sourceEnd(), nsRef.getNamespace(), nsRef.getClassName());
@@ -218,11 +217,6 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 		return true;
 	}		
 
-	@Override
-	public boolean endvisit(ReturnStatement s) throws Exception {
-
-		return true;
-	}
 
 	/**
 	 * 
@@ -239,12 +233,15 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 			Service service = null;
 			if (s.getVariable().getClass() == VariableReference.class) {
 
-				VariableReference var = (VariableReference) s.getVariable();			
+				VariableReference var = (VariableReference) s.getVariable();		
+
+				// A call expression like $foo = $this->get('bar');
+				//
 				if (s.getValue().getClass() == PHPCallExpression.class) {
 
 					PHPCallExpression exp = (PHPCallExpression) s.getValue();
 
-					// are we calling a method named "get" ?
+					// are we requesting a Service?
 					if (exp.getName().equals("get")) {
 
 						service = ModelUtils.extractServiceFromCall(exp);
@@ -254,35 +251,60 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 							deferredVariables.push(tempVar);
 						}
 
-					} else {
+					// a more complex expression like
+					// $form = $this->get('form.factory')->create(new ContactType());
+					} else if (exp.getReceiver().getClass() == PHPCallExpression.class) {
 
-						if (exp.getReceiver().getClass() == PHPCallExpression.class) {
+						// try to extract a service if it's a Servicecontainer call
+						service = ModelUtils.extractServiceFromCall((PHPCallExpression) exp.getReceiver());
+						
+						// nothing found, return
+						if (service == null || exp.getCallName() == null) {
+							
+							System.err.println("nothing found");
+							return true;
+						}
 
-							service = ModelUtils.extractServiceFromCall((PHPCallExpression) exp.getReceiver());
-							if (service == null || exp.getCallName() == null) {
-								return true;
-							}
+						SimpleReference callName = exp.getCallName();
 
-							SimpleReference callName = exp.getCallName();
+						TemplateVariable tempVar = SymfonyModelAccess.getDefault()
+								.createTemplateVariableByReturnType(currentMethod, callName, 
+										service.getClassName(), service.getNamespace(), var.getName());
 
-							TemplateVariable tempVar = SymfonyModelAccess.getDefault()
-									.createTemplateVariableByReturnType(currentMethod, callName, 
-											service.getClassName(), service.getNamespace(), var.getName());
+						if (tempVar != null) {								
+							deferredVariables.push(tempVar);
+						}
 
-							if (tempVar != null) {								
-								deferredVariables.push(tempVar);
-							}
+					// something like $formView = $form->createView(); 
+					} else if (exp.getReceiver().getClass() == VariableReference.class) {
+						
+						VariableReference varRef = (VariableReference) exp.getReceiver();
+						SimpleReference ref = exp.getCallName();
+						
+						// check for a previosly declared variable
+						for (TemplateVariable tempVar : deferredVariables) {							
+							if (tempVar.getName().equals(varRef.getName())) {
+								
+								TemplateVariable tVar = SymfonyModelAccess.getDefault()
+										.createTemplateVariableByReturnType(currentMethod, ref, tempVar.getClassName(), tempVar.getNamespace(), var.getName());
+								
+								if (tVar != null) {
+									deferredVariables.push(tVar);
+									break;
+								}								
+							}							
 						}
 					}
+				// a simple ClassInstanceCreation, ie. $contact = new ContactType();
 				} else if (s.getValue().getClass() == ClassInstanceCreation.class) {
-					
+
 					ClassInstanceCreation instance = (ClassInstanceCreation) s.getValue();
-					
+
 					if (instance.getClassName().getClass() == FullyQualifiedReference.class) {
 
 						FullyQualifiedReference fqcn = (FullyQualifiedReference) instance.getClassName();
 						NamespaceReference nsRef = createFromFQCN(fqcn);
-						
+
 						if (nsRef != null) {
 							TemplateVariable variable = new TemplateVariable(currentMethod, var.getName(), 
 									var.sourceStart(), var.sourceEnd(), nsRef.getNamespace(), nsRef.getClassName());
@@ -294,42 +316,57 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * 
+	 * Get the ClassName and Namespace from a {@link FullyQualifiedReference}
+	 * 
+	 * @param fqcn
+	 * @return
+	 */
 	private NamespaceReference createFromFQCN(FullyQualifiedReference fqcn) {
-		
+
 		for (UseStatement use : useStatements) {
 			for (UsePart part : use.getParts()) {					
 				if (part.getNamespace().getName().equals(fqcn.getName())) {
 
 					String name = fqcn.getName();
 					String qualifier = part.getNamespace().getNamespace().getName();
-					
+
 					return new NamespaceReference(qualifier, name);
 				}
 			}								
 		}
-		
+
 		return null;
 	}
-	
+
+
+	/**
+	 * 
+	 * Simple helper class to pass around namespaces.
+	 * 
+	 * @author "Robert Gruendler <r.gruendler@gmail.com>"
+	 *
+	 */
 	private class NamespaceReference {		
-		
+
 		private String namespace;
 		private String className;
-		
+
 		public NamespaceReference(String qualifier, String name) {
 
 			this.namespace = qualifier;
 			this.className = name;
 		}
-		
+
 		public String getNamespace() {
 			return namespace;
 		}
-		
+
 		public String getClassName() {
 			return className;
 		}
-		
+
 	}
 }
