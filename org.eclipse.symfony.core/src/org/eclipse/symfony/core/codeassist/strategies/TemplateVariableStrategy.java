@@ -4,7 +4,6 @@ package org.eclipse.symfony.core.codeassist.strategies;
 import java.util.List;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.internal.core.SourceRange;
@@ -48,10 +47,15 @@ public class TemplateVariableStrategy extends GlobalElementStrategy {
 		List<TemplateField> variables = model.findTemplateVariables(controller);
 		
 		SourceRange range = getReplacementRange(getContext());
+		
+
 
 		for(TemplateField element : variables) {
 
 			if (CodeAssistUtils.startsWithIgnoreCase(element.getMethod(), viewName)) {
+				
+//				FakeType fType = new FakeType((ModelElement) element.getSourceModule(), element.getElementName());				
+//				reporter.reportType(fType, "", range);
 				
 				reporter.reportField(new FakeField(element, element.getElementName(), Modifiers.AccPublic), "", range, false);
 				

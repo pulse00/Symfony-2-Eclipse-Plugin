@@ -47,15 +47,14 @@ public class TemplateGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 				if (node instanceof VariableReference) {
 					
 					VariableReference variable = (VariableReference) node;
-					 IModelElement element = SymfonyModelAccess.getDefault().findTemplateVariableType(variable.toString(), context.getSourceModule());
+					TemplateField element = SymfonyModelAccess.getDefault().findTemplateVariableType(variable.toString(), context.getSourceModule());
 					 
-					 if (element != null && (element instanceof TemplateField)) {
-						 
-						 TemplateField field = (TemplateField) element;
+					 if (element != null) {
+						 						
 						 String viewName = PathUtils.getViewFromTemplatePath(context.getSourceModule().getPath());
 						 
-						 if (CodeAssistUtils.startsWithIgnoreCase(field.getMethod(), viewName))
-							 return new TemplateVariableGoalEvaluator(goal, field);
+						 if (CodeAssistUtils.startsWithIgnoreCase(element.getMethod(), viewName))
+							 return new TemplateVariableGoalEvaluator(goal, element);
 					 }
 				}
 			}			

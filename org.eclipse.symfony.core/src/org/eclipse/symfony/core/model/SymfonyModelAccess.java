@@ -225,7 +225,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	 * @param sourceModule
 	 * @return
 	 */
-	public IModelElement findTemplateVariableType(String variableName, ISourceModule sourceModule) {
+	public TemplateField findTemplateVariableType(String variableName, ISourceModule sourceModule) {
 
 
 		// find the corresponding controller for the template
@@ -241,7 +241,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 			return null;
 		}
 		
-		final List<IModelElement> variables = new ArrayList<IModelElement>();
+		final List<TemplateField> variables = new ArrayList<TemplateField>();
 		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());		
 		final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
 		
@@ -255,8 +255,8 @@ public class SymfonyModelAccess extends PhpModelAccess {
 
 				IModelElement element = resolver.resolve(elementType, flags, offset, length, nameOffset, nameLength, elementName, metadata, doc, qualifier, parent, sourceModule);
 				
-				if (element != null) {
-					variables.add(element);					
+				if (element != null && element instanceof TemplateField) {
+					variables.add((TemplateField) element);					
 				} 
 			}
 		}, null);

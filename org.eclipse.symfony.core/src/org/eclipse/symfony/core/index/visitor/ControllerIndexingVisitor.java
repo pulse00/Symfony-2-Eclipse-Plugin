@@ -36,10 +36,8 @@ import org.eclipse.symfony.core.util.ModelUtils;
  * 
  * The {@link ControllerIndexingVisitor} indexes the following
  * ModelElements in Symfony2 controllers:
- * 
- * 
+ *  
  * 1. Template variables
- * 2. Annotations
  * 
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
@@ -69,6 +67,11 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 	}
 
 
+	/**
+	 * 
+	 * Setup the visitor for a PHP method.
+	 * 
+	 */
 	@Override
 	public boolean visit(PHPMethodDeclaration method) throws Exception {
 
@@ -343,11 +346,7 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 
 	/**
-	 * 
 	 * Simple helper class to pass around namespaces.
-	 * 
-	 * @author "Robert Gruendler <r.gruendler@gmail.com>"
-	 *
 	 */
 	private class NamespaceReference {		
 

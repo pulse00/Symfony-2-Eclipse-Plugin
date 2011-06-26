@@ -5,13 +5,19 @@ package org.eclipse.symfony.twig.codeassist.strategies;
 import java.util.List;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.typeinference.FakeField;
+import org.eclipse.symfony.core.index.SymfonyElementResolver.TemplateField;
 import org.eclipse.symfony.core.model.ModelManager;
+import org.eclipse.symfony.core.model.SymfonyModelAccess;
 import org.eclipse.symfony.core.model.TemplateVariable;
+import org.eclipse.symfony.core.util.PathUtils;
 import org.eclipse.twig.core.codeassist.context.AbstractTwigCompletionContext;
 import org.eclipse.twig.core.codeassist.strategies.AbstractTwigCompletionStrategy;
 
@@ -61,22 +67,29 @@ public class TemplateVariableCompletionStrategy extends AbstractTwigCompletionSt
 
 		try {
 			
-			System.err.println("complet template variable");
-			AbstractTwigCompletionContext ctx = (AbstractTwigCompletionContext) getContext();
-			ModelManager model = ModelManager.getInstance();
-			List<TemplateVariable> variables = model.findTemplateVariables(ctx.getSourceModule());
+			AbstractCompletionContext ctxt = (AbstractCompletionContext) getContext();
+			ISourceModule module = ctxt.getSourceModule();
+			SymfonyModelAccess model = SymfonyModelAccess.getDefault();
+			
+			String viewName = PathUtils.getViewFromTemplatePath(module.getPath());
+			
+			IType controller = model.findControllerByTemplate(module);		
+			List<TemplateField> variables = model.findTemplateVariables(controller);
+			
+			SourceRange range = getReplacementRange(getContext());
+			
+			System.err.println(range.getOffset() + " " + range.getLength());			
 			
 			if (variables == null) {
 				return;
 			}
 			
-			SourceRange range = getReplacementRange(ctx);
-//			for (TemplateVariable variable : variables) {
-//				
-//				FakeField field = new FakeField((ModelElement) variable.getSourceModule(), variable.getName(""), Modifiers.AccPublic);
-//				reporter.reportField(field, "", range, true);								
-//				
-//			}
+			for(TemplateField element : variables) {
+				if (CodeAssistUtils.startsWithIgnoreCase(element.getMethod(), viewName)) {
+					reporter.reportField(new FakeField(element, element.getElementName(), Modifiers.AccPublic), "", range, true);
+					
+				}
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
