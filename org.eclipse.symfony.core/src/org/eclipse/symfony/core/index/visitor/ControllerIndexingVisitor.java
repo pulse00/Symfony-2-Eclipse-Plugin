@@ -24,7 +24,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
 import org.eclipse.symfony.core.SymfonyCorePlugin;
 import org.eclipse.symfony.core.model.Service;
@@ -50,9 +49,10 @@ import org.eclipse.symfony.core.util.ModelUtils;
 public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 	private Map<TemplateVariable, String> templateVariables = new HashMap<TemplateVariable, String>();
-	
+	private Stack<TemplateVariable> deferredVariables = new Stack<TemplateVariable>();
+
 	private PHPMethodDeclaration currentMethod;
-	
+
 	final private List<UseStatement> useStatements;
 
 	public ControllerIndexingVisitor(List<UseStatement> useStatements) {
@@ -65,13 +65,10 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 	}
 
 	private boolean inAction = false;
-	
-	
+
+
 	@Override
 	public boolean visit(UseStatement s) throws Exception {
-		
-		
-		System.err.println("ahoi use statemtn " + s.toString());
 
 		return true;
 	}
@@ -79,10 +76,12 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 	@Override
 	public boolean visit(PHPMethodDeclaration method) throws Exception {
 
-		
 		currentMethod = method;
-		
+		deferredVariables = new Stack<TemplateVariable>();
+
 		if (method.getName().endsWith(SymfonyCoreConstants.ACTION_SUFFIX)) {
+
+			System.err.println("visit method " + method.getName());
 
 			inAction = true;
 			boolean foundAnnotation = false;
@@ -98,7 +97,7 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 						//TODO: parse @Template() parameters
 						if (line.startsWith(SymfonyCoreConstants.TEMPLATE_ANNOTATION)) {
-							
+
 							foundAnnotation = true;
 							break;
 
@@ -116,6 +115,9 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 	@Override
 	public boolean endvisit(PHPMethodDeclaration s) throws Exception {
 
+		System.err.println();
+
+		deferredVariables = null;
 		currentMethod = null;
 		inAction = false;
 		return true;
@@ -128,6 +130,8 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 		// the Template() annotation is set
 
 		if (statement.getExpr().getKind() == ASTNodeKinds.ARRAY_CREATION) {
+
+			System.err.println("visit return");
 
 			//Action action = new Action(controller, method);
 			ArrayCreation array = (ArrayCreation) statement.getExpr();
@@ -142,17 +146,25 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 					Scalar varName = (Scalar) key;
 
+					// something in the form:  return array ('foo' => $bar);
+					// check the type of $bar:
 					if (value.getClass() == VariableReference.class) {
 
-						SymfonyCorePlugin.debug("is value " + varName.getValue());
-						
-						SymfonyCorePlugin.debug(value.toString());
-						TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), varName.sourceStart(), varName.sourceEnd(), null, null);
-						templateVariables.put(variable, "");
+						VariableReference ref = (VariableReference) value;
 
+						for (TemplateVariable variable : deferredVariables) {
+							
+							// we got the variable, add it the the templateVariables
+							if (ref.getName().equals(variable.getName())) {								
+								// alter the variable name
+								variable.setName(varName.getValue());
+								templateVariables.put(variable, "");
+								break;
+							}							
+						}
 
 					} else if(value.getClass() == PHPCallExpression.class) {
-						
+
 
 						//						Iterator it = templateVariables.keySet().iterator();
 						//						
@@ -164,42 +176,44 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 						//							
 						//						}							
 					} else if (value.getClass() == ClassInstanceCreation.class) {
-						
+
 						ClassInstanceCreation instance = (ClassInstanceCreation) value;
-						
+
 						if (instance.getClassName().getClass() == FullyQualifiedReference.class) {
-							
+
 							FullyQualifiedReference fqcn = (FullyQualifiedReference) instance.getClassName();
-							
+
 							boolean found = false;
-							
+
 							for (UseStatement use : useStatements) {
 								for (UsePart part : use.getParts()) {					
 									if (part.getNamespace().getName().equals(fqcn.getName())) {
-										
+
 										String name = fqcn.getName();
 										String qualifier = part.getNamespace().getNamespace().getName();
-										
+
 										TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), 
-										varName.sourceStart(), varName.sourceEnd(), qualifier, name);
+												varName.sourceStart(), varName.sourceEnd(), qualifier, name);
 										templateVariables.put(variable, "");
 										found = true;
 										break;
 									}
 								}								
-								
+
 								if (found)
 									break;
 							}
-							
-//							TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), 
-//									varName.sourceStart(), varName.sourceEnd(), fqcn.getNamespace().getName(), fqcn.getName());
-//							
-//							templateVariables.put(variable, "");							
-							
+
+							//							TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), 
+							//									varName.sourceStart(), varName.sourceEnd(), fqcn.getNamespace().getName(), fqcn.getName());
+							//							
+							//							templateVariables.put(variable, "");							
+
 						}
 					} else {
-						
+
+
+
 						SymfonyCorePlugin.debug(this.getClass(), "array value: " + value.getClass());
 					}
 				}
@@ -213,6 +227,7 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 	@Override
 	public boolean endvisit(ReturnStatement s) throws Exception {
 
+
 		return true;
 	}
 
@@ -220,6 +235,9 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 	public boolean visit(Assignment s) throws Exception {
 
 		if (inAction) {
+
+			System.err.println("visit assignment");
+
 			Service service = null;
 			if (s.getVariable().getClass() == VariableReference.class) {
 
@@ -231,14 +249,13 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 					// are we calling a method named "get" ?
 					if (exp.getName().equals("get")) {
 
-						
-						System.err.println("get " + exp.toString());
+
 						service = ModelUtils.extractServiceFromCall(exp);
 
 						if (service != null) {
-
-							//						TemplateVariable tempVar = new TemplateVariable(context.getSourceModule(), service.getClassName(), service.getNamespace(), varName);
-							//						templateVariables.put(varName, tempVar);
+							TemplateVariable tempVar= new TemplateVariable(currentMethod, var.getName(), exp.sourceStart(), exp.sourceEnd(), service.getNamespace(), service.getClassName());							
+							deferredVariables.push(tempVar);
+//							templateVariables.put(varName, tempVar);
 						}
 
 					} else {
@@ -252,15 +269,15 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 							}
 
 							SimpleReference callName = exp.getCallName();
-							
+
 							TemplateVariable tempVar = SymfonyModelAccess.getDefault()
 									.createTemplateVariableByReturnType(currentMethod, callName, 
 											service.getClassName(), service.getNamespace(), var.getName());
 
 							if (tempVar != null) {								
-								
 
-								templateVariables.put(tempVar, tempVar.getClassName());
+								//								templateVariables.put(tempVar, tempVar.getClassName());
+								deferredVariables.push(tempVar);
 							}
 						}
 					}
