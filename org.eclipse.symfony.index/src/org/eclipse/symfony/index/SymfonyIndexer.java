@@ -11,12 +11,14 @@ public class SymfonyIndexer {
 	private SymfonyDbFactory factory;
 	private Connection connection;
 	private IServiceDao serviceDao;
+	private TemplateVarDao templateDao;
 	
 	private SymfonyIndexer() throws Exception {
 
 		factory = SymfonyDbFactory.getInstance();
 		connection = factory.createConnection();
 		serviceDao = factory.getServiceDao();
+		templateDao = factory.getTemplateDao();
 		
 	}
 	
@@ -35,10 +37,19 @@ public class SymfonyIndexer {
 		
 		try {
 			serviceDao.insert(connection, path, id, phpClass, timestamp);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}		
 		
+	}
+	
+	public void addTemplateVariable(String varName, String phpClass, String namespace, String path) {
+		
+		try {
+			templateDao.insert(connection,varName, phpClass, namespace, path, 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void startIndexing(String path) {
@@ -66,6 +77,19 @@ public class SymfonyIndexer {
 
 		
 		serviceDao.findService(connection, id, path, iServiceHandler);
+		
+	}
+
+
+	public void commitVariables() {
+
+		try {
+			templateDao.commitInsertions();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 }

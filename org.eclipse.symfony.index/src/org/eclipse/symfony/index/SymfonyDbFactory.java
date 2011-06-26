@@ -193,4 +193,10 @@ public class SymfonyDbFactory  {
 	public IServiceDao getServiceDao() {
 		return new ServiceDao();
 	}
+
+
+	public TemplateVarDao getTemplateDao() {
+
+		return new TemplateVarDao();
+	}
 }

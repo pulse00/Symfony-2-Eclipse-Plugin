@@ -64,41 +64,6 @@ public class Schema {
 
 
 	/**
-	 * Creates elements table
-	 * 
-	 * @param connection
-	 *            Database connection
-	 * @param tableName
-	 *            Table name
-	 * @param isReference
-	 *            Whether to create table for element references or element
-	 *            declarations
-	 * @throws SQLException
-	 */
-	public void createTable(Connection connection, String tableName) throws SQLException {
-
-		synchronized (TABLES_CACHE) {
-			if (TABLES_CACHE.add(tableName)) {
-
-				String query = readSqlFile("Resources/index/element_decl.sql"); //$NON-NLS-1$
-				query = NLS.bind(query, tableName);
-
-				try {
-					Statement statement = connection.createStatement();
-					try {
-						statement.executeUpdate(query);
-					} finally {
-						statement.close();
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-					throw e;
-				}
-			}
-		}
-	}
-
-	/**
 	 * Checks whether the schema version is compatible with the stored one.
 	 */
 	public boolean isCompatible() {

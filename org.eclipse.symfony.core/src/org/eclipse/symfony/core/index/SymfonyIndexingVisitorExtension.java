@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
@@ -12,14 +11,18 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.expressions.Literal;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.index2.IIndexingRequestor.DeclarationInfo;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
+import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
+import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
+import org.eclipse.symfony.index.SymfonyIndexer;
 
 
 /**
@@ -44,6 +47,7 @@ PhpIndexingVisitorExtension {
 	private ClassDeclaration currentClass;
 	private NamespaceDeclaration namespace;
 	private ControllerIndexingVisitor controllerIndexer;
+	private SymfonyIndexer indexer;
 	
 
 	
@@ -73,6 +77,8 @@ PhpIndexingVisitorExtension {
 	@Override
 	public boolean visit(TypeDeclaration s) throws Exception {
 
+		if (indexer == null)
+			indexer = SymfonyIndexer.getInstance();
 
 		if (s instanceof ClassDeclaration) {
 
@@ -110,6 +116,7 @@ PhpIndexingVisitorExtension {
 
 		if (controllerIndexer != null) {
 
+			System.err.println(requestor.getClass() + " > requestor");
 			
 			Map<ASTNode, String> variables = controllerIndexer.getTemplateVariables();			
 			Iterator it = variables.keySet().iterator();
@@ -119,26 +126,38 @@ PhpIndexingVisitorExtension {
 				ASTNode variable = (ASTNode) it.next();
 				int start = variable.sourceStart();
 				int length = variable.sourceEnd() - variable.sourceStart();
+				String fqcn = variables.get(variable);
 				
-				String name = null;
+				String name = null;				
 				
 				if (variable instanceof SimpleReference) {
 					name = ((SimpleReference) variable).getName().replaceAll("['\"]", "");
+
+					String phpClass = PHPModelUtils.extractElementName(fqcn);
+					String namespace = PHPModelUtils.extractNameSapceName(fqcn);
+					
+					indexer.addTemplateVariable(name, phpClass, namespace, "");						
+					System.err.println("added variable " + name + " to indexer");
+					
 				} else if (variable instanceof Literal) {
 					name = ((Literal) variable).getValue().replaceAll("['\"]", "");	
 				}
 				
-				DeclarationInfo info = new DeclarationInfo(IModelElement.FIELD, 
-						Modifiers.AccPublic, start, length, start, length, name, 
-						null, null, namespace.getName(), currentClass.getName());		
 				
-				if (requestor != null && name != null) {					
-					System.err.println("added field declaration in " + namespace.getName() + " "
-							+ currentClass.getName() + " for " + name + " from " + start + " to " + (start + length));				
-					
-					requestor.addDeclaration(info);
-				}
+				
+//				DeclarationInfo info = new DeclarationInfo(IModelElement.FIELD, 
+//						Modifiers.AccPublic, start, length, start, length, name, 
+//						null, null, namespace.getName(), currentClass.getName());		
+//				
+//				if (requestor != null && name != null) {					
+//					System.err.println("added field declaration in " + namespace.getName() + " "
+//							+ currentClass.getName() + " for " + name + " from " + start + " to " + (start + length));				
+//					
+//					requestor.addDeclaration(info);
+//				}
 			}
+			
+			indexer.commitVariables();
 		}
 		
 		inController = false;
