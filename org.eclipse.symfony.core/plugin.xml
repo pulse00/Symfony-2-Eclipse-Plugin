@@ -19,7 +19,15 @@
       
    </extension>
    
-   <!-- The Symfony2 core builder - visits xml and yml files to parse the configuration --> 
+   <!-- The Symfony2 core builder - visits xml and yml files to parse the configuration -->
+   <extension
+         point="org.eclipse.dltk.core.language">
+      <language
+            class="org.eclipse.symfony.core.SymfonyLanguageToolkit"
+            nature="org.eclipse.php.core.PHPNature"
+            priority="100">
+      </language>
+   </extension> 
    <extension
          id="symfonyBuilder"
          name="Symfony Builder"
@@ -50,6 +58,14 @@
             name="Symfony Builder"
             nature="org.eclipse.symfony.core.symfonyNature">
       </buildParticipant>
+   </extension>
+   <extension
+         point="org.eclipse.dltk.core.indexerParticipant">
+      <indexerParticipant
+            class="org.eclipse.symfony.core.index.SymfonyIndexerParticipant"
+            nature="org.eclipse.php.core.PHPNature"
+            targetId="org.eclipse.dltk.core.index.sql.indexer">
+      </indexerParticipant>
    </extension>
    
    

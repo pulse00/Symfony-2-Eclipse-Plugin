@@ -1,8 +1,12 @@
 package org.eclipse.symfony.core.index;
 
+import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.util.TokenBuffer;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -11,15 +15,13 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.expressions.Literal;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
 import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
-import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
 import org.eclipse.symfony.index.SymfonyIndexer;
@@ -98,6 +100,7 @@ PhpIndexingVisitorExtension {
 						inController = true;						
 						controllerIndexer = new ControllerIndexingVisitor();
 						currentClass.traverse(controllerIndexer);
+						
 
 
 					} 
@@ -116,8 +119,6 @@ PhpIndexingVisitorExtension {
 
 		if (controllerIndexer != null) {
 
-			System.err.println(requestor.getClass() + " > requestor");
-			
 			Map<ASTNode, String> variables = controllerIndexer.getTemplateVariables();			
 			Iterator it = variables.keySet().iterator();
 			
@@ -136,12 +137,28 @@ PhpIndexingVisitorExtension {
 					String phpClass = PHPModelUtils.extractElementName(fqcn);
 					String namespace = PHPModelUtils.extractNameSapceName(fqcn);
 					
-					indexer.addTemplateVariable(name, phpClass, namespace, "");						
-					System.err.println("added variable " + name + " to indexer");
+					JsonFactory factory = new JsonFactory();
+					StringWriter writer = new StringWriter();
+					JsonGenerator jg = factory.createJsonGenerator(writer);
+					
+					jg.writeString(phpClass);
+					jg.writeString(namespace);					
+					jg.flush();
+					jg.close();
+					
+					
+					ReferenceInfo info = new ReferenceInfo(IModelElement.USER_ELEMENT, start, length, name, writer.getBuffer().toString(), namespace);
+					requestor.addReference(info);
+					
+					System.err.println("added reference info to requestor " + writer.getBuffer().toString());
+					
+//					indexer.addTemplateVariable(name, phpClass, namespace, "");						
+//					System.err.println("added variable " + name + " to indexer");
 					
 				} else if (variable instanceof Literal) {
 					name = ((Literal) variable).getValue().replaceAll("['\"]", "");	
 				}
+				
 				
 				
 				
@@ -157,7 +174,7 @@ PhpIndexingVisitorExtension {
 //				}
 			}
 			
-			indexer.commitVariables();
+//			indexer.commitVariables();
 		}
 		
 		inController = false;

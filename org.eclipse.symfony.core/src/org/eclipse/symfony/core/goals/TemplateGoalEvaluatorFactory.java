@@ -36,6 +36,8 @@ public class TemplateGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 					
 					VariableReference variable = (VariableReference) node;
 					
+					System.err.println("goal");
+					
 					
 					//System.err.println(expression.getClass());
 					context.getSourceModule().getPath();

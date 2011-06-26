@@ -72,17 +72,11 @@ public class SymfonyDbFactory  {
 	private SymfonyDbFactory() throws Exception {
 		try {
 			Class.forName("org.h2.Driver");
-
-			System.err.println("DRIVER CREATED");
 		} catch (ClassNotFoundException e) {
-
 			e.printStackTrace();
-
 		}
 
 		IPath dbPath = SymfonyIndex.getDefault().getStateLocation();
-		
-		System.err.println("db path is " + dbPath.toString());
 		String connString = getConnectionString(dbPath);
 
 		pool = JdbcConnectionPool.create(connString, DB_USER, DB_PASS);
@@ -101,8 +95,6 @@ public class SymfonyDbFactory  {
 						statement
 						.executeQuery("SELECT COUNT(*) FROM SERVICES WHERE 1=0;");
 						initializeSchema = !schema.isCompatible();
-
-						System.err.println("schema initailiz");
 
 					} catch (SQLException e) {
 						// Basic table doesn't exist
@@ -144,7 +136,6 @@ public class SymfonyDbFactory  {
 			}
 		} while (connection == null && --tries > 0);
 		
-		System.err.println("factory created");
 	}
 
 	/**
@@ -194,9 +185,4 @@ public class SymfonyDbFactory  {
 		return new ServiceDao();
 	}
 
-
-	public TemplateVarDao getTemplateDao() {
-
-		return new TemplateVarDao();
-	}
 }

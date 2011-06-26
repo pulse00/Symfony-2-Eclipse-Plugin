@@ -11,7 +11,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.sse.core,
  org.eclipse.dltk.core,
  org.eclipse.php.core,
- org.eclipse.symfony.index
+ org.eclipse.symfony.index,
+ org.eclipse.dltk.core.index,
+ org.eclipse.dltk.core.index.sql,
+ org.eclipse.dltk.core.index.sql.h2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.symfony.core,
@@ -22,4 +25,5 @@ Export-Package: org.eclipse.symfony.core,
  org.eclipse.symfony.core.parser.antlr.error
 Bundle-ClassPath: .,
  Resources/antlr-runtime-3.3.jar,
- Resources/snakeyaml-1.8.jar
+ Resources/snakeyaml-1.8.jar,
+ lib/jackson-all-1.8.2.jar
