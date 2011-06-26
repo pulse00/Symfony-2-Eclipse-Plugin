@@ -103,4 +103,10 @@ public class TemplateVariable implements ISymfonyModelElement {
 		return namespace != null && className != null;
 		
 	}
+	
+	public String toString() {
+				
+		return getName() + " => " + getNamespace() + " - " + getClassName() + " " + getMethod();		
+		
+	}
 }

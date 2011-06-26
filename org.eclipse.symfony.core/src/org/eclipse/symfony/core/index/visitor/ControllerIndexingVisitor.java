@@ -55,6 +55,9 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 	final private List<UseStatement> useStatements;
 
+	private boolean inAction = false;
+	
+	
 	public ControllerIndexingVisitor(List<UseStatement> useStatements) {
 
 		this.useStatements = useStatements;
@@ -63,9 +66,6 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 	public Map<TemplateVariable, String> getTemplateVariables() {
 		return templateVariables;
 	}
-
-	private boolean inAction = false;
-
 
 	@Override
 	public boolean visit(UseStatement s) throws Exception {
@@ -80,8 +80,6 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 		deferredVariables = new Stack<TemplateVariable>();
 
 		if (method.getName().endsWith(SymfonyCoreConstants.ACTION_SUFFIX)) {
-
-			System.err.println("visit method " + method.getName());
 
 			inAction = true;
 			boolean foundAnnotation = false;
@@ -115,8 +113,6 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 	@Override
 	public boolean endvisit(PHPMethodDeclaration s) throws Exception {
 
-		System.err.println();
-
 		deferredVariables = null;
 		currentMethod = null;
 		inAction = false;
@@ -130,8 +126,6 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 		// the Template() annotation is set
 
 		if (statement.getExpr().getKind() == ASTNodeKinds.ARRAY_CREATION) {
-
-			System.err.println("visit return");
 
 			//Action action = new Action(controller, method);
 			ArrayCreation array = (ArrayCreation) statement.getExpr();
@@ -163,18 +157,42 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 							}							
 						}
 
+					// this is more complicated, something like:
+					// return array('form' => $form->createView());
+					// we need to infer $form and then check the returntype of createView()
 					} else if(value.getClass() == PHPCallExpression.class) {
 
-
-						//						Iterator it = templateVariables.keySet().iterator();
-						//						
-						//						while(it.hasNext()) {								
-						//							String var = (String) it.next();
-						//							var = var.replace("$", "");
-						//							TemplateVariable variable = templateVariables.get(var);								
-						//							action.addTemplateVariable(variable);								
-						//							
-						//						}							
+						PHPCallExpression callExp = (PHPCallExpression) value;
+						
+						VariableReference varRef = (VariableReference) callExp.getReceiver();
+						
+						if (varRef == null) {
+							continue;
+						}
+						
+						SimpleReference callName = callExp.getCallName();
+						
+						// we got the variable name (in this case $form)
+						// now search for the defferedVariable:
+						
+						for (TemplateVariable deferred : deferredVariables) {
+							
+							// we got it, find the returntype of the
+							// callExpression
+							if (deferred.getName().equals(varRef.getName())) {
+								
+								TemplateVariable tempVar = SymfonyModelAccess.getDefault()
+										.createTemplateVariableByReturnType(currentMethod, 
+												callName, deferred.getClassName(), deferred.getNamespace(), 
+												varRef.getName());
+								
+								templateVariables.put(tempVar, "");
+								break;
+							}
+						}
+						
+					// this is a direct ClassInstanceCreation, ie:
+					// return array('user' => new User());
 					} else if (value.getClass() == ClassInstanceCreation.class) {
 
 						ClassInstanceCreation instance = (ClassInstanceCreation) value;
@@ -203,30 +221,19 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 								if (found)
 									break;
 							}
-
-							//							TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), 
-							//									varName.sourceStart(), varName.sourceEnd(), fqcn.getNamespace().getName(), fqcn.getName());
-							//							
-							//							templateVariables.put(variable, "");							
-
 						}
 					} else {
-
-
 
 						SymfonyCorePlugin.debug(this.getClass(), "array value: " + value.getClass());
 					}
 				}
 			}
-
-			//			controller.addAction(action);
 		}	
 		return true;
 	}		
 
 	@Override
 	public boolean endvisit(ReturnStatement s) throws Exception {
-
 
 		return true;
 	}
@@ -235,8 +242,6 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 	public boolean visit(Assignment s) throws Exception {
 
 		if (inAction) {
-
-			System.err.println("visit assignment");
 
 			Service service = null;
 			if (s.getVariable().getClass() == VariableReference.class) {
@@ -249,13 +254,11 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 					// are we calling a method named "get" ?
 					if (exp.getName().equals("get")) {
 
-
 						service = ModelUtils.extractServiceFromCall(exp);
 
 						if (service != null) {
 							TemplateVariable tempVar= new TemplateVariable(currentMethod, var.getName(), exp.sourceStart(), exp.sourceEnd(), service.getNamespace(), service.getClassName());							
 							deferredVariables.push(tempVar);
-//							templateVariables.put(varName, tempVar);
 						}
 
 					} else {
@@ -263,7 +266,6 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 						if (exp.getReceiver().getClass() == PHPCallExpression.class) {
 
 							service = ModelUtils.extractServiceFromCall((PHPCallExpression) exp.getReceiver());
-
 							if (service == null || exp.getCallName() == null) {
 								return true;
 							}
@@ -275,8 +277,6 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 											service.getClassName(), service.getNamespace(), var.getName());
 
 							if (tempVar != null) {								
-
-								//								templateVariables.put(tempVar, tempVar.getClassName());
 								deferredVariables.push(tempVar);
 							}
 						}
