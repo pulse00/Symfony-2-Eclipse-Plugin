@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+
    <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
@@ -37,7 +38,6 @@
       </objectContribution>
    </extension>
 
-
  <extension
        point="org.eclipse.ui.preferencePages">
     <page
@@ -46,6 +46,7 @@
           name="Symfony">
     </page>
  </extension>
+ 
  <extension
        point="org.eclipse.ui.views">
     <category
@@ -60,12 +61,14 @@
           name="Symfony Project Outline">
     </view>
  </extension>
+ 
  <extension
        point="org.eclipse.help.contexts">
     <contexts
           file="contexts.xml">
     </contexts>
  </extension>
+ 
  <extension
        point="org.eclipse.ui.perspectiveExtensions">
     <perspectiveExtension
@@ -78,6 +81,7 @@
        </view>
     </perspectiveExtension>
  </extension>
+ 
  <extension
        point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
     <hyperlinkDetector
@@ -87,6 +91,15 @@
           name="%hyperlinkDetector.name"
           targetId="org.eclipse.php.core.phpsource">
     </hyperlinkDetector>
+ </extension>
+ 
+ 
+ <extension
+       point="org.eclipse.wst.sse.ui.semanticHighlighting">
+        <highlighting
+          class="org.eclipse.symfony.ui.editor.highlighting.AnnotationHighlighting"
+          target="org.eclipse.php.core.phpsource">
+        </highlighting> 
  </extension>
  
 </plugin>

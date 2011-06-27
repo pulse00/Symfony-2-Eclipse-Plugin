@@ -14,6 +14,13 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.php.ui,
  org.eclipse.symfony.core,
  org.eclipse.jface.text,
+ org.eclipse.wst.sse.core,
  org.eclipse.wst.sse.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.symfony.ui,
+ org.eclipse.symfony.ui.editor.highlighting;uses:="org.eclipse.php.internal.core.ast.nodes,org.eclipse.php.internal.ui.editor.highlighter",
+ org.eclipse.symfony.ui.editor.hyperlink,
+ org.eclipse.symfony.ui.popup.actions,
+ org.eclipse.symfony.ui.preferences,
+ org.eclipse.symfony.ui.views
