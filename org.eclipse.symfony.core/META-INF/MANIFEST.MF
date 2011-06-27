@@ -17,7 +17,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.dltk.core.index.sql.h2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.symfony.core,
+Export-Package: org.antlr.runtime,
+ org.antlr.runtime.tree,
+ org.eclipse.symfony.core,
  org.eclipse.symfony.core.builder,
  org.eclipse.symfony.core.index,
  org.eclipse.symfony.core.model,
@@ -26,6 +28,6 @@ Export-Package: org.eclipse.symfony.core,
  org.eclipse.symfony.core.parser.antlr.error,
  org.eclipse.symfony.core.util
 Bundle-ClassPath: .,
- Resources/antlr-runtime-3.3.jar,
- Resources/snakeyaml-1.8.jar,
- lib/json_simple-1.1.jar
+ lib/antlr-runtime-3.3.jar,
+ lib/json_simple-1.1.jar,
+ lib/snakeyaml-1.8.jar
