@@ -1,4 +1,4 @@
-package org.eclipse.symfony.index;
+package org.eclipse.symfony.index.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,7 +8,11 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.symfony.index.Debug;
+import org.eclipse.symfony.index.IServiceHandler;
+import org.eclipse.symfony.index.Schema;
 
 
 /**
@@ -249,4 +253,6 @@ public class ServiceDao implements IServiceDao {
 			e.printStackTrace();
 		}
 	}
+
+
 }

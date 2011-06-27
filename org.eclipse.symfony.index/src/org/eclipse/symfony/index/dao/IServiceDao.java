@@ -1,7 +1,10 @@
-package org.eclipse.symfony.index;
+package org.eclipse.symfony.index.dao;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.symfony.index.IServiceHandler;
 
 
 /**
@@ -29,5 +32,6 @@ public interface IServiceDao {
 
 	void findService(Connection connection, String id, String path,
 			IServiceHandler iServiceHandler);
+
 
 }

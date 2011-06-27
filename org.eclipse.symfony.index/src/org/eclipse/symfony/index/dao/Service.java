@@ -1,4 +1,4 @@
-package org.eclipse.symfony.index;
+package org.eclipse.symfony.index.dao;
 
 
 /**
