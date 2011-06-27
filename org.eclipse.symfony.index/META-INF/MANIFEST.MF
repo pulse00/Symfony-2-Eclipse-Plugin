@@ -8,4 +8,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.h2
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.eclipse.symfony.index
+Export-Package: org.eclipse.symfony.index,
+ org.eclipse.symfony.index.dao

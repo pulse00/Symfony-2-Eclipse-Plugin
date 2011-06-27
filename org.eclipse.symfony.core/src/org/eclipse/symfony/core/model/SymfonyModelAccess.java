@@ -13,10 +13,10 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.core.index2.search.ISearchEngine;
-import org.eclipse.dltk.core.index2.search.ISearchRequestor;
-import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.SearchFor;
+import org.eclipse.dltk.core.index2.search.ISearchRequestor;
+import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
@@ -30,6 +30,8 @@ import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.symfony.core.SymfonyLanguageToolkit;
 import org.eclipse.symfony.core.index.SymfonyElementResolver.TemplateField;
 import org.eclipse.symfony.core.util.PathUtils;
+import org.eclipse.symfony.index.SymfonyIndexer;
+import org.eclipse.symfony.index.dao.Route;
 
 /**
  * 
@@ -46,7 +48,18 @@ public class SymfonyModelAccess extends PhpModelAccess {
 
 
 	private static SymfonyModelAccess modelInstance = null;
+		
+	private SymfonyIndexer index;
+	
+	private SymfonyModelAccess() {
 
+		try {
+			index = SymfonyIndexer.getInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static SymfonyModelAccess getDefault() {
 
 		if (modelInstance == null)
@@ -268,6 +281,19 @@ public class SymfonyModelAccess extends PhpModelAccess {
 			return variables.get(0);
 		
 		return null;
+		
+	}
+	
+	/**
+	 * 
+	 * Return a List of all Routes for a given project. 
+	 * 
+	 * @param project
+	 * @return
+	 */
+	public List<Route> findRoutes(IScriptProject project) {
+
+		return index.findRoutes(project.getPath());
 		
 	}
 }

@@ -7,15 +7,12 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.symfony.index.preferences.SymfonyIndexPreferences;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -31,10 +28,7 @@ import org.osgi.service.prefs.BackingStoreException;
 public class Schema {
 
 
-	public static final String VERSION = "0.2"; //$NON-NLS-1$
-
-	/** Contains already created tables names */
-	private static final Set<String> TABLES_CACHE = new HashSet<String>();
+	public static final String VERSION = "0.3"; //$NON-NLS-1$
 
 	/**
 	 * Creates the database schema using given connection.
@@ -48,6 +42,7 @@ public class Schema {
 			Statement statement = connection.createStatement();
 			try {
 				statement.executeUpdate(readSqlFile("Resources/index/basic.sql")); //$NON-NLS-1$
+				statement.executeUpdate(readSqlFile("Resources/index/routes/basic.sql")); //$NON-NLS-1$
 			} finally {
 				statement.close();
 			}
@@ -89,7 +84,7 @@ public class Schema {
 		}
 	}
 
-	static String readSqlFile(String sqlFile) {
+	public static String readSqlFile(String sqlFile) {
 		try {
 			URL url = FileLocator.find(SymfonyIndex.getDefault().getBundle(),
 					new Path(sqlFile), null);

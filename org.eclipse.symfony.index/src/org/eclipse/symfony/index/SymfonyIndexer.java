@@ -1,11 +1,20 @@
 package org.eclipse.symfony.index;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.symfony.index.dao.IRouteDao;
+import org.eclipse.symfony.index.dao.IServiceDao;
+import org.eclipse.symfony.index.dao.Route;
 
 
 /**
  * 
- * 
+ * {@link SymfonyIndexer} is the main class to index
+ * Symfony2 services and routes in a local H2 SQL 
+ * database.
  * 
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
@@ -18,12 +27,14 @@ public class SymfonyIndexer {
 	private SymfonyDbFactory factory;
 	private Connection connection;
 	private IServiceDao serviceDao;
+	private IRouteDao routeDao;
 	
 	private SymfonyIndexer() throws Exception {
 
 		factory = SymfonyDbFactory.getInstance();
 		connection = factory.createConnection();
 		serviceDao = factory.getServiceDao();
+		routeDao = factory.getRouteDao();
 		
 	}
 	
@@ -37,6 +48,24 @@ public class SymfonyIndexer {
 		
 	}
 	
+
+	public void addRoute(Route route, IPath path) {
+
+		addRoute(route.name, route.pattern, route.controller, path);
+		
+	}
+	
+	
+	
+	public void addRoute(String name, String pattern, String controller, IPath path) {
+				
+		try {
+			routeDao.insert(connection, name, pattern, controller, path);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	public void addService(String id, String phpClass, String path, int timestamp) {
 		
@@ -48,19 +77,14 @@ public class SymfonyIndexer {
 		
 	}
 	
-	public void startIndexing(String path) {
+	public void enterServices(String path) {
 
 		serviceDao.deleteServices(connection, path);		
 		
 	}
 	
-	public void startVariableIndexing(String path) {
-		
-		
-		
-	}
 
-	public void commit() {
+	public void exitServices() {
 		
 		try {
 			serviceDao.commitInsertions();
@@ -81,5 +105,35 @@ public class SymfonyIndexer {
 		
 		serviceDao.findService(connection, id, path, iServiceHandler);
 		
+	}
+
+
+	public void enterRoutes(IPath path) {
+		
+		routeDao.deleteRoutesByPath(connection, path);		
+		
+	}
+
+
+	public void exitRoutes() {
+
+		try {
+			routeDao.commitInsertions();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+
+	public List<Route> findRoutes(IPath path) {
+
+		
+		try {
+			return routeDao.findRoutes(connection, path);
+		} catch (Exception e) {
+
+		}
+		return null;
 	}
 }

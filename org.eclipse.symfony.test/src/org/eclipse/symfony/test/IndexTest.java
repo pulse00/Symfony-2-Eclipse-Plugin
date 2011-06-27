@@ -6,10 +6,10 @@ import java.util.Stack;
 
 import junit.framework.TestCase;
 
-import org.eclipse.symfony.index.IServiceDao;
 import org.eclipse.symfony.index.IServiceHandler;
-import org.eclipse.symfony.index.Service;
 import org.eclipse.symfony.index.SymfonyDbFactory;
+import org.eclipse.symfony.index.dao.IServiceDao;
+import org.eclipse.symfony.index.dao.Service;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

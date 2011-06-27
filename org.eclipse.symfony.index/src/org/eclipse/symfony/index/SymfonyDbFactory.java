@@ -9,6 +9,11 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.symfony.index.dao.IRouteDao;
+import org.eclipse.symfony.index.dao.IServiceDao;
+import org.eclipse.symfony.index.dao.Route;
+import org.eclipse.symfony.index.dao.RouteDao;
+import org.eclipse.symfony.index.dao.ServiceDao;
 import org.eclipse.symfony.index.preferences.SymfonyIndexPreferences;
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.h2.tools.DeleteDbFiles;
@@ -183,6 +188,11 @@ public class SymfonyDbFactory  {
 
 	public IServiceDao getServiceDao() {
 		return new ServiceDao();
+	}
+
+
+	public IRouteDao getRouteDao() {
+		return new RouteDao();
 	}
 
 }

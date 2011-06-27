@@ -117,7 +117,7 @@ public class Service {
 		return className;
 	}
 
-	public static Service fromIndex(org.eclipse.symfony.index.Service s) {
+	public static Service fromIndex(org.eclipse.symfony.index.dao.Service s) {
 	
 		Service service = new Service(s.id, s.phpClass, s.path, null);
 		return service;

@@ -1,0 +1,3 @@
+blog:
+    pattern:   /blog
+    defaults:  { _controller: "AcmeBlogBundle:Blog:index" }

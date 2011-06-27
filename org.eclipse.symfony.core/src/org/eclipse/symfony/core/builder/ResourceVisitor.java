@@ -2,6 +2,7 @@ package org.eclipse.symfony.core.builder;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Stack;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -15,7 +16,10 @@ import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.index.PhpIndexerParticipant;
 import org.eclipse.symfony.core.parser.XMLConfigParser;
 import org.eclipse.symfony.core.parser.YamlConfigParser;
+import org.eclipse.symfony.core.parser.YamlRoutingParser;
 import org.eclipse.symfony.index.SymfonyIndexer;
+import org.eclipse.symfony.index.dao.Route;
+import org.yaml.snakeyaml.scanner.ScannerException;
 
 
 /**
@@ -47,7 +51,7 @@ implements IResourceVisitor {
 				path = resource.getFullPath();
 				resource.getParent();
 				timestamp = (int) resource.getLocalTimeStamp();
-				indexer.startIndexing(path.toString());
+				
 
 				if (resource.getFileExtension().equals("xml"))
 				{				
@@ -55,10 +59,13 @@ implements IResourceVisitor {
 
 				} else if (resource.getFileExtension().equals("yml")) 
 				{
-					loadYaml();
+					
+					if (resource.getName().equals("services.yml")) {					
+						loadYaml();
+					} else if (resource.getName().contains("routing")) {
+						loadYamlRouting();
+					}
 				}
-				
-				indexer.commit();
 			}
 		} catch (Exception e) {
 
@@ -69,10 +76,38 @@ implements IResourceVisitor {
 	}
 
 
+	private void loadYamlRouting() {
+
+		try {			
+
+			YamlRoutingParser parser = new YamlRoutingParser(file.getContents());
+			parser.parse();
+			
+			indexRoutes(parser.getRoutes());		
+			
+		} catch (ScannerException se) {
+			System.err.println(se.getMessage());
+		} catch (Exception e) {			
+			System.err.println(e.getMessage() + " " + e.getClass().toString());
+		}
+	}
+
+
+	private void indexRoutes(Stack<Route> routes) {
+
+		indexer.enterRoutes(file.getFullPath());
+		for (Route route : routes) {
+			indexer.addRoute(route, file.getFullPath());
+		}
+		indexer.exitRoutes();		
+		
+	}
+
+
 	private void loadYaml() {
 
 		try {
-
+			
 			YamlConfigParser parser = new YamlConfigParser(file.getContents());
 			parser.parse();
 
@@ -109,6 +144,7 @@ implements IResourceVisitor {
 
 		try {
 
+			indexer.enterServices(path.toString());
 			Iterator it = services.keySet().iterator();
 
 			while(it.hasNext()) {
@@ -118,6 +154,8 @@ implements IResourceVisitor {
 				indexer.addService(id, phpClass, path.toString(), timestamp);
 
 			}
+			
+			indexer.exitServices();			
 
 		} catch (Exception e) {
 			e.printStackTrace();

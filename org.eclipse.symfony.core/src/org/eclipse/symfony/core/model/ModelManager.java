@@ -28,7 +28,6 @@ import org.eclipse.symfony.index.SymfonyIndexer;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings("restriction")
 public class ModelManager {
 	
 	private static ModelManager instance;
@@ -40,8 +39,6 @@ public class ModelManager {
 
 	private SymfonyIndexer index;
 	
-	
-
 	
 	private ModelManager() {	
 
