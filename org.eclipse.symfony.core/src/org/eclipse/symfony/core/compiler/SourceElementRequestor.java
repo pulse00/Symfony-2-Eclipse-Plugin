@@ -129,7 +129,7 @@ public class SourceElementRequestor extends PHPSourceElementRequestorExtension {
 						// nothing found, return
 						if (service == null || exp.getCallName() == null) {
 							
-							System.err.println("nothing found");
+//							System.err.println("nothing found");
 							return true;
 						}
 					}

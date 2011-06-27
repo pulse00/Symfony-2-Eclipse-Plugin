@@ -27,7 +27,6 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		System.err.println("start plugin");
 	}
 
 	/*
@@ -35,8 +34,8 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		plugin = null;
 		super.stop(context);
+		plugin = null;		
 	}
 
 	/**

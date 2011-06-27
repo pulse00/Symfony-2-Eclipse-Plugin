@@ -21,9 +21,11 @@ import org.eclipse.symfony.core.parser.antlr.error.IAnnotationErrorReporter;
 	public void displayRecognitionError(String[] tokenNames,
                                         RecognitionException e) {
         
-		String hdr = getErrorHeader(e);
-        String msg = getErrorMessage(e, tokenNames);        
-        errorReporter.reportError(hdr,msg,e);
+    		if (errorReporter != null) {
+        		String hdr = getErrorHeader(e);
+                String msg = getErrorMessage(e, tokenNames);        
+                errorReporter.reportError(hdr,msg,e);
+    		}
         
     }    
         
