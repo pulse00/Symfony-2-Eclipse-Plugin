@@ -7,16 +7,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.dltk.core.SourceParserUtil;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
@@ -31,35 +31,40 @@ import org.eclipse.symfony.core.model.Service;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
 import org.eclipse.symfony.core.model.TemplateVariable;
 import org.eclipse.symfony.core.util.ModelUtils;
+import org.eclipse.symfony.core.util.PathUtils;
 
 
 /**
  * 
- * The {@link ControllerIndexingVisitor} indexes the following
- * ModelElements in Symfony2 controllers:
- *  
- * 1. Template variables
+ * The {@link TemplateVariableVisitor} indexes collects
+ * templateVariables in Symfony2 controller classes.  
  * 
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
 @SuppressWarnings("restriction")
-public class ControllerIndexingVisitor extends PHPASTVisitor {
+public class TemplateVariableVisitor extends PHPASTVisitor {
 
+	// The templatevariables with their corresponding ViewPath
 	private Map<TemplateVariable, String> templateVariables = new HashMap<TemplateVariable, String>();
+	
+	// The variables found during method parsing
 	private Stack<TemplateVariable> deferredVariables = new Stack<TemplateVariable>();
 
 	private PHPMethodDeclaration currentMethod;
-
+	
 	final private List<UseStatement> useStatements;
-
+	final private NamespaceDeclaration namespace;
+	
 	private boolean inAction = false;
 
+	private String currentAnnotationPath;
 
-	public ControllerIndexingVisitor(List<UseStatement> useStatements) {
 
-		
+	public TemplateVariableVisitor(List<UseStatement> useStatements, NamespaceDeclaration namespace) {
+
+		this.namespace = namespace;
 		this.useStatements = useStatements;
 	}
 
@@ -71,7 +76,8 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 	/**
 	 * 
-	 * Setup the visitor for a PHP method.
+	 * Visit a {@link PHPMethodDeclaration} and check
+	 * if it's an Action.
 	 * 
 	 */
 	@Override
@@ -88,6 +94,7 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 			if (docs != null) {
 
+				//TODO: use the AnnotationParser for this instead
 				BufferedReader buffer = new BufferedReader(new StringReader(docs.getShortDescription()));
 
 				try {
@@ -96,6 +103,22 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 						//TODO: parse @Template() parameters
 						if (line.startsWith(SymfonyCoreConstants.TEMPLATE_ANNOTATION)) {
+
+							int start = -1;
+							int end = -1;
+							
+							if ((start = line.indexOf("\"")) > -1) {								
+								end = line.lastIndexOf("\"");								
+							} else if ( (start = line.indexOf("'")) > -1) {								
+								end = line.lastIndexOf("'");								
+							}
+							
+
+							if (start > -1 && end > -1) {								
+								String path = line.substring(start, end+1);
+								currentAnnotationPath = PathUtils.createViewPath(path);
+							}
+														
 
 							foundAnnotation = true;
 							break;
@@ -114,113 +137,169 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 	@Override
 	public boolean endvisit(PHPMethodDeclaration s) throws Exception {
 
+		currentAnnotationPath = null;
 		deferredVariables = null;
 		currentMethod = null;
 		inAction = false;
 		return true;
 	}
 
-	
+
 	/**
 	 * Parse {@link ReturnStatement}s and try to evaluate
 	 * the variables.
 	 * 
-	 */
+	 */	
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean visit(ReturnStatement statement) throws Exception {
 
-		//TODO: Only parse ARRAY_CREATION return types when
-		// the Template() annotation is set
-		if (statement.getExpr().getKind() == ASTNodeKinds.ARRAY_CREATION) {
+		// we're inside an action, find the template variables
+		if (inAction) {			
 
-			//Action action = new Action(controller, method);
-			ArrayCreation array = (ArrayCreation) statement.getExpr();
+			// the simplest case:
+			// return array('foo' => $bar);
+			if (statement.getExpr().getClass() == ArrayCreation.class) {
+			
+				if (namespace != null) {
 
-			for (ArrayElement element : array.getElements()) {
-
-				Expression key = element.getKey();
-				Expression value = element.getValue();
-
-
-				if (key.getClass() == Scalar.class) {
-
-					Scalar varName = (Scalar) key;
-
-					// something in the form:  return array ('foo' => $bar);
-					// check the type of $bar:
-					if (value.getClass() == VariableReference.class) {
-
-						VariableReference ref = (VariableReference) value;
-
-						for (TemplateVariable variable : deferredVariables) {
-
-							// we got the variable, add it the the templateVariables
-							if (ref.getName().equals(variable.getName())) {								
-								// alter the variable name
-								variable.setName(varName.getValue());
-								templateVariables.put(variable, "");
-								break;
-							}							
-						}
-
-						// this is more complicated, something like:
-						// return array('form' => $form->createView());
-						// we need to infer $form and then check the returntype of createView()
-					} else if(value.getClass() == PHPCallExpression.class) {
-
-						PHPCallExpression callExp = (PHPCallExpression) value;
-						VariableReference varRef = (VariableReference) callExp.getReceiver();
-
-						if (varRef == null) {
-							continue;
-						}
-
-						SimpleReference callName = callExp.getCallName();
-
-						// we got the variable name (in this case $form)
-						// now search for the defferedVariable:						
-						for (TemplateVariable deferred : deferredVariables) {
-
-							// we got it, find the returntype of the
-							// callExpression
-							if (deferred.getName().equals(varRef.getName())) {
-
-								TemplateVariable tempVar = SymfonyModelAccess.getDefault()
-										.createTemplateVariableByReturnType(currentMethod, 
-												callName, deferred.getClassName(), deferred.getNamespace(), 
-												varRef.getName());
-
-								templateVariables.put(tempVar, "");
-								break;
-							}
-						}
-
-						// this is a direct ClassInstanceCreation, ie:
-						// return array('user' => new User());
-					} else if (value.getClass() == ClassInstanceCreation.class) {
-
-						ClassInstanceCreation instance = (ClassInstanceCreation) value;
-
-						if (instance.getClassName().getClass() == FullyQualifiedReference.class) {
-
-							FullyQualifiedReference fqcn = (FullyQualifiedReference) instance.getClassName();
-							NamespaceReference nsRef = createFromFQCN(fqcn);
-
-							if (nsRef != null) {
-								TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), 
-										varName.sourceStart(), varName.sourceEnd(), nsRef.getNamespace(), nsRef.getClassName());
-								templateVariables.put(variable, "");
-							}
-						}
+					String viewPath = null;
+					
+					if (currentAnnotationPath != null) {
+						viewPath = currentAnnotationPath;
+						
 					} else {
-
-						SymfonyCorePlugin.debug(this.getClass(), "array value: " + value.getClass());
+						
+						String bundle = ModelUtils.extractBundleName(namespace);
+						String controller = currentMethod.getDeclaringTypeName().replace(SymfonyCoreConstants.CONTROLLER_CLASS, "");
+						String template = currentMethod.getName().replace(SymfonyCoreConstants.ACTION_SUFFIX, "");
+						
+						if (bundle != null)
+							viewPath = String.format("%s:%s:%s", bundle, controller, template);
+						
+					}
+										
+					if (viewPath != null ) {						
+						parseVariablesFromArray((ArrayCreation) statement.getExpr(), viewPath);						
 					}
 				}
+				
+			// a render call:
+			// return return $this->render("DemoBundle:Test:index.html.twig", array('foo' => $bar));
+			} else if (statement.getExpr().getClass() == PHPCallExpression.class) {
+				
+				PHPCallExpression expression = (PHPCallExpression) statement.getExpr();
+				String callName = expression.getCallName().getName();
+				
+				if (callName.startsWith(SymfonyCoreConstants.RENDER_PREFIX)) {
+				
+					CallArgumentsList args = expression.getArgs();
+					List<Object> children = args.getChilds();
+					
+					Scalar view = (Scalar) children.get(0);
+					
+					if (children.get(1).getClass() == ArrayCreation.class) {
+						parseVariablesFromArray((ArrayCreation) children.get(1), PathUtils.createViewPath(view));
+					}					
+				}
 			}
-		}	
+		}
+
 		return true;
 	}		
+
+
+	/**
+	 * 
+	 * Parse the TemplateVariables from the given {@link ReturnStatement}
+	 * @param viewPath 
+	 * @param statement
+	 */
+	private void parseVariablesFromArray(ArrayCreation array, String viewPath) {
+
+
+		for (ArrayElement element : array.getElements()) {
+
+			Expression key = element.getKey();
+			Expression value = element.getValue();
+
+			if (key.getClass() == Scalar.class) {
+
+				Scalar varName = (Scalar) key;
+
+				// something in the form:  return array ('foo' => $bar);
+				// check the type of $bar:
+				if (value.getClass() == VariableReference.class) {
+
+					VariableReference ref = (VariableReference) value;
+
+					for (TemplateVariable variable : deferredVariables) {
+
+						// we got the variable, add it the the templateVariables
+						if (ref.getName().equals(variable.getName())) {								
+							// alter the variable name
+							variable.setName(varName.getValue());							
+							templateVariables.put(variable, viewPath);
+							break;
+						}							
+					}
+
+					// this is more complicated, something like:
+					// return array('form' => $form->createView());
+					// we need to infer $form and then check the returntype of createView()
+				} else if(value.getClass() == PHPCallExpression.class) {
+
+					PHPCallExpression callExp = (PHPCallExpression) value;
+					VariableReference varRef = (VariableReference) callExp.getReceiver();
+
+					if (varRef == null) {
+						continue;
+					}
+
+					SimpleReference callName = callExp.getCallName();
+
+					// we got the variable name (in this case $form)
+					// now search for the defferedVariable:						
+					for (TemplateVariable deferred : deferredVariables) {
+
+						// we got it, find the returntype of the
+						// callExpression
+						if (deferred.getName().equals(varRef.getName())) {
+
+							TemplateVariable tempVar = SymfonyModelAccess.getDefault()
+									.createTemplateVariableByReturnType(currentMethod, 
+											callName, deferred.getClassName(), deferred.getNamespace(), 
+											varRef.getName());
+
+							templateVariables.put(tempVar, viewPath);
+							break;
+						}
+					}
+
+					// this is a direct ClassInstanceCreation, ie:
+					// return array('user' => new User());
+				} else if (value.getClass() == ClassInstanceCreation.class) {
+
+					ClassInstanceCreation instance = (ClassInstanceCreation) value;
+
+					if (instance.getClassName().getClass() == FullyQualifiedReference.class) {
+
+						FullyQualifiedReference fqcn = (FullyQualifiedReference) instance.getClassName();
+						NamespaceReference nsRef = createFromFQCN(fqcn);
+
+						if (nsRef != null) {
+							TemplateVariable variable = new TemplateVariable(currentMethod, varName.getValue(), 
+									varName.sourceStart(), varName.sourceEnd(), nsRef.getNamespace(), nsRef.getClassName());
+							templateVariables.put(variable, viewPath);
+						}
+					}
+				} else {
+
+					SymfonyCorePlugin.debug(this.getClass(), "array value: " + value.getClass());
+				}
+			}
+		}
+	}
 
 
 	/**
@@ -256,17 +335,15 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 							deferredVariables.push(tempVar);
 						}
 
-					// a more complex expression like
-					// $form = $this->get('form.factory')->create(new ContactType());
+						// a more complex expression like
+						// $form = $this->get('form.factory')->create(new ContactType());
 					} else if (exp.getReceiver().getClass() == PHPCallExpression.class) {
 
 						// try to extract a service if it's a Servicecontainer call
 						service = ModelUtils.extractServiceFromCall((PHPCallExpression) exp.getReceiver());
-						
+
 						// nothing found, return
 						if (service == null || exp.getCallName() == null) {
-							
-							System.err.println("nothing found");
 							return true;
 						}
 
@@ -280,19 +357,19 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 							deferredVariables.push(tempVar);
 						}
 
-					// something like $formView = $form->createView(); 
+						// something like $formView = $form->createView(); 
 					} else if (exp.getReceiver().getClass() == VariableReference.class) {
-						
+
 						VariableReference varRef = (VariableReference) exp.getReceiver();
 						SimpleReference ref = exp.getCallName();
-						
+
 						// check for a previosly declared variable
 						for (TemplateVariable tempVar : deferredVariables) {							
 							if (tempVar.getName().equals(varRef.getName())) {
-								
+
 								TemplateVariable tVar = SymfonyModelAccess.getDefault()
 										.createTemplateVariableByReturnType(currentMethod, ref, tempVar.getClassName(), tempVar.getNamespace(), var.getName());
-								
+
 								if (tVar != null) {
 									deferredVariables.push(tVar);
 									break;
@@ -300,7 +377,7 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 							}							
 						}
 					}
-				// a simple ClassInstanceCreation, ie. $contact = new ContactType();
+					// a simple ClassInstanceCreation, ie. $contact = new ContactType();
 				} else if (s.getValue().getClass() == ClassInstanceCreation.class) {
 
 					ClassInstanceCreation instance = (ClassInstanceCreation) s.getValue();
