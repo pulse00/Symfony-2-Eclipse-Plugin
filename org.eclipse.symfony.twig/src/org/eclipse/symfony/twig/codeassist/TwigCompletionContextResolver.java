@@ -1,5 +1,6 @@
 package org.eclipse.symfony.twig.codeassist;
 
+import org.eclipse.symfony.twig.codeassist.context.RouteCompletionContext;
 import org.eclipse.symfony.twig.codeassist.context.TemplateVariableCompletionContext;
 import org.eclipse.symfony.twig.codeassist.context.TemplateVariableFieldCompletionContext;
 import org.eclipse.twig.core.codeassist.ITwigCompletionContextResolver;
@@ -27,7 +28,8 @@ public class TwigCompletionContextResolver implements
 		
 		return new AbstractTwigCompletionContext[] {
 				new TemplateVariableCompletionContext(),
-				new TemplateVariableFieldCompletionContext()
+				new TemplateVariableFieldCompletionContext(),
+				new RouteCompletionContext(),
 				
 		};
 	}

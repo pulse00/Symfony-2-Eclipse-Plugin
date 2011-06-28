@@ -33,10 +33,10 @@ public class RouteCompletionContext extends QuotesContext {
 			
 			TextSequence statementText = getStatementText();
 			
-			
+						
 			try {
 				
-				//this is just a quick test, we need more accurate helper
+				// TODO: this is just a quick test, we need more accurate helper
 				// methods to detect various template contexts
 				// like: Are we staying in a helper method? etc.
 				if (statementText.toString().contains("generate("))

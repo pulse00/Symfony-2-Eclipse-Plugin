@@ -10,6 +10,8 @@ import org.eclipse.symfony.core.codeassist.contexts.ServiceReturnTypeContext;
 import org.eclipse.symfony.core.codeassist.contexts.TemplateVariableContext;
 
 /**
+ *  
+ * Context resolver for Symfony2.
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *

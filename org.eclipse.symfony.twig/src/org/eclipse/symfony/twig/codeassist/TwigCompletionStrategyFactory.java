@@ -4,12 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.internal.core.codeassist.strategies.AbstractCompletionStrategy;
+import org.eclipse.symfony.core.codeassist.strategies.RouteCompletionStrategy;
+import org.eclipse.symfony.twig.codeassist.context.RouteCompletionContext;
 import org.eclipse.symfony.twig.codeassist.context.TemplateVariableCompletionContext;
 import org.eclipse.symfony.twig.codeassist.context.TemplateVariableFieldCompletionContext;
 import org.eclipse.symfony.twig.codeassist.strategies.TemplateVariableCompletionStrategy;
 import org.eclipse.symfony.twig.codeassist.strategies.TemplateVariableFieldCompletionStrategy;
 import org.eclipse.twig.core.codeassist.ITwigCompletionStrategyFactory;
-import org.eclipse.twig.core.codeassist.strategies.AbstractTwigCompletionStrategy;
 
 /**
  * 
@@ -20,6 +22,7 @@ import org.eclipse.twig.core.codeassist.strategies.AbstractTwigCompletionStrateg
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
+@SuppressWarnings("restriction")
 public class TwigCompletionStrategyFactory implements
 		ITwigCompletionStrategyFactory {
 
@@ -29,21 +32,29 @@ public class TwigCompletionStrategyFactory implements
 
 
 	@Override
-	public AbstractTwigCompletionStrategy[] create(ICompletionContext[] contexts) {
+	public AbstractCompletionStrategy[] create(ICompletionContext[] contexts) {
 
 
-		List<AbstractTwigCompletionStrategy> result = new LinkedList<AbstractTwigCompletionStrategy>();
+		List<AbstractCompletionStrategy> result = new LinkedList<AbstractCompletionStrategy>();
 		
 		for (ICompletionContext context : contexts) {
 			if (context.getClass() == TemplateVariableCompletionContext.class) {
+				
 				result.add(new TemplateVariableCompletionStrategy(context));
-			} else if (context.getClass() == TemplateVariableFieldCompletionContext.class) {				
+				
+			} else if (context.getClass() == TemplateVariableFieldCompletionContext.class) {
+				
 				result.add(new TemplateVariableFieldCompletionStrategy(context));
+				
+			} else if (context.getClass() == RouteCompletionContext.class) {
+				
+				result.add(new RouteCompletionStrategy(context));
+				
 			}
 		}
 		
-		return (AbstractTwigCompletionStrategy[]) result
-		        .toArray(new AbstractTwigCompletionStrategy[result.size()]);
+		return (AbstractCompletionStrategy[]) result
+		        .toArray(new AbstractCompletionStrategy[result.size()]);
 				
 	}
 }

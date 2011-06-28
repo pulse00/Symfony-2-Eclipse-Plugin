@@ -7,6 +7,7 @@ import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
 import org.eclipse.symfony.core.codeassist.contexts.RouteCompletionContext;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
@@ -33,7 +34,7 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		
-		RouteCompletionContext context = (RouteCompletionContext) getContext();		
+		AbstractCompletionContext context = (AbstractCompletionContext) getContext();		
 		ISourceModule module = context.getSourceModule();		
 		List<Route> routes = SymfonyModelAccess.getDefault().findRoutes(module.getScriptProject());		
 		SourceRange range = getReplacementRange(context);
