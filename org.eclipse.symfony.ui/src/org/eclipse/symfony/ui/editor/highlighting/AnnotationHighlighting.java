@@ -128,7 +128,7 @@ public class AnnotationHighlighting extends AbstractSemanticHighlighting {
 	@Override
 	public void initDefaultPreferences() {
 		
-		 getStyle().setUnderlineByDefault(true)
+		 getStyle().setUnderlineByDefault(false)
          .setDefaultTextColor(new RGB(64, 64, 64));
 		
 	}

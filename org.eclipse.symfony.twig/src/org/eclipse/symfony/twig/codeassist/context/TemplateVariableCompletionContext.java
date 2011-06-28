@@ -21,8 +21,10 @@ public class TemplateVariableCompletionContext extends
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
 	
+		
 		if (super.isValid(sourceModule, offset, requestor)) {
 			
+
 			//...
 			return true;
 			

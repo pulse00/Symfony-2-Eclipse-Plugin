@@ -2,7 +2,6 @@ package org.eclipse.symfony.core.goals;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
@@ -51,9 +50,9 @@ public class TemplateGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 					 
 					 if (element != null) {
 						 						
-						 String viewName = PathUtils.getViewFromTemplatePath(context.getSourceModule().getPath());
+						 String viewName = PathUtils.createViewPathFromTemplate(context.getSourceModule());
 						 
-						 if (CodeAssistUtils.startsWithIgnoreCase(element.getMethod(), viewName))
+						 if (viewName != null && element.getViewPath().equals(viewName))
 							 return new TemplateVariableGoalEvaluator(goal, element);
 					 }
 				}

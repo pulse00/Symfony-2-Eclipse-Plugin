@@ -46,7 +46,7 @@ public class SymfonyElementResolver extends PhpElementResolver {
 					
 					String className = (String) data.get("elementName");
 					String q = (String) data.get("qualifier");
-					String method = (String) data.get("method");
+					String viewPath = (String) data.get("viewPath");
 					
 					ModelElement parentElement = (ModelElement) sourceModule;
 
@@ -54,7 +54,7 @@ public class SymfonyElementResolver extends PhpElementResolver {
 						parentElement = new ControllerType(parentElement, qualifier,
 								Modifiers.AccNameSpace, 0, 0, 0, 0, null, doc);
 
-						return new TemplateField(parentElement, elementName, q, className, method);
+						return new TemplateField(parentElement, elementName, q, className, viewPath);
 
 					}			
 				}
@@ -72,15 +72,14 @@ public class SymfonyElementResolver extends PhpElementResolver {
 
 		private String qualifier;
 		private String className;
-		private String method;
+		private String viewPath;
 		
 		public TemplateField(ModelElement parent, String name, String qualifier, String className, String method) {
 			super(parent, name);
 
 			this.qualifier = qualifier;
 			this.className = className;
-			this.method = method;
-
+			this.viewPath = method;
 
 		}
 		
@@ -91,8 +90,8 @@ public class SymfonyElementResolver extends PhpElementResolver {
 		public String getClassName() {
 			return className;
 		}
-		public String getMethod() {
-			return method;
+		public String getViewPath() {
+			return viewPath;
 		}
 	}
 

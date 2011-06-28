@@ -4,11 +4,14 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
+import org.eclipse.symfony.core.model.SymfonyModelAccess;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
 
@@ -125,6 +128,60 @@ public class PathUtils {
 	public static boolean isViewPath(String path) {
 		
 		return StringUtils.occurrencesOf(path, ':') == 2;
+		
+	}
+
+
+	public static String createViewPathFromTemplate(ISourceModule sourceModule) {
+
+		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
+		
+		String viewName = PathUtils.getViewFromTemplatePath(sourceModule.getPath());
+		
+		IType controller = model.findControllerByTemplate(sourceModule);		
+		String bundle = ModelUtils.extractBundleName(controller.getFullyQualifiedName());
+		
+		if (bundle == null)
+			return null;
+		
+		String controllerPart = controller.getElementName().replace(SymfonyCoreConstants.CONTROLLER_CLASS, "");
+		return String.format("%s:%s:%s", bundle, controllerPart, viewName);
+
+	}
+
+
+	/**
+	 * 
+	 * Creates a valid ViewPath from a {@link Scalar} stripping
+	 * away any file extensions and quotes:
+	 * 
+	 * <pre>
+	 *  
+	 *  'AcmeBlogBundle:Blog:show.html.twig' => AcmeBlogBundle:Blog:show
+	 * 
+	 * </pre>
+	 * 
+	 * @param view
+	 * @return
+	 */
+	public static String createViewPath(Scalar view) {
+
+		return createViewPath(view.getValue());
+		
+	}
+	
+	
+	public static String createViewPath(String viewString) {
+		
+		String path = viewString.replaceAll("['\"]", "");
+		
+		int dotIndex = path.indexOf('.');
+		
+		if (dotIndex == -1)
+			return path;
+
+		return path.substring(0, dotIndex);		
+
 		
 	}
 }

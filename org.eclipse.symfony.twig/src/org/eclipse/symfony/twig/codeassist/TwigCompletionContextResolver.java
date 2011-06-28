@@ -1,10 +1,10 @@
 package org.eclipse.symfony.twig.codeassist;
 
+import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.symfony.twig.codeassist.context.RouteCompletionContext;
 import org.eclipse.symfony.twig.codeassist.context.TemplateVariableCompletionContext;
 import org.eclipse.symfony.twig.codeassist.context.TemplateVariableFieldCompletionContext;
 import org.eclipse.twig.core.codeassist.ITwigCompletionContextResolver;
-import org.eclipse.twig.core.codeassist.context.AbstractTwigCompletionContext;
 
 
 /**
@@ -24,9 +24,9 @@ public class TwigCompletionContextResolver implements
 	}
 
 	@Override
-	public AbstractTwigCompletionContext[] createContexts() {
+	public ICompletionContext[] createContexts() {
 		
-		return new AbstractTwigCompletionContext[] {
+		return new ICompletionContext[] {
 				new TemplateVariableCompletionContext(),
 				new TemplateVariableFieldCompletionContext(),
 				new RouteCompletionContext(),

@@ -35,13 +35,15 @@ public class SymfonyCoreConstants {
 
 	
 	
-	// FrameworkExtraBundle Annotations
-	
+	// FrameworkExtraBundle Annotations	
 	public static final String TEMPLATE_ANNOTATION	= "@Template";
 	
 	
-	// namespaces
+	// prefix for methods which render views
+	public static final String RENDER_PREFIX		= "render";
 	
+	
+	// namespaces
 	public static final String CONTROLLER_NS		="Symfony\\Bundle\\FrameworkBundle\\Controller";
 	
 

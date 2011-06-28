@@ -23,7 +23,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
 import org.eclipse.symfony.core.SymfonyCorePlugin;
-import org.eclipse.symfony.core.index.visitor.ControllerIndexingVisitor;
+import org.eclipse.symfony.core.index.visitor.TemplateVariableVisitor;
 import org.eclipse.symfony.core.model.TemplateVariable;
 import org.eclipse.symfony.core.util.JsonUtils;
 import org.eclipse.symfony.index.SymfonyIndexer;
@@ -50,7 +50,7 @@ PhpIndexingVisitorExtension {
 	private boolean inController = false;
 	private ClassDeclaration currentClass;
 	private NamespaceDeclaration namespace;
-	private ControllerIndexingVisitor controllerIndexer;
+	private TemplateVariableVisitor controllerIndexer;
 	private SymfonyIndexer indexer;
 	
 	private List<UseStatement> useStatements = new ArrayList<UseStatement>();
@@ -120,12 +120,11 @@ PhpIndexingVisitorExtension {
 
 						inController = true;
 						
-						
-						
+					
 						// the ControllerIndexer does the actual work of parsing the
 						// the relevant elements inside the controller
 						// which are then being collected in the endVisit() method
-						controllerIndexer = new ControllerIndexingVisitor(useStatements);
+						controllerIndexer = new TemplateVariableVisitor(useStatements, namespace);
 						currentClass.traverse(controllerIndexer);
 
 					} 
@@ -151,20 +150,19 @@ PhpIndexingVisitorExtension {
 			while(it.hasNext()) {
 				
 				TemplateVariable variable = (TemplateVariable) it.next();
+				String viewPath = variables.get(variable);
+						
 				int start = variable.sourceStart();
 				int length = variable.sourceEnd() - variable.sourceStart();
 				String name = null;				
-				
-
 				
 				if (variable.isReference()) {
 					
 					name = variable.getName();
 
 					String phpClass = variable.getClassName();
-					String namespace = variable.getNamespace();
-					String method = variable.getMethod().getName();
-					String metadata = JsonUtils.createReference(phpClass, namespace, method);
+					String namespace = variable.getNamespace();					
+					String metadata = JsonUtils.createReference(phpClass, namespace, viewPath);
 					
 					SymfonyCorePlugin.debug(this.getClass(), "add reference info: " + name +  " " + metadata + " " + namespace);
 					
