@@ -6,4 +6,6 @@ Bundle-Version: 1.0.0.qualifier
 Fragment-Host: org.eclipse.symfony.core;bundle-version="1.0.0.qualifier"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit,
- org.eclipse.symfony.core;bundle-version="1.0.0"
+ org.eclipse.symfony.core;bundle-version="1.0.0",
+ org.eclipse.dltk.core.tests;bundle-version="3.0.0",
+ org.eclipse.php.core.tests;bundle-version="3.0.0"

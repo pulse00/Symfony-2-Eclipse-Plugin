@@ -9,6 +9,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 
 
 /**
@@ -112,5 +113,18 @@ public class PathUtils {
 		}
 		
 		return null;
-	}		
+	}
+	
+	
+	/**
+	 * Very simple check, this needs to be refined...
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public static boolean isViewPath(String path) {
+		
+		return StringUtils.occurrencesOf(path, ':') == 2;
+		
+	}
 }

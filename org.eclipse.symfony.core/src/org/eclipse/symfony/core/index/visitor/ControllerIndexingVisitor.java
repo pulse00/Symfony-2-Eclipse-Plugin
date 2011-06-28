@@ -10,6 +10,7 @@ import java.util.Stack;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
@@ -58,6 +59,7 @@ public class ControllerIndexingVisitor extends PHPASTVisitor {
 
 	public ControllerIndexingVisitor(List<UseStatement> useStatements) {
 
+		
 		this.useStatements = useStatements;
 	}
 

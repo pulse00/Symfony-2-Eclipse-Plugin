@@ -129,9 +129,10 @@ implements IResourceVisitor {
 			parser = new XMLConfigParser(file.getContents());
 			parser.parse();
 
+			System.err.println("parse xml");
 			if (parser.hasServices()) {
 				indexServices(parser.getServices());
-			}
+			} 
 
 		} catch (Exception e) {
 
@@ -151,6 +152,8 @@ implements IResourceVisitor {
 
 				String id = (String) it.next();
 				String phpClass = services.get(id);
+				
+				System.err.println("index service " + id + " " + path.toString());
 				indexer.addService(id, phpClass, path.toString(), timestamp);
 
 			}
