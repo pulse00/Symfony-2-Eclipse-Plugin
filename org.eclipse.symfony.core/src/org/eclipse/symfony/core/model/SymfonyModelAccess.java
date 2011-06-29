@@ -12,7 +12,6 @@ import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.core.index2.search.ISearchEngine;
@@ -23,7 +22,7 @@ import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ScriptFolder;
-import org.eclipse.dltk.internal.core.SourceModule;
+import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -316,7 +315,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		 ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());		 
 		 final List<String> bundles = new ArrayList<String>();
 		 
-		 engine.search(IBundle.ID, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+		 engine.search(ISymfonyModelElement.BUNDLE, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
 			
 			@Override
 			public void match(int elementType, int flags, int offset, int length,
@@ -409,5 +408,37 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		}
 		
 		return new IModelElement[] {};
+	}
+
+	/**
+	 * Check if the {@link ScriptProject} has a PHPMethod
+	 * named "method" which accepts viewPaths as parameter. 
+	 * 
+	 * @param method
+	 * @param project
+	 * @return
+	 */
+	public boolean hasViewMethod(final String method, IScriptProject project) {
+		
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(project);		
+		ISearchEngine engine = getSearchEngine(PHPLanguageToolkit.getDefault());		
+		final List<String> methods = new ArrayList<String>();
+		
+		engine.search(ISymfonyModelElement.VIEW_METHOD, null, method, 0, 0, 10, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
+			
+			@Override
+			public void match(int elementType, int flags, int offset, int length,
+					int nameOffset, int nameLength, String elementName,
+					String metadata, String doc, String qualifier, String parent,
+					ISourceModule sourceModule, boolean isReference) {
+
+				methods.add(elementName);
+				
+			}
+		}, null);
+
+
+		return methods.size() > 0;
+		
 	}
 }

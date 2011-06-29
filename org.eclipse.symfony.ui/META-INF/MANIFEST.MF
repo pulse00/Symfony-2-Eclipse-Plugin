@@ -22,6 +22,5 @@ Export-Package: org.eclipse.symfony.ui,
  org.eclipse.symfony.ui.editor.highlighting;uses:="org.eclipse.php.internal.core.ast.nodes,org.eclipse.php.internal.ui.editor.highlighter",
  org.eclipse.symfony.ui.editor.hyperlink,
  org.eclipse.symfony.ui.popup.actions,
- org.eclipse.symfony.ui.preferences,
- org.eclipse.symfony.ui.views
+ org.eclipse.symfony.ui.preferences
 Bundle-ClassPath: .

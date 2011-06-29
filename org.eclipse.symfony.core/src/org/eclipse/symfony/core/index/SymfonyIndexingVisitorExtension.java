@@ -10,6 +10,7 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.IModelElement;
@@ -18,16 +19,16 @@ import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
-import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
 import org.eclipse.symfony.core.SymfonyCorePlugin;
 import org.eclipse.symfony.core.index.visitor.TemplateVariableVisitor;
-import org.eclipse.symfony.core.model.IBundle;
+import org.eclipse.symfony.core.model.ISymfonyModelElement;
 import org.eclipse.symfony.core.model.TemplateVariable;
 import org.eclipse.symfony.core.util.JsonUtils;
 import org.eclipse.symfony.index.SymfonyIndexer;
@@ -109,7 +110,7 @@ PhpIndexingVisitorExtension {
 		if (s instanceof ClassDeclaration) {
 
 			currentClass = (ClassDeclaration) s;
-
+			
 			for (Object o : currentClass.getSuperClasses().getChilds()) {
 
 				if (o instanceof FullyQualifiedReference) {
@@ -126,16 +127,17 @@ PhpIndexingVisitorExtension {
 						if (fqcn.equals(SymfonyCoreConstants.BUNDLE_FQCN) && ! isTestOrFixture) {
 
 							int length = (currentClass.sourceEnd() - currentClass.sourceEnd());
-							ReferenceInfo info = new ReferenceInfo(IBundle.ID, currentClass.sourceStart(), length, currentClass.getName(), null, namespace.getName());
+							ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.BUNDLE, currentClass.sourceStart(), length, currentClass.getName(), null, namespace.getName());
 							requestor.addReference(info);
 							
 						}						
 					}
 
-					//TODO: find a way to check against the FQCN
-					// via the UseStatement
-					if (/*superReference.getNamespace().equals(SymfonyCoreConstants.CONTROLLER_NS) 
-							&& */superReference.getName().equals(SymfonyCoreConstants.CONTROLLER_CLASS)) {
+					//TODO: Check against an implementation of Symfony\Component\DependencyInjection\ContainerAwareInterface
+					//
+					// see http://symfony.com/doc/current/cookbook/bundles/best_practices.html#controllers
+					// and http://api.symfony.com/2.0/Symfony/Component/DependencyInjection/ContainerAwareInterface.html
+					if (superReference.getName().equals(SymfonyCoreConstants.CONTROLLER_CLASS)) {
 
 						inController = true;
 						
@@ -192,7 +194,7 @@ PhpIndexingVisitorExtension {
 			}
 			
 			for (Route route : controllerIndexer.getRoutes()) {				
-				indexer.addRoute(route);				
+				indexer.addRoute(route, sourceModule.getScriptProject().getPath());	
 			}
 		}
 		
@@ -220,19 +222,42 @@ PhpIndexingVisitorExtension {
 		
 	}
 
+	/**
+	 * Parse {@link PHPMethodDeclaration} to index a couple of elements needed for code-assist
+	 * like Methods that accept viewpaths as parameters.
+	 */
 	@Override
 	public boolean visit(MethodDeclaration s) throws Exception {
 
-		
 		if (s instanceof PHPMethodDeclaration) {
-
+			
 			PHPMethodDeclaration method = (PHPMethodDeclaration) s;
-			if (inController) {
+			PHPDocBlock docBlock = method.getPHPDoc();
+			
+			if (docBlock != null) {
+
+				PHPDocTag[] tags = docBlock.getTags();
 				
+				for (PHPDocTag tag : tags) {
+
+					if (tag.getReferences().length == 2) {
+						
+						SimpleReference[] refs = tag.getReferences();
+						SimpleReference varName = refs[0];
+						SimpleReference varType = refs[1];
+						
+						if(varName.getName().equals("$view") && varType.getName().equals("string")) {							
+							int length = method.sourceEnd() - method.sourceStart();
+							
+							System.err.println("indexing view method " + method.getName());
+							ReferenceInfo viewMethod = new ReferenceInfo(ISymfonyModelElement.VIEW_METHOD, method.sourceStart()	, length, method.getName(), null, null);
+							requestor.addReference(viewMethod);
+						}
+					}					
+				}				
 			}
-
-
 		}
+		
 		return true;
 	}
 }

@@ -30,16 +30,11 @@ public class Route {
 		
 	}
 	
-	public Route(String name2, String pattern2, String viewPath) {
+	public Route(String name, String pattern, String controller) {
 		
-		name = name2;
-		pattern = pattern2;
-		
-		StringTokenizer tokenizer = new StringTokenizer(viewPath, ":");
-		
-		bundle = tokenizer.nextToken();
-		controller = tokenizer.nextToken();
-		action = tokenizer.nextToken();
+		this.name = name;
+		this.pattern = pattern;
+		this.controller = controller;
 		
 	}
 

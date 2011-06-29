@@ -43,7 +43,7 @@ public class RouteDao implements IRouteDao {
 	}
 	
 	public void insert(Connection connection, String name, String pattern, 
-			String controller, String bundle, String action)
+			String controller, String bundle, String action, IPath path)
 					throws SQLException {
 
 
@@ -63,12 +63,12 @@ public class RouteDao implements IRouteDao {
 				statement = connection.prepareStatement(query);
 				batchStatements.put(query, statement);
 			}
-			insertBatch(connection, statement, name, pattern, controller, bundle, action);
+			insertBatch(connection, statement, name, pattern, controller, bundle, action, path);
 		}
 	}
 	
 	private void insertBatch(Connection connection, PreparedStatement statement, 
-			String name, String pattern, String controller, String bundle, String action)
+			String name, String pattern, String controller, String bundle, String action, IPath path)
 					throws SQLException {
 
 		int param = 0;
@@ -78,6 +78,7 @@ public class RouteDao implements IRouteDao {
 		statement.setString(++param, controller);		
 		statement.setString(++param, bundle);
 		statement.setString(++param, action);
+		statement.setString(++param, path.toString());
 		statement.addBatch();
 		
 		if (Debug.debugSql) {			
@@ -112,12 +113,12 @@ public class RouteDao implements IRouteDao {
 	}
 
 	@Override
-	public void deleteRoutesByPath(Connection connection, String bundle, String controller, String action) {
+	public void deleteRoutesByPath(Connection connection, String name, IPath path) {
 
 		try {
 			Statement statement = connection.createStatement();
-			statement.execute("DELETE FROM ROUTES WHERE BUNDLE = '"
-					+ bundle + "' AND CONTROLLER = '" + controller + "' AND ACTION = '" + action + "'");
+			statement.execute("DELETE FROM ROUTES WHERE NAME = '"
+					+ name + "' AND PATH = '"  + path.toString()+ "'");
 			connection.commit();
 			
 		} catch (SQLException e) {
@@ -134,7 +135,7 @@ public class RouteDao implements IRouteDao {
 		try {
 			
 			Statement statement = connection.createStatement();
-			String query = "SELECT NAME, PATTERN, CONTROLLER FROM ROUTES WHERE PATH LIKE '" + path + "%'";
+			String query = "SELECT NAME, PATTERN, CONTROLLER FROM ROUTES WHERE PATH = '" + path + "'";
 
 			ResultSet result = statement.executeQuery(query.toString());
 			

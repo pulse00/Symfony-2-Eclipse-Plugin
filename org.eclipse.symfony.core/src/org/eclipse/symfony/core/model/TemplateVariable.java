@@ -19,7 +19,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
  *
  */
 @SuppressWarnings("restriction")
-public class TemplateVariable implements ISymfonyModelElement {
+public class TemplateVariable  {
 
 
 	private String name;
@@ -79,7 +79,6 @@ public class TemplateVariable implements ISymfonyModelElement {
 	}
 
 
-	@Override
 	public String getName() {
 
 		return getName("");

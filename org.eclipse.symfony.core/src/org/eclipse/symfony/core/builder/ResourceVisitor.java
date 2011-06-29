@@ -98,7 +98,7 @@ implements IResourceVisitor {
 
 		//indexer.enterRoutes();
 		for (Route route : routes) {
-			indexer.addRoute(route);
+			indexer.addRoute(route, file.getProject().getFullPath());
 		}
 		indexer.exitRoutes();		
 		

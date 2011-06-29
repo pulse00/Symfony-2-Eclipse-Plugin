@@ -3,7 +3,6 @@ package org.eclipse.symfony.core.index;
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.core.index2.IIndexingParser;
 import org.eclipse.php.internal.core.index.PhpIndexerParticipant;
-import org.eclipse.symfony.core.model.IBundle;
 
 /**
  * 
@@ -19,8 +18,6 @@ public class SymfonyIndexerParticipant extends PhpIndexerParticipant  {
 
 	public SymfonyIndexerParticipant() {
 		
-		int foo = IBundle.ID;
-
 	}
 	
 	@Override

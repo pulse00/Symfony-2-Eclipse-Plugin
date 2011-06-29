@@ -20,12 +20,12 @@ public interface IRouteDao {
 	
 
 	void insert(Connection connection, String name, String pattern, 
-		String controller, String bundle, String action)
+		String controller, String bundle, String action, IPath path)
 			throws SQLException;
 
 	void commitInsertions() throws SQLException;
 
-	void deleteRoutesByPath(Connection connection, String bundle, String controller, String action);
+	void deleteRoutesByPath(Connection connection, String name, IPath path);
 
 	List<Route> findRoutes(Connection connection, IPath path);
 

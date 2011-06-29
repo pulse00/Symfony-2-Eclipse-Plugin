@@ -53,13 +53,6 @@
           id="org.eclipse.symfony.ui"
           name="Symfony">
     </category>
-    <view
-          category="org.eclipse.symfony.ui"
-          class="org.eclipse.symfony.ui.views.ProjectOutline"
-          icon="icons/sample.gif"
-          id="org.eclipse.symfony.ui.views.ProjectOutline"
-          name="Symfony Project Outline">
-    </view>
  </extension>
  
  <extension
@@ -69,18 +62,6 @@
     </contexts>
  </extension>
  
- <extension
-       point="org.eclipse.ui.perspectiveExtensions">
-    <perspectiveExtension
-          targetID="org.eclipse.php.perspective">
-       <view
-             id="org.eclipse.symfony.ui.views.ProjectOutline"
-             ratio="0.5"
-             relationship="right"
-             relative="org.eclipse.ui.views.TaskList">
-       </view>
-    </perspectiveExtension>
- </extension>
  
  <extension
        point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
