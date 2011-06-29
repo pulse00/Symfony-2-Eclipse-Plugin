@@ -100,14 +100,24 @@ public class ModelUtils {
 	 */
 	public static String extractBundleName(String fullyQualifiedName) {
 
+		
 		StringTokenizer tokenizer = new StringTokenizer(fullyQualifiedName, "\\");
+		
+		int i = 0;
+		
+		String prefix = "";
 		
 		while(tokenizer.hasMoreTokens()) {
 			
 			String token = tokenizer.nextToken();
 			
-			if (token.endsWith("Bundle"))
-				return token;
+			if (i++ == 0) {
+				prefix = token;
+			}
+			
+			if (token.endsWith("Bundle")) {
+				return prefix + token;
+			}
 		}
 		
 		return null;

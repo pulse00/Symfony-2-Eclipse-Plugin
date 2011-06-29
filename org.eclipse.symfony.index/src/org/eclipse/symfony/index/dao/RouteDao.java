@@ -73,7 +73,7 @@ public class RouteDao implements IRouteDao {
 
 		int param = 0;
 
-		statement.setString(++param, name);
+		statement.setString(++param, name.replaceAll("['\"]", ""));
 		statement.setString(++param, pattern);
 		statement.setString(++param, controller);		
 		statement.setString(++param, bundle);
@@ -96,7 +96,6 @@ public class RouteDao implements IRouteDao {
 	@Override
 	public void commitInsertions() throws SQLException {
 
-		System.err.println("commit routes");
 		synchronized (batchStatements) {
 			try {
 				for (PreparedStatement statement : batchStatements.values()) {
@@ -135,11 +134,12 @@ public class RouteDao implements IRouteDao {
 		try {
 			
 			Statement statement = connection.createStatement();
-			String query = "SELECT NAME, PATTERN, CONTROLLER, BUNDLE, ACTION FROM ROUTES WHERE PATH = '" + path + "'";
+			String query = "SELECT NAME, PATTERN, CONTROLLER, BUNDLE, ACTION FROM ROUTES WHERE PATH LIKE '" + path + "%'";
 
 			ResultSet result = statement.executeQuery(query.toString());
 			
 			while (result.next()) {
+				
 				
 				int columnIndex = 0;
 				String name = result.getString(++columnIndex);
@@ -147,6 +147,8 @@ public class RouteDao implements IRouteDao {
 				String controller = result.getString(++columnIndex);				
 				String bundle = result.getString(++columnIndex);
 				String action = result.getString(++columnIndex);
+				
+				System.err.println(name);
 				routes.add(new Route(bundle, controller, action, name, pattern));
 
 			}

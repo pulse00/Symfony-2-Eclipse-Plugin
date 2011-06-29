@@ -48,9 +48,7 @@ public class ViewPath {
 	
 	public String getController() {
 		
-		
 		return controller;
-		
 		
 	}
 	
@@ -58,6 +56,13 @@ public class ViewPath {
 		
 		return template;
 		
+	}
+	
+	@Override
+	public String toString() {
+
+		return String.format("%s:%s:%s", bundle, controller, template);
+
 	}
 	
 }

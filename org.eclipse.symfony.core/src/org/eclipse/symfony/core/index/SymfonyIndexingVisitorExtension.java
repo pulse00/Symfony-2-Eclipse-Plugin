@@ -192,10 +192,13 @@ PhpIndexingVisitorExtension {
 					
 				}
 			}
-			
-			for (Route route : controllerIndexer.getRoutes()) {				
-				indexer.addRoute(route, sourceModule.getScriptProject().getPath());	
+						
+			for (Route route : controllerIndexer.getRoutes()) {
+				SymfonyCorePlugin.debug(this.getClass(), "indexing route: " + route.toString());
+				indexer.addRoute(route, sourceModule.getScriptProject().getPath());
 			}
+			
+			indexer.exitRoutes();
 		}
 		
 		inController = false;
@@ -249,7 +252,6 @@ PhpIndexingVisitorExtension {
 						if(varName.getName().equals("$view") && varType.getName().equals("string")) {							
 							int length = method.sourceEnd() - method.sourceStart();
 							
-							System.err.println("indexing view method " + method.getName());
 							ReferenceInfo viewMethod = new ReferenceInfo(ISymfonyModelElement.VIEW_METHOD, method.sourceStart()	, length, method.getName(), null, null);
 							requestor.addReference(viewMethod);
 						}

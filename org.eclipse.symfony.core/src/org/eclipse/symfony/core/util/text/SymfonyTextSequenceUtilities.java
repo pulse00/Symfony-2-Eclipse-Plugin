@@ -65,7 +65,7 @@ public class SymfonyTextSequenceUtilities {
 			startPosition--;
 		}
 
-		return startPosition + 1;
+		return startPosition;
 
 	}
 

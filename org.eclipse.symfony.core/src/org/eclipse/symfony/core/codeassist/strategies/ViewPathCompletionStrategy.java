@@ -49,7 +49,7 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 		ISourceModule module = context.getSourceModule();
 		ViewPath viewPath = context.getViewPath();
 		
-		
+		System.err.println(viewPath.toString());
 		String bundle = viewPath.getBundle();
 		String controller = viewPath.getController();
 		String template = viewPath.getTemplate();
@@ -64,8 +64,13 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 				reporter.reportKeyword(b, ":", range);				
 			}			
 		// complete the controller part
+			
+			
 		} else if (controller == null) {			
+			
+			
 			IType[] controllers = model.findBundleControllers(bundle, module.getScriptProject());
+			
 			
 			if (controllers != null) {
 				for (IType ctrl : controllers) {

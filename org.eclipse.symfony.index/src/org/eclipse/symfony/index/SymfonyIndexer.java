@@ -110,13 +110,6 @@ public class SymfonyIndexer {
 	}
 
 
-	public void enterRoutes(String bundle, String controller) {
-		
-		//routeDao.deleteRoutesByPath(connection, bundle, controller);		
-		
-	}
-
-
 	public void exitRoutes() {
 
 		try {
