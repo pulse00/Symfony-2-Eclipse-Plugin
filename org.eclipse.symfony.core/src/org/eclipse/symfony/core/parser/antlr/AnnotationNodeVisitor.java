@@ -48,7 +48,9 @@ public class AnnotationNodeVisitor implements IAnnotationNodeVisitor {
 		case AnnotationParser.NAMED_ARG:
 
 			String key = node.getChild(0).toString();
-			arguments.put(key, node.getChild(1).getChild(0).toString());
+			
+			if (node.getChildCount() > 1 && node.getChild(1).getChildCount() > 0)
+				arguments.put(key, node.getChild(1).getChild(0).toString());
 
 			break;
 		

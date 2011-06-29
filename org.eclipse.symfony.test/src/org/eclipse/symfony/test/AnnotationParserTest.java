@@ -1,6 +1,5 @@
 package org.eclipse.symfony.test;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -48,7 +47,14 @@ public class AnnotationParserTest extends TestCase {
 		reporter.reset();
 		
 	}
+
 	
+	@Test
+	public void testTemplatePath() {
+		
+		root = getRootNode("* @Template(\"DemoBundle:Welcome:index.html.twig\")", false);
+
+	}
 	
 	@Test
 	public void testRoute() {
@@ -186,7 +192,10 @@ public class AnnotationParserTest extends TestCase {
 			return visitor;
 			
 			
-		} catch (RecognitionException e) {
+		} catch (Exception e) {
+			
+			if (!expectFail)
+				fail();
 						
 		}
 
