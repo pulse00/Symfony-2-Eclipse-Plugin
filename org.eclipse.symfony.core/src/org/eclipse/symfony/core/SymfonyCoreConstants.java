@@ -45,6 +45,9 @@ public class SymfonyCoreConstants {
 	
 	// namespaces
 	public static final String CONTROLLER_NS		="Symfony\\Bundle\\FrameworkBundle\\Controller";
+	
+	// core classes
+	public static final String BUNDLE_FQCN 			= "Symfony\\Component\\HttpKernel\\Bundle\\Bundle"; 
 
 
 

@@ -7,9 +7,12 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IProjectFragment;
+import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.core.index2.search.ISearchEngine;
@@ -19,6 +22,8 @@ import org.eclipse.dltk.core.index2.search.ISearchRequestor;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.dltk.internal.core.ScriptFolder;
+import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -296,5 +301,113 @@ public class SymfonyModelAccess extends PhpModelAccess {
 
 		return index.findRoutes(project.getPath());
 		
+	}
+	
+	/**
+	 * 
+	 * Retrieve all bundles inside a Project.
+	 * 
+	 * @param project
+	 * @return
+	 */
+	public List<String> findBundles(IScriptProject project) {
+		
+		 IDLTKSearchScope scope = SearchEngine.createSearchScope(project.getScriptProject());			 		 
+		 ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());		 
+		 final List<String> bundles = new ArrayList<String>();
+		 
+		 engine.search(IBundle.ID, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+			
+			@Override
+			public void match(int elementType, int flags, int offset, int length,
+					int nameOffset, int nameLength, String elementName,
+					String metadata, String doc, String qualifier, String parent,
+					ISourceModule sourceModule, boolean isReference) {
+
+				bundles.add(elementName);				
+				
+			}
+		}, null);
+		
+		
+		 return bundles;
+	}
+	
+	
+	/**
+	 * Finds the {@link ScriptFolder} of corresponding bundle inside the project.
+	 * 
+	 * @param bundle
+	 * @param project
+	 * @return
+	 */
+	public ScriptFolder findBundleFolder(String bundle, IScriptProject project) {
+		
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
+		
+		IType[] types = findTypes(bundle, MatchRule.EXACT, 0, 0, scope, null);
+		
+		if (types.length != 1)
+			return null;
+
+		IType bundleType = types[0];
+		return  (ScriptFolder) bundleType.getSourceModule().getParent(); 		
+		
+	}
+
+	/**
+	 * 
+	 * Find all controllers in a given bundle.
+	 * 
+	 * @param bundle
+	 * @param project
+	 * @return
+	 */
+	public IType[] findBundleControllers(String bundle, IScriptProject project) {
+
+
+		ScriptFolder bundleFolder = findBundleFolder(bundle, project);
+		if(bundleFolder == null)
+			return null;
+
+		ISourceModule controllerSource = bundleFolder.getSourceModule("Controller");
+		
+		if (controllerSource == null)
+			return null;
+
+		IDLTKSearchScope controllerScope = SearchEngine.createSearchScope(controllerSource);
+		return findTypes("", MatchRule.PREFIX, 0, 0, controllerScope, null);
+		
+	}
+
+	
+	/**
+	 * Retrieve templates for a given bundle and controller path inside
+	 * the ScriptProject. 
+	 * 
+	 * Returns an empty array if nothing found. 
+	 * 
+	 * 
+	 * @param bundle
+	 * @param controller
+	 * @param project
+	 * @return
+	 */
+	public IModelElement[] findTemplates(String bundle, String controller, IScriptProject project) {
+
+		try {
+			
+			ScriptFolder bundleFolder = findBundleFolder(bundle, project);
+			IProjectFragment fragment = (IProjectFragment) bundleFolder.getParent();
+			IScriptFolder folder = fragment.getScriptFolder("Resources/views/" + controller.replace("Controller", ""));
+			if (folder.exists() && folder.hasChildren()) {
+				return folder.getChildren();
+			}			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new IModelElement[] {};
 	}
 }

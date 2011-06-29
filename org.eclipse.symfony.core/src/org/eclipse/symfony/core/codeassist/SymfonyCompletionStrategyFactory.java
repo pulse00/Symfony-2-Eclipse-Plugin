@@ -11,11 +11,13 @@ import org.eclipse.symfony.core.codeassist.contexts.RouteCompletionContext;
 import org.eclipse.symfony.core.codeassist.contexts.ServiceContainerContext;
 import org.eclipse.symfony.core.codeassist.contexts.ServiceReturnTypeContext;
 import org.eclipse.symfony.core.codeassist.contexts.TemplateVariableContext;
+import org.eclipse.symfony.core.codeassist.contexts.ViewPathCompletionContext;
 import org.eclipse.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
 import org.eclipse.symfony.core.codeassist.strategies.RouteCompletionStrategy;
 import org.eclipse.symfony.core.codeassist.strategies.ServiceContainerCompletionStrategy;
 import org.eclipse.symfony.core.codeassist.strategies.ServiceReturnTypeCompletionStrategy;
 import org.eclipse.symfony.core.codeassist.strategies.TemplateVariableStrategy;
+import org.eclipse.symfony.core.codeassist.strategies.ViewPathCompletionStrategy;
 
 /**
  * Factory class for CompletionStrategies. 
@@ -57,6 +59,10 @@ public class SymfonyCompletionStrategyFactory implements ICompletionStrategyFact
 			} else if (contextClass == RouteCompletionContext.class) {
 			
 				result.add(new RouteCompletionStrategy(context));
+				
+			} else if (contextClass == ViewPathCompletionContext.class) {
+				
+				result.add(new ViewPathCompletionStrategy(context));
 				
 			}
 		}

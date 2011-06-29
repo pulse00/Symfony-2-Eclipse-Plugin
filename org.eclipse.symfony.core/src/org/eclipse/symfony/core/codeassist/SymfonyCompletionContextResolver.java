@@ -8,6 +8,7 @@ import org.eclipse.symfony.core.codeassist.contexts.RouteCompletionContext;
 import org.eclipse.symfony.core.codeassist.contexts.ServiceContainerContext;
 import org.eclipse.symfony.core.codeassist.contexts.ServiceReturnTypeContext;
 import org.eclipse.symfony.core.codeassist.contexts.TemplateVariableContext;
+import org.eclipse.symfony.core.codeassist.contexts.ViewPathCompletionContext;
 
 /**
  *  
@@ -30,6 +31,7 @@ public class SymfonyCompletionContextResolver extends CompletionContextResolver
 				new ServiceReturnTypeContext(),
 				new TemplateVariableContext(),
 				new RouteCompletionContext(),
+				new ViewPathCompletionContext(),
 		};		
 	}
 }

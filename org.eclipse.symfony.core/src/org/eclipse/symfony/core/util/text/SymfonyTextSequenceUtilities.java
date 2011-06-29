@@ -39,6 +39,35 @@ public class SymfonyTextSequenceUtilities {
 		
 	}
 	
+	
+	/**
+	 * Retrieve the startOffset of a ViewPath inside a textSeauence
+	 * 
+	 *  
+	 * @param textSequence
+	 * @return
+	 */
+	public static int readViewPathStartIndex(CharSequence textSequence) {
+		
+		int startPosition = textSequence.length() -1;
+		
+		while (startPosition > 0) {
+			
+			char ch = textSequence.charAt(startPosition - 1);
+			if (!Character.isLetterOrDigit(ch) && ch != ':') {
+				break;
+			}
+			startPosition--;
+		}
+		if (startPosition > 0
+				&& textSequence.charAt(startPosition - 1) == '"') {
+			startPosition--;
+		}
+		
+		return startPosition + 1;
+		
+	}
+	
 	/**
 	 * Checks for the existance of a service container function, ie. $this->get( or $this->container->get(
 	 * @param sequence

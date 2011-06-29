@@ -19,11 +19,15 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.symfony.core.SymfonyCoreConstants;
 import org.eclipse.symfony.core.SymfonyCorePlugin;
 import org.eclipse.symfony.core.index.visitor.TemplateVariableVisitor;
+import org.eclipse.symfony.core.model.IBundle;
 import org.eclipse.symfony.core.model.TemplateVariable;
 import org.eclipse.symfony.core.util.JsonUtils;
 import org.eclipse.symfony.index.SymfonyIndexer;
@@ -111,6 +115,22 @@ PhpIndexingVisitorExtension {
 				if (o instanceof FullyQualifiedReference) {
 
 					FullyQualifiedReference superReference = (FullyQualifiedReference) o;					
+					String ns = getUseStatement(superReference.getName());
+					
+					if (ns != null) {
+						
+						String fqcn = ns + "\\" + superReference.getName();						
+						boolean isTestOrFixture = namespace.getName().contains("Test") || namespace.getName().contains("Fixtures");
+						
+						// we got a bundle definition, index it
+						if (fqcn.equals(SymfonyCoreConstants.BUNDLE_FQCN) && ! isTestOrFixture) {
+
+							int length = (currentClass.sourceEnd() - currentClass.sourceEnd());
+							ReferenceInfo info = new ReferenceInfo(IBundle.ID, currentClass.sourceStart(), length, currentClass.getName(), null, namespace.getName());
+							requestor.addReference(info);
+							
+						}						
+					}
 
 					//TODO: find a way to check against the FQCN
 					// via the UseStatement
@@ -181,6 +201,23 @@ PhpIndexingVisitorExtension {
 		namespace = null;
 		controllerIndexer = null;
 		return true;
+	}
+	
+	private String getUseStatement(String name) {
+		
+		for (UseStatement statement : useStatements) {
+			
+			for (UsePart part : statement.getParts()) {
+				
+				if (part.getNamespace().getName().equals(name)) {
+					return part.getNamespace().getNamespace().getName();
+				}
+			}
+			
+		}
+		
+		return null;
+		
 	}
 
 	@Override
