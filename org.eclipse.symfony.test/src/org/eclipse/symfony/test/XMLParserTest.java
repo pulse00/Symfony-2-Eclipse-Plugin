@@ -4,10 +4,12 @@ package org.eclipse.symfony.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.Stack;
 
 import junit.framework.TestCase;
 
 import org.eclipse.symfony.core.parser.XMLConfigParser;
+import org.eclipse.symfony.index.dao.Route;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +33,37 @@ public class XMLParserTest extends TestCase {
 	@After
 	protected void tearDown() throws Exception {
 		super.tearDown();
+	}
+
+	
+	@Test
+	public void testRoutes() {
+		
+		try {
+			
+			String dir = System.getProperty("user.dir") + "/Resources/config/routing.xml";
+			FileInputStream input = new FileInputStream(new File(dir));
+			XMLConfigParser parser = new XMLConfigParser(input);
+			parser.parse();
+			
+			assertTrue(parser.hasRoutes());
+			
+			Stack<Route> routes = parser.getRoutes();			
+			assertEquals(2, routes.size());
+			
+			Route route = routes.pop();
+			
+			assertEquals(route.name, "blog_index");
+			assertEquals(route.pattern, "/blog");
+			assertEquals(route.bundle, "AcmeBlogBundle");
+			assertEquals(route.controller, "Blog");
+			assertEquals(route.action, "index");
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
 	}
 
 

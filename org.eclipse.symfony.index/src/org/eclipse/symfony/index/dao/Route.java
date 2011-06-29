@@ -30,12 +30,23 @@ public class Route {
 		
 	}
 	
-	public Route(String name, String pattern, String controller) {
+	public Route(String name, String pattern, String viewPath) {
 		
 		this.name = name;
 		this.pattern = pattern;
-		this.controller = controller;
 		
+		try {
+			
+			StringTokenizer tokenizer = new StringTokenizer(viewPath, ":");
+			
+			this.bundle = tokenizer.nextToken();
+			this.controller = tokenizer.nextToken();
+			this.action = tokenizer.nextToken();
+			
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
 	}
 
 

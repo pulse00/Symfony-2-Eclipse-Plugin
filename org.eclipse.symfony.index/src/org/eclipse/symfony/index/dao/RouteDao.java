@@ -135,7 +135,7 @@ public class RouteDao implements IRouteDao {
 		try {
 			
 			Statement statement = connection.createStatement();
-			String query = "SELECT NAME, PATTERN, CONTROLLER FROM ROUTES WHERE PATH = '" + path + "'";
+			String query = "SELECT NAME, PATTERN, CONTROLLER, BUNDLE, ACTION FROM ROUTES WHERE PATH = '" + path + "'";
 
 			ResultSet result = statement.executeQuery(query.toString());
 			
@@ -144,8 +144,10 @@ public class RouteDao implements IRouteDao {
 				int columnIndex = 0;
 				String name = result.getString(++columnIndex);
 				String pattern = result.getString(++columnIndex);
-				String controller= result.getString(++columnIndex);				
-				routes.add(new Route(name, pattern, controller));
+				String controller = result.getString(++columnIndex);				
+				String bundle = result.getString(++columnIndex);
+				String action = result.getString(++columnIndex);
+				routes.add(new Route(bundle, controller, action, name, pattern));
 
 			}
 		} catch(Exception e) {
