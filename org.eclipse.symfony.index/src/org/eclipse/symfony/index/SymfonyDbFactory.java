@@ -82,6 +82,8 @@ public class SymfonyDbFactory  {
 		}
 
 		IPath dbPath = SymfonyIndex.getDefault().getStateLocation();
+		
+		System.err.println("DBPATH: " + dbPath.toString());
 		String connString = getConnectionString(dbPath);
 
 		pool = JdbcConnectionPool.create(connString, DB_USER, DB_PASS);

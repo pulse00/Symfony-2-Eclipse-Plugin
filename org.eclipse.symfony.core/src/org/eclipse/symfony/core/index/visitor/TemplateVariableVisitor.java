@@ -30,8 +30,10 @@ import org.eclipse.symfony.core.SymfonyCorePlugin;
 import org.eclipse.symfony.core.model.Service;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
 import org.eclipse.symfony.core.model.TemplateVariable;
+import org.eclipse.symfony.core.util.AnnotationUtils;
 import org.eclipse.symfony.core.util.ModelUtils;
 import org.eclipse.symfony.core.util.PathUtils;
+import org.eclipse.symfony.index.dao.Route;
 
 
 /**
@@ -61,11 +63,20 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 
 	private String currentAnnotationPath;
 
+	private Stack<Route> routes = new Stack<Route>();
+
+	final private String bundle;
+
+	private String controller;
 
 	public TemplateVariableVisitor(List<UseStatement> useStatements, NamespaceDeclaration namespace) {
 
 		this.namespace = namespace;
 		this.useStatements = useStatements;
+		
+		bundle = ModelUtils.extractBundleName(namespace);
+
+		
 	}
 
 
@@ -85,11 +96,11 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 
 		currentMethod = method;
 		deferredVariables = new Stack<TemplateVariable>();
+		controller = currentMethod.getDeclaringTypeName().replace(SymfonyCoreConstants.CONTROLLER_CLASS, "");
 
 		if (method.getName().endsWith(SymfonyCoreConstants.ACTION_SUFFIX)) {
 
 			inAction = true;
-			boolean foundAnnotation = false;
 			PHPDocBlock docs = method.getPHPDoc();
 
 			if (docs != null) {
@@ -101,29 +112,12 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 					String line;
 					while((line = buffer.readLine()) != null) {
 
-						//TODO: parse @Template() parameters
 						if (line.startsWith(SymfonyCoreConstants.TEMPLATE_ANNOTATION)) {
-
-							int start = -1;
-							int end = -1;
-							
-							if ((start = line.indexOf("\"")) > -1) {								
-								end = line.lastIndexOf("\"");								
-							} else if ( (start = line.indexOf("'")) > -1) {								
-								end = line.lastIndexOf("'");								
-							}
-							
-
-							if (start > -1 && end > -1) {								
-								String path = line.substring(start, end+1);
-								currentAnnotationPath = PathUtils.createViewPath(path);
-							}
-														
-
-							foundAnnotation = true;
-							break;
-
+							parseTemplateAnnotation(line);							
+						} else if (line.startsWith(SymfonyCoreConstants.ROUTE_ANNOTATION)) {							
+							processRoute(line);
 						}
+						
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -132,6 +126,43 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 		}
 
 		return true;
+	}
+	
+	/**
+	 * 
+	 * Parse a route from the annotation and 
+	 * push it to the route stack for later indexing.
+	 * 
+	 * @param annotation
+	 */
+	private void processRoute(String annotation) {
+
+		String action = currentMethod.getName().replace(SymfonyCoreConstants.ACTION_SUFFIX, "");
+		Route route = AnnotationUtils.getRoute(annotation, bundle, controller, action);
+		
+		if (route != null) {
+			routes.push(route);
+		}		
+	}
+
+
+	private void parseTemplateAnnotation(String annotation) {
+		
+		int start = -1;
+		int end = -1;
+		
+		if ((start = annotation.indexOf("\"")) > -1) {								
+			end = annotation.lastIndexOf("\"");								
+		} else if ( (start = annotation.indexOf("'")) > -1) {								
+			end = annotation.lastIndexOf("'");								
+		}
+		
+
+		if (start > -1 && end > -1) {								
+			String path = annotation.substring(start, end+1);
+			currentAnnotationPath = PathUtils.createViewPath(path);
+		}
+		
 	}
 
 	@Override
@@ -170,12 +201,8 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 						
 					} else {
 						
-						String bundle = ModelUtils.extractBundleName(namespace);
-						String controller = currentMethod.getDeclaringTypeName().replace(SymfonyCoreConstants.CONTROLLER_CLASS, "");
 						String template = currentMethod.getName().replace(SymfonyCoreConstants.ACTION_SUFFIX, "");
-						
-						if (bundle != null)
-							viewPath = String.format("%s:%s:%s", bundle, controller, template);
+						viewPath = String.format("%s:%s:%s", bundle, controller, template);
 						
 					}
 										
@@ -446,5 +473,11 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 			return className;
 		}
 
+	}
+
+
+	public Stack<Route> getRoutes() {
+
+		return routes;
 	}
 }

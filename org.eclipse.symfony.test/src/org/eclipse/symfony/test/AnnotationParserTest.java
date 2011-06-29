@@ -1,5 +1,8 @@
 package org.eclipse.symfony.test;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import junit.framework.TestCase;
 
 import org.antlr.runtime.ANTLRStringStream;
@@ -43,6 +46,19 @@ public class AnnotationParserTest extends TestCase {
 	public void tearDown() throws Exception {
 	
 		reporter.reset();
+		
+	}
+	
+	
+	@Test
+	public void testRoute() {
+		
+		root = getRootNode("* @Route('/blog', name='_blog')", false);		
+		Map<String, String> args = root.getArguments();		
+		assertNotNull(args);		
+		String route = args.get("name");		
+		assertNotNull(route);
+		assertEquals("'_blog'", route);		
 		
 	}
 

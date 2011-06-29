@@ -37,7 +37,7 @@ public class SymfonyCoreConstants {
 	
 	// FrameworkExtraBundle Annotations	
 	public static final String TEMPLATE_ANNOTATION	= "@Template";
-	
+	public static final String ROUTE_ANNOTATION 	= "@Route";	
 	
 	// prefix for methods which render views
 	public static final String RENDER_PREFIX		= "render";
@@ -45,6 +45,9 @@ public class SymfonyCoreConstants {
 	
 	// namespaces
 	public static final String CONTROLLER_NS		="Symfony\\Bundle\\FrameworkBundle\\Controller";
+
+
+
 	
 
 	public static void initializeDefaultValues() {

@@ -27,6 +27,7 @@ import org.eclipse.symfony.core.index.visitor.TemplateVariableVisitor;
 import org.eclipse.symfony.core.model.TemplateVariable;
 import org.eclipse.symfony.core.util.JsonUtils;
 import org.eclipse.symfony.index.SymfonyIndexer;
+import org.eclipse.symfony.index.dao.Route;
 
 
 /**
@@ -98,8 +99,6 @@ PhpIndexingVisitorExtension {
 	@Override
 	public boolean visit(TypeDeclaration s) throws Exception {
 
-
-		
 		if (indexer == null)
 			indexer = SymfonyIndexer.getInstance();
 
@@ -137,8 +136,8 @@ PhpIndexingVisitorExtension {
 		return true; 
 	}
 
-	@SuppressWarnings({ "rawtypes" })
 	@Override
+	@SuppressWarnings({ "rawtypes" })
 	public boolean endvisit(TypeDeclaration s) throws Exception {
 
 
@@ -170,6 +169,10 @@ PhpIndexingVisitorExtension {
 					requestor.addReference(info);
 					
 				}
+			}
+			
+			for (Route route : controllerIndexer.getRoutes()) {				
+				indexer.addRoute(route);				
 			}
 		}
 		

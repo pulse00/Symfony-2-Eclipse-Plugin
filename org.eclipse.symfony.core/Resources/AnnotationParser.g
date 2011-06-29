@@ -10,6 +10,7 @@ tokenVocab=AnnotationLexer;
 tokens {
 ANNOTATION;
 ARGUMENT_LIST;
+ARGS;
 NAMED_ARG;
 LITERAL_ARG;
 NSPART;
@@ -94,7 +95,8 @@ classname
   ;
 
 arguments
-  : argument  (COMMA (argument))*
+  : argument  (COMMA arguments)?
+    -> argument arguments?
   ;
 
 argument
@@ -108,8 +110,8 @@ literal_argument
   ;
 
 named_argument
-  : lht=STRING ASIG rhtype
-    -> ^(NAMED_ARG $lht rhtype)
+  : param=STRING ASIG rhtype
+    -> ^(NAMED_ARG $param rhtype)
   ;
 
 json

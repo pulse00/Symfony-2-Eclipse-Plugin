@@ -18,13 +18,14 @@ import org.eclipse.core.runtime.IPath;
  */
 public interface IRouteDao {
 	
-	
-	void insert(Connection connection, String name, String pattern, String controller, IPath path)
+
+	void insert(Connection connection, String name, String pattern, 
+		String controller, String bundle, String action)
 			throws SQLException;
 
 	void commitInsertions() throws SQLException;
 
-	void deleteRoutesByPath(Connection connection, IPath path);
+	void deleteRoutesByPath(Connection connection, String bundle, String controller, String action);
 
 	List<Route> findRoutes(Connection connection, IPath path);
 

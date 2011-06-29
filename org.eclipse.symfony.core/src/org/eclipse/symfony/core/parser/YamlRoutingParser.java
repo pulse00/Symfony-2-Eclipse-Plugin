@@ -83,8 +83,8 @@ public class YamlRoutingParser {
 					if(defaults == null)
 						continue;
 					
-					String controller = (String) defaults.get("_controller");
-					routes.push(new Route(name, pattern, controller));
+					String viewPath = (String) defaults.get("_controller");
+					routes.push(new Route(name, pattern, viewPath));
 
 				} catch (Exception e) {
 					e.printStackTrace();

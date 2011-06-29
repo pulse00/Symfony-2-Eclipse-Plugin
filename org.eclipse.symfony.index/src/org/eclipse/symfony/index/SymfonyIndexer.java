@@ -49,18 +49,21 @@ public class SymfonyIndexer {
 	}
 	
 
-	public void addRoute(Route route, IPath path) {
-
-		addRoute(route.name, route.pattern, route.controller, path);
+	public void addRoute(Route route) {
+		
+		
+		addRoute(route.name, route.pattern, route.controller, route.bundle, route.action);
 		
 	}
 	
 	
 	
-	public void addRoute(String name, String pattern, String controller, IPath path) {
+	public void addRoute(String name, String pattern, String controller, String bundle, String action) {
 				
 		try {
-			routeDao.insert(connection, name, pattern, controller, path);
+			
+			routeDao.deleteRoutesByPath(connection, bundle, controller, action);			
+			routeDao.insert(connection, name, pattern, controller, bundle, action);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -108,9 +111,9 @@ public class SymfonyIndexer {
 	}
 
 
-	public void enterRoutes(IPath path) {
+	public void enterRoutes(String bundle, String controller) {
 		
-		routeDao.deleteRoutesByPath(connection, path);		
+		//routeDao.deleteRoutesByPath(connection, bundle, controller);		
 		
 	}
 

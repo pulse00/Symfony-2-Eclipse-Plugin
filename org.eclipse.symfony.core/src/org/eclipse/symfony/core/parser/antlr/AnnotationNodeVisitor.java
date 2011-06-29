@@ -1,5 +1,7 @@
 package org.eclipse.symfony.core.parser.antlr;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 import org.eclipse.dltk.core.builder.IBuildContext;
@@ -21,6 +23,8 @@ public class AnnotationNodeVisitor implements IAnnotationNodeVisitor {
 	
 	private IBuildContext context;
 	
+	private Map<String, String> arguments = new HashMap<String, String>();
+	
 	public AnnotationNodeVisitor(IBuildContext context) {
 
 		this.context = context;
@@ -41,6 +45,21 @@ public class AnnotationNodeVisitor implements IAnnotationNodeVisitor {
 		switch(kind) {
 		
 		
+		case AnnotationParser.NAMED_ARG:
+
+			String key = node.getChild(0).toString();
+			arguments.put(key, node.getChild(1).getChild(0).toString());
+
+			break;
+		
+		
+		case AnnotationParser.ARGUMENT_LIST:
+			
+			
+			
+			break;
+			
+			
 		case AnnotationParser.ANNOTATION:
 			
 			break;
@@ -51,6 +70,13 @@ public class AnnotationNodeVisitor implements IAnnotationNodeVisitor {
 			assert node.getChildCount() == 1;
 			className = node.getChild(0).toString();
 			break;
+			
+			
+		case AnnotationParser.LITERAL_ARG:
+			
+			arguments.put(node.getChild(0).toString(), null);
+			
+			break;
 		
 		case AnnotationParser.NSPART:
 			
@@ -60,9 +86,12 @@ public class AnnotationNodeVisitor implements IAnnotationNodeVisitor {
 			
 			break;
 			
+		case AnnotationParser.STRING_LITERAL:
+			
+			break;
+			
 		default:
 			
-
 			break;
 				
 		}
@@ -110,6 +139,11 @@ public class AnnotationNodeVisitor implements IAnnotationNodeVisitor {
 		
 		return getNamespace() + getClassName();
 		
+	}
+	
+	public Map<String, String> getArguments() {
+		
+		return arguments;
 	}
 	
 	public String getFirstNamespacePart() {

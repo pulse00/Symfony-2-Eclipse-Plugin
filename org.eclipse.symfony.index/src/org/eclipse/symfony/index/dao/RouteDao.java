@@ -42,8 +42,9 @@ public class RouteDao implements IRouteDao {
 		this.batchStatements = new HashMap<String, PreparedStatement>();		
 	}
 	
-	public void insert(Connection connection, String name, String pattern, String controller, IPath path)
-			throws SQLException {
+	public void insert(Connection connection, String name, String pattern, 
+			String controller, String bundle, String action)
+					throws SQLException {
 
 
 		String tableName = TABLENAME;
@@ -62,19 +63,21 @@ public class RouteDao implements IRouteDao {
 				statement = connection.prepareStatement(query);
 				batchStatements.put(query, statement);
 			}
-			insertBatch(connection, statement, name, pattern, controller, path);
+			insertBatch(connection, statement, name, pattern, controller, bundle, action);
 		}
 	}
 	
-	private void insertBatch(Connection connection, PreparedStatement statement, String name, String pattern, String controller, IPath path)
-			throws SQLException {
+	private void insertBatch(Connection connection, PreparedStatement statement, 
+			String name, String pattern, String controller, String bundle, String action)
+					throws SQLException {
 
 		int param = 0;
 
 		statement.setString(++param, name);
 		statement.setString(++param, pattern);
 		statement.setString(++param, controller);		
-		statement.setString(++param, path.toString());
+		statement.setString(++param, bundle);
+		statement.setString(++param, action);
 		statement.addBatch();
 		
 		if (Debug.debugSql) {			
@@ -109,11 +112,12 @@ public class RouteDao implements IRouteDao {
 	}
 
 	@Override
-	public void deleteRoutesByPath(Connection connection, IPath path) {
+	public void deleteRoutesByPath(Connection connection, String bundle, String controller, String action) {
 
 		try {
 			Statement statement = connection.createStatement();
-			statement.execute("DELETE FROM ROUTES WHERE PATH = '" + path + "'");
+			statement.execute("DELETE FROM ROUTES WHERE BUNDLE = '"
+					+ bundle + "' AND CONTROLLER = '" + controller + "' AND ACTION = '" + action + "'");
 			connection.commit();
 			
 		} catch (SQLException e) {

@@ -7,6 +7,7 @@ INSERT INTO {0}(
 	NAME,
 	PATTERN,
 	CONTROLLER,
-	PATH)
+	BUNDLE,
+	ACTION)
 
-VALUES(?,?,?,?);
+VALUES(?,?,?,?,?);

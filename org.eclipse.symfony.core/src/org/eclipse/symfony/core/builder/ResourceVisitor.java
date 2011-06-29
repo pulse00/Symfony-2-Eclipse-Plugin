@@ -3,6 +3,7 @@ package org.eclipse.symfony.core.builder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Stack;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -95,9 +96,9 @@ implements IResourceVisitor {
 
 	private void indexRoutes(Stack<Route> routes) {
 
-		indexer.enterRoutes(file.getFullPath());
+		//indexer.enterRoutes();
 		for (Route route : routes) {
-			indexer.addRoute(route, file.getFullPath());
+			indexer.addRoute(route);
 		}
 		indexer.exitRoutes();		
 		
