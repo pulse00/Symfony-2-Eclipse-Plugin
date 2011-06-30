@@ -9,11 +9,13 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.symfony.core.SymfonyCorePreferences;
 import org.eclipse.symfony.core.parser.XMLConfigParser;
 import org.eclipse.symfony.core.parser.YamlConfigParser;
 import org.eclipse.symfony.core.parser.YamlRoutingParser;
 import org.eclipse.symfony.index.SymfonyIndexer;
 import org.eclipse.symfony.index.dao.Route;
+import org.json.simple.JSONObject;
 import org.yaml.snakeyaml.scanner.ScannerException;
 
 
@@ -33,6 +35,7 @@ implements IResourceVisitor {
 	private IPath path;
 	private SymfonyIndexer indexer;
 	private int timestamp;
+	private JSONObject synthetic = SymfonyCorePreferences.getSyntheticServices();
 
 	@Override
 	public boolean visit(IResource resource) throws CoreException {
@@ -138,11 +141,12 @@ implements IResourceVisitor {
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes" })
 	private void indexServices(HashMap<String, String> services) {
 
 		try {
 
+			
 			indexer.enterServices(path.toString());
 			Iterator it = services.keySet().iterator();
 
@@ -150,6 +154,14 @@ implements IResourceVisitor {
 
 				String id = (String) it.next();
 				String phpClass = services.get(id);				
+				
+				if(phpClass.equals("synthetic")) {
+					
+					if (synthetic.containsKey(id)) {
+						phpClass = (String) synthetic.get(id);								
+					} else phpClass = "";
+				}
+				
 				indexer.addService(id, phpClass, path.toString(), timestamp);
 
 			}

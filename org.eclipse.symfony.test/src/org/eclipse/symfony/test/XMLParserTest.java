@@ -82,7 +82,7 @@ public class XMLParserTest extends TestCase {
 			
 			HashMap<String, String>services = parser.getServices();
 			
-			assertTrue(services.size() == 3);
+			assertTrue(services.size() == 4);
 			
 			String tplAnnotation = "view.template_annotation";
 			String tplSomething = "view.template_something";
@@ -99,6 +99,10 @@ public class XMLParserTest extends TestCase {
 
 			assertTrue(services.containsKey(serviceAlias));
 			assertEquals(listenerClass, services.get(serviceAlias));
+			
+			
+			assertTrue(services.containsKey("request"));
+			assertEquals("synthetic", services.get("request"));
 			
 			
 			

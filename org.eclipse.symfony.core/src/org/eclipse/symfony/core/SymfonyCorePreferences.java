@@ -2,6 +2,8 @@ package org.eclipse.symfony.core;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.compiler.problem.ProblemSeverity;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 /**
  * Utility class to access the plugins preferences.
@@ -14,6 +16,8 @@ public class SymfonyCorePreferences {
 
 	
 	public static final String SCHEMA_VERSION = "schema_version";
+	
+	private static JSONObject synthetic = null;
 
 	/**
 	 * Get the severity level for annotation problems.
@@ -45,6 +49,40 @@ public class SymfonyCorePreferences {
 		}
 		
 		return ProblemSeverity.IGNORE;
+		
+	}
+	
+	
+	public static JSONObject getSyntheticServices() {
+		
+		try {
+
+			if (synthetic != null)
+				return synthetic;
+			
+			//TODO: store in preferences and build a preference page for synthetic services
+			// where users can change the default implementations
+			
+//			String stored = Platform.getPreferencesService().getString("org.eclipse.symfony.ui", 
+//					SymfonyCoreConstants.SYNTHETIC_SERVICES, "", null);
+			
+			String stored = "{\"request\" : \"Symfony\\Component\\HttpFoundation\\Request\"}";
+			
+			if (stored == null || stored.length() == 0)
+				return new JSONObject();
+			
+			JSONParser parser = new JSONParser();			
+			JSONObject prefs = (JSONObject) parser.parse(stored);
+
+			synthetic = prefs;
+			return synthetic;
+			
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}			
+		
+		return new JSONObject();
 		
 	}
 }

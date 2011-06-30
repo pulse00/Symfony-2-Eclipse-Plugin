@@ -60,6 +60,9 @@ public class XMLConfigParser implements IConfigParser {
 		// get aliased services
 		parseAliases();
 		
+		// parse synthetic services
+		parseSynthetic();
+
 		// parse routes
 		parseRoutes();
 
@@ -68,41 +71,41 @@ public class XMLConfigParser implements IConfigParser {
 	private void parseRoutes() {
 
 		try {
-			
+
 			String servicePath = "/routes/route";
 			NodeList routeNodes = getNodes(servicePath);
-			
+
 			for (int i = 0; i < routeNodes.getLength(); i++) {
-			
+
 				Node node = routeNodes.item(i);				
 				NamedNodeMap atts = node.getAttributes();
-				
+
 				String name = null;
 				String pattern = null;
-				
+
 				for (int j = 0; j < atts.getLength(); j++) {
-					
+
 					Attr attr = (Attr) atts.item(j);
-					
+
 					String key = attr.getName();
 					if (key.equals("id"))
 						name = attr.getValue();
 					else if (key.equals("pattern"))
 						pattern = attr.getValue();
-					
+
 				}
-				
+
 				XPathExpression expr = xPath.compile("default[@key='_controller']");
 				Object _default = expr.evaluate(node, XPathConstants.NODESET);
 				NodeList defaults = (NodeList) _default;
-				
+
 				if (defaults.getLength() == 1) {
 					Node controllerNode = defaults.item(0);			
 					routes.push(new Route(name, pattern, controllerNode.getTextContent()));					
 				}
-				
+
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -127,9 +130,9 @@ public class XMLConfigParser implements IConfigParser {
 			Node node = nodes.item(i);
 			NamedNodeMap atts = node.getAttributes();			
 			for (int j = 0; j < atts.getLength(); j++) {
-				
+
 				Attr attr = (Attr) atts.item(j);	
-				
+
 				if (attr != null && attr.getName() != null && attr.getName().equals("key")) {
 					parameters.put(attr.getValue(), node.getTextContent());
 					break;					
@@ -156,11 +159,7 @@ public class XMLConfigParser implements IConfigParser {
 			//TODO: Check the services visibility and if it's abstract
 			String id = service.getAttribute("id");
 			String phpClass = service.getAttribute("class");
-			
-			
-			//TODO: How shall we handle synthetic services?
-			// As they are injected during runtime, it's pretty unpossible
-			// to parse their types from the php sources...
+
 			if (phpClass != null && id != null) {
 
 				if (phpClass.startsWith("%") && phpClass.endsWith("%")) {
@@ -207,12 +206,31 @@ public class XMLConfigParser implements IConfigParser {
 					String aliasID = (String) it.next();						
 					String phpClass = (String) services.get(aliasID);
 
-					if (alias.equals(aliasID)) {						
+					if (alias.equals(aliasID)) {
 						services.put(id, phpClass);
 					}
 				}
 			}
 		}
+	}
+
+	private void parseSynthetic() throws Exception {
+
+		String servicePath = "/container/services/service[@synthetic]";
+		NodeList serviceNodes = getNodes(servicePath);
+
+		for (int i = 0; i < serviceNodes.getLength(); i++) {
+
+			Element service = (Element) serviceNodes.item(i);
+
+			//TODO: Check the services visibility and if it's abstract
+			String id = service.getAttribute("id");
+			String isSynthetic = service.getAttribute("synthetic");
+
+			if (isSynthetic != null && id != null) {				
+				services.put(id, "synthetic");
+			} 		
+		}		
 	}
 
 	/**
@@ -255,14 +273,14 @@ public class XMLConfigParser implements IConfigParser {
 	public HashMap<String, String> getParameters() {
 		return parameters;
 	}
-	
+
 	public boolean hasRoutes() {
-		
+
 		return routes.size() > 0;
 	}
-	
+
 	public Stack<Route> getRoutes() {
-		
+
 		return routes;
 	}
 

@@ -21,5 +21,6 @@
         <service id="view.some_alias" alias="view.template_annotation">
         </service>        
         
+        <service id="request" scope="request" synthetic="true" />
     </services>
 </container>

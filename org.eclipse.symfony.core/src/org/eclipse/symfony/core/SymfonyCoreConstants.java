@@ -2,6 +2,7 @@ package org.eclipse.symfony.core;
 
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.json.simple.JSONObject;
 
 
 /**
@@ -47,16 +48,27 @@ public class SymfonyCoreConstants {
 	public static final String CONTROLLER_NS		="Symfony\\Bundle\\FrameworkBundle\\Controller";
 	
 	// core classes
-	public static final String BUNDLE_FQCN 			= "Symfony\\Component\\HttpKernel\\Bundle\\Bundle"; 
+	public static final String BUNDLE_FQCN 			= "Symfony\\Component\\HttpKernel\\Bundle\\Bundle";
+
+
+	public static final String SYNTHETIC_SERVICES = "synthetic_services"; 
 
 
 
 	
 
+	@SuppressWarnings("unchecked")
 	public static void initializeDefaultValues() {
 
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(SymfonyCorePlugin.ID);
 		node.put(ANNOTATION_PROBLEM_SEVERITY, ANNOTATION_WARNING);
+		
+		JSONObject prefs = new JSONObject();
+		prefs.put("request", "Symfony\\Component\\HttpFoundation\\Request");
+		
+		node.put(SYNTHETIC_SERVICES, prefs.toString());
+		
+		System.err.println("INITIALIZE PREFS");
 		
 	}	
 }

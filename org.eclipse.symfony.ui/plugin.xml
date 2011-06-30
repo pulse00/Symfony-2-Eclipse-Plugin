@@ -10,7 +10,7 @@
             objectClass="org.eclipse.core.resources.IProject">
          <menu
                id="org.eclipse.symfony.ui.menu1"
-               label="Symfony"
+               label="%menu.label"
                path="additions">
             <separator
                   name="project">
@@ -20,7 +20,7 @@
                class="org.eclipse.symfony.ui.popup.actions.AddSymfonyNature"
                enablesFor="1"
                id="org.eclipse.symfony.ui.newAction"
-               label="Add/Remove Symfony Nature"
+               label="%action.label"
                menubarPath="org.eclipse.symfony.ui.menu1/project">
          </action>
       </objectContribution>
@@ -32,7 +32,7 @@
                class="org.eclipse.symfony.ui.popup.actions.DebugModelAction"
                enablesFor="1"
                id="org.eclipse.symfony.ui.debugmodelaction"
-               label="Debug symfony model"
+               label="%action.label.0"
                menubarPath="org.eclipse.symfony.ui.menu1/project">
          </action>
       </objectContribution>
@@ -43,7 +43,7 @@
     <page
           class="org.eclipse.symfony.ui.preferences.SymfonyPreferencePage"
           id="org.eclipse.symfony.ui.preferences.SymfonyPreferencePage"
-          name="Symfony">
+          name="%page.name">
     </page>
  </extension>
  
@@ -51,7 +51,7 @@
        point="org.eclipse.ui.views">
     <category
           id="org.eclipse.symfony.ui"
-          name="Symfony">
+          name="%category.name">
     </category>
  </extension>
  
@@ -81,6 +81,19 @@
           class="org.eclipse.symfony.ui.editor.highlighting.AnnotationHighlighting"
           target="org.eclipse.php.core.phpsource">
         </highlighting> 
+ </extension>
+ <extension
+       point="org.eclipse.ui.propertyPages">
+    <page
+          class="org.eclipse.symfony.ui.properties.ServicesPropertyPage"
+          id="org.eclipse.symfony.ui.servicePreferencePage"
+          name="%servicesPreferencePage">
+       <enabledWhen>
+          <adapt
+                type="org.eclipse.core.resources.IProject">
+          </adapt>
+       </enabledWhen>
+    </page>
  </extension>
  
 </plugin>

@@ -15,6 +15,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	 */
 	public void initializeDefaultPreferences() {
 		
+		
+		System.err.println("initializeer");
 		SymfonyCoreConstants.initializeDefaultValues();
 		
 	}
