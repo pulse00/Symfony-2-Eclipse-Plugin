@@ -1,62 +1,66 @@
 package org.eclipse.symfony.ui.preferences;
 
-import org.eclipse.jface.preference.ComboFieldEditor;
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.symfony.core.SymfonyCoreConstants;
-import org.eclipse.symfony.ui.SymfonyUiPlugin;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.symfony.ui.Messages;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+
 /**
- * This class represents a preference page that
- * is contributed to the Preferences dialog. By 
- * subclassing <samp>FieldEditorPreferencePage</samp>, we
- * can use the field support built into JFace that allows
- * us to create a page that is small and knows how to 
- * save, restore and apply itself.
- * <p>
- * This page is used to modify preferences only. They
- * are stored in the preference store that belongs to
- * the main plug-in class. That way, preferences can
- * be accessed directly via the preference store.
+ * 
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
  */
+public class SymfonyPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-public class SymfonyPreferencePage
-	extends FieldEditorPreferencePage
-	implements IWorkbenchPreferencePage {
-
+	
+	
 	public SymfonyPreferencePage() {
-		super(GRID);
+		super();
 		
-		setPreferenceStore(SymfonyUiPlugin.getDefault().getPreferenceStore());
-		setDescription("Symfony2 preferences");
+		setPreferenceStore(DLTKUIPlugin.getDefault().getPreferenceStore());
+		setDescription(Messages.SymfonyPreferencePage_0);
 	}
 	
-	/**
-	 * Creates the field editors. Field editors are abstractions of
-	 * the common GUI blocks needed to manipulate various types
-	 * of preferences. Each field editor knows how to save and
-	 * restore itself.
-	 */
-	public void createFieldEditors() {
-		
-		
-		String[][] options = new String[][] 
-		{ 
-				{ SymfonyCoreConstants.ANNOTATION_ERROR, SymfonyCoreConstants.ANNOTATION_ERROR }, 
-				{ SymfonyCoreConstants.ANNOTATION_WARNING, SymfonyCoreConstants.ANNOTATION_WARNING },
-				{ SymfonyCoreConstants.ANNOTATION_IGNORE, SymfonyCoreConstants.ANNOTATION_IGNORE },				
-		};
-		
-		addField(new ComboFieldEditor(SymfonyCoreConstants.ANNOTATION_PROBLEM_SEVERITY, 
-				"Annotation Problems", options, getFieldEditorParent()));
-	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
 		
+	}
+	
+	@Override
+	protected Control createContents(Composite parent) {
+		initializeDialogUnits(parent);
+		
+		Composite result = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+		layout.marginWidth = 0;
+		layout.verticalSpacing = convertVerticalDLUsToPixels(10);
+		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+		result.setLayout(layout);
+
+		Group doubleClickGroup = new Group(result, SWT.NONE);
+		doubleClickGroup.setLayout(new GridLayout());
+		doubleClickGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		doubleClickGroup
+				.setText("foobar"); //$NON-NLS-1$
+
+		Dialog.applyDialogFont(result);
+		return result;		
 	}
 	
 }

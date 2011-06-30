@@ -45,6 +45,12 @@
           id="org.eclipse.symfony.ui.preferences.SymfonyPreferencePage"
           name="%page.name">
     </page>
+    <page
+          category="org.eclipse.symfony.ui.preferences.SymfonyPreferencePage"
+          class="org.eclipse.symfony.ui.preferences.ServicesPreferencePage"
+          id="org.eclipse.symfony.ui.page1"
+          name="%Services">
+    </page>
  </extension>
  
  <extension
@@ -85,7 +91,7 @@
  <extension
        point="org.eclipse.ui.propertyPages">
     <page
-          class="org.eclipse.symfony.ui.properties.ServicesPropertyPage"
+          class="org.eclipse.symfony.ui.preferences.ServicesPreferencePage"
           id="org.eclipse.symfony.ui.servicePreferencePage"
           name="%servicesPreferencePage">
        <enabledWhen>
@@ -93,6 +99,10 @@
                 type="org.eclipse.core.resources.IProject">
           </adapt>
        </enabledWhen>
+       <filter
+             name="nature"
+             value="org.eclipse.symfony.core.symfonyNature">
+       </filter>
     </page>
  </extension>
  

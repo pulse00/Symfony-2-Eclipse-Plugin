@@ -1,5 +1,8 @@
 package org.eclipse.symfony.ui;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.symfony.ui.listener.OpenDocumentListener;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -18,6 +21,9 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 	 * The constructor
 	 */
 	public SymfonyUiPlugin() {
+		
+		
+		
 	}
 
 	/*
@@ -27,6 +33,11 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		
+		
+		//TODO: implement OpenDocumentListener for file links in 
+		// symfony exception pages
+		Display.getDefault().addListener(SWT.OpenDocument, new OpenDocumentListener());
 	}
 
 	/*
