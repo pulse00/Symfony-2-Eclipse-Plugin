@@ -1,4 +1,4 @@
-package org.eclipse.symfony.ui;
+package org.eclipse.symfony.ui.editor.hover;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IRegion;
@@ -22,7 +22,7 @@ public class ServiceTextHover implements IPHPTextHover {
 			@Override
 			public String getDecoratedMessage(String msg) {
 
-				return "decorated " + msg + " message";
+				return "decorated " + msg + " message"; //$NON-NLS-1$ //$NON-NLS-2$
 
 			}
 		};
@@ -45,7 +45,7 @@ public class ServiceTextHover implements IPHPTextHover {
 	@Override
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		
-		System.err.println("get hover info " + hoverRegion.getOffset() + " " + hoverRegion.getLength());
+		System.err.println("get hover info " + hoverRegion.getOffset() + " " + hoverRegion.getLength()); //$NON-NLS-1$ //$NON-NLS-2$
 		return null;
 
 	}
@@ -55,7 +55,7 @@ public class ServiceTextHover implements IPHPTextHover {
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
 
 		
-		System.err.println("get hover region");
+		System.err.println("get hover region"); //$NON-NLS-1$
 		return null;
 	}
 }
