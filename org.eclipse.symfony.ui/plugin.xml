@@ -105,5 +105,11 @@
        </filter>
     </page>
  </extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.eclipse.symfony.ui.preferences.SymfonyPreferenceInitializer">
+    </initializer>
+ </extension>
  
 </plugin>

@@ -60,6 +60,8 @@ public class SymfonyCoreConstants {
 	@SuppressWarnings("unchecked")
 	public static void initializeDefaultValues() {
 
+		
+		
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(SymfonyCorePlugin.ID);
 		node.put(ANNOTATION_PROBLEM_SEVERITY, ANNOTATION_WARNING);
 		

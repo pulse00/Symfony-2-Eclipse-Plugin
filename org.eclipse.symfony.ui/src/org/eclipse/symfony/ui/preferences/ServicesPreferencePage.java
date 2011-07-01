@@ -3,6 +3,7 @@ package org.eclipse.symfony.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -18,7 +19,7 @@ public class ServicesPreferencePage extends PropertyAndPreferencePage {
 	public static final String PROP_ID = "org.eclipse.symfony.ui.propertyPages.ServicesPreferencePage"; //$NON-NLS-1$
 
 	private SymfonyServiceConfigurationBlock fConfigurationBlock;
-
+	
 	public ServicesPreferencePage() {
 
 		setPreferenceStore(SymfonyUiPlugin.getDefault().getPreferenceStore());
@@ -102,9 +103,8 @@ public class ServicesPreferencePage extends PropertyAndPreferencePage {
 		
 		
 		if (fConfigurationBlock != null) {
-			System.err.println("perform apply");
 			fConfigurationBlock.performApply();
-		} else System.err.println("null");
+		}
 	}
 
 	/*

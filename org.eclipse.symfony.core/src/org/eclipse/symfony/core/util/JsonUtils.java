@@ -1,5 +1,6 @@
 package org.eclipse.symfony.core.util;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -30,6 +31,20 @@ public class JsonUtils {
 		
 		return header.toString();		
 		
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static String createDefaultSyntheticServices() {
+		
+		
+		JSONArray data = new JSONArray();
+		
+		JSONObject request = new JSONObject();
+		request.put("name", "request");
+		request.put("class", "\\Symfony\\Request");
+		data.add(request);
+		return data.toString();		
 		
 	}
 

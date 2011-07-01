@@ -28,7 +28,9 @@ Export-Package: org.antlr.runtime,
  org.eclipse.symfony.core.model.listener,
  org.eclipse.symfony.core.parser.antlr,
  org.eclipse.symfony.core.parser.antlr.error,
- org.eclipse.symfony.core.util
+ org.eclipse.symfony.core.util,
+ org.json.simple,
+ org.json.simple.parser
 Bundle-ClassPath: .,
  lib/antlr-runtime-3.3.jar,
  lib/json_simple-1.1.jar,
