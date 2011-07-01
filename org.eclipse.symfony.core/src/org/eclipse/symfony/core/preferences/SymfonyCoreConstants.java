@@ -1,7 +1,10 @@
-package org.eclipse.symfony.core;
+package org.eclipse.symfony.core.preferences;
+
 
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.symfony.core.SymfonyCorePlugin;
+import org.eclipse.symfony.core.preferences.CorePreferenceConstants.Keys;
 import org.json.simple.JSONObject;
 
 
@@ -60,17 +63,13 @@ public class SymfonyCoreConstants {
 	@SuppressWarnings("unchecked")
 	public static void initializeDefaultValues() {
 
-		
-		
+		//IEclipsePreferences node = new DefaultScope().getNode(PHPCorePlugin.ID);
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(SymfonyCorePlugin.ID);
 		node.put(ANNOTATION_PROBLEM_SEVERITY, ANNOTATION_WARNING);
 		
 		JSONObject prefs = new JSONObject();
 		prefs.put("request", "Symfony\\Component\\HttpFoundation\\Request");
-		
-		node.put(SYNTHETIC_SERVICES, prefs.toString());
-		
-		System.err.println("INITIALIZE PREFS");
+		node.put(Keys.SYNTHETIC_SERVICES, prefs.toString());
 		
 	}	
 }

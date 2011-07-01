@@ -1,4 +1,4 @@
-package org.eclipse.symfony.core;
+package org.eclipse.symfony.core.preferences;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.compiler.problem.ProblemSeverity;
