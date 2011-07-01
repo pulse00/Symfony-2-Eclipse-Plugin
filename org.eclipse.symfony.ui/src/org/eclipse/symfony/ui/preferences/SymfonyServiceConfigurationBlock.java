@@ -2,6 +2,8 @@ package org.eclipse.symfony.ui.preferences;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -24,6 +26,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.symfony.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.symfony.ui.Messages;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  * 
@@ -138,13 +143,35 @@ SymfonyCoreOptionsConfigurationBlock {
 	}	
 
 
+	@SuppressWarnings("rawtypes")
 	private List<SyntheticService> unpackServices() {
 
 		String currTags = getValue(SYNTHETIC_SERVICES);
 		
-		System.err.println(currTags);
+		List<SymfonyServiceConfigurationBlock.SyntheticService> list = new ArrayList<SymfonyServiceConfigurationBlock.SyntheticService>();
 		
-		return new ArrayList<SymfonyServiceConfigurationBlock.SyntheticService>();
+		JSONParser parser = new JSONParser();
+		JSONObject data;
+		try {
+			data = (JSONObject) parser.parse(currTags);
+			Iterator it = data.keySet().iterator();
+			
+			while(it.hasNext()) {
+
+				String id = (String) it.next();
+				String value = (String) data.get(id);
+				list.add(new SyntheticService(id, value));
+				
+			}
+			
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		
+		
+		
+		return list;
 	}
 
 	// This will create the columns for the table

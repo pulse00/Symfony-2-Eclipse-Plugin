@@ -19,6 +19,7 @@ import org.eclipse.symfony.core.preferences.SymfonyCorePreferences;
 import org.eclipse.symfony.index.SymfonyIndexer;
 import org.eclipse.symfony.index.dao.Route;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.yaml.snakeyaml.scanner.ScannerException;
 
 
@@ -152,9 +153,12 @@ implements IResourceVisitor {
 
 			String syntheticServices = ProjectOptions.getSyntheticServices(file.getProject());
 			
-			System.err.println("#######");
+			JSONParser parser = new JSONParser();
+			JSONObject defaults = (JSONObject) parser.parse(syntheticServices);
 			
-			System.err.println(syntheticServices);;
+//			System.err.println("#######");
+//			
+//			System.err.println(syntheticServices);;
 			
 			
 			indexer.enterServices(path.toString());
@@ -172,8 +176,16 @@ implements IResourceVisitor {
 					
 					if (synthetic.containsKey(id)) {
 
+						String pc = (String) defaults.get(id);
+						
+						if (pc != null ) {
+							phpClass = pc;
+							System.err.println("found it");
+						} else {
+							phpClass = (String) synthetic.get(id);	
+						}
 
-						phpClass = (String) synthetic.get(id);
+						
 					} else phpClass = "";
 				}
 				

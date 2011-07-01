@@ -54,22 +54,34 @@ public class SymfonyCoreConstants {
 	public static final String BUNDLE_FQCN 			= "Symfony\\Component\\HttpKernel\\Bundle\\Bundle";
 
 
-	public static final String SYNTHETIC_SERVICES = "synthetic_services"; 
+	 
 
 
 
 	
-
-	@SuppressWarnings("unchecked")
-	public static void initializeDefaultValues() {
-
-		//IEclipsePreferences node = new DefaultScope().getNode(PHPCorePlugin.ID);
-		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(SymfonyCorePlugin.ID);
-		node.put(ANNOTATION_PROBLEM_SEVERITY, ANNOTATION_WARNING);
-		
-		JSONObject prefs = new JSONObject();
-		prefs.put("request", "Symfony\\Component\\HttpFoundation\\Request");
-		node.put(Keys.SYNTHETIC_SERVICES, prefs.toString());
-		
-	}	
+//
+//	@SuppressWarnings("unchecked")
+//	public static void initializeDefaultValues() {
+//
+//		//IEclipsePreferences node = new DefaultScope().getNode(PHPCorePlugin.ID);
+//		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(SymfonyCorePlugin.ID);
+//		node.put(ANNOTATION_PROBLEM_SEVERITY, ANNOTATION_WARNING);
+//		
+//		JSONObject prefs = new JSONObject();
+//		prefs.put("request", "Symfony\\Component\\HttpFoundation\\Request");
+//		
+//		System.err.println("init default " + prefs.toString());		
+//		node.put(Keys.SYNTHETIC_SERVICES, prefs.toString());
+//		
+//		String dathing = node.get(Keys.SYNTHETIC_SERVICES, "none");
+//		
+//		System.err.println("dathing " + dathing);
+//		
+//		
+//		String result = ProjectOptions.getSyntheticServices(null);
+//		
+//		System.err.println("loaded " + result);
+//		
+//		
+//	}	
 }
