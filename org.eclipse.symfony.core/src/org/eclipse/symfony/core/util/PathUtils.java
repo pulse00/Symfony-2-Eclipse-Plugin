@@ -10,8 +10,8 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
-import org.eclipse.symfony.core.SymfonyCoreConstants;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
+import org.eclipse.symfony.core.preferences.SymfonyCoreConstants;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
 

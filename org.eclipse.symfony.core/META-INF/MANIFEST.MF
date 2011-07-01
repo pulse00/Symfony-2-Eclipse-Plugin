@@ -28,6 +28,7 @@ Export-Package: org.antlr.runtime,
  org.eclipse.symfony.core.model.listener,
  org.eclipse.symfony.core.parser.antlr,
  org.eclipse.symfony.core.parser.antlr.error,
+ org.eclipse.symfony.core.preferences,
  org.eclipse.symfony.core.util,
  org.json.simple,
  org.json.simple.parser

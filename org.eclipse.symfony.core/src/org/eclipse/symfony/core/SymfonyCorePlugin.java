@@ -19,6 +19,7 @@ public class SymfonyCorePlugin extends Plugin {
 		super.start(bundleContext);
 
 		plugin = this;
+		System.err.println("startup symfony");
 	}
 
 	/*

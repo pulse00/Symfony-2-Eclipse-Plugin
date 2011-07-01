@@ -6,9 +6,9 @@ import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.dltk.core.builder.IBuildContext;
-import org.eclipse.symfony.core.SymfonyCorePreferences;
 import org.eclipse.symfony.core.parser.antlr.AnnotationLexer;
 import org.eclipse.symfony.core.parser.antlr.AnnotationParser;
+import org.eclipse.symfony.core.preferences.SymfonyCorePreferences;
 
 /**
  *

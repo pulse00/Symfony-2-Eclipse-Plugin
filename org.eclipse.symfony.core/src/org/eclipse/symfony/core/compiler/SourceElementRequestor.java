@@ -9,9 +9,9 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.php.core.compiler.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
-import org.eclipse.symfony.core.SymfonyCoreConstants;
 import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
+import org.eclipse.symfony.core.preferences.SymfonyCoreConstants;
 import org.eclipse.symfony.core.util.PathUtils;
 
 

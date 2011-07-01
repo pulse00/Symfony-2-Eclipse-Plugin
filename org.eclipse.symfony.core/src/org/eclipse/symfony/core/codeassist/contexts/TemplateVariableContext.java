@@ -7,9 +7,9 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.php.internal.core.codeassist.contexts.GlobalStatementContext;
 import org.eclipse.php.internal.core.util.text.TextSequence;
-import org.eclipse.symfony.core.SymfonyCoreConstants;
 import org.eclipse.symfony.core.index.SymfonyElementResolver.TemplateField;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
+import org.eclipse.symfony.core.preferences.SymfonyCoreConstants;
 import org.eclipse.symfony.core.util.ModelUtils;
 import org.eclipse.symfony.core.util.PathUtils;
 

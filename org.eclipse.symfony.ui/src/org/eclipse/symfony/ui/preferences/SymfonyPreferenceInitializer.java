@@ -10,7 +10,6 @@ public class SymfonyPreferenceInitializer extends AbstractPreferenceInitializer 
 	@Override
 	public void initializeDefaultPreferences() {
 
-		System.err.println("INITIALIZE");
 		PreferenceConstants.initializeDefaultValues();
 
 	}

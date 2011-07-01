@@ -9,10 +9,13 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.symfony.core.SymfonyCorePreferences;
+import org.eclipse.symfony.core.model.Project;
 import org.eclipse.symfony.core.parser.XMLConfigParser;
 import org.eclipse.symfony.core.parser.YamlConfigParser;
 import org.eclipse.symfony.core.parser.YamlRoutingParser;
+import org.eclipse.symfony.core.preferences.CorePreferencesSupport;
+import org.eclipse.symfony.core.preferences.ProjectOptions;
+import org.eclipse.symfony.core.preferences.SymfonyCorePreferences;
 import org.eclipse.symfony.index.SymfonyIndexer;
 import org.eclipse.symfony.index.dao.Route;
 import org.json.simple.JSONObject;
@@ -146,6 +149,13 @@ implements IResourceVisitor {
 
 		try {
 
+
+			String syntheticServices = ProjectOptions.getSyntheticServices(file.getProject());
+			
+			System.err.println("#######");
+			
+			System.err.println(syntheticServices);;
+			
 			
 			indexer.enterServices(path.toString());
 			Iterator it = services.keySet().iterator();
@@ -157,8 +167,13 @@ implements IResourceVisitor {
 				
 				if(phpClass.equals("synthetic")) {
 					
+					
+					
+					
 					if (synthetic.containsKey(id)) {
-						phpClass = (String) synthetic.get(id);								
+
+
+						phpClass = (String) synthetic.get(id);
 					} else phpClass = "";
 				}
 				
