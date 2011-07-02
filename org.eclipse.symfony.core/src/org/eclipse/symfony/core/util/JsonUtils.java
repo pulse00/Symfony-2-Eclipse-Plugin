@@ -1,5 +1,6 @@
 package org.eclipse.symfony.core.util;
 
+import org.eclipse.symfony.core.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -56,7 +57,7 @@ public class JsonUtils {
 			String type = (String) json.get("type");
 			return type;
 		} catch (ParseException e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}		
 		
 		return null;
@@ -70,7 +71,7 @@ public class JsonUtils {
 			return (JSONObject) header.get("data");
 		} catch (ParseException e) {
 
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 		return null;
 	}

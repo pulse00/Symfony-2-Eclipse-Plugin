@@ -27,7 +27,6 @@ public class PreferencesSupport {
 	 */
 	public PreferencesSupport(String nodeQualifier, IEclipsePreferences preferenceStore) {
 
-		System.err.println("create support with " + nodeQualifier);
 		this.nodeQualifier = nodeQualifier;
 		this.preferenceStore = preferenceStore;
 		projectToScope = new HashMap();

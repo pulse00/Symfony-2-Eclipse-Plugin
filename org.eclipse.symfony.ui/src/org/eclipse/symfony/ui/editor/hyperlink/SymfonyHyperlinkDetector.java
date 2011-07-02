@@ -102,7 +102,7 @@ public class SymfonyHyperlinkDetector extends PHPHyperlinkDetector {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 		
 		return null;

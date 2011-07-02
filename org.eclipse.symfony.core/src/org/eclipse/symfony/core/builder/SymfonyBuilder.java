@@ -7,6 +7,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.symfony.core.Logger;
 import org.eclipse.symfony.core.SymfonyCorePlugin;
 import org.eclipse.symfony.core.model.ModelManager;
 
@@ -52,7 +53,7 @@ public class SymfonyBuilder extends IncrementalProjectBuilder {
 			
 			getProject().accept(new ResourceVisitor());
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 	}
 	

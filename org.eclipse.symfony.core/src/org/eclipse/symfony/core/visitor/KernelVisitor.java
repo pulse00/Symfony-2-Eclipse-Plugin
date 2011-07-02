@@ -5,6 +5,7 @@ import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.symfony.core.Logger;
 import org.eclipse.symfony.core.model.ModelManager;
 
 /**
@@ -54,8 +55,7 @@ public class KernelVisitor extends PHPASTVisitor {
 					FullyQualifiedReference reference = (FullyQualifiedReference) creation.getClassName();
 					ModelManager.getInstance().activateBundle(reference.getFullyQualifiedName());									
 				} catch (Exception e) {
-					e.printStackTrace();
-				}
+					Logger.logException(e);				}
 			}
 		}
 		return true;

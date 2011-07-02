@@ -2,6 +2,7 @@ package org.eclipse.symfony.core.preferences;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.compiler.problem.ProblemSeverity;
+import org.eclipse.symfony.core.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -79,7 +80,7 @@ public class SymfonyCorePreferences {
 			
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			Logger.logException(e);
 		}			
 		
 		return new JSONObject();

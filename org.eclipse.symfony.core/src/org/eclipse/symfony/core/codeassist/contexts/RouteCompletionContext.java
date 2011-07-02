@@ -4,6 +4,7 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.codeassist.contexts.QuotesContext;
 import org.eclipse.php.internal.core.util.text.TextSequence;
+import org.eclipse.symfony.core.Logger;
 
 
 /**
@@ -43,8 +44,7 @@ public class RouteCompletionContext extends QuotesContext {
 					return true;
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.logException(e);
 			}
 		}
 		

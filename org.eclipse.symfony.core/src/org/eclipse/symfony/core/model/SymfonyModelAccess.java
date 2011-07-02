@@ -31,6 +31,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.symfony.core.Logger;
 import org.eclipse.symfony.core.SymfonyLanguageToolkit;
 import org.eclipse.symfony.core.index.SymfonyElementResolver.TemplateField;
 import org.eclipse.symfony.core.util.PathUtils;
@@ -60,7 +61,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		try {
 			index = SymfonyIndexer.getInstance();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 	}
 	
@@ -99,7 +100,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		try {
 			module.traverse(visitor);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 
 		if (visitor.className == null || visitor.namespace == null)
@@ -404,7 +405,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 			}			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 		
 		return new IModelElement[] {};

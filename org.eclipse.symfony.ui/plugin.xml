@@ -24,18 +24,6 @@
                menubarPath="org.eclipse.symfony.ui.menu1/project">
          </action>
       </objectContribution>
-      <objectContribution
-            adaptable="true"
-            id="org.eclipse.symfony.ui.debugModel"
-            objectClass="org.eclipse.core.resources.IProject">
-         <action
-               class="org.eclipse.symfony.ui.popup.actions.DebugModelAction"
-               enablesFor="1"
-               id="org.eclipse.symfony.ui.debugmodelaction"
-               label="%action.label.0"
-               menubarPath="org.eclipse.symfony.ui.menu1/project">
-         </action>
-      </objectContribution>
    </extension>
 
  <extension

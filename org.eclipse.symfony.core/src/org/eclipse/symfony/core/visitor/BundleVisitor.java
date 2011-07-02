@@ -53,7 +53,6 @@ public class BundleVisitor extends PHPASTVisitor {
 				
 			} catch (InvalidBundleException e) {
 				
-//				System.err.println(e.getMessage());
 			}
 		} 
 		

@@ -11,6 +11,7 @@ import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.symfony.core.Logger;
 import org.eclipse.symfony.core.parser.antlr.AnnotationCommonTree;
 import org.eclipse.symfony.core.parser.antlr.AnnotationCommonTreeAdaptor;
 import org.eclipse.symfony.core.parser.antlr.AnnotationLexer;
@@ -101,7 +102,7 @@ public class AnnotationHighlighting extends AbstractSemanticHighlighting {
 				}
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				Logger.logException(e);
 			}
 
 			return true;

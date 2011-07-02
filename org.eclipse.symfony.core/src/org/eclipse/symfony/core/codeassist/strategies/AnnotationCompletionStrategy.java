@@ -68,7 +68,6 @@ public class AnnotationCompletionStrategy extends PHPDocTagStrategy {
 		// which represent them
 		//String suffix = getSuffix(context);
 		
-//		System.err.println("prev: " + context.getPrefix());
 		
 		String suffix = "()";
 		

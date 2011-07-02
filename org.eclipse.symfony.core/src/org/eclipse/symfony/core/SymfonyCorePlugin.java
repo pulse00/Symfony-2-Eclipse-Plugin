@@ -18,8 +18,6 @@ public class SymfonyCorePlugin extends Plugin {
 		super.start(bundleContext);
 
 		plugin = this;
-		System.err.println("aha");
-		Logger.debugMSG("startup sf");
 
 	}
 

@@ -8,7 +8,6 @@ public class OpenDocumentListener implements Listener {
 	@Override
 	public void handleEvent(Event event) {
 
-		System.err.println("open document " + event.text);
 
 	}
 

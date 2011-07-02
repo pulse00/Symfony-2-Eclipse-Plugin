@@ -75,7 +75,6 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
 		
 		// MethodContext context = (MethodContext) goal.getContext();		
 		// PHPClassType classType = (PHPClassType) context.getInstanceType();
-		// System.err.println(classType.subtypeOf(ModelManager.getInstance().getControllerType()));
 				
 		
 		if (goalClass == ExpressionTypeGoal.class) {

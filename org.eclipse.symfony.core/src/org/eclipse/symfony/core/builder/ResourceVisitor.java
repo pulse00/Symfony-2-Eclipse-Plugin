@@ -9,6 +9,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.symfony.core.Logger;
 import org.eclipse.symfony.core.model.Project;
 import org.eclipse.symfony.core.parser.XMLConfigParser;
 import org.eclipse.symfony.core.parser.YamlConfigParser;
@@ -71,7 +72,7 @@ implements IResourceVisitor {
 			}
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 
 		return true;
@@ -88,9 +89,9 @@ implements IResourceVisitor {
 			indexRoutes(parser.getRoutes());		
 			
 		} catch (ScannerException se) {
-			System.err.println(se.getMessage());
-		} catch (Exception e) {			
-			System.err.println(e.getMessage() + " " + e.getClass().toString());
+			Logger.logException(se);
+		} catch (Exception e) {		
+			Logger.logException(e);
 		}
 	}
 
@@ -117,7 +118,7 @@ implements IResourceVisitor {
 
 		} catch (Exception e1) {
 
-			System.err.println(e1.getMessage());
+			Logger.log(Logger.INFO, e1.getMessage());
 
 		}
 
@@ -141,7 +142,8 @@ implements IResourceVisitor {
 
 		} catch (Exception e) {
 
-			//System.err.println("xml error: " + e.getMessage());
+			Logger.log(Logger.INFO_DEBUG, e.getMessage());
+
 		}
 	}
 
@@ -156,9 +158,6 @@ implements IResourceVisitor {
 			JSONParser parser = new JSONParser();
 			JSONObject defaults = (JSONObject) parser.parse(syntheticServices);
 			
-//			System.err.println("#######");
-//			
-//			System.err.println(syntheticServices);;
 			
 			
 			indexer.enterServices(path.toString());
@@ -180,7 +179,6 @@ implements IResourceVisitor {
 						
 						if (pc != null ) {
 							phpClass = pc;
-							System.err.println("found it");
 						} else {
 							phpClass = (String) synthetic.get(id);	
 						}
@@ -196,7 +194,7 @@ implements IResourceVisitor {
 			indexer.exitServices();			
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 	}
 }

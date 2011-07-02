@@ -24,6 +24,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.symfony.core.Logger;
 import org.eclipse.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
 import org.eclipse.symfony.core.model.Annotation;
 import org.eclipse.symfony.core.parser.antlr.AnnotationCommonTree;
@@ -253,14 +254,12 @@ public class AnnotationVisitor extends PHPASTVisitor {
 
 				} catch (Exception e) {
 
-					e.printStackTrace();
+					Logger.logException(e);
 				}				
 			}
 
 		} catch (Exception e) {
-//			System.err.println(e.getMessage());
-//			e.printStackTrace();
-		}		
+			Logger.logException(e);		}		
 	}
 
 	

@@ -121,7 +121,7 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 						
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					Logger.logException(e);
 				}
 			}
 		}

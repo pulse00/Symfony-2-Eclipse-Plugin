@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.symfony.core.Logger;
 import org.eclipse.symfony.core.goals.ContainerAwareGoalEvaluatorFactory;
 import org.eclipse.symfony.core.model.listener.IModelChangedListener;
 import org.eclipse.symfony.core.model.listener.IModelClearListener;
@@ -45,8 +46,7 @@ public class ModelManager {
 		try {
 			index = SymfonyIndexer.getInstance();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 	}
 	
@@ -120,7 +120,7 @@ public class ModelManager {
 	
 	public void addService(Service service) {
 		
-//		System.err.println("+++ adding service " + service.getClassName());
+
 		for (Project project : projects) {
 			for (Bundle bundle : project.getBundles()) {
 				if (bundle.getBasePath().isPrefixOf(service.getFile().getFullPath())) {				
@@ -279,7 +279,6 @@ public class ModelManager {
 		Bundle bundle = getBundle(sourceModule);
 		
 		if (bundle == null) {
-			System.err.println("No matching bundle found for viewvariable fetching");
 			return null;
 		}
 		

@@ -2,7 +2,6 @@ package org.eclipse.symfony.ui.preferences;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,17 +17,16 @@ import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.symfony.core.Logger;
 import org.eclipse.symfony.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.symfony.ui.Messages;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  * 
@@ -69,8 +67,6 @@ SymfonyCoreOptionsConfigurationBlock {
 
 
 	private static final Key SYNTHETIC_SERVICES= getSymfonyCoreKey(Keys.SYNTHETIC_SERVICES);
-
-	private Button dummyButton; 
 
 	private TableViewer viewer;
 
@@ -166,7 +162,7 @@ SymfonyCoreOptionsConfigurationBlock {
 			
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 		
 		
@@ -212,18 +208,9 @@ SymfonyCoreOptionsConfigurationBlock {
 
 	}
 
-	private void setDummyValue(String value) {
-
-		System.err.println("set value");
-		setValue(SYNTHETIC_SERVICES, value);
-		validateSettings(SYNTHETIC_SERVICES, null, null);
-	}
-
-
 	public void setEnabled(boolean isEnabled) {
 
-		System.err.println("set enabled");
-		dummyButton.setEnabled(isEnabled);
+//		dummyButton.setEnabled(isEnabled);
 
 	}
 

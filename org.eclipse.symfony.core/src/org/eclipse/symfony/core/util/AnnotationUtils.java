@@ -7,6 +7,7 @@ import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
+import org.eclipse.symfony.core.Logger;
 import org.eclipse.symfony.core.parser.antlr.AnnotationCommonTree;
 import org.eclipse.symfony.core.parser.antlr.AnnotationCommonTreeAdaptor;
 import org.eclipse.symfony.core.parser.antlr.AnnotationLexer;
@@ -66,7 +67,7 @@ public class AnnotationUtils {
 			
 		} catch (RecognitionException e) {
 
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 		return route;
 	}

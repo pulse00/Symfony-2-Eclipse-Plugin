@@ -45,7 +45,6 @@ public class ServiceTextHover implements IPHPTextHover {
 	@Override
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		
-		System.err.println("get hover info " + hoverRegion.getOffset() + " " + hoverRegion.getLength()); //$NON-NLS-1$ //$NON-NLS-2$
 		return null;
 
 	}
@@ -54,8 +53,6 @@ public class ServiceTextHover implements IPHPTextHover {
 	@Override
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
 
-		
-		System.err.println("get hover region"); //$NON-NLS-1$
 		return null;
 	}
 }

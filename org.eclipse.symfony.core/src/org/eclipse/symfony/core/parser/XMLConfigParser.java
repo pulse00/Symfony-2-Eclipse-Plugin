@@ -11,6 +11,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
+import org.eclipse.symfony.core.Logger;
 import org.eclipse.symfony.index.dao.Route;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -107,7 +108,7 @@ public class XMLConfigParser implements IConfigParser {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 	}
 

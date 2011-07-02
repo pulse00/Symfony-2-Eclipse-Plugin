@@ -49,7 +49,6 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 		ISourceModule module = context.getSourceModule();
 		ViewPath viewPath = context.getViewPath();
 		
-		System.err.println(viewPath.toString());
 		String bundle = viewPath.getBundle();
 		String controller = viewPath.getController();
 		String template = viewPath.getTemplate();
