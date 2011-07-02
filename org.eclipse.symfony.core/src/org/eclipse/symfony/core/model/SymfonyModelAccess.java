@@ -32,6 +32,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.symfony.core.SymfonyLanguageToolkit;
 import org.eclipse.symfony.core.index.SymfonyElementResolver.TemplateField;
 import org.eclipse.symfony.core.log.Logger;
@@ -467,13 +468,30 @@ public class SymfonyModelAccess extends PhpModelAccess {
 			
 			@Override
 			public void handle(String id, String phpClass, String path) {
+				
+				
 				services.add(new Service(id, phpClass, path, null));				
 			}
 		});
+						
 		
-		
-		if (services.size() == 1)
-			return services.get(0);
+		if (services.size() == 1) {
+			
+			Service service = services.get(0);
+			String fqcn = service.getFullyQualifiedName();
+			
+			if (fqcn.startsWith("alias_")) {
+				
+				String alias = fqcn.substring(fqcn.indexOf("_")+1);
+				Service reference = SymfonyModelAccess.getDefault().findService(alias, service.getPath());
+				
+				if (reference != null)
+					return reference;
+				
+			}			
+			
+			return service;
+		}
 		
 		return null;
 	}

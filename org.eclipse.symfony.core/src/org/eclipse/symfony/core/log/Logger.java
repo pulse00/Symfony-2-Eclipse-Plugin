@@ -5,6 +5,7 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.symfony.core.SymfonyCorePlugin;
 import org.osgi.framework.Bundle;
 
@@ -152,6 +153,12 @@ public class Logger {
 	public static void debugMSG(String msg) {
 		if (SymfonyCorePlugin.debug())
 			System.out.println(msg);
+	}
+
+	public static void debugMSG(Class<? extends ASTNode> class1) {
+
+		debugMSG(class1.toString());
+		
 	}	
 
 }

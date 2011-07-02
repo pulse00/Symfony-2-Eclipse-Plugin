@@ -32,6 +32,7 @@ public class Service {
 	 */
 	private String fqcn;
 	
+
 	/***
 	 * The namespace only.
 	 */
@@ -55,7 +56,7 @@ public class Service {
 	public Service(IFile resource, String id, String clazz) {
 		
 		file = resource;
-		this.fqcn = clazz;
+		setFqcn(clazz);
 		this.id = id;
 		
 		int lastPart = clazz.lastIndexOf("\\");
@@ -73,7 +74,7 @@ public class Service {
 
 		this.namespace = PHPModelUtils.extractNameSapceName(phpClass);
 		this.className = PHPModelUtils.extractElementName(phpClass);		
-		this.fqcn = phpClass;
+		setFqcn(phpClass);
 		this.id = id;
 		this.path = new Path(path);
 		this.scalar = scalar;
@@ -83,6 +84,12 @@ public class Service {
 	public Service(String id2, String phpClass, String path2) {
 		this(id2,phpClass,path2, null);
 	}
+	
+	public void setFqcn(String fqcn) {
+		
+		this.fqcn = fqcn;
+	}
+	
 
 	public Scalar getScalar() {
 		
@@ -96,7 +103,7 @@ public class Service {
 	}
 
 	public String getFullyQualifiedName() {
-
+		
 		return fqcn;
 		
 	}
@@ -127,6 +134,11 @@ public class Service {
 		Service service = new Service(s.id, s.phpClass, s.path, null);
 		return service;
 
+	}
+	
+	public IPath getPath() {
+		
+		return path;
 	}
 	
 }

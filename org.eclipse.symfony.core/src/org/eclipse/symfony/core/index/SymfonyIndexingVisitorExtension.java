@@ -10,8 +10,11 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.expressions.MethodCallExpression;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.IModelElement;
@@ -19,11 +22,14 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
 import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ExpressionStatement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
@@ -34,6 +40,7 @@ import org.eclipse.symfony.core.model.ISymfonyModelElement;
 import org.eclipse.symfony.core.model.TemplateVariable;
 import org.eclipse.symfony.core.preferences.SymfonyCoreConstants;
 import org.eclipse.symfony.core.util.JsonUtils;
+import org.eclipse.symfony.core.util.text.SymfonyTextSequenceUtilities;
 import org.eclipse.symfony.index.SymfonyIndexer;
 import org.eclipse.symfony.index.dao.Route;
 
@@ -93,9 +100,50 @@ PhpIndexingVisitorExtension {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean visit(Statement s) throws Exception {
 
+		
+		if (s instanceof ExpressionStatement) {
+			
+			ExpressionStatement stmt = (ExpressionStatement) s;
+			
+			if (stmt.getExpr() instanceof PHPCallExpression) {
+			
+				PHPCallExpression call = (PHPCallExpression) stmt.getExpr();
+				
+				
+				// TODO: check if the variable implements Symfony\Component\DependencyInjection\ContainerInterface
+				if("setAlias".equals(call.getName())) {
+					
+					if (call.getReceiver() instanceof VariableReference) {
+						
+						CallArgumentsList args = call.getArgs();
+						
+						if (args.getChilds().size() == 2) {
+							
+							List<ASTNode> nodes = args.getChilds();
+							
+							Scalar alias = (Scalar) nodes.get(0);
+							Scalar reference = (Scalar) nodes.get(1);
+							
+							if (alias != null && reference != null) {
+							
+								String id = SymfonyTextSequenceUtilities.removeQuotes(alias.getValue());
+								String ref = "alias_" + SymfonyTextSequenceUtilities.removeQuotes(reference.getValue());
+								
+								
+								indexer.addService(id, ref, sourceModule.getScriptProject().getPath().toString(), 0);								
+								indexer.exitServices();
+								
+							}
+						}
+					}
+				}
+			}
+		}
+		
 		return true;
 
 	}
@@ -105,6 +153,7 @@ PhpIndexingVisitorExtension {
 
 		if(!isSymfonyResource)
 			return false;
+
 		
 		if (s.getClass() == Block.class) {
 			
@@ -229,6 +278,8 @@ PhpIndexingVisitorExtension {
 		currentClass = null;
 		namespace = null;
 		controllerIndexer = null;
+		
+
 		return true;
 	}
 	
@@ -276,7 +327,7 @@ PhpIndexingVisitorExtension {
 						SimpleReference varName = refs[0];
 						SimpleReference varType = refs[1];
 						
-						if(varName.getName().equals("$view") && varType.getName().equals("string")) {							
+						if(varName.getName().equals("$view") && varType.getName().equals("string")) {
 							int length = method.sourceEnd() - method.sourceStart();
 							
 							ReferenceInfo viewMethod = new ReferenceInfo(ISymfonyModelElement.VIEW_METHOD, method.sourceStart()	, length, method.getName(), null, null);
