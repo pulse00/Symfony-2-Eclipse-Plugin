@@ -25,7 +25,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
-import org.eclipse.symfony.core.SymfonyCorePlugin;
+import org.eclipse.symfony.core.Logger;
 import org.eclipse.symfony.core.index.visitor.TemplateVariableVisitor;
 import org.eclipse.symfony.core.model.ISymfonyModelElement;
 import org.eclipse.symfony.core.model.TemplateVariable;
@@ -185,7 +185,7 @@ PhpIndexingVisitorExtension {
 					String namespace = variable.getNamespace();					
 					String metadata = JsonUtils.createReference(phpClass, namespace, viewPath);
 					
-					SymfonyCorePlugin.debug(this.getClass(), "add reference info: " + name +  " " + metadata + " " + namespace);
+					Logger.debugMSG("add reference info: " + name +  " " + metadata + " " + namespace);
 					
 					ReferenceInfo info = new ReferenceInfo(IModelElement.USER_ELEMENT, start, length, name, metadata, namespace);
 					requestor.addReference(info);
@@ -194,7 +194,7 @@ PhpIndexingVisitorExtension {
 			}
 						
 			for (Route route : controllerIndexer.getRoutes()) {
-				SymfonyCorePlugin.debug(this.getClass(), "indexing route: " + route.toString());
+				Logger.debugMSG("indexing route: " + route.toString());
 				indexer.addRoute(route, sourceModule.getScriptProject().getPath());
 			}
 			

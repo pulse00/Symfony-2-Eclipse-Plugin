@@ -17,6 +17,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.hyperlink.PHPHyperlinkDetector;
+import org.eclipse.symfony.core.Logger;
 import org.eclipse.symfony.core.SymfonyCorePlugin;
 import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
@@ -87,7 +88,7 @@ public class SymfonyHyperlinkDetector extends PHPHyperlinkDetector {
 			IType[] types = PhpModelAccess.getDefault().findTypes(s.getNamespace(), s.getClassName(), MatchRule.EXACT, 0, 0, scope, null);
 			
 			if (types.length != 1) {
-				SymfonyCorePlugin.debug("No service found");
+				Logger.debugMSG("No service found");
 				return null;
 			}
 			

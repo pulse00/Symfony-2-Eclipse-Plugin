@@ -1,5 +1,6 @@
 package org.eclipse.symfony.core;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
@@ -7,8 +8,6 @@ public class SymfonyCorePlugin extends Plugin {
 
 	public static String ID = "org.eclipse.symfony.core";
 	private static SymfonyCorePlugin plugin;
-	
-	public static boolean DEBUG = true;
 
 
 	/*
@@ -19,7 +18,9 @@ public class SymfonyCorePlugin extends Plugin {
 		super.start(bundleContext);
 
 		plugin = this;
-		System.err.println("startup symfony");
+		System.err.println("aha");
+		Logger.debugMSG("startup sf");
+
 	}
 
 	/*
@@ -30,27 +31,19 @@ public class SymfonyCorePlugin extends Plugin {
 		super.stop(bundleContext);
 		plugin = null;
 	}
-	
+
 	public static SymfonyCorePlugin getDefault() {
-		
+
 		return plugin;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public static void debug(Class clazz, String message) {
 
-		if (DEBUG) {			
-//			System.err.print(clazz.toString() + ": " );
-			System.out.println(message);
-		}	
-	}
+	private static final String isDebugMode = "org.eclipse.symfony.core/debug";
 
-	public static void debug(String message) {
-
-		if (DEBUG) {			
-			System.out.println(message);
-		}	
+	public static boolean debug() {
 		
+		String debugOption = Platform.getDebugOption(isDebugMode); //$NON-NLS-1$
+		return getDefault().isDebugging() && "true".equalsIgnoreCase(debugOption); 
 		
 	}
 }
