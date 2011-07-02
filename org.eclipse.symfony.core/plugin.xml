@@ -12,11 +12,9 @@
                class="org.eclipse.symfony.core.builder.SymfonyNature">
          </run>
       </runtime>
-      
       <builder
             id="org.eclipse.symfony.core.symfonyBuilder">
       </builder>
-      
    </extension>
    
    <!-- The Symfony2 core builder - visits xml and yml files to parse the configuration -->

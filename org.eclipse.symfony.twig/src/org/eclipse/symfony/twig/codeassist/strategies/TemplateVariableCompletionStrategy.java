@@ -9,6 +9,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 import org.eclipse.symfony.core.index.SymfonyElementResolver.TemplateField;
@@ -73,9 +74,13 @@ public class TemplateVariableCompletionStrategy extends AbstractTwigCompletionSt
 			
 			SourceRange range = getReplacementRange(ctxt);
 			
+			// prepend the php dollar variable for the equals check
+			String prefix = "$" +ctxt.getPrefix();
+			
 			for(TemplateField element : variables) {
 
-				if (viewPath.equals(element.getViewPath())) {
+
+				if (viewPath.equals(element.getViewPath()) && CodeAssistUtils.startsWithIgnoreCase(element.getElementName(), prefix)) {
 					reporter.reportField(new FakeField(element, element.getElementName(), Modifiers.AccPublic), "", range, true);
 				}
 			}

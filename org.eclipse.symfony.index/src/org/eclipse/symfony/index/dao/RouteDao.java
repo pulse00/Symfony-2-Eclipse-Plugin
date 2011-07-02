@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.osgi.framework.debug.Debug;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.symfony.index.Schema;
 import org.eclipse.symfony.index.log.Logger;

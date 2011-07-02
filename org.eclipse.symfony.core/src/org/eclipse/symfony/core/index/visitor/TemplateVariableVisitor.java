@@ -25,7 +25,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
-import org.eclipse.symfony.core.SymfonyCorePlugin;
 import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.model.Service;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
@@ -208,7 +207,9 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 					}
 										
 					if (viewPath != null ) {						
-						parseVariablesFromArray((ArrayCreation) statement.getExpr(), viewPath);						
+						
+						ArrayCreation array = (ArrayCreation) statement.getExpr();
+						parseVariablesFromArray(array, viewPath);						
 					}
 				}
 				
@@ -248,13 +249,14 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 
 		for (ArrayElement element : array.getElements()) {
 
+			
 			Expression key = element.getKey();
 			Expression value = element.getValue();
 
 			if (key.getClass() == Scalar.class) {
 
 				Scalar varName = (Scalar) key;
-
+				
 				// something in the form:  return array ('foo' => $bar);
 				// check the type of $bar:
 				if (value.getClass() == VariableReference.class) {
@@ -266,7 +268,9 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 						// we got the variable, add it the the templateVariables
 						if (ref.getName().equals(variable.getName())) {								
 							// alter the variable name
+														
 							variable.setName(varName.getValue());							
+							
 							templateVariables.put(variable, viewPath);
 							break;
 						}							
@@ -377,11 +381,21 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 
 						SimpleReference callName = exp.getCallName();
 
+						//TODO: this is a problematic case, as during a clean build
+						// it's possible that the SourceModule in which the 
+						// called method was declared is not yet in the index, so
+						// the return type cannot be evaluated and therefore
+						// the templatevariable won't be created...
+						//
+						// Possible solution: check if there's an event fired when the
+						// build is completed and store those return types in a global
+						// singleton, evaluate them when the whole build process is finished.
 						TemplateVariable tempVar = SymfonyModelAccess.getDefault()
 								.createTemplateVariableByReturnType(currentMethod, callName, 
 										service.getClassName(), service.getNamespace(), var.getName());
 
 						if (tempVar != null) {								
+														
 							deferredVariables.push(tempVar);
 						}
 

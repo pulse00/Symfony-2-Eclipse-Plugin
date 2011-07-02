@@ -23,9 +23,6 @@ public class TemplateVariableCompletionContext extends
 	
 		
 		if (super.isValid(sourceModule, offset, requestor)) {
-			
-
-			//...
 			return true;
 			
 		}

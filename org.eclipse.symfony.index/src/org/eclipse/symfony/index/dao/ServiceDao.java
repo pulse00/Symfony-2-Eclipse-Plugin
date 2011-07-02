@@ -80,7 +80,7 @@ public class ServiceDao implements IServiceDao {
 		statement.setInt(++param, timestamp);
 		statement.addBatch();
 		
-		Logger.debugMSG(statement.toString());
+		//Logger.debugMSG(statement.toString());
 		
 		//
 		//		if (!isReference) {

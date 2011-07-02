@@ -12,7 +12,6 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.Expression;
-import org.eclipse.dltk.ast.expressions.MethodCallExpression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
@@ -184,6 +183,7 @@ PhpIndexingVisitorExtension {
 
 			currentClass = (ClassDeclaration) s;
 			
+			
 			for (Object o : currentClass.getSuperClasses().getChilds()) {
 
 				if (o instanceof FullyQualifiedReference) {
@@ -235,7 +235,7 @@ PhpIndexingVisitorExtension {
 	@SuppressWarnings({ "rawtypes" })
 	public boolean endvisit(TypeDeclaration s) throws Exception {
 
-
+		
 		if (controllerIndexer != null) {
 
 			Map<TemplateVariable, String> variables = controllerIndexer.getTemplateVariables();			

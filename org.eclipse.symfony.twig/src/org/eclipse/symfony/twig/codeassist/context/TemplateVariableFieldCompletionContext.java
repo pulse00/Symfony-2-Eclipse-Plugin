@@ -1,5 +1,7 @@
 package org.eclipse.symfony.twig.codeassist.context;
 
+import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.twig.core.codeassist.context.VariableFieldContext;
 
 
@@ -10,7 +12,7 @@ import org.eclipse.twig.core.codeassist.context.VariableFieldContext;
  * 
  * <pre>
  * 
- * 	{{ form.|  <-- creates a valid context
+ * 	{{ form.|  <-- a valid context
  * 
  * </pre> 
  * 
@@ -20,6 +22,19 @@ import org.eclipse.twig.core.codeassist.context.VariableFieldContext;
  */
 public class TemplateVariableFieldCompletionContext extends
 		VariableFieldContext {
+	
+	
+	
+	@Override
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
+
+		if (super.isValid(sourceModule, offset, requestor)) {						
+			return true;			
+		}
+		
+		return false;
+	}
 	
 	
 

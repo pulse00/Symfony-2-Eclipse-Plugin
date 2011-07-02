@@ -1,17 +1,19 @@
 package org.eclipse.symfony.twig.codeassist.strategies;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
-import org.eclipse.php.internal.core.typeinference.FakeMethod;
 import org.eclipse.symfony.core.index.SymfonyElementResolver.TemplateField;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
 import org.eclipse.twig.core.codeassist.context.VariableFieldContext;
@@ -51,30 +53,47 @@ AbstractTwigCompletionStrategy {
 		VariableFieldContext ctx = (VariableFieldContext) getContext();
 		String varName = ctx.getVariable();
 		TemplateField var = SymfonyModelAccess.getDefault().findTemplateVariableType("$" + varName, ctx.getSourceModule());
-
+		
+		System.err.println(varName);
+		
 		if (var == null) {
 			return;
 		}
 		
 		String className = var.getClassName();
-		IDLTKSearchScope scope = createSearchScope();
-
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(ctx.getSourceModule().getScriptProject());
+		
+		String prefix = ctx.getPrefix();
+		
+		SourceRange range = getReplacementRange(getContext());
+		
 		if (className != null) {
 
 			IType[] types =  PhpModelAccess.getDefault().findTypes(var.getQualifier(), var.getClassName(), MatchRule.EXACT, 0, 0, scope, null);
-			SourceRange range = getReplacementRange(getContext());
+			
 			
 			if (types.length == 1) {
 				IType type = types[0];
-				for (IMethod method :type.getMethods()) {
-										
-					FakeMethod fake = new FakeMethod((ModelElement) method, method.getElementName());					
-					reporter.reportMethod(fake, "()", getReplacementRange(ctx));
-					
-//					reporter.reportMethod(method, "", range);
+
+				
+				IDLTKSearchScope methodScope = SearchEngine.createSuperHierarchyScope(type);
+				
+				IMethod[] methods = PhpModelAccess.getDefault().findMethods(prefix, MatchRule.PREFIX, 0, 0, methodScope, null);
+				
+				List<String> reported = new ArrayList<String>();
+				
+				for (IMethod method : methods) {
+
+					if (!reported.contains(method.getElementName())) {
+						reporter.reportMethod(method, "()", range);
+						reported.add(method.getElementName());
+					}										
 				}
 				
-				for (IField field : type.getFields()) {
+				IDLTKSearchScope fieldScope = SearchEngine.createSuperHierarchyScope(type);				
+				IField[] fields = PhpModelAccess.getDefault().findFields(prefix, MatchRule.PREFIX, 0, 0, fieldScope, null);				
+				
+				for (IField field : fields) {
 					
 					if (field.getFlags() == Modifiers.AccPublic)
 						reporter.reportField(field, "", range, true);

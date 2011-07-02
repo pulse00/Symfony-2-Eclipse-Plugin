@@ -1,22 +1,30 @@
 package org.eclipse.symfony.twig;
 
-import org.osgi.framework.BundleActivator;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-public class SymfonyTwigPlugin implements BundleActivator {
+public class SymfonyTwigPlugin extends Plugin {
 
-	private static BundleContext context;
-
-	static BundleContext getContext() {
-		return context;
-	}
+	
+	public static String ID = "org.eclipse.symfony.twig"; //$NON-NLS-N$
+	
+	private static SymfonyTwigPlugin plugin;
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
-		SymfonyTwigPlugin.context = bundleContext;
+		
+		super.start(bundleContext);
+		plugin = this;
+		
+	}
+	
+	public static SymfonyTwigPlugin getDefault() {
+		
+		return plugin;
 	}
 
 	/*
@@ -24,7 +32,18 @@ public class SymfonyTwigPlugin implements BundleActivator {
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
-		SymfonyTwigPlugin.context = null;
+		super.stop(bundleContext);
+		plugin = null;
+		
 	}
+	
+	private static final String isDebugMode = "org.eclipse.symfony.twig/debug";
+
+	public static boolean debug() {
+		
+		String debugOption = Platform.getDebugOption(isDebugMode); //$NON-NLS-1$
+		return getDefault().isDebugging() && "true".equalsIgnoreCase(debugOption); 
+		
+	}	
 
 }
