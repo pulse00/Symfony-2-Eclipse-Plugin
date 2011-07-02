@@ -11,12 +11,12 @@ import org.eclipse.symfony.core.SymfonyCorePlugin;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 @SuppressWarnings("restriction")
-public abstract class SymfonyCoreOptionsConfigurationBlock extends
+public abstract class CoreOptionsConfigurationBlock extends
 		OptionsConfigurationBlock {
 
-	public SymfonyCoreOptionsConfigurationBlock(IStatusChangeListener context,
-			IProject project, Key[] allKeys,
-			IWorkbenchPreferenceContainer container) {
+
+	public CoreOptionsConfigurationBlock(IStatusChangeListener context, IProject project,
+			Key[] allKeys, IWorkbenchPreferenceContainer container) {
 		super(context, project, allKeys, container);
 
 	}

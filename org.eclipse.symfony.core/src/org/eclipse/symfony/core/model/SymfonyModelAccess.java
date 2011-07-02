@@ -3,6 +3,7 @@ package org.eclipse.symfony.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IMethod;
@@ -35,6 +36,7 @@ import org.eclipse.symfony.core.SymfonyLanguageToolkit;
 import org.eclipse.symfony.core.index.SymfonyElementResolver.TemplateField;
 import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.util.PathUtils;
+import org.eclipse.symfony.index.IServiceHandler;
 import org.eclipse.symfony.index.SymfonyIndexer;
 import org.eclipse.symfony.index.dao.Route;
 
@@ -55,6 +57,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	private static SymfonyModelAccess modelInstance = null;
 		
 	private SymfonyIndexer index;
+
 	
 	private SymfonyModelAccess() {
 
@@ -440,6 +443,62 @@ public class SymfonyModelAccess extends PhpModelAccess {
 
 
 		return methods.size() > 0;
+		
+	}
+
+	public Service findService(String className) {
+	
+		return findService(className, null);
+	}
+
+	/**
+	 * 
+	 * @param Retrieve a single service by service id
+	 * 
+	 * 
+	 * @return
+	 */
+	public Service findService(final String id, IPath path) {
+		
+		final List<Service> services = new ArrayList<Service>();		
+		String pathString = path == null ? "" : path.toString();
+		
+		index.findService(id, pathString, new IServiceHandler() {
+			
+			@Override
+			public void handle(String id, String phpClass, String path) {
+				services.add(new Service(id, phpClass, path, null));				
+			}
+		});
+		
+		
+		if (services.size() == 1)
+			return services.get(0);
+		
+		return null;
+	}
+
+	/**
+	 * Return all services of a {@link Project} or null if the
+	 * project hasn't been found.
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public List<Service> findServices(IPath path) {
+	
+		final List<Service> services = new ArrayList<Service>();
+		
+		index.findServices(path.toString(), new IServiceHandler() {
+			
+			@Override
+			public void handle(String id, String phpClass, String path) {
+				services.add(new Service(id, phpClass, path));
+				
+			}
+		});
+		
+		return services;
 		
 	}
 }

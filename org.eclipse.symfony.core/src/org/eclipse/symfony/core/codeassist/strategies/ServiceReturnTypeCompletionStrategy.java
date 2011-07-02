@@ -10,7 +10,6 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
@@ -19,8 +18,8 @@ import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionConte
 import org.eclipse.php.internal.core.codeassist.strategies.ClassMembersStrategy;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.symfony.core.codeassist.contexts.ServiceReturnTypeContext;
-import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
+import org.eclipse.symfony.core.model.SymfonyModelAccess;
 import org.eclipse.symfony.core.util.text.SymfonyTextSequenceUtilities;
 
 /**
@@ -57,7 +56,7 @@ public class ServiceReturnTypeCompletionStrategy extends ClassMembersStrategy {
 		if (source == null)
 			return;
 		
-		Service service = ModelManager.getInstance().findService(source, project.getPath());
+		Service service = SymfonyModelAccess.getDefault().findService(source, project.getPath());
 
 		if (service == null)
 			return;

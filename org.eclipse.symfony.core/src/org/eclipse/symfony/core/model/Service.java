@@ -20,6 +20,11 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 @SuppressWarnings("restriction")
 public class Service {
 	
+	
+	public static final String NAME = "name";
+	public static final String CLASS = "class";
+	public static final Object SYNTHETIC = "synthetic";
+	
 	private IFile file;
 	
 	/**

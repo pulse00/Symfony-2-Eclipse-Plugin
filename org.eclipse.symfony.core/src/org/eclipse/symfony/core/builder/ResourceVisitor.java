@@ -10,12 +10,14 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.symfony.core.log.Logger;
+import org.eclipse.symfony.core.model.Service;
 import org.eclipse.symfony.core.parser.XMLConfigParser;
 import org.eclipse.symfony.core.parser.YamlConfigParser;
 import org.eclipse.symfony.core.parser.YamlRoutingParser;
 import org.eclipse.symfony.core.preferences.ProjectOptions;
 import org.eclipse.symfony.index.SymfonyIndexer;
 import org.eclipse.symfony.index.dao.Route;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.yaml.snakeyaml.scanner.ScannerException;
 
@@ -36,11 +38,13 @@ implements IResourceVisitor {
 	private IPath path;
 	private SymfonyIndexer indexer;
 	private int timestamp;
+	private JSONArray syntheticServices;
 
 	@Override
 	public boolean visit(IResource resource) throws CoreException {
 		
 		try {
+			
 
 			if (resource instanceof IFile && resource.getFileExtension() != null) {
 
@@ -71,6 +75,15 @@ implements IResourceVisitor {
 		}
 
 		return true;
+	}
+	
+	private JSONArray getSynthetics() {
+		
+		if (syntheticServices == null)
+			syntheticServices = ProjectOptions.getSyntheticServices(file.getProject());;
+		
+		return syntheticServices;
+		
 	}
 
 
@@ -147,34 +160,26 @@ implements IResourceVisitor {
 
 		try {
 
-			JSONObject syntheticServices = ProjectOptions.getSyntheticServices(file.getProject());
 			indexer.enterServices(path.toString());
 			Iterator it = services.keySet().iterator();
+			
+			JSONArray synths = getSynthetics();
 
 			while(it.hasNext()) {
 
 				String id = (String) it.next();
 				String phpClass = services.get(id);				
 				
-				if(phpClass.equals("synthetic")) {
-					
-					
-					if (syntheticServices.containsKey(id)) {
-
-						String pc = (String) syntheticServices.get(id);
-						
-						if (pc != null ) {
-							phpClass = pc;
-						} else {
-							phpClass = (String) syntheticServices.get(id);	
+				if(phpClass.equals(Service.SYNTHETIC)) {
+					for (Object o : synths) {
+						JSONObject service = (JSONObject) o;
+						if (service.get(Service.NAME).equals(id)) {							
+							phpClass = (String) service.get(Service.CLASS);
+							break;
 						}
-
-						
-					} else phpClass = "";
+					}
 				}
-				
 				indexer.addService(id, phpClass, path.toString(), timestamp);
-
 			}
 			
 			indexer.exitServices();			

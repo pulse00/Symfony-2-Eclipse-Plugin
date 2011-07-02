@@ -1,6 +1,7 @@
 package org.eclipse.symfony.core.util;
 
 import org.eclipse.symfony.core.log.Logger;
+import org.eclipse.symfony.core.model.Service;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -21,6 +22,7 @@ public class JsonUtils {
 	@SuppressWarnings("unchecked")
 	public static String createReference(String elementName, String qualifier, String viewPath) {
 		
+		
 		JSONObject data = new JSONObject();
 		data.put("elementName", elementName);
 		data.put("qualifier", qualifier);
@@ -38,12 +40,12 @@ public class JsonUtils {
 	@SuppressWarnings("unchecked")
 	public static String createDefaultSyntheticServices() {
 		
-		
 		JSONArray data = new JSONArray();
 		
 		JSONObject request = new JSONObject();
-		request.put("name", "request");
-		request.put("class", "\\Symfony\\Request");
+		request.put(Service.NAME, "request");
+		request.put(Service.CLASS, "Symfony\\Component\\HttpFoundation\\Request");
+				
 		data.add(request);
 		return data.toString();		
 		
@@ -74,5 +76,25 @@ public class JsonUtils {
 			Logger.logException(e);
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject createService(String id, String className) {
+
+		JSONObject service = new JSONObject();
+		service.put(Service.NAME, id);
+		service.put(Service.CLASS, className);
+		return service;		
+
+	}
+
+	public static JSONArray parseArray(String defaults) {
+
+		try {
+			return (JSONArray) parser.parse(defaults);
+		} catch (Exception e) {			
+			Logger.logException(e);
+			return new JSONArray();
+		}
 	}
 }

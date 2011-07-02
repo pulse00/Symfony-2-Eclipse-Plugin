@@ -17,10 +17,9 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.hyperlink.PHPHyperlinkDetector;
-import org.eclipse.symfony.core.SymfonyCorePlugin;
 import org.eclipse.symfony.core.log.Logger;
-import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
+import org.eclipse.symfony.core.model.SymfonyModelAccess;
 
 
 /**
@@ -77,7 +76,8 @@ public class SymfonyHyperlinkDetector extends PHPHyperlinkDetector {
 				return null;
 
 			String service = document.get(wordRegion.getOffset(), wordRegion.getLength());			
-			Service s = ModelManager.getInstance().findService(service, input.getScriptProject().getPath());
+
+			Service s = SymfonyModelAccess.getDefault().findService(service, input.getScriptProject().getPath());
 			
 			if (s == null) {
 				return null;

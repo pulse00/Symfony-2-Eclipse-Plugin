@@ -8,8 +8,8 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
-import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
+import org.eclipse.symfony.core.model.SymfonyModelAccess;
 
 /**
  * 
@@ -64,7 +64,7 @@ public class ModelUtils {
 						//TODO: check if there are PDT utils for stripping away quotes from
 						// string literals.
 
-						Service service = ModelManager.getInstance().findService(((Scalar)first).getValue());
+						Service service = SymfonyModelAccess.getDefault().findService(((Scalar)first).getValue());
 						
 
 						// we got a service match, return the goalevaluator.

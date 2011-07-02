@@ -9,8 +9,8 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
 import org.eclipse.symfony.core.codeassist.contexts.ServiceContainerContext;
-import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
+import org.eclipse.symfony.core.model.SymfonyModelAccess;
 
 
 /**
@@ -49,8 +49,8 @@ public class ServiceContainerCompletionStrategy extends
 		ServiceContainerContext context = (ServiceContainerContext) getContext();
 		IScriptProject project = context.getSourceModule().getScriptProject();
 		
-		ModelManager manager = ModelManager.getInstance();
-		List<Service> services = manager.findServices(project.getPath());
+		SymfonyModelAccess model= SymfonyModelAccess.getDefault();
+		List<Service> services = model.findServices(project.getPath());
 		SourceRange range = getReplacementRange(context);
 		
 		if (services == null) {
@@ -59,7 +59,7 @@ public class ServiceContainerCompletionStrategy extends
 
 		for(Service service : services) {
 
-			//TODO: filter by visibility |Êabstract services
+			//TODO: filter by visibility |ï¿½abstract services
 			reporter.reportKeyword(service.getId(), "", range);
 		}
 	}

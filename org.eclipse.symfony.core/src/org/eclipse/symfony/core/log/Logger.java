@@ -1,10 +1,11 @@
-package org.eclipse.symfony.core;
+package org.eclipse.symfony.core.log;
 
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.symfony.core.SymfonyCorePlugin;
 import org.osgi.framework.Bundle;
 
 public class Logger {
@@ -130,7 +131,9 @@ public class Logger {
 	}
 
 	public static void logException(Throwable exception) {
-		_log(ERROR, exception.getMessage(), exception);
+		
+		debugMSG(exception.getMessage());
+//		_log(ERROR, exception.getMessage(), exception);
 	}
 
 	public static void traceException(String category, String message,

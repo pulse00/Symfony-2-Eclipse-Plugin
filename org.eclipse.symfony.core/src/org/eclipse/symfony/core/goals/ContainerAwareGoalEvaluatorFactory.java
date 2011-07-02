@@ -13,8 +13,8 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 import org.eclipse.symfony.core.goals.evaluator.ServiceGoalEvaluator;
-import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
+import org.eclipse.symfony.core.model.SymfonyModelAccess;
 
 
 /**
@@ -111,7 +111,8 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
 								//TODO: check if there are PDT utils for stripping away quotes from
 								// string literals.
 								String className = ((Scalar)first).getValue().replace("'", "").replace("\"", "");
-								Service service = ModelManager.getInstance().findService(className);
+								
+								Service service = SymfonyModelAccess.getDefault().findService(className);
 
 								// we got a service match, return the goalevaluator.
 								if (service != null) {

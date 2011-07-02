@@ -3,14 +3,23 @@ package org.eclipse.symfony.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.ui.Messages;
 import org.eclipse.symfony.ui.SymfonyUiPlugin;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
+/**
+ * 
+ * 
+ * 
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 @SuppressWarnings("restriction")
 public class ServicesPreferencePage extends PropertyAndPreferencePage {
 
@@ -18,7 +27,7 @@ public class ServicesPreferencePage extends PropertyAndPreferencePage {
 	public static final String PREF_ID = "org.eclipse.symfony.ui.preferences.ServicesPreferencePage"; //$NON-NLS-1$
 	public static final String PROP_ID = "org.eclipse.symfony.ui.propertyPages.ServicesPreferencePage"; //$NON-NLS-1$
 
-	private SymfonyServiceConfigurationBlock fConfigurationBlock;
+	private ServiceConfigurationBlock fConfigurationBlock;
 	
 	public ServicesPreferencePage() {
 
@@ -35,7 +44,7 @@ public class ServicesPreferencePage extends PropertyAndPreferencePage {
 	public void createControl(Composite parent) {
 
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
-		fConfigurationBlock = new SymfonyServiceConfigurationBlock(
+		fConfigurationBlock = new ServiceConfigurationBlock(
 				getNewStatusChangedListener(), getProject(), container);
 
 		super.createControl(parent);
@@ -90,7 +99,11 @@ public class ServicesPreferencePage extends PropertyAndPreferencePage {
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
 	public boolean performOk() {
+		
+		
+		
 		if (fConfigurationBlock != null && !fConfigurationBlock.performOk()) {
+			Logger.debugMSG("return false");
 			return false;
 		}
 		return super.performOk();

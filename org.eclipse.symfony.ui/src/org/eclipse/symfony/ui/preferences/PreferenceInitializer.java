@@ -3,7 +3,7 @@ package org.eclipse.symfony.ui.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.symfony.ui.PreferenceConstants;
 
-public class SymfonyPreferenceInitializer extends AbstractPreferenceInitializer {
+public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 
 

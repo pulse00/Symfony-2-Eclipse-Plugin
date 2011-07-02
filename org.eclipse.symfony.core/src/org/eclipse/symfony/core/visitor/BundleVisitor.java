@@ -4,9 +4,6 @@ import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
-import org.eclipse.symfony.core.model.Bundle;
-import org.eclipse.symfony.core.model.ModelManager;
-import org.eclipse.symfony.core.model.exception.InvalidBundleException;
 
 /**
  * 
@@ -47,11 +44,11 @@ public class BundleVisitor extends PHPASTVisitor {
 					
 			try {
 				
-				Bundle bundle = new Bundle(context.getSourceModule(), declaration, namespace);
-				ModelManager.getInstance().addBundle(bundle);			
+//				Bundle bundle = new Bundle(context.getSourceModule(), declaration, namespace);
+	//			ModelManager.getInstance().addBundle(bundle);			
 				return true;
 				
-			} catch (InvalidBundleException e) {
+			} catch (Exception e) {
 				
 			}
 		} 

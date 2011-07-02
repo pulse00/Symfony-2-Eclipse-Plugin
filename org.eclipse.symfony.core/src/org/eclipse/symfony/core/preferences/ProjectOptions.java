@@ -5,7 +5,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.preferences.CorePreferenceConstants.Keys;
-import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
 
@@ -33,18 +33,21 @@ public class ProjectOptions {
 	 * @param project
 	 * @return
 	 */
-	public static final JSONObject getSyntheticServices(IProject project) {
+	public static final JSONArray getSyntheticServices(IProject project) {
 		
-		JSONObject defaultSynthetics = null;
+		JSONArray defaultSynthetics = null;
 		
 		try {
 			String synths = CorePreferencesSupport.getInstance()
-			.getPreferencesValue(Keys.SYNTHETIC_SERVICES, "{}", project);		
+			.getPreferencesValue(Keys.SYNTHETIC_SERVICES, null, project);		
+			
+			Logger.debugMSG("LOADED DEFAULTS: " + synths);
 			
 			JSONParser parser = new JSONParser();
-			defaultSynthetics = (JSONObject) parser.parse(synths);
+			defaultSynthetics = (JSONArray) parser.parse(synths);
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			Logger.logException(e);			
 		}		
 		

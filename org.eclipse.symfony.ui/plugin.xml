@@ -96,7 +96,7 @@
  <extension
        point="org.eclipse.core.runtime.preferences">
     <initializer
-          class="org.eclipse.symfony.ui.preferences.SymfonyPreferenceInitializer">
+          class="org.eclipse.symfony.ui.preferences.PreferenceInitializer">
     </initializer>
  </extension>
  

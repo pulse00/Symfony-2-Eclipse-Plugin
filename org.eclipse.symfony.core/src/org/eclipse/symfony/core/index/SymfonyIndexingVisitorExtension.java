@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -14,6 +15,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
 import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
@@ -25,6 +27,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.symfony.core.builder.SymfonyNature;
 import org.eclipse.symfony.core.index.visitor.TemplateVariableVisitor;
 import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.model.ISymfonyModelElement;
@@ -60,6 +63,21 @@ PhpIndexingVisitorExtension {
 	private SymfonyIndexer indexer;
 	
 	private List<UseStatement> useStatements = new ArrayList<UseStatement>();
+	private boolean isSymfonyResource;
+	
+	
+	@Override
+	public void setSourceModule(ISourceModule module) {
+
+		super.setSourceModule(module);
+		
+		try {
+			isSymfonyResource = sourceModule.getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID) != null;
+		} catch (CoreException e) {
+			Logger.logException(e);
+			isSymfonyResource = false;
+		}
+	}
 	
 
 	@Override
@@ -85,6 +103,9 @@ PhpIndexingVisitorExtension {
 	@Override
 	public boolean visit(Expression s) throws Exception {
 
+		if(!isSymfonyResource)
+			return false;
+		
 		if (s.getClass() == Block.class) {
 			
 			s.traverse(new PHPASTVisitor() {
@@ -103,6 +124,9 @@ PhpIndexingVisitorExtension {
 
 	@Override
 	public boolean visit(TypeDeclaration s) throws Exception {
+
+		if(!isSymfonyResource)
+			return false;
 
 		if (indexer == null)
 			indexer = SymfonyIndexer.getInstance();
@@ -231,6 +255,9 @@ PhpIndexingVisitorExtension {
 	 */
 	@Override
 	public boolean visit(MethodDeclaration s) throws Exception {
+
+		if(!isSymfonyResource)
+			return false;
 
 		if (s instanceof PHPMethodDeclaration) {
 			
