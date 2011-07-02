@@ -2,30 +2,59 @@ package org.eclipse.symfony.core.preferences;
 
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.preferences.CorePreferenceConstants.Keys;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 
-
+/**
+ * 
+ * Provides acces to the {@link IEclipsePreferences} on a
+ * ProjectScope, falls back to the Workspace preferences
+ * if not project scoped value is there.
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 public class ProjectOptions {
 	
 	private ProjectOptions() {
 
 	}
 	
-	@SuppressWarnings("restriction")
-	public static final String getSyntheticServices(IProject project) {
+	/**
+	 * 
+	 * Retrieve the synthetic services of a project.
+	 * 
+	 * 
+	 * @param project
+	 * @return
+	 */
+	public static final JSONObject getSyntheticServices(IProject project) {
 		
-		return CorePreferencesSupport.getInstance()
-				.getPreferencesValue(Keys.SYNTHETIC_SERVICES, null, project);
+		JSONObject defaultSynthetics = null;
+		
+		try {
+			String synths = CorePreferencesSupport.getInstance()
+			.getPreferencesValue(Keys.SYNTHETIC_SERVICES, "{}", project);		
+			
+			JSONParser parser = new JSONParser();
+			defaultSynthetics = (JSONObject) parser.parse(synths);
+			
+		} catch (Exception e) {
+			Logger.logException(e);			
+		}		
+		
+		return defaultSynthetics;
 	}	
 	
 	
-	@SuppressWarnings("restriction")
 	public static final String getDefaultSyntheticServices() {
 	
-		
 		return CorePreferencesSupport.getInstance().getWorkspacePreferencesValue(Keys.SYNTHETIC_SERVICES);
 		
 	}
-
 }

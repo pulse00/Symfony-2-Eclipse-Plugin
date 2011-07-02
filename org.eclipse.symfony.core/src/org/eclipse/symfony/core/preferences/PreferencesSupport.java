@@ -5,9 +5,25 @@ import java.util.HashMap;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.symfony.core.Logger;
+import org.eclipse.symfony.core.log.Logger;
 import org.osgi.service.prefs.BackingStoreException;
 
+
+/**
+ *
+ * The {@link PreferencesSupport} handles project specific
+ * preferences and falls back to workspace scoped prefs
+ * if there's no value for a specific project.
+ * 
+ * 
+ * This is basically copy pasted from the PDT PreferencesSupport
+ * but i wanted to get rid of the deprecated use of Preferences
+ * 
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 @SuppressWarnings("rawtypes")
 public class PreferencesSupport {
 	

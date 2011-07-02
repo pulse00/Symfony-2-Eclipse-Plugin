@@ -8,11 +8,10 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.symfony.index.Debug;
 import org.eclipse.symfony.index.IServiceHandler;
 import org.eclipse.symfony.index.Schema;
+import org.eclipse.symfony.index.log.Logger;
 
 
 /**
@@ -81,9 +80,7 @@ public class ServiceDao implements IServiceDao {
 		statement.setInt(++param, timestamp);
 		statement.addBatch();
 		
-		if (Debug.debugSql) {			
-			System.err.println(statement.toString());
-		}		
+		Logger.debugMSG(statement.toString());
 		
 		//
 		//		if (!isReference) {
@@ -103,7 +100,7 @@ public class ServiceDao implements IServiceDao {
 			
 		} catch (SQLException e) {
 
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 
 
@@ -129,7 +126,7 @@ public class ServiceDao implements IServiceDao {
 
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 	}
 
@@ -174,7 +171,7 @@ public class ServiceDao implements IServiceDao {
 			
 		} catch(Exception e) {
 
-			e.printStackTrace();
+			Logger.logException(e);
 
 		}		
 		
@@ -192,7 +189,7 @@ public class ServiceDao implements IServiceDao {
 			
 		} catch (SQLException e) {
 
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 
 		
@@ -218,7 +215,7 @@ public class ServiceDao implements IServiceDao {
 
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 	}
 
@@ -250,7 +247,7 @@ public class ServiceDao implements IServiceDao {
 			handler.handle(_id, _phpClass, _path);			
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 	}
 

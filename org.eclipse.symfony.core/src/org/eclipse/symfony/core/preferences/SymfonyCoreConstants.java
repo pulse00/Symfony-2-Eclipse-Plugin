@@ -1,11 +1,6 @@
 package org.eclipse.symfony.core.preferences;
 
 
-import org.eclipse.core.runtime.preferences.DefaultScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.symfony.core.SymfonyCorePlugin;
-import org.eclipse.symfony.core.preferences.CorePreferenceConstants.Keys;
-import org.json.simple.JSONObject;
 
 
 /**

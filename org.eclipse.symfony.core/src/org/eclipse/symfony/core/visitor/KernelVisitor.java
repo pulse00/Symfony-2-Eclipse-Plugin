@@ -5,7 +5,7 @@ import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
-import org.eclipse.symfony.core.Logger;
+import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.model.ModelManager;
 
 /**

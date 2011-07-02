@@ -11,9 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.osgi.framework.debug.Debug;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.symfony.index.Debug;
 import org.eclipse.symfony.index.Schema;
+import org.eclipse.symfony.index.log.Logger;
 
 
 /**
@@ -80,10 +81,8 @@ public class RouteDao implements IRouteDao {
 		statement.setString(++param, action);
 		statement.setString(++param, path.toString());
 		statement.addBatch();
+
 		
-		if (Debug.debugSql) {			
-			System.err.println(statement.toString());
-		}		
 		
 		//
 		//		if (!isReference) {
@@ -122,7 +121,7 @@ public class RouteDao implements IRouteDao {
 			
 		} catch (SQLException e) {
 
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 	}
 
@@ -148,12 +147,11 @@ public class RouteDao implements IRouteDao {
 				String bundle = result.getString(++columnIndex);
 				String action = result.getString(++columnIndex);
 				
-				System.err.println(name);
 				routes.add(new Route(bundle, controller, action, name, pattern));
 
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 		
 		return routes;

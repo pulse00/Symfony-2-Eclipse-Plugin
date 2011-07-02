@@ -6,7 +6,7 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocMethodReturnTypeEvaluator;
-import org.eclipse.symfony.core.Logger;
+import org.eclipse.symfony.core.log.Logger;
 
 /**
  *  

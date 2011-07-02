@@ -5,7 +5,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.codeassist.contexts.QuotesContext;
 import org.eclipse.php.internal.core.util.text.TextSequence;
-import org.eclipse.symfony.core.Logger;
+import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.model.ViewPath;
 import org.eclipse.symfony.core.util.text.SymfonyTextSequenceUtilities;
 

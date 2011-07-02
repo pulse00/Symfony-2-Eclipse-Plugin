@@ -1,6 +1,6 @@
 package org.eclipse.symfony.core.util;
 
-import org.eclipse.symfony.core.Logger;
+import org.eclipse.symfony.core.log.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

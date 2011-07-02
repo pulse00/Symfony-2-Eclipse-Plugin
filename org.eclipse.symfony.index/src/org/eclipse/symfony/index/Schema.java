@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.symfony.index.log.Logger;
 import org.eclipse.symfony.index.preferences.SymfonyIndexPreferences;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -52,7 +53,7 @@ public class Schema {
 
 		} catch (SQLException e) {
 			
-			e.printStackTrace();
+			Logger.logException(e);
 			throw e;
 		}
 	}
@@ -103,7 +104,7 @@ public class Schema {
 			}
 			return buf.toString();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 		return null;
 	}

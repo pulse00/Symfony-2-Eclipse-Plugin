@@ -2,7 +2,7 @@ package org.eclipse.symfony.core.preferences;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.compiler.problem.ProblemSeverity;
-import org.eclipse.symfony.core.Logger;
+import org.eclipse.symfony.core.log.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -54,36 +54,36 @@ public class SymfonyCorePreferences {
 	}
 	
 	
-	public static JSONObject getSyntheticServices() {
-		
-		try {
-
-			if (synthetic != null)
-				return synthetic;
-			
-			//TODO: store in preferences and build a preference page for synthetic services
-			// where users can change the default implementations
-			
-//			String stored = Platform.getPreferencesService().getString("org.eclipse.symfony.ui", 
-//					SymfonyCoreConstants.SYNTHETIC_SERVICES, "", null);
-			
-			String stored = "{\"request\" : \"Symfony\\Component\\HttpFoundation\\Request\"}";
-			
-			if (stored == null || stored.length() == 0)
-				return new JSONObject();
-			
-			JSONParser parser = new JSONParser();			
-			JSONObject prefs = (JSONObject) parser.parse(stored);
-
-			synthetic = prefs;
-			return synthetic;
-			
-		} catch (Exception e) {
-
-			Logger.logException(e);
-		}			
-		
-		return new JSONObject();
-		
-	}
+//	public static JSONObject getSyntheticServices() {
+//		
+//		try {
+//
+//			if (synthetic != null)
+//				return synthetic;
+//			
+//			//TODO: store in preferences and build a preference page for synthetic services
+//			// where users can change the default implementations
+//			
+////			String stored = Platform.getPreferencesService().getString("org.eclipse.symfony.ui", 
+////					SymfonyCoreConstants.SYNTHETIC_SERVICES, "", null);
+//			
+//			String stored = "{\"request\" : \"Symfony\\Component\\HttpFoundation\\Request\"}";
+//			
+//			if (stored == null || stored.length() == 0)
+//				return new JSONObject();
+//			
+//			JSONParser parser = new JSONParser();			
+//			JSONObject prefs = (JSONObject) parser.parse(stored);
+//
+//			synthetic = prefs;
+//			return synthetic;
+//			
+//		} catch (Exception e) {
+//
+//			Logger.logException(e);
+//		}			
+//		
+//		return new JSONObject();
+//		
+//	}
 }

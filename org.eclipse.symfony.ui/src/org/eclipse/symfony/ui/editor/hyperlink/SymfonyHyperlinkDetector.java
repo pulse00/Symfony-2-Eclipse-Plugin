@@ -17,8 +17,8 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.hyperlink.PHPHyperlinkDetector;
-import org.eclipse.symfony.core.Logger;
 import org.eclipse.symfony.core.SymfonyCorePlugin;
+import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.model.ModelManager;
 import org.eclipse.symfony.core.model.Service;
 

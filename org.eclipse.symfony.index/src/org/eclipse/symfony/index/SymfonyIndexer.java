@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.symfony.index.dao.IRouteDao;
 import org.eclipse.symfony.index.dao.IServiceDao;
 import org.eclipse.symfony.index.dao.Route;
+import org.eclipse.symfony.index.log.Logger;
 
 
 /**
@@ -64,7 +65,7 @@ public class SymfonyIndexer {
 			routeDao.deleteRoutesByPath(connection, name, path);
 			routeDao.insert(connection, name, pattern, controller, bundle, action, path);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 	}
 	
@@ -74,7 +75,7 @@ public class SymfonyIndexer {
 		try {
 			serviceDao.insert(connection, path, id, phpClass, timestamp);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}		
 		
 	}
@@ -91,7 +92,7 @@ public class SymfonyIndexer {
 		try {
 			serviceDao.commitInsertions();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}		
 	}
 	
@@ -115,7 +116,7 @@ public class SymfonyIndexer {
 		try {
 			routeDao.commitInsertions();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 		
 	}

@@ -9,18 +9,14 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.symfony.core.Logger;
-import org.eclipse.symfony.core.model.Project;
+import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.parser.XMLConfigParser;
 import org.eclipse.symfony.core.parser.YamlConfigParser;
 import org.eclipse.symfony.core.parser.YamlRoutingParser;
-import org.eclipse.symfony.core.preferences.CorePreferencesSupport;
 import org.eclipse.symfony.core.preferences.ProjectOptions;
-import org.eclipse.symfony.core.preferences.SymfonyCorePreferences;
 import org.eclipse.symfony.index.SymfonyIndexer;
 import org.eclipse.symfony.index.dao.Route;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.yaml.snakeyaml.scanner.ScannerException;
 
 
@@ -40,7 +36,6 @@ implements IResourceVisitor {
 	private IPath path;
 	private SymfonyIndexer indexer;
 	private int timestamp;
-	private JSONObject synthetic = SymfonyCorePreferences.getSyntheticServices();
 
 	@Override
 	public boolean visit(IResource resource) throws CoreException {
@@ -152,14 +147,7 @@ implements IResourceVisitor {
 
 		try {
 
-
-			String syntheticServices = ProjectOptions.getSyntheticServices(file.getProject());
-			
-			JSONParser parser = new JSONParser();
-			JSONObject defaults = (JSONObject) parser.parse(syntheticServices);
-			
-			
-			
+			JSONObject syntheticServices = ProjectOptions.getSyntheticServices(file.getProject());
 			indexer.enterServices(path.toString());
 			Iterator it = services.keySet().iterator();
 
@@ -171,16 +159,14 @@ implements IResourceVisitor {
 				if(phpClass.equals("synthetic")) {
 					
 					
-					
-					
-					if (synthetic.containsKey(id)) {
+					if (syntheticServices.containsKey(id)) {
 
-						String pc = (String) defaults.get(id);
+						String pc = (String) syntheticServices.get(id);
 						
 						if (pc != null ) {
 							phpClass = pc;
 						} else {
-							phpClass = (String) synthetic.get(id);	
+							phpClass = (String) syntheticServices.get(id);	
 						}
 
 						

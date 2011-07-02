@@ -1,6 +1,7 @@
 package org.eclipse.symfony.index;
 
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
@@ -52,6 +53,15 @@ public class SymfonyIndex extends Plugin {
 	public static SymfonyIndex getDefault() {
 		
 		return plugin;
+		
+	}
+
+	private static final String isDebugMode = "org.eclipse.symfony.index/debug";
+
+	public static boolean debug() {
+		
+		String debugOption = Platform.getDebugOption(isDebugMode); //$NON-NLS-1$
+		return getDefault().isDebugging() && "true".equalsIgnoreCase(debugOption); 
 		
 	}
 }

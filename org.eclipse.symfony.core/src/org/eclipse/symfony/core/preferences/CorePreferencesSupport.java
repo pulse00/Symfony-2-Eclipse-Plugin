@@ -4,7 +4,14 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.symfony.core.SymfonyCorePlugin;
 
 
-
+/**
+ * 
+ * The PreferenceSupport of the Symfony core plugin.
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 public class CorePreferencesSupport extends PreferencesSupport {
 
 	private static CorePreferencesSupport corePreferencesSupport;

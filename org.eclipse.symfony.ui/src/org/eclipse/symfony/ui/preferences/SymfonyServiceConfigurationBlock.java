@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.symfony.core.Logger;
+import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.symfony.ui.Messages;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;

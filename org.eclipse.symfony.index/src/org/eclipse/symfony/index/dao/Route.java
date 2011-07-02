@@ -2,6 +2,8 @@ package org.eclipse.symfony.index.dao;
 
 import java.util.StringTokenizer;
 
+import org.eclipse.symfony.index.log.Logger;
+
 /**
  * 
  * 
@@ -45,7 +47,7 @@ public class Route {
 			
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 	}
 

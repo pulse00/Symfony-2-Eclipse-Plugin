@@ -11,7 +11,7 @@ import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.php.internal.core.index.IPHPDocAwareElement;
 import org.eclipse.php.internal.core.index.PhpElementResolver;
-import org.eclipse.symfony.core.Logger;
+import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.util.JsonUtils;
 import org.json.simple.JSONObject;
 

@@ -5,8 +5,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
-import org.eclipse.symfony.core.Logger;
 import org.eclipse.symfony.core.builder.SymfonyNature;
+import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.util.text.SymfonyTextSequenceUtilities;
 
 

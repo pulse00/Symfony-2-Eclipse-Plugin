@@ -11,9 +11,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.symfony.index.dao.IRouteDao;
 import org.eclipse.symfony.index.dao.IServiceDao;
-import org.eclipse.symfony.index.dao.Route;
 import org.eclipse.symfony.index.dao.RouteDao;
 import org.eclipse.symfony.index.dao.ServiceDao;
+import org.eclipse.symfony.index.log.Logger;
 import org.eclipse.symfony.index.preferences.SymfonyIndexPreferences;
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.h2.tools.DeleteDbFiles;
@@ -56,7 +56,7 @@ public class SymfonyDbFactory  {
 							try {
 								instance.dispose();
 							} catch (SQLException e) {
-								e.printStackTrace();
+								Logger.logException(e);
 							}
 							instance = null;
 						}
@@ -64,7 +64,7 @@ public class SymfonyDbFactory  {
 				});
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				Logger.logException(e);
 			} finally {
 				instanceLock.release();
 			}
@@ -78,12 +78,11 @@ public class SymfonyDbFactory  {
 		try {
 			Class.forName("org.h2.Driver");
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 
 		IPath dbPath = SymfonyIndex.getDefault().getStateLocation();
 		
-		System.err.println("DBPATH: " + dbPath.toString());
 		String connString = getConnectionString(dbPath);
 
 		pool = JdbcConnectionPool.create(connString, DB_USER, DB_PASS);
@@ -129,7 +128,7 @@ public class SymfonyDbFactory  {
 				}
 			} catch (SQLException e) {
 
-				e.printStackTrace();
+				Logger.logException(e);
 
 				// remove corrupted DB
 				try {
@@ -137,7 +136,7 @@ public class SymfonyDbFactory  {
 
 				} catch (Exception e1) {
 
-					e1.printStackTrace();
+					Logger.logException(e1);
 					throw e1;
 				}
 			}
