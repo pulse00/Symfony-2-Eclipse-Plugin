@@ -1,57 +1,19 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
 <head>
-<title>org.eclipse.symfony.updatesite</title>
+<title>Symfony2 Eclipse plugin</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<style>@import url("web/site.css");</style>
-<script type="text/javascript">
-	var returnval = 0;
-	var stylesheet, xmlFile, cache, doc;
-	function init(){
-		// NSCP 7.1+ / Mozilla 1.4.1+ / Safari
-		// Use the standard DOM Level 2 technique, if it is supported
-		if (document.implementation && document.implementation.createDocument) {
-			xmlFile = document.implementation.createDocument("", "", null);
-			stylesheet = document.implementation.createDocument("", "", null);
-			if (xmlFile.load){
-				xmlFile.load("site.xml");
-				stylesheet.load("web/site.xsl");
-			} else {
-				alert("Document could not be loaded by browser.");
-			}
-			xmlFile.addEventListener("load", transform, false);
-			stylesheet.addEventListener("load", transform, false);
-		}
-		//IE 6.0+ solution
-		else if (window.ActiveXObject) {
-			xmlFile = new ActiveXObject("msxml2.DOMDocument.3.0");
-			xmlFile.async = false;
-			xmlFile.load("site.xml");
-			stylesheet = new ActiveXObject("msxml2.FreeThreadedDOMDocument.3.0");
-			stylesheet.async = false;
-			stylesheet.load("web/site.xsl");
-			cache = new ActiveXObject("msxml2.XSLTemplate.3.0");
-			cache.stylesheet = stylesheet;
-			transformData();
-		}
-	}
-	// separate transformation function for IE 6.0+
-	function transformData(){
-		var processor = cache.createProcessor();
-		processor.input = xmlFile;
-		processor.transform();
-		data.innerHTML = processor.output;
-	}
-	// separate transformation function for NSCP 7.1+ and Mozilla 1.4.1+ 
-	function transform(){
-		returnval+=1;
-		if (returnval==2){
-			var processor = new XSLTProcessor();
-			processor.importStylesheet(stylesheet); 
-			doc = processor.transformToDocument(xmlFile);
-			document.getElementById("data").innerHTML = doc.documentElement.innerHTML;
-		}
-	}
-</script>
+<link href="/web/plugin_layout.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/web/plugin.css" rel="stylesheet" type="text/css" media="all" />
+<link type="text/css" href="/css/smoothness/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="css/jquery.lightbox-0.5.css" media="screen" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js" type="text/javascript"></script>
+<script src="/js/jquery.lightbox-0.5.min.js" type="text/javascript"></script>
+<script src="/web/main.js" type="text/javascript"></script>
+
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -66,10 +28,161 @@
 
 </script>
 </head>
-<body onload="init();">
-  <a href="http://github.com/pulse00/Symfony-2-Eclipse-Plugin"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
-<!--[insert static HTML here]-->
-<div id="data"><!-- this is where the transformed data goes --></div>
+<body>
+<p>
+	<a href="http://github.com/pulse00/Symfony-2-Eclipse-Plugin"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+</p>
+<div id="content">
+	<div id="header_clear_fix">
+		<img class="png_fix" id="sflogo" alt="Symfony" src="/web/images/symfony_black_02.png" name="sflogo">
+		<div id="header_eclipse">
+			<h1 class="eclipseheader">
+				Eclipse Plugin
+			</h1>
+		</div>
+	</div>
+	<div class="sf-exceptionreset"></div>
+	
+	<div class="demo">
+		
+		<div id="tabs">
+			<ul>
+				<li><a href="#tabs-1">About</a></li>
+				<li><a href="#tabs-2">Installation</a></li>
+				<li><a href="#tabs-3">Features</a></li>
+				<li><a href="#tabs-4">FAQ</a></li>
+			</ul>
+			
+			<div id="tabs-1">
+		
+			<h2>What's this good for?</h2>
+			<p>The Symfony Eclipse Plugin provide support for the <a href="http://symfony.com">Symfony2 PHP Framework</a>. It is built on top of the <a href="http://www.eclipse.org/dltk/">Dynamic Languages Toolkit</a> and the <a href="http://www.eclipse.org/pdt/">PHP Development Tools.</a> and adds some useful features which hopefully save you some time like:				
+				<ul>
+					<li> - Codeassist for elements specific to the Symfony2 framework, like <a href="http://symfony.com/doc/current/book/service_container.html">services</a>, <a href="http://symfony.com/doc/current/book/routing.html">routes</a> and <a href="http://symfony.com/doc/current/book/templating.html">template paths</a></li>					
+					<li> - <a href="http://symfony.com/doc/2.0/bundles/SensioFrameworkExtraBundle/index.html">Annotation</a> support</li>
+					<li> - <a href="http://www.twig-project.org/">Twig</a> support</li>
+				</ul>
+
+				</p>
+
+			<h2>Disclaimer</h2>
+		<p>
+		The plugin is still beta. Please report problems and feature requests via <a href="https://github.com/pulse00/Symfony-2-Eclipse-Plugin/issues?sort=created&amp;direction=asc&amp;state=open">github issues</a>.
+		</p>
+			</div>
+			
+			<div id="tabs-2">
+				<h2>Prerequisites</h2>
+				<p>At the current stage the Symfony2 Eclipse Plugin require a nightly build of the PHP Development Tools (PDT), as there have been some changes to the way extenders can hook into PDT. This nightly build can be downloaded as a build artifact from the <a href="https://hudson.eclipse.org/hudson/job/cbi-pdt-3.0-indigo/159/artifact/build/N201107010913/">eclipse continuous integration site</a>. You'll need to download a file called <span><b><a href="https://hudson.eclipse.org/hudson/job/cbi-pdt-3.0-indigo/159/artifact/build/N201107010913/pdt-Update-N201107010913.zip">pdt-Update-N201107010913.zip</a></b></span> </p>
+				<p>All following installation/deinstallation steps can be found via <span class="eclipsehint">Help -> Install new software...</span> </p>
+				<p>Before installing the nightly build, make sure to uninstall any existing installations of the PDT plugin, if one exists.</p>
+				<p>After that, open the "Install new software" dialog and add a new repository. Select "Local" and browse to the unzipped PDT nightly build. The repository will offer a couple of PHP features, choose the "All-In-One SDK" Feature and install it.</p>			
+				<p>This installation step well be redundant as soon as the next maintenance release of PDT is deployed.</p>			
+				<h2>Installation via Updatesite</h2>			
+				<p>The plugin can be installed via the regular <a href="http://help.eclipse.org/helios/index.jsp?topic=/org.eclipse.platform.doc.user/tasks/tasks-124.htm">update site mechanism.</a></p>
+				<p>The update site is located at<br/><br/> <span id="updatelink"><a href="http://pulse00.github.com/Symfony-2-Eclipse-Plugin/">http://pulse00.github.com/Symfony-2-Eclipse-Plugin/</a></span></p>
+				<br/><p>After adding the updatesite to your eclipse installation, you will see 2 Symfony2 features:				
+					<ul>					
+						<li> - Symfony2 Core Feature</li>
+						<li> - Symfony2 Twig Support</li>
+					</ul>				
+
+					The Core Feature is mandatory. The Twig Support Feature is only needed if you use the <a href="http://www.twig-project.org/">Twig templating engine</a>. If you need Twig Support, install the separate <a href="https://github.com/pulse00/Twig-Eclipse-Plugin">Twig plugin</a> first.
+					</p>
+
+					<h2>Usage</h2>			
+
+					<p>To make your existing PHP Projects Symfony2 aware, add the SymfonyNature by right-clicking on the project in the <span class="eclipsehint">PHP explorer -> Symfony -> Add/Remove Symfony Nature.</span> This will add the Symfony2 <a href="http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fextension-points%2Forg_eclipse_core_resources_natures.html">project nature</a> and trigger the indexing mechanism of DLTK/PDT/Symfony (see the status bar at the bottom). <br/><br/>That's it, you're ready to go.</p>
+			</div>
+			
+			<div id="tabs-3">
+				
+				<div id="featurestab">
+					<ul>
+						<li><a href="#codeassistf">Codeassist</a></li>
+						<li><a href="#hyperlinkf">Hyperlinking</a></li>
+						<li><a href="#highlightf">Highlighting</a></li>
+						<li><a href="#validationf">Validation</a></li>
+					</ul>
+					<div id="codeassistf">
+						<h2>Codeassist</h2>
+
+						<p>You will get additional codeassist options for various Symfony2 elements.</p>
+
+						<h3>Dependency Injection Services</h3>
+
+						<p>If the current class implements the <a href="http://api.symfony.com/2.0/Symfony/Component/DependencyInjection/ContainerAwareInterface.html">ContainerAwareInterface</a>, you will see a list of available services when staying in a parameter of service-retrieval methods:</p>
+
+						<a class="lightbox" href="/images/screenshots/servicenamecompletion.gif"><img src="/images/screenshots/servicenamecompletion_thumb.gif"></img></a>
+
+						<br/>
+
+						<p>The plugin can also help out PDT to infer the type of a service:</p>
+
+						<a class="lightbox" href="/images/screenshots/servicetypeinference.png"><img src="/images/screenshots/servicetypeinference_thumb.png"></img></a>
+
+						<h3>Template paths</h3>
+
+						<p>In methods that accept a view parameter ie. <span class="code">Controller::render($view)</span>, you'll get assistance:</p>
+
+						<div class="multiShot">				
+							<a href="/images/screenshots/viewpath1.png"><img src="/images/screenshots/viewpath1_thumb.png"></img></a>
+							<a href="/images/screenshots/viewpath2.png"><img src="/images/screenshots/viewpath2_thumb.png"></img></a>
+							<a href="/images/screenshots/viewpath3.png"><img src="/images/screenshots/viewpath3_thumb.png"></img></a>				
+						</div>
+
+						<h3>Annotations</h3>
+
+						<p>You will get codeassist for PHPDoc Annotations and automatic injection of the corresponding UseStatement:</p>
+
+						<div class="multiShot">				
+							<a href="/images/screenshots/annotationcompletion.png"><img src="/images/screenshots/annotationcompletion_thumb.png"></img></a>
+							<a href="/images/screenshots/annotationinjection.png"><img src="/images/screenshots/annotationinjection_thumb.png"></img></a>
+						</div>
+
+						<h3>Template variables</h3>
+
+						<p>When passing variables from a controller to a view, PDT can't help you out in your template</p>			
+							<a class="lightbox" href="/images/screenshots/var_declaration.png"><img src="/images/screenshots/var_declaration_thumb.png"></img></a>			
+						<p>The symfony plugin assists PDT in resolving variables and their types inside templates. This is implemented for PHP and Twig templates:</p>
+
+						<div class="multiShotContainer" id="tempvars">				
+								<ul>
+									<li><a href="#var-twig">Twig</a></li>
+									<li><a href="#var-php">PHP</a></li>
+								</ul>					
+							<div id="var-twig">					
+								<div class="multiShot">				
+									<a href="/images/screenshots/resolved_var_twig.png"><img src="/images/screenshots/resolved_var_twig_thumb.png"></img></a>
+									<a href="/images/screenshots/infered_var_twig.png"><img src="/images/screenshots/infered_var_twig_thumb.png"></img></a>
+								</div>
+							</div>				
+							<div id="var-php">
+								<div class="multiShot">				
+									<a href="/images/screenshots/resolved_var_php.png"><img src="/images/screenshots/resolved_var_php_thumb.png"></img></a>
+									<a href="/images/screenshots/infered_var_php.png"><img src="/images/screenshots/infered_var_php_thumb.png"></img></a>
+								</div>
+							</div>
+						</div>						
+					</div>
+					<div id="hyperlinkf">
+						hyperlink
+					</div>
+					<div id="highlightf">
+						highlight
+					</div>
+					<div id="validationf">
+						validate
+					</div>															
+				</div>
+			</div>
+			
+			<div id="tabs-4"></div>
+			
+		</div>
+	</div>
+	<div id="footer"></div>
+</div>
 
 </body>
 </html>
