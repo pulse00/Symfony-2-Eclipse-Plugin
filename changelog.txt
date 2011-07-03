@@ -1,3 +1,16 @@
+1.0.23
+
+* added project homepage
+* improved twig support
+* improved service/route indexing
+* fixed issue with index-schema deployment
+* added file_link_format applescript for OSX
+* fixed annotation highlighting
+* improved service hyperlink detection
+* added property page for synthetic services
+* moved info from readme to project page
+
+
 1.0.2
 
 * added twig support feature

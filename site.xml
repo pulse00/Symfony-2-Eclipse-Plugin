@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.eclipse.symfony.feature_1.0.23.201107031708.jar" id="org.eclipse.symfony.feature" version="1.0.23.201107031708">
+   <feature url="features/org.eclipse.symfony.feature_1.0.23.201107040118.jar" id="org.eclipse.symfony.feature" version="1.0.23.201107040118">
       <category name="org.eclipse.symfony"/>
    </feature>
-   <feature url="features/org.eclipse.symfony.twigfeature_1.0.23.201107031708.jar" id="org.eclipse.symfony.twigfeature" version="1.0.23.201107031708">
+   <feature url="features/org.eclipse.symfony.twigfeature_1.0.23.201107040118.jar" id="org.eclipse.symfony.twigfeature" version="1.0.23.201107040118">
       <category name="org.eclipse.symfony"/>
    </feature>
    <category-def name="org.eclipse.symfony" label="Symfony"/>
