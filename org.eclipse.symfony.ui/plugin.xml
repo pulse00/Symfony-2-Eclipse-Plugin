@@ -99,5 +99,13 @@
           class="org.eclipse.symfony.ui.preferences.PreferenceInitializer">
     </initializer>
  </extension>
+ <extension
+       point="org.eclipse.ui.ide.projectNatureImages">
+    <image
+          icon="ico/full/obj16/symfony_icon.gif"
+          id="org.eclipse.symfony.ui.symfonyNatureImage"
+          natureId="org.eclipse.symfony.core.symfonyNature">
+    </image>
+ </extension>
  
 </plugin>
