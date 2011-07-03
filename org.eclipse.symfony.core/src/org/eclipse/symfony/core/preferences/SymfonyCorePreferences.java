@@ -2,9 +2,6 @@ package org.eclipse.symfony.core.preferences;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.compiler.problem.ProblemSeverity;
-import org.eclipse.symfony.core.log.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 /**
  * Utility class to access the plugins preferences.
@@ -18,8 +15,6 @@ public class SymfonyCorePreferences {
 	
 	public static final String SCHEMA_VERSION = "schema_version";
 	
-	private static JSONObject synthetic = null;
-
 	/**
 	 * Get the severity level for annotation problems.
 	 * 

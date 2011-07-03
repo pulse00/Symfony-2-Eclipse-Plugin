@@ -47,6 +47,16 @@ public class AnnotationParserTest extends TestCase {
 		reporter.reset();
 		
 	}
+	
+	
+	@Test
+	public void testSyntaxErrors() {
+		
+		
+		root = getRootNode("@ManyToManyPersister('shall\". fo)", false);
+		
+		
+	}
 
 	
 	@Test
@@ -194,8 +204,10 @@ public class AnnotationParserTest extends TestCase {
 			
 		} catch (Exception e) {
 			
-			if (!expectFail)
-				fail();
+			e.printStackTrace();
+			// we should never be here, if the parser fails it should
+			// still finish normally but log syntax errors
+			fail();
 						
 		}
 

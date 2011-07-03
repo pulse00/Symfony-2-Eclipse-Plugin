@@ -11,7 +11,6 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
-import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
@@ -340,7 +339,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
 			int start = sourceStart;
 			int end = sourceStart + visitor.getFullyQualifiedName().length() + 1;
 			String filename = context.getFile().getName();
-			String message = "Unable to resolve " + fqcn;
+			String message = "Unable to resolve annotation '" + fqcn + "'";
 			int lineNo = context.getLineTracker().getLineInformationOfOffset(sourceStart).getOffset();
 
 			/**

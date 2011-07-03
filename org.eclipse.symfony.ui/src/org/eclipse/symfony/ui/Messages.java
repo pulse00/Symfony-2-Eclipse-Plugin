@@ -6,6 +6,9 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.symfony.ui.messages"; //$NON-NLS-1$
 	public static String ServicesPreferencePage_0;
 	public static String SymfonyPreferencePage_0;
+	public static String SymfonyPreferencePage_1;
+	public static String SymfonyPreferencePage_2;
+	public static String SymfonyPreferencePage_3;
 	public static String SymfonyServiceConfigurationBlock_0;
 	public static String SymfonyServiceConfigurationBlock_1;
 	public static String SymfonyServiceConfigurationBlock_2;

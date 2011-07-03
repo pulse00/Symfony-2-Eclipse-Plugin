@@ -133,8 +133,8 @@ public class Logger {
 
 	public static void logException(Throwable exception) {
 		
-		debugMSG(exception.getMessage());
-//		_log(ERROR, exception.getMessage(), exception);
+		//debugMSG(exception.getMessage());
+		_log(ERROR, exception.getMessage(), exception);
 	}
 
 	public static void traceException(String category, String message,

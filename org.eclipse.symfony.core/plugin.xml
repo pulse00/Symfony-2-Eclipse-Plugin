@@ -54,7 +54,7 @@
             class="org.eclipse.symfony.core.builder.SymfonyBuildParticipantFactory"
             id="org.eclipse.symfony.core.buildParticipant"
             name="Symfony Builder"
-            nature="org.eclipse.symfony.core.symfonyNature">
+            nature="org.eclipse.php.core.PHPNature">
       </buildParticipant>
    </extension>
    <extension

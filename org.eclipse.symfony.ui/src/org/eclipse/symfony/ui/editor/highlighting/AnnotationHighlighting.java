@@ -53,18 +53,20 @@ public class AnnotationHighlighting extends AbstractSemanticHighlighting {
 					if ((start == -1 || end == -1)) continue;
 					
 					boolean isTag = false;				
-					String aTag = line.substring(start +1);
+					String aTag = line.substring(start +1).trim();
 
 					// check for built-int phpdoc tags and don't parse them
 					// as annotations
-					for(String tag : PHPDocTagStrategy.PHPDOC_TAGS) {					
-						if (tag.equals(aTag)) {
+					for(String tag : PHPDocTagStrategy.PHPDOC_TAGS) {
+						
+						if (aTag.startsWith(tag)) {
+							
 							isTag = true;
 							break;
 						}					
 					}
 					
-					if (isTag) {
+					if (isTag) {						
 						continue;
 					}
 					
