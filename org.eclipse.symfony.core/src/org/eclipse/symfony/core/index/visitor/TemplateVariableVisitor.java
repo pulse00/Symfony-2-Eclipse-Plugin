@@ -227,9 +227,11 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 					
 					Scalar view = (Scalar) children.get(0);
 					
-					if (children.get(1).getClass() == ArrayCreation.class) {
+					if (children.size() >= 2 && children.get(1).getClass() == ArrayCreation.class) {
 						parseVariablesFromArray((ArrayCreation) children.get(1), PathUtils.createViewPath(view));
-					}					
+					} else {
+						Logger.log(Logger.WARNING, "Unable to parse view variable from " + children.toString());
+					}
 				}
 			}
 		}
@@ -282,7 +284,16 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 				} else if(value.getClass() == PHPCallExpression.class) {
 
 					PHPCallExpression callExp = (PHPCallExpression) value;
-					VariableReference varRef = (VariableReference) callExp.getReceiver();
+					
+					VariableReference varRef = null;
+					try {
+						varRef = (VariableReference) callExp.getReceiver();	
+					} catch (ClassCastException e) {
+						Logger.log(Logger.WARNING, callExp.getReceiver().getClass().toString() 
+								+ " could not be cast to VariableReference in " + currentMethod.getName() );
+
+					}
+					
 
 					if (varRef == null) {
 						continue;

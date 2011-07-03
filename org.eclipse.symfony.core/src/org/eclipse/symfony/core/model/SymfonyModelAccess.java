@@ -302,6 +302,12 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	 */
 	public List<Route> findRoutes(IScriptProject project) {
 
+		if (index == null) {
+			Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
+			return new ArrayList<Route>();
+		}
+		
+		
 		return index.findRoutes(project.getPath());
 		
 	}
@@ -460,7 +466,13 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	 */
 	public Service findService(final String id, IPath path) {
 		
-		final List<Service> services = new ArrayList<Service>();		
+		final List<Service> services = new ArrayList<Service>();
+		
+		if (index == null) {
+			Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
+			return null;
+		}
+		
 		String pathString = path == null ? "" : path.toString();
 		
 		index.findService(id, pathString, new IServiceHandler() {
@@ -505,6 +517,11 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	public List<Service> findServices(IPath path) {
 	
 		final List<Service> services = new ArrayList<Service>();
+		
+		if (index == null) {
+			Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
+			return null;			
+		}
 		
 		index.findServices(path.toString(), new IServiceHandler() {
 			

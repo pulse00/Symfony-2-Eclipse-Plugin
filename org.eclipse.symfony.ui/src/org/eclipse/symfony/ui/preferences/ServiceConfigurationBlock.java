@@ -1,6 +1,7 @@
 package org.eclipse.symfony.ui.preferences;
 
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.model.Service;
 import org.eclipse.symfony.core.preferences.CorePreferenceConstants.Keys;
@@ -211,6 +213,18 @@ CoreOptionsConfigurationBlock {
 
 		setShell(parent.getShell());
 
+		
+		GridData data = new GridData();
+		data.horizontalSpan = 1;
+		
+		org.eclipse.swt.graphics.Rectangle rect = parent.getMonitor().getClientArea();
+		data.widthHint = rect.width / 4;
+		
+		Label header = new Label(parent, SWT.WRAP | SWT.BORDER);
+		header.setText(Messages.ServiceConfigurationBlock_6);
+		header.setLayoutData(data);
+		
+		
 		Composite markersComposite = createMarkersTabContent(parent);
 
 		validateSettings(null, null, null);

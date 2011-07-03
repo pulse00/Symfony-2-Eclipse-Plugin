@@ -124,18 +124,24 @@ PhpIndexingVisitorExtension {
 							
 							List<ASTNode> nodes = args.getChilds();
 							
-							Scalar alias = (Scalar) nodes.get(0);
-							Scalar reference = (Scalar) nodes.get(1);
-							
-							if (alias != null && reference != null) {
-							
-								String id = SymfonyTextSequenceUtilities.removeQuotes(alias.getValue());
-								String ref = "alias_" + SymfonyTextSequenceUtilities.removeQuotes(reference.getValue());
+							try {
 								
+								Scalar alias = (Scalar) nodes.get(0);
+								Scalar reference = (Scalar) nodes.get(1);
 								
-								indexer.addService(id, ref, sourceModule.getScriptProject().getPath().toString(), 0);								
-								indexer.exitServices();
+								if (alias != null && reference != null) {
 								
+									String id = SymfonyTextSequenceUtilities.removeQuotes(alias.getValue());
+									String ref = "alias_" + SymfonyTextSequenceUtilities.removeQuotes(reference.getValue());
+									
+									
+									indexer.addService(id, ref, sourceModule.getScriptProject().getPath().toString(), 0);								
+									indexer.exitServices();
+									
+								}
+								
+							} catch (ClassCastException e) {
+								//ignore cause not a valid node
 							}
 						}
 					}
@@ -193,8 +199,13 @@ PhpIndexingVisitorExtension {
 					
 					if (ns != null) {
 						
-						String fqcn = ns + "\\" + superReference.getName();						
-						boolean isTestOrFixture = namespace.getName().contains("Test") || namespace.getName().contains("Fixtures");
+						String fqcn = ns + "\\" + superReference.getName();	
+						
+						
+						boolean isTestOrFixture = false;
+						
+						if (namespace != null && namespace.getName() != null)
+							isTestOrFixture = namespace.getName().contains("Test") || namespace.getName().contains("Fixtures");
 						
 						// we got a bundle definition, index it
 						if (fqcn.equals(SymfonyCoreConstants.BUNDLE_FQCN) && ! isTestOrFixture) {
@@ -290,6 +301,15 @@ PhpIndexingVisitorExtension {
 			for (UsePart part : statement.getParts()) {
 				
 				if (part.getNamespace().getName().equals(name)) {
+					
+					//TODO: clean this up ;)
+					if (part.getNamespace() == null || part.getNamespace().getNamespace() == null
+							|| part.getNamespace().getNamespace().getName() == null) {
+						
+						Logger.log(Logger.WARNING, sourceModule.getPath().toString() + ": error parsing namespace parts for " + name);
+						return null;
+					}
+					
 					return part.getNamespace().getNamespace().getName();
 				}
 			}

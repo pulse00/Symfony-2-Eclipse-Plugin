@@ -3,6 +3,7 @@ package org.eclipse.symfony.core.util;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
@@ -87,6 +88,7 @@ public class ModelUtils {
 	 */
 	public static String extractBundleName(NamespaceDeclaration namespace) {
 
+		Assert.isNotNull(namespace);
 		return extractBundleName(namespace.getName());
 		
 	}

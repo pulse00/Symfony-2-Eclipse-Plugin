@@ -72,7 +72,7 @@ public class SymfonyIndexer {
 	
 	public void addService(String id, String phpClass, String path, int timestamp) {
 		
-		try {
+		try {			
 			serviceDao.insert(connection, path, id, phpClass, timestamp);
 		} catch (Exception e) {
 			Logger.logException(e);

@@ -70,13 +70,14 @@ public class SymfonyHyperlinkDetector extends PHPHyperlinkDetector {
 		int offset = region.getOffset();
 		
 		try {
+			
+			// TODO: fix the findWord() method for services like form.factory
 			IRegion wordRegion = findWord(document, offset);
 			
 			if (wordRegion == null)
 				return null;
 
 			String service = document.get(wordRegion.getOffset(), wordRegion.getLength());			
-
 			Service s = SymfonyModelAccess.getDefault().findService(service, input.getScriptProject().getPath());
 			
 			if (s == null) {
@@ -87,8 +88,9 @@ public class SymfonyHyperlinkDetector extends PHPHyperlinkDetector {
 			
 			IType[] types = PhpModelAccess.getDefault().findTypes(s.getNamespace(), s.getClassName(), MatchRule.EXACT, 0, 0, scope, null);
 			
+			// it should only exist 1 single service for each project with this service id
 			if (types.length != 1) {
-				Logger.debugMSG("No service found");
+				Logger.debugMSG("No service found (" + types.length + ")");
 				return null;
 			}
 			
