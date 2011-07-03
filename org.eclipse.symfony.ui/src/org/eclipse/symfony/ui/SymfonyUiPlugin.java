@@ -34,10 +34,13 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		
-		
 		//TODO: implement OpenDocumentListener for file links in 
 		// symfony exception pages
-		Display.getDefault().addListener(SWT.OpenDocument, new OpenDocumentListener());
+		// currently this is not used, as eclipse itself handles this
+		// event and opens the file
+		//Display.getDefault().addListener(SWT.OpenDocument, new OpenDocumentListener());
+		
+
 	}
 
 	/*
