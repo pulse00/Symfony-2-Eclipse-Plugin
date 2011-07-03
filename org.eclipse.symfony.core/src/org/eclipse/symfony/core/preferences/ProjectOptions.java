@@ -47,7 +47,6 @@ public class ProjectOptions {
 			defaultSynthetics = (JSONArray) parser.parse(synths);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
 			Logger.logException(e);			
 		}		
 		

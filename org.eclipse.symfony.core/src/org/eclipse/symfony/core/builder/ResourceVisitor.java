@@ -126,7 +126,7 @@ implements IResourceVisitor {
 
 		} catch (Exception e1) {
 
-			Logger.log(Logger.INFO, e1.getMessage());
+			Logger.logException(e1);
 
 		}
 
@@ -150,7 +150,7 @@ implements IResourceVisitor {
 
 		} catch (Exception e) {
 
-			Logger.log(Logger.INFO_DEBUG, e.getMessage());
+			Logger.logException(e);
 
 		}
 	}

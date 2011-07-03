@@ -6,6 +6,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
 import org.eclipse.symfony.core.codeassist.contexts.ServiceContainerContext;
@@ -53,14 +54,16 @@ public class ServiceContainerCompletionStrategy extends
 		List<Service> services = model.findServices(project.getPath());
 		SourceRange range = getReplacementRange(context);
 		
+		String prefix = context.getPrefix();
+		
 		if (services == null) {
 			return;
 		}
 
 		for(Service service : services) {
 
-			//TODO: filter by visibility |�abstract services
-			reporter.reportKeyword(service.getId(), "", range);
+			if (CodeAssistUtils.startsWithIgnoreCase(service.getId(), prefix))
+				reporter.reportKeyword(service.getId(), "", range);
 		}
 	}
 }

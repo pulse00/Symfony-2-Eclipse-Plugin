@@ -2,6 +2,7 @@ package org.eclipse.symfony.core;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.symfony.core.log.Logger;
 import org.osgi.framework.BundleContext;
 
 public class SymfonyCorePlugin extends Plugin {

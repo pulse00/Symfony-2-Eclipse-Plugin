@@ -17,6 +17,11 @@ import org.eclipse.swt.widgets.Listener;
  * a symfony:// url protocol and pass over the "open with"
  * event to eclipse.
  * 
+ * TODO: open feature request in bugzilla
+ * 
+ * 1. To make eclipse register a url scheme with the host operating system
+ * 2. To create an extension point which lets plugins handle opening of documents
+ * , so switching to a specific line can be done 
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
