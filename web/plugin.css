@@ -5,6 +5,10 @@ http://developer.yahoo.com/yui/license.html
 version: 3.1.2
 build: 56
 */
+
+html {	
+	overflow: scroll;
+}
 .sf-exceptionreset html{color:#000;background:#FFF;}.sf-exceptionreset body,.sf-exceptionreset div,.sf-exceptionreset dl,.sf-exceptionreset dt,.sf-exceptionreset dd,.sf-exceptionreset ul,.sf-exceptionreset ol,.sf-exceptionreset li,.sf-exceptionreset h1,.sf-exceptionreset h2,.sf-exceptionreset h3,.sf-exceptionreset h4,.sf-exceptionreset h5,.sf-exceptionreset h6,.sf-exceptionreset pre,.sf-exceptionreset code,.sf-exceptionreset form,.sf-exceptionreset fieldset,.sf-exceptionreset legend,.sf-exceptionreset input,.sf-exceptionreset textarea,.sf-exceptionreset p,.sf-exceptionreset blockquote,.sf-exceptionreset th,.sf-exceptionreset td{margin:0;padding:0;}.sf-exceptionreset table{border-collapse:collapse;border-spacing:0;}.sf-exceptionreset fieldset,.sf-exceptionreset img{border:0;}.sf-exceptionreset address,.sf-exceptionreset caption,.sf-exceptionreset cite,.sf-exceptionreset code,.sf-exceptionreset dfn,.sf-exceptionreset em,.sf-exceptionreset strong,.sf-exceptionreset th,.sf-exceptionreset var{font-style:normal;font-weight:normal;}.sf-exceptionreset li{list-style:none;}.sf-exceptionreset caption,.sf-exceptionreset th{text-align:left;}.sf-exceptionreset h1,.sf-exceptionreset h2,.sf-exceptionreset h3,.sf-exceptionreset h4,.sf-exceptionreset h5,.sf-exceptionreset h6{font-size:100%;font-weight:normal;}.sf-exceptionreset q:before,.sf-exceptionreset q:after{content:'';}.sf-exceptionreset abbr,.sf-exceptionreset acronym{border:0;font-variant:normal;}.sf-exceptionreset sup{vertical-align:text-top;}.sf-exceptionreset sub{vertical-align:text-bottom;}.sf-exceptionreset input,.sf-exceptionreset textarea,.sf-exceptionreset select{font-family:inherit;font-size:inherit;font-weight:inherit;}.sf-exceptionreset input,.sf-exceptionreset textarea,.sf-exceptionreset select{*font-size:100%;}.sf-exceptionreset legend{color:#000;}
 
 .sf-exceptionreset html,
@@ -15,6 +19,7 @@ build: 56
     _height:100%;
     margin:0;
     padding:0;
+		
 }
 .sf-exceptionreset body
 {
@@ -111,66 +116,9 @@ build: 56
     margin:10px 0 20px;
 }
 
-.sf-exceptionreset .block,
-.sf-exceptionreset .block_exception
-{
-    -moz-border-radius:16px;
-    -webkit-border-radius:16px;
-    border-radius:16px;
-    margin-bottom:20px;
-}
-.sf-exceptionreset .block
-{
-    background-color:#FFFFFF;
-    border:1px solid #dfdfdf;
-    padding:40px 50px;
-}
 
-.sf-exceptionreset .block_exception
-{
-    background-color:#f6f6f6;
-    border:1px solid #dfdfdf;
-    padding:30px 28px;
-}
 
-.sf-exceptionreset .block_exception div
-{
-    color:#313131;
-    font-size:10px;
-}
 
-.sf-exceptionreset .block_exception_detected .illustration_exception,
-.sf-exceptionreset .block_exception_detected .text_exception
-{
-    float:left;
-}
-.sf-exceptionreset .block_exception_detected .illustration_exception
-{
-    width:152px;
-}
-.sf-exceptionreset .block_exception_detected .text_exception
-{
-    width:670px;
-    padding: 30px 44px 24px 46px;
-    position:relative;
-}
-.sf-exceptionreset .text_exception .open_quote,
-.sf-exceptionreset .text_exception .close_quote
-{
-    position:absolute;
-}
-
-.sf-exceptionreset .open_quote
-{
-    top:0;
-    left:0;
-}
-
-.sf-exceptionreset .close_quote
-{
-    bottom:0;
-    right:50px;
-}
 
 .sf-exceptionreset .block_exception p
 {
@@ -189,88 +137,46 @@ build: 56
     padding-bottom:16px;
 }
 
-.sf-exceptionreset li a
-{
-    background:none;
-    color:#868686;
-    text-decoration:none;
+
+
+#tabs .ui-widget-header {
+	
+	 background: none repeat scroll 0 0 transparent;
+	 border: medium none;
+
+	
+
 }
 
-.sf-exceptionreset li a:hover
-{
-    background:none;
-    color:#313131;
-    text-decoration:underline;
+#tabs .ui-state-default,
+#tabs .ui-widget-content .ui-state-default,
+#tabs .ui-widget-header .ui-state-default, 
+#tabs .ui-tabs .ui-tabs-nav li {
+
+	background: -moz-linear-gradient(center top , #F4F4F4, #ECECEC) repeat scroll 0 0 transparent;
+	 height: 32px;
+	 margin-right: 5px;
+	
+	
 }
 
-.sf-exceptionreset .logs h2
-{
-    float:left;
-    width:654px;
+#featurestab .ui-state-active a, #featurestab .ui-state-active a:link, #featurestab  .ui-state-active a:visited {
+
+ color: #7D112C;
+    font-weight: bold;	
+	
 }
 
-.sf-exceptionreset .error_count
-{
-    float:right;
-    width:170px;
-    text-align:right;
+#tabs #featurestab .ui-state-default,
+#tabs #featurestab .ui-widget-content .ui-state-default,
+#tabs #featurestab .ui-widget-header .ui-state-default, 
+#tabs #featurestab .ui-tabs .ui-tabs-nav li {
+	
+	background: none;
+	border: none;
+	
 }
 
-.sf-exceptionreset .error_count span
-{
-    display:inline-block;
-    background-color:#aacd4e;
-    -moz-border-radius:6px;
-    -webkit-border-radius:6px;
-    border-radius:6px;
-    padding:4px;
-    color:white;
-    margin-right:2px;
-    font-size:11px;
-    font-weight:bold;
-}
-
-.sf-exceptionreset .toggle
-{
-    vertical-align:middle;
-}
-
-.sf-exceptionreset .linked ul, 
-.sf-exceptionreset .linked li
-{
-    display: inline;
-}
-
-.sf-exceptionreset #output_content
-{
-    color: #000;
-    font-size: 12px;
-}
-
-.sf-exceptionreset ol
-{
-    padding: 10px 0
-}
-
-.sf-exceptionreset ol li {
-    list-style: decimal; 
-    margin-left: 20px; 
-    padding: 2px;
-    padding-bottom: 20px;
-}
-
-.sf-exceptionreset ol ol li
-{
-    list-style-position: inside; 
-    margin-left: 0; 
-    white-space: nowrap; 
-    font-size: 12px; 
-    padding-bottom: 0;
-}
-.sf-exceptionreset li .selected
-{
-    background-color: #ffd;
-}
 
 #sflogo { 	
 	float: left;
@@ -301,16 +207,14 @@ li {
 }
 
 h2 {
-	margin-top: 30px;	
+ margin: 0 0 10px;
 }
 
-h3 {
-	
-	 margin-top: 40px;
-	
+h3 {	
+	 margin-top: 40px;	
 }
 
-span.code {
+span.code, p.code {
 		
 	 background: none repeat scroll 0 0 #EEEEEE;
 	 border: 1px solid lightgray;
@@ -321,8 +225,106 @@ span.code {
 	}	
 }
 
+h2.question {
+	
+ margin: 0 0 12px;
+ padding: 0;	
+	
+}
+
+h2.answer {
+	
+ font-size: 13px;
+ font-weight: normal;
+ margin: 0;
+ padding: 0;
+	
+}
+
+.faq {
+ background-color: #F6F6F6;
+    border: 1px solid #DFDFDF;
+    border-radius: 8px 8px 8px 8px;
+    margin-bottom: 20px;
+    padding: 20px 28px;
+	
+}
+.ui-widget-content a:hover {
+	
+	text-decoration: underline;
+}
+
+
+.sharewrapper {
+	
+	margin-top: 2px;
+	float: right;
+}
+
+.ui-tabs-vertical { width: 55em; }
+.ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 12em; }
+.ui-tabs-vertical .ui-tabs-nav li { clear: left; width: 100%; border-bottom-width: 1px !important; border-right-width: 0 !important; margin: 0 -1px .2em 0; }
+.ui-tabs-vertical .ui-tabs-nav li a { display:block; }
+.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-selected { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; border-right-width: 1px; }
+.ui-tabs-vertical .ui-tabs-panel {  float: right;  width: 720px;}
+
 #tempvars {
+	background: none repeat scroll 0 0 transparent;
+    border: medium none;
+}
+
+#tabs #featurestab #tempvars .ui-state-default,
+#tabs #featurestab #tempvars .ui-widget-content .ui-state-default,
+#tabs #featurestab #tempvars .ui-widget-header .ui-state-default, 
+#tabs #featurestab #tempvars .ui-tabs .ui-tabs-nav li {
 	
+	 background: -moz-linear-gradient(center top , #F4F4F4, #ECECEC) repeat scroll 0 0 transparent;
+	 height: 32px;
+	 border-bottom-width: 1px !important;
+	 border-right-width: 0 !important;
+	 clear: none;
+	 margin: 0 15px 0.2em 0;
+	 width: 50px;		
+}
+
+
+#featurestab {	
 	
+	width: 915px;
+	border: medium none;
+}
+
+#tabs #featureul {
+	width: 130px;
 	
+}
+
+.tabdiv {
+	
+	margin-top: 15px;
+	
+}
+
+#mainul {
+	
+	margin-top: 10px;
+    padding-left: 15px;
+}
+
+#topfeature {
+	
+	margin: 0;
+    padding: 0;
+}
+
+
+#vpspan {
+	
+	 margin-left: 45px;
+}
+
+p.info {
+	
+	color: #7D112C;
+  font-size: 13px;
 }

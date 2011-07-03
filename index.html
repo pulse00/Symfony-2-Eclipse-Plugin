@@ -3,12 +3,12 @@
 
 <html lang="en">
 <head>
-<title>Symfony2 Eclipse plugin</title>
+<title>Symfony Eclipse plugin</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link href="/web/plugin_layout.css" rel="stylesheet" type="text/css" media="all" />
-<link href="/web/plugin.css" rel="stylesheet" type="text/css" media="all" />
 <link type="text/css" href="/css/smoothness/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="css/jquery.lightbox-0.5.css" media="screen" />
+<link href="/web/plugin_layout.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/web/plugin.css" rel="stylesheet" type="text/css" media="all" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js" type="text/javascript"></script>
 <script src="/js/jquery.lightbox-0.5.min.js" type="text/javascript"></script>
@@ -27,6 +27,7 @@
   })();
 
 </script>
+<script type="text/javascript">var switchTo5x=true;</script><script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script><script type="text/javascript">stLight.options({publisher:'41a167f1-9ddb-4d54-a742-c665de64954c'});</script>
 </head>
 <body>
 <p>
@@ -34,11 +35,13 @@
 </p>
 <div id="content">
 	<div id="header_clear_fix">
-		<img class="png_fix" id="sflogo" alt="Symfony" src="/web/images/symfony_black_02.png" name="sflogo">
+		<a href="http://symfony.com">		<img class="png_fix" id="sflogo" alt="Symfony" src="/web/images/symfony_black_02.png" name="sflogo"></a>
+
 		<div id="header_eclipse">
 			<h1 class="eclipseheader">
 				Eclipse Plugin
 			</h1>
+
 		</div>
 	</div>
 	<div class="sf-exceptionreset"></div>
@@ -46,34 +49,45 @@
 	<div class="demo">
 		
 		<div id="tabs">
-			<ul>
-				<li><a href="#tabs-1">About</a></li>
-				<li><a href="#tabs-2">Installation</a></li>
-				<li><a href="#tabs-3">Features</a></li>
-				<li><a href="#tabs-4">FAQ</a></li>
+			
+			<ul id="mainul">
+				<li class="ui-corner-bottom"><a href="#tabs-1">About</a></li>
+				<li class="ui-corner-bottom"><a href="#tabs-2">Installation</a></li>
+				<li class="ui-corner-bottom"><a href="#tabs-3">Features</a></li>
+				<li class="ui-corner-bottom"><a href="#tabs-4">FAQ</a></li>
+				<div class="sharewrapper">
+			<span  class='st_twitter_large' ></span><span  class='st_facebook_large' ></span><span  class='st_yahoo_large' ></span><span  class='st_gbuzz_large' ></span><span  class='st_email_large' ></span><span  class='st_sharethis_large' ></span>					
+				</div>				
 			</ul>
 			
-			<div id="tabs-1">
+			<div id="tabs-1" class="tabdiv">
 		
-			<h2>What's this good for?</h2>
-			<p>The Symfony Eclipse Plugin provide support for the <a href="http://symfony.com">Symfony2 PHP Framework</a>. It is built on top of the <a href="http://www.eclipse.org/dltk/">Dynamic Languages Toolkit</a> and the <a href="http://www.eclipse.org/pdt/">PHP Development Tools.</a> and adds some useful features which hopefully save you some time like:				
+			<h2>Symfony</h2>
+			<p><a href="http://symfony.com">Symfony</a> is a popular PHP Web Development framework. This eclipse plugin aims to provide support for framework specific idioms. It is built on top of the <a href="http://www.eclipse.org/dltk/">Dynamic Languages Toolkit</a> and the <a href="http://www.eclipse.org/pdt/">PHP Development Tools.</a> and adds some useful features which hopefully save you some time like:				
 				<ul>
-					<li> - Codeassist for elements specific to the Symfony2 framework, like <a href="http://symfony.com/doc/current/book/service_container.html">services</a>, <a href="http://symfony.com/doc/current/book/routing.html">routes</a> and <a href="http://symfony.com/doc/current/book/templating.html">template paths</a></li>					
+					<li> - Codeassist for elements specific to the Symfony framework, like <a href="http://symfony.com/doc/current/book/service_container.html">services</a>, <a href="http://symfony.com/doc/current/book/routing.html">routes</a> and <a href="http://symfony.com/doc/current/book/templating.html">template paths</a></li>					
 					<li> - <a href="http://symfony.com/doc/2.0/bundles/SensioFrameworkExtraBundle/index.html">Annotation</a> support</li>
 					<li> - <a href="http://www.twig-project.org/">Twig</a> support</li>
 				</ul>
 
 				</p>
+				
+			<h2>Twig</h2>
+			
+			<p><a href="http://twig-project.com">Twig</a> is a templating language for PHP. Symfony has built in support for Twig, and so does the Symfony Eclipse Plugin. You'll need to install the standalone <a href="https://github.com/pulse00/Twig-Eclipse-Plugin">Twig Plugin</a> first though.</p>
 
+			<h2>Yaml</h2>
+			
+			<p><a href="http://www.yaml.org/">Yaml</a> is a data serialization standard which is supported by Symfony. If you're using yaml, there's a separate <a href="http://code.google.com/p/yedit/">eclipse plugin available.</a> which adds syntax highlighting and validation for yaml files.</p>
 			<h2>Disclaimer</h2>
 		<p>
 		The plugin is still beta. Please report problems and feature requests via <a href="https://github.com/pulse00/Symfony-2-Eclipse-Plugin/issues?sort=created&amp;direction=asc&amp;state=open">github issues</a>.
 		</p>
 			</div>
 			
-			<div id="tabs-2">
+			<div id="tabs-2" class="tabdiv">
 				<h2>Prerequisites</h2>
-				<p>At the current stage the Symfony2 Eclipse Plugin require a nightly build of the PHP Development Tools (PDT), as there have been some changes to the way extenders can hook into PDT. This nightly build can be downloaded as a build artifact from the <a href="https://hudson.eclipse.org/hudson/job/cbi-pdt-3.0-indigo/159/artifact/build/N201107010913/">eclipse continuous integration site</a>. You'll need to download a file called <span><b><a href="https://hudson.eclipse.org/hudson/job/cbi-pdt-3.0-indigo/159/artifact/build/N201107010913/pdt-Update-N201107010913.zip">pdt-Update-N201107010913.zip</a></b></span> </p>
+				<p>At the current stage the Symfony Eclipse Plugin requires a nightly build of the PHP Development Tools (PDT), as there have been some changes to the way extenders can hook into PDT. This nightly build can be downloaded as a build artifact from the <a href="https://hudson.eclipse.org/hudson/job/cbi-pdt-3.0-indigo/159/artifact/build/N201107010913/">eclipse continuous integration site</a>. You'll need to download a file called <span><b><a href="https://hudson.eclipse.org/hudson/job/cbi-pdt-3.0-indigo/159/artifact/build/N201107010913/pdt-Update-N201107010913.zip">pdt-Update-N201107010913.zip</a></b></span> </p>
 				<p>All following installation/deinstallation steps can be found via <span class="eclipsehint">Help -> Install new software...</span> </p>
 				<p>Before installing the nightly build, make sure to uninstall any existing installations of the PDT plugin, if one exists.</p>
 				<p>After that, open the "Install new software" dialog and add a new repository. Select "Local" and browse to the unzipped PDT nightly build. The repository will offer a couple of PHP features, choose the "All-In-One SDK" Feature and install it.</p>			
@@ -81,10 +95,10 @@
 				<h2>Installation via Updatesite</h2>			
 				<p>The plugin can be installed via the regular <a href="http://help.eclipse.org/helios/index.jsp?topic=/org.eclipse.platform.doc.user/tasks/tasks-124.htm">update site mechanism.</a></p>
 				<p>The update site is located at<br/><br/> <span id="updatelink"><a href="http://pulse00.github.com/Symfony-2-Eclipse-Plugin/">http://pulse00.github.com/Symfony-2-Eclipse-Plugin/</a></span></p>
-				<br/><p>After adding the updatesite to your eclipse installation, you will see 2 Symfony2 features:				
+				<br/><p>After adding the updatesite to your eclipse installation, you will see 2 Symfony features:				
 					<ul>					
-						<li> - Symfony2 Core Feature</li>
-						<li> - Symfony2 Twig Support</li>
+						<li> - Symfony Core Feature</li>
+						<li> - Symfony Twig Support</li>
 					</ul>				
 
 					The Core Feature is mandatory. The Twig Support Feature is only needed if you use the <a href="http://www.twig-project.org/">Twig templating engine</a>. If you need Twig Support, install the separate <a href="https://github.com/pulse00/Twig-Eclipse-Plugin">Twig plugin</a> first.
@@ -92,26 +106,24 @@
 
 					<h2>Usage</h2>			
 
-					<p>To make your existing PHP Projects Symfony2 aware, add the SymfonyNature by right-clicking on the project in the <span class="eclipsehint">PHP explorer -> Symfony -> Add/Remove Symfony Nature.</span> This will add the Symfony2 <a href="http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fextension-points%2Forg_eclipse_core_resources_natures.html">project nature</a> and trigger the indexing mechanism of DLTK/PDT/Symfony (see the status bar at the bottom). <br/><br/>That's it, you're ready to go.</p>
+					<p>To make your existing PHP projects Symfony aware, add the SymfonyNature by right-clicking on the project in the <span class="eclipsehint">PHP explorer -> Symfony -> Add/Remove Symfony Nature.</span> This will add the Symfony <a href="http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fextension-points%2Forg_eclipse_core_resources_natures.html">project nature</a> and trigger the indexing mechanism of DLTK/PDT/Symfony (see the status bar at the bottom). <br/><br/>That's it, you're ready to go.</p>
 			</div>
 			
-			<div id="tabs-3">
+			<div id="tabs-3" class="tabdiv">
 				
 				<div id="featurestab">
-					<ul>
-						<li><a href="#codeassistf">Codeassist</a></li>
-						<li><a href="#hyperlinkf">Hyperlinking</a></li>
-						<li><a href="#highlightf">Highlighting</a></li>
-						<li><a href="#validationf">Validation</a></li>
+					<ul id="featureul">
+						<li class="ftli"><a href="#codeassistf">Codeassist</a></li>
+						<li class="ftli"><a href="#hyperlinkf">Hyperlinks</a></li>
+						<li class="ftli"><a href="#highlightf">Highlighting</a></li>
+						<li class="ftli"><a href="#validationf">Validation</a></li>
+						<li class="ftli"><a href="#experimentalf">Experimental</a></li>
 					</ul>
-					<div id="codeassistf">
-						<h2>Codeassist</h2>
+					<div id="codeassistf" class="featurediv">
+					
+						<h3 id="topfeature">Dependency Injection Services</h3>
 
-						<p>You will get additional codeassist options for various Symfony2 elements.</p>
-
-						<h3>Dependency Injection Services</h3>
-
-						<p>If the current class implements the <a href="http://api.symfony.com/2.0/Symfony/Component/DependencyInjection/ContainerAwareInterface.html">ContainerAwareInterface</a>, you will see a list of available services when staying in a parameter of service-retrieval methods:</p>
+						<p>If the current class implements the <a href="http://api.symfony.com/2.0/Symfony/Component/DependencyInjection/ContainerAwareInterface.html">ContainerAwareInterface</a>, you will see a list of available services when staying in a parameter of service-retrieval methods (click thumb to enlarge):</p>
 
 						<a class="lightbox" href="/images/screenshots/servicenamecompletion.gif"><img src="/images/screenshots/servicenamecompletion_thumb.gif"></img></a>
 
@@ -148,8 +160,8 @@
 
 						<div class="multiShotContainer" id="tempvars">				
 								<ul>
-									<li><a href="#var-twig">Twig</a></li>
-									<li><a href="#var-php">PHP</a></li>
+									<li class="twigvsphp"><a href="#var-twig">Twig</a></li>
+									<li class="twigvsphp"><a href="#var-php">PHP</a></li>
 								</ul>					
 							<div id="var-twig">					
 								<div class="multiShot">				
@@ -165,19 +177,102 @@
 							</div>
 						</div>						
 					</div>
-					<div id="hyperlinkf">
-						hyperlink
+					<div id="hyperlinkf" class="featurediv">
+						<p>To ease naviation in your Symfony project, the plugin offers hyperlinks for Symfony elements. When ctrl+clicking on such elements, PDT will know
+							where to go and open the corresponding resource. <br/><br/>For example ctrl+clicking on <span class="code">'session'</span> in the method call <span class="code">$this->get('session');</span> will open the declaring type of the session service.</p>
+							
+						<p>Currently only dependency injection services are supported. Elements that are on the feature list:</p>
+						
+						<ul>
+							<li> - <b>Routes</b>: open the corresponding controller when ctrl+click on a route in a template</li>
+							<li> - <b>ViewPaths</b>: open the template when ctrl+clicking on a viewpath ie.<p><span class="code" id="vpspan"> $this->render('MyBundle:Controller:index.html.twig')</span></p></li>
+							<li> - <b>Template variables</b>: open the corresponding controller when ctrl+clicking on templates variables</li>
+						</ul>
+						
+						<p>If you have ideas for additional elements, please <a href="https://github.com/pulse00/Symfony-2-Eclipse-Plugin/issues/new">create an issue</a> on github.</p>
 					</div>
 					<div id="highlightf">
-						highlight
+						<p>At the moment additional highlighting on top of the PDT defaults is applied to annotations only:</p>
+						<a class="lightbox" href="/images/screenshots/highlighting.png"><img src="/images/screenshots/highlighting_thumb.png"></img></a>							
+						<p>The color of the highlighting can be changed in the default PDT syntax color preference page.</p>						
 					</div>
-					<div id="validationf">
-						validate
+					<div id="validationf" class="featurediv">
+
+						<p>Symfony elements can be validated by the plugin for syntax errors or other problems. For example you will see a validation error for unresolvable annotations:</p>
+						<a class="lightbox" href="/images/screenshots/annotationerror.png"><img src="/images/screenshots/annotationerror_thumb.png"></img></a>
+						
+						<p>The severity level of those validation problems can be altered in the preference page of the Plugin ( or turned off completely).</p>
+						<p>It's planned to validate additional elements with a corresponding quickfix solution, so these the validation error of a missing template will offer you quickfix to create that template for you.</p>
+						
 					</div>															
+					
+					<div id="experimentalf" class="featurediv">
+						<h2>These features might or might not work for you ;)</h2>
+						
+						<h3>file_link_format</h3>
+						
+						<p>Symfony provides a configuration flag to render file links in exceptions using a specific format. Unfortunately eclipse does not register an URL protocol in the operating system, so this does not work out of the box for eclipse. There's however a workaround (currently only available on Mac OSX):</p>
+						
+						<ul>
+							<li>1. Download the <span>symfony2eclipse.zip</span> file from the <a href="https://github.com/pulse00/Symfony-2-Eclipse-Plugin"> download section</a> in the github repository.</li>
+							<li>2. Unzip the <b>symfony2eclipse</b> app, and copy the file in your application folder.</li>
+							<li>3. Add an <span class="code">eclipse</span> link in your FrameworkBundle:</li>							
+							<p>
+								<script src="https://gist.github.com/1062569.js"> </script>								
+							</p>
+							<p>File links in Symfony exception pages should now open / focus eclipse and open the corresponding file.</p>
+							
+							<p>The source of the symfony2eclipse app is available in the <a href="https://github.com/pulse00/Symfony-2-Eclipse-Plugin/tree/master/org.eclipse.symfony.ui/launcher/osx/symfony2eclipse.app/Contents">github repo.</a> It's a simple applescript registering a <span class="code">symfony://</span> URL scheme with OSX via the info.plist file of the applescript-bundle. When the browser requests that URL scheme, the script handles it and opens Eclipse.</p>
+							<p class="info">Any hints (or even better <a href="http://help.github.com/pull-requests/">pull request</a>) how to implement this for Windows and Linux are greatly appreciated!</p>
+						</ul>
+						
+						
+					</div>
 				</div>
 			</div>
 			
-			<div id="tabs-4"></div>
+			<div id="tabs-4" class="tabdiv">
+				
+				<div class="faq">					
+					<h2 class="question">How do i know a PHP project is symfony-aware?</h2>
+					<h2 class="answer">Check for a "Symfony Builder" in the projects builders - <span class="eclipsehint">project -> Properties -> Builders</span>. If it's not there, run the "Add/Remove Symfony Nature" (right-click on the project in the <span class="eclipsehint">package explorer -> Symfony -> Add/Remove Symfony Nature</span>).</h2>					
+				</div>
+
+				<div class="faq">					
+					<h2 class="question">There's no additional codeassistance showing up, what can i do?</h2>
+					<h2 class="answer">The plugin indexes services and annotation during the build process. Try to clean the project (<span class="eclipsehint">project -> clean</span>). If it's still not working, check if the project has a Symfony nature.</h2>					
+				</div>
+				
+				<div class="faq">					
+					<h2 class="question">Still no code assist, what now?</h2>
+					<h2 class="answer">Check your build-path - <span class="eclipsehint"> project -> properties -> PHP build path</span> - and ensure that all your source folders are in the build path. Also make sure that none of your sourcefolders are excluded.</h2>					
+				</div>
+
+				<div class="faq">					
+					<h2 class="question">The plugin broke the built in PHP code completion!?!</h2>
+					<h2 class="answer">Sorry about that ;) To check that it's really the plugins fault, first remove the symfony nature, clean your project and try again. If you're getting code assist, it's probably the plugin causing it. If not, you're build-path is probably messed.</h2>
+				</div>
+				
+				<div class="faq">					
+					<h2 class="question">Okay, it seems the plugin broke it, how can i figure out what's wrong?</h2>
+					<h2 class="answer">Eclipse can be started with various debugging options. This can be turned on/off for each installed plugin independently. To debug the symfony plugin, create a file called <span class="code">.options</span> in your Eclipse installation folder. The file should contain the following lines:
+						
+						<p class="code">							
+							org.eclipse.symfony.core/debug=true<br/>
+							org.eclipse.symfony.index/debug=true<br/>
+							org.eclipse.symfony.ui/debug=true<br/>
+						</p>
+						
+						Then restart eclipse from the commandline with these flags: <span class="code">eclipse -debug .output</span>						
+						<p>Try to reproduce the problem and monitor the commandline - please provide these stacktraces in your github issues.</p>
+						</h2>
+				</div>
+				
+				<div class="faq">					
+					<h2 class="question">How do i know which version of the plugin is installed?</h2>
+					<h2 class="answer"> <span class="eclipsehint">Eclipse(Mac) / Help(Windows/Linux) -> About Eclipse -> SDK -> Installation Details -> Plugins </span> lists all installed plugins and their version. Note that the Symfony eclipse Feature actually consists of multiple plugins listed on that page.</h2>	
+				</div>				
+			</div>			
 			
 		</div>
 	</div>
