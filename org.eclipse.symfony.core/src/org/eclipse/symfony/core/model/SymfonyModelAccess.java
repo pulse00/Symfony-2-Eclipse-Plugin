@@ -535,4 +535,29 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		return services;
 		
 	}
+
+	public boolean hasRouteMethod(String method, IScriptProject project) {
+
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(project);		
+		ISearchEngine engine = getSearchEngine(PHPLanguageToolkit.getDefault());		
+		final List<String> methods = new ArrayList<String>();
+		
+		engine.search(ISymfonyModelElement.ROUTE_METHOD, null, method, 0, 0, 10, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
+			
+			@Override
+			public void match(int elementType, int flags, int offset, int length,
+					int nameOffset, int nameLength, String elementName,
+					String metadata, String doc, String qualifier, String parent,
+					ISourceModule sourceModule, boolean isReference) {
+
+				methods.add(elementName);
+				
+			}
+		}, null);
+
+
+		return methods.size() > 0;
+		
+
+	}
 }

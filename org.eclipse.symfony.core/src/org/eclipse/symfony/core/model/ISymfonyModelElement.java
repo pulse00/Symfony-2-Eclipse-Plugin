@@ -19,6 +19,7 @@ public interface ISymfonyModelElement {
 	
 	// method types
 	int VIEW_METHOD = 300;
+	int ROUTE_METHOD = 301;
 	
 
 

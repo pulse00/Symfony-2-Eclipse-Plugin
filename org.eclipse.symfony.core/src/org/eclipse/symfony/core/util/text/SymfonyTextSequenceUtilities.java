@@ -167,4 +167,13 @@ public class SymfonyTextSequenceUtilities {
 		return SymfonyModelAccess.getDefault().hasViewMethod(method, project);
 
 	}
+
+
+	public static boolean isInRouteFunctionParameter(TextSequence statement,
+			IScriptProject project) {
+		
+		String method = getMethodName(statement);
+		return SymfonyModelAccess.getDefault().hasRouteMethod(method, project);
+
+	}
 }

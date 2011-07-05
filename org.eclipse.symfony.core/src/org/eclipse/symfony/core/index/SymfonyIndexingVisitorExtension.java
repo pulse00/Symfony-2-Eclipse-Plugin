@@ -341,6 +341,8 @@ PhpIndexingVisitorExtension {
 				
 				for (PHPDocTag tag : tags) {
 
+					String value = tag.getValue();
+					
 					if (tag.getReferences().length == 2) {
 						
 						SimpleReference[] refs = tag.getReferences();
@@ -348,10 +350,17 @@ PhpIndexingVisitorExtension {
 						SimpleReference varType = refs[1];
 						
 						if(varName.getName().equals("$view") && varType.getName().equals("string")) {
-							int length = method.sourceEnd() - method.sourceStart();
 							
+							int length = method.sourceEnd() - method.sourceStart();							
 							ReferenceInfo viewMethod = new ReferenceInfo(ISymfonyModelElement.VIEW_METHOD, method.sourceStart()	, length, method.getName(), null, null);
 							requestor.addReference(viewMethod);
+							
+						} else if (value.contains("route") || value.contains("url")) {
+							
+							int length = method.sourceEnd() - method.sourceStart();
+							ReferenceInfo routeMethod = new ReferenceInfo(ISymfonyModelElement.ROUTE_METHOD, method.sourceStart(), length, method.getName(), null, null);
+							requestor.addReference(routeMethod);
+							
 						}
 					}					
 				}				
