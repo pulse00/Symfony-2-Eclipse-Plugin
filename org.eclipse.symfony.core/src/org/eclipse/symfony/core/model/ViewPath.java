@@ -24,19 +24,43 @@ public class ViewPath {
 	private String controller;
 	private String template;
 	
+	private boolean basePath;
+	
 	public ViewPath(String path) {
 		
-		StringTokenizer tokenizer = new StringTokenizer(path, ":");
+		// initialize the viewpath parts as far as possible		
+		if (path.indexOf("::") >=0) {
+			
+			StringTokenizer tokenizer = new StringTokenizer(path, "::");
 
-		// initialize the viewpath parts as far as possible
-		try {
+			basePath = true;
+			try {
+				
+				bundle = tokenizer.nextToken();
+				template = tokenizer.nextToken();
+				
+			} catch (Exception e) {
+				
+			}
 			
-			bundle = tokenizer.nextToken();
-			controller = tokenizer.nextToken();
-			template = tokenizer.nextToken();
+		} else {
 			
-		} catch (Exception e) {
+			StringTokenizer tokenizer = new StringTokenizer(path, ":");
+			basePath = false;
+			// initialize the viewpath parts as far as possible
+			try {
+				
+				bundle = tokenizer.nextToken();
+				controller = tokenizer.nextToken();
+				template = tokenizer.nextToken();
+				
+			} catch (Exception e) {
+				
+			}
+			
 		}
+		
+		
 	}
 	
 	public String getBundle() {
@@ -63,6 +87,11 @@ public class ViewPath {
 
 		return String.format("%s:%s:%s", bundle, controller, template);
 
+	}
+
+	public boolean isBasePath() {
+
+		return basePath;
 	}
 	
 }

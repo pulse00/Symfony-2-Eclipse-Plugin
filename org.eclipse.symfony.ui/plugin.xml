@@ -61,18 +61,25 @@
        point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
     <hyperlinkDetector
           activate="true"
-          class="org.eclipse.symfony.ui.editor.hyperlink.SymfonyHyperlinkDetector"
+          class="org.eclipse.symfony.ui.editor.hyperlink.ServiceHyperlinkDetector"
           id="org.eclipse.symfony.ui.hyperlinkDetector"
           name="%hyperlinkDetector.name"
           targetId="org.eclipse.php.core.phpsource">
     </hyperlinkDetector>
     <hyperlinkDetector
           activate="true"
-          class="org.eclipse.symfony.ui.editor.hyperlink.RouteLinkDetector"
+          class="org.eclipse.symfony.ui.editor.hyperlink.RouteHyperlinkDetector"
           id="org.eclipse.symfony.ui.routeDetector"
           name="%routeDetector.name"
           targetId="org.eclipse.php.core.phpsource">
-    </hyperlinkDetector>    
+    </hyperlinkDetector>
+    <hyperlinkDetector
+          activate="true"
+          class="org.eclipse.symfony.ui.editor.hyperlink.ViewpathHyperlinkDetector"
+          id="org.eclipse.symfony.ui.viewpathDetector"
+          name="%routeDetector.name"
+          targetId="org.eclipse.php.core.phpsource">
+    </hyperlinkDetector>            
  </extension>
  
  
