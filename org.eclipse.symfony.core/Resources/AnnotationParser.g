@@ -123,7 +123,7 @@ json_arguments
   ;
   
 json_argument
-  : STRING_LITERAL ASIG STRING_LITERAL
+  : STRING_LITERAL ASIG (STRING_LITERAL | STRING)
   ;
 
 rhtype

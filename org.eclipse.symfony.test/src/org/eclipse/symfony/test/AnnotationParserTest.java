@@ -57,6 +57,8 @@ public class AnnotationParserTest extends TestCase {
 		
 		
 	}
+	
+	
 
 	
 	@Test
@@ -108,6 +110,13 @@ public class AnnotationParserTest extends TestCase {
 		
 		assertNotNull(root);
 		assertEquals("Route",root.getClassName());		
+		assertFalse(reporter.hasErrors());
+		
+		
+		root = getRootNode("@Route(\"/zone/add/{id}\", options={\"expose\"=true})", false);
+		
+		assertNotNull(root);
+		assertEquals("Route", root.getClassName());
 		assertFalse(reporter.hasErrors());
 		
 	}

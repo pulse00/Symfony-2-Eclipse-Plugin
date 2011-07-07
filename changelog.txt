@@ -1,3 +1,11 @@
+1.0.25
+
+* fixed annotation validation false positive
+
+1.0.24
+
+* improved route completion context
+
 1.0.23
 
 * added project homepage

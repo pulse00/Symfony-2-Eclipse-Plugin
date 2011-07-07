@@ -1,4 +1,4 @@
-// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-06-29 12:31:53
+// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-07-07 12:30:26
 
 package org.eclipse.symfony.core.parser.antlr;
 
@@ -631,7 +631,7 @@ public class AnnotationParser extends Parser {
 
 
             // AST REWRITE
-            // elements: argument, arguments
+            // elements: arguments, argument
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -900,7 +900,7 @@ public class AnnotationParser extends Parser {
 
 
             // AST REWRITE
-            // elements: param, rhtype
+            // elements: rhtype, param
             // token labels: param
             // rule labels: retval
             // token list labels: 
@@ -1126,7 +1126,7 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "json_argument"
-    // AnnotationParser.g:125:1: json_argument : STRING_LITERAL ASIG STRING_LITERAL ;
+    // AnnotationParser.g:125:1: json_argument : STRING_LITERAL ASIG ( STRING_LITERAL | STRING ) ;
     public final AnnotationParser.json_argument_return json_argument() throws RecognitionException {
         AnnotationParser.json_argument_return retval = new AnnotationParser.json_argument_return();
         retval.start = input.LT(1);
@@ -1135,15 +1135,15 @@ public class AnnotationParser extends Parser {
 
         CommonToken STRING_LITERAL24=null;
         CommonToken ASIG25=null;
-        CommonToken STRING_LITERAL26=null;
+        CommonToken set26=null;
 
         AnnotationCommonTree STRING_LITERAL24_tree=null;
         AnnotationCommonTree ASIG25_tree=null;
-        AnnotationCommonTree STRING_LITERAL26_tree=null;
+        AnnotationCommonTree set26_tree=null;
 
         try {
-            // AnnotationParser.g:126:3: ( STRING_LITERAL ASIG STRING_LITERAL )
-            // AnnotationParser.g:126:5: STRING_LITERAL ASIG STRING_LITERAL
+            // AnnotationParser.g:126:3: ( STRING_LITERAL ASIG ( STRING_LITERAL | STRING ) )
+            // AnnotationParser.g:126:5: STRING_LITERAL ASIG ( STRING_LITERAL | STRING )
             {
             root_0 = (AnnotationCommonTree)adaptor.nil();
 
@@ -1155,9 +1155,16 @@ public class AnnotationParser extends Parser {
             ASIG25_tree = (AnnotationCommonTree)adaptor.create(ASIG25);
             adaptor.addChild(root_0, ASIG25_tree);
 
-            STRING_LITERAL26=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_json_argument390); 
-            STRING_LITERAL26_tree = (AnnotationCommonTree)adaptor.create(STRING_LITERAL26);
-            adaptor.addChild(root_0, STRING_LITERAL26_tree);
+            set26=(CommonToken)input.LT(1);
+            if ( input.LA(1)==STRING||input.LA(1)==STRING_LITERAL ) {
+                input.consume();
+                adaptor.addChild(root_0, (AnnotationCommonTree)adaptor.create(set26));
+                state.errorRecovery=false;
+            }
+            else {
+                MismatchedSetException mse = new MismatchedSetException(null,input);
+                throw mse;
+            }
 
 
             }
@@ -1231,7 +1238,7 @@ public class AnnotationParser extends Parser {
                 case 1 :
                     // AnnotationParser.g:130:5: param= STRING
                     {
-                    param=(CommonToken)match(input,STRING,FOLLOW_STRING_in_rhtype405);  
+                    param=(CommonToken)match(input,STRING,FOLLOW_STRING_in_rhtype411);  
                     stream_STRING.add(param);
 
 
@@ -1268,7 +1275,7 @@ public class AnnotationParser extends Parser {
                 case 2 :
                     // AnnotationParser.g:132:5: param= STRING_LITERAL
                     {
-                    param=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_rhtype426);  
+                    param=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_rhtype432);  
                     stream_STRING_LITERAL.add(param);
 
 
@@ -1307,7 +1314,7 @@ public class AnnotationParser extends Parser {
                     {
                     root_0 = (AnnotationCommonTree)adaptor.nil();
 
-                    pushFollow(FOLLOW_json_in_rhtype445);
+                    pushFollow(FOLLOW_json_in_rhtype451);
                     json27=json();
 
                     state._fsp--;
@@ -1369,10 +1376,10 @@ public class AnnotationParser extends Parser {
     public static final BitSet FOLLOW_COMMA_in_json_arguments365 = new BitSet(new long[]{0x0000000000008000L});
     public static final BitSet FOLLOW_json_argument_in_json_arguments368 = new BitSet(new long[]{0x0000000000000102L});
     public static final BitSet FOLLOW_STRING_LITERAL_in_json_argument386 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_ASIG_in_json_argument388 = new BitSet(new long[]{0x0000000000008000L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_json_argument390 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_in_rhtype405 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_rhtype426 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_json_in_rhtype445 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ASIG_in_json_argument388 = new BitSet(new long[]{0x000000000000A000L});
+    public static final BitSet FOLLOW_set_in_json_argument390 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_in_rhtype411 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_LITERAL_in_rhtype432 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_json_in_rhtype451 = new BitSet(new long[]{0x0000000000000002L});
 
 }
