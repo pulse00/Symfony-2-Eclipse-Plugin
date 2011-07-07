@@ -155,5 +155,44 @@ public class RouteDao implements IRouteDao {
 		
 		return routes;
 
+	}
+
+	@Override
+	public Route findRoute(Connection connection, String route, IPath path) {
+
+		final List<Route> routes = new ArrayList<Route>();
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			String query = "SELECT NAME, PATTERN, CONTROLLER, BUNDLE, ACTION FROM ROUTES WHERE PATH LIKE '" + path + "%' AND NAME = '" + route + "'";
+
+			ResultSet result = statement.executeQuery(query.toString());
+			
+			while (result.next()) {
+				
+				
+				int columnIndex = 0;
+				String name = result.getString(++columnIndex);
+				String pattern = result.getString(++columnIndex);
+				String controller = result.getString(++columnIndex);				
+				String bundle = result.getString(++columnIndex);
+				String action = result.getString(++columnIndex);
+				
+				routes.add(new Route(bundle, controller, action, name, pattern));
+
+			}
+		} catch(Exception e) {
+			Logger.logException(e);
+		}
+		
+		if (routes.size() <= 0)
+			
+			return null;
+		
+		return routes.get(0);
+			
+		
+		
 	}	
 }

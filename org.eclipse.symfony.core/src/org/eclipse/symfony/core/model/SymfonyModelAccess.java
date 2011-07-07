@@ -560,4 +560,17 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		
 
 	}
+
+	public Route findRoute(String route, IScriptProject scriptProject) {
+
+		if (index == null) {
+			Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
+			return null;
+		}
+		
+		
+		return index.findRoute(route, scriptProject.getPath());
+		
+
+	}
 }

@@ -66,6 +66,13 @@
           name="%hyperlinkDetector.name"
           targetId="org.eclipse.php.core.phpsource">
     </hyperlinkDetector>
+    <hyperlinkDetector
+          activate="true"
+          class="org.eclipse.symfony.ui.editor.hyperlink.RouteLinkDetector"
+          id="org.eclipse.symfony.ui.routeDetector"
+          name="%routeDetector.name"
+          targetId="org.eclipse.php.core.phpsource">
+    </hyperlinkDetector>    
  </extension>
  
  

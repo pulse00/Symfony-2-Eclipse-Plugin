@@ -128,8 +128,19 @@ public class SymfonyIndexer {
 		try {
 			return routeDao.findRoutes(connection, path);
 		} catch (Exception e) {
-
+			Logger.logException(e);
+			return null;			
 		}
-		return null;
+	}
+
+
+	public Route findRoute(String route, IPath path) {
+
+		try {
+			return routeDao.findRoute(connection, route, path);
+		} catch (Exception e) {
+			Logger.logException(e);
+			return null;
+		}
 	}
 }

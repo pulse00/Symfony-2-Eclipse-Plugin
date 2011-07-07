@@ -29,4 +29,6 @@ public interface IRouteDao {
 
 	List<Route> findRoutes(Connection connection, IPath path);
 
+	Route findRoute(Connection connection, String route, IPath path);
+
 }
