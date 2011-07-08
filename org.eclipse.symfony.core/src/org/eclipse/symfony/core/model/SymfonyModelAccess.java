@@ -573,4 +573,27 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		
 
 	}
+
+	public IType findController(String bundle, String controller,
+			IScriptProject scriptProject) {
+
+		ScriptFolder bundleFolder = findBundleFolder(bundle, scriptProject);
+		if(bundleFolder == null)
+			return null;
+
+		ISourceModule controllerSource = bundleFolder.getSourceModule("Controller");
+		
+		if (controllerSource == null)
+			return null;
+
+		IDLTKSearchScope controllerScope = SearchEngine.createSearchScope(controllerSource);
+		
+		IType[] controllers = findTypes(controller, MatchRule.PREFIX, 0, 0, controllerScope, null); 
+		
+		if(controllers.length == 1)
+			return controllers[0];
+		
+		return null;
+		
+	}
 }

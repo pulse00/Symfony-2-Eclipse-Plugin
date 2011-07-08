@@ -83,7 +83,7 @@ public class ServiceHyperlinkDetector extends StringHyperlinkDetector {
 			
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(input.getScriptProject());
 			
-			IType[] types = PhpModelAccess.getDefault().findTypes(s.getNamespace(), s.getClassName(), MatchRule.EXACT, 0, 0, scope, null);
+			IType[] types = PhpModelAccess.getDefault().findTypes(s.getNamespace().getQualifiedName(), s.getClassName(), MatchRule.EXACT, 0, 0, scope, null);
 			
 			// it should only exist 1 single service for each project with this service id
 			if (types.length != 1) {

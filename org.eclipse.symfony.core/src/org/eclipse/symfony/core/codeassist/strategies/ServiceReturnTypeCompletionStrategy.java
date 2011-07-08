@@ -67,7 +67,7 @@ public class ServiceReturnTypeCompletionStrategy extends ClassMembersStrategy {
 		// if that's possible.
 		//
 		// this way, we could avoid the SearchEngine call here
-		IType[] types = getTypes(context, service.getClassName(), service.getNamespace());
+		IType[] types = getTypes(context, service.getClassName(), service.getNamespace().getQualifiedName());
 		
 		// ambigous types found, return nothing
 		// any better ideas out there?

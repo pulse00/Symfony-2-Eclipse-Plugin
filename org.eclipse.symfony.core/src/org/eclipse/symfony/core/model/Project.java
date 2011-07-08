@@ -94,8 +94,6 @@ public class Project extends AbstractSymfonyModel {
 
 	public void addBundle(Bundle bundle) {
 		
-		System.out.println("adding bundle " + bundle.getName());
-		
 //		for (Bundle existing : bundles) {			
 //			if (existing.equals(bundle)) {
 //				System.out.println("removing existing " + existing.getName());

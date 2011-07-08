@@ -4,6 +4,11 @@ package org.eclipse.symfony.core.model;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.INamespace;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
@@ -18,7 +23,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  *
  */
 @SuppressWarnings("restriction")
-public class Service {
+public class Service extends SourceType {
 	
 	
 	public static final String NAME = "name";
@@ -51,9 +56,15 @@ public class Service {
 	private Bundle bundle;
 
 	private IPath path;
+
+	public Service(ModelElement parent, String name) {
+		super(parent, name);
+	}
 	
 	
 	public Service(IFile resource, String id, String clazz) {
+		
+		super(null, id);
 		
 		file = resource;
 		setFqcn(clazz);
@@ -72,6 +83,7 @@ public class Service {
 
 	public Service(String id, String phpClass, String path, Scalar scalar) {
 
+		super(null, id);
 		this.namespace = PHPModelUtils.extractNameSapceName(phpClass);
 		this.className = PHPModelUtils.extractElementName(phpClass);		
 		setFqcn(phpClass);
@@ -120,10 +132,10 @@ public class Service {
 		return id;
 	}
 
-	public String getNamespace() {
-		
-		return namespace;
-	}
+//	public INamespace getNamespace() {
+//		
+//		return namespace;
+//	}
 	
 	public String getClassName() {
 		return className;
@@ -139,6 +151,19 @@ public class Service {
 	public IPath getPath() {
 		
 		return path;
+	}
+	
+	@Override
+	public Object getElementInfo() throws ModelException {
+
+		return new RouteTypeElementInfo();
+
+	}
+	
+	@Override
+	public ISourceModule getSourceModule() {
+
+		return super.getSourceModule();
 	}
 	
 }

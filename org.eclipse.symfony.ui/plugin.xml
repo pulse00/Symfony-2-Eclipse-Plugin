@@ -121,5 +121,71 @@
           natureId="org.eclipse.symfony.core.symfonyNature">
     </image>
  </extension>
+ <extension
+       point="org.eclipse.ui.actionSets">
+       <!--
+		<actionSet label="%OpenActionSet.label" description="%OpenActionSet.description"
+			visible="false" id="org.eclipse.php.ui.A_OpenActionSet">
+			<action definitionId="org.eclipse.php.ui.edit.text.php.open.type.hierarchy"
+				label="%OpenTypeHierarchyAction.label" retarget="true" menubarPath="navigate/open.ext"
+				id="org.eclipse.php.ui.actions.OpenTypeHierarchy" />
+			<action definitionId="org.eclipse.php.ui.edit.text.php.open.call.hierarchy"
+				label="%OpenCallHierarchyAction.label" retarget="true" menubarPath="navigate/open.ext"
+				id="org.eclipse.php.ui.actions.OpenCallHierarchy" />
+		</actionSet>
+       -->
+    <actionSet
+          id="org.eclipse.symfony.ui.switchContext"
+          label="Sample Action Set"
+          visible="false">
+       <action
+             class="org.eclipse.symfony.ui.actions.SwitchContextAction"
+             definitionId="org.eclipse.symfony.ui.edit.text.switchContext"
+             id="org.eclipse.symfony.ui.actions.SwitchContextAction"
+             label="&amp;Sample Action"
+             menubarPath="navigate/open.ext"
+             retarget="true">
+       </action>
+    </actionSet>
+ </extension>
+ <extension
+       point="org.eclipse.ui.actionSetPartAssociations">
+    <actionSetPartAssociation
+          targetID="org.eclipse.symfony.ui.switchContext">
+       <part
+             id="org.eclipse.php.ui.explorer">
+       </part>
+       <part
+             id="org.eclipse.php.editor">
+       </part>
+    </actionSetPartAssociation>
+ </extension>
+ <extension
+       point="org.eclipse.ui.commands">
+		<command name="Switch Context"
+			description="Switch context"
+			categoryId="org.eclipse.ui.category.navigate" id="org.eclipse.symfony.ui.edit.text.switchContext">
+		</command>
+
+ </extension>
+ <extension
+       point="org.eclipse.dltk.ui.completion">
+    <proposalLabelProvider
+          class="org.eclipse.symfony.ui.contentassist.SymfonyCompletionProposalLabelProvider"
+          nature="org.eclipse.php.core.PHPNature">
+    </proposalLabelProvider>
+ </extension>
+ <extension
+       id="id2"
+       point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
+    <scriptCompletionProposalComputer
+          categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
+          class="org.eclipse.symfony.ui.contentassist.SymfonyCompletionProposalComputer"
+          toolkitId="org.eclipse.php.core.PHPNature">
+       <partition
+             type="org.eclipse.php.PHP_DEFAULT">
+       </partition>
+    </scriptCompletionProposalComputer>
+ </extension>
  
 </plugin>

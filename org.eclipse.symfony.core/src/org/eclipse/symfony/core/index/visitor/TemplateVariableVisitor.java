@@ -374,7 +374,7 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 						service = ModelUtils.extractServiceFromCall(exp);
 
 						if (service != null) {
-							TemplateVariable tempVar= new TemplateVariable(currentMethod, var.getName(), exp.sourceStart(), exp.sourceEnd(), service.getNamespace(), service.getClassName());							
+							TemplateVariable tempVar= new TemplateVariable(currentMethod, var.getName(), exp.sourceStart(), exp.sourceEnd(), service.getNamespace().getQualifiedName(), service.getClassName());							
 							deferredVariables.push(tempVar);
 						}
 
@@ -403,7 +403,7 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 						// singleton, evaluate them when the whole build process is finished.
 						TemplateVariable tempVar = SymfonyModelAccess.getDefault()
 								.createTemplateVariableByReturnType(currentMethod, callName, 
-										service.getClassName(), service.getNamespace(), var.getName());
+										service.getClassName(), service.getNamespace().getQualifiedName(), var.getName());
 
 						if (tempVar != null) {								
 														
