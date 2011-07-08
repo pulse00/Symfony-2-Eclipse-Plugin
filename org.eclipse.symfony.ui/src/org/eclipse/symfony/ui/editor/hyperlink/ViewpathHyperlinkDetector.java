@@ -6,14 +6,11 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.internal.ui.editor.ModelElementHyperlink;
 import org.eclipse.dltk.ui.actions.OpenAction;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.internal.ui.editor.hyperlink.PHPHyperlinkDetector;
 import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
 import org.eclipse.symfony.core.model.ViewPath;
@@ -29,7 +26,7 @@ import org.eclipse.symfony.core.model.ViewPath;
  *
  */
 @SuppressWarnings("restriction")
-public class ViewpathHyperlinkDetector extends PHPHyperlinkDetector {
+public class ViewpathHyperlinkDetector extends StringHyperlinkDetector {
 
 
 	@Override
@@ -105,56 +102,5 @@ public class ViewpathHyperlinkDetector extends PHPHyperlinkDetector {
 		return null;
 	}
 
-	public static IRegion findWord(IDocument document, int offset) {
 
-		int start = -2;
-		int end = -1;
-
-		try {
-
-			int pos = offset;
-			char c;
-
-			char separator = '?';
-			int length = document.getLength();
-
-			// search backwards until a string delimiter
-			// to find the start position
-			while (pos >= 0) {
-				c = document.getChar(pos);
-
-				if (c == '\'' || c == '"') {
-					separator = c;
-					break;
-				}
-				--pos;
-			}
-
-			start = pos;
-			pos++;
-
-
-			// search forward until a string delimiter
-			// to find the end position
-			while (pos < length) {
-				c = document.getChar(pos);
-				if (c == separator) {
-					end = pos;
-					break;
-				}
-				++pos;
-			}
-
-
-			if (separator != '?' && start >= 0 && end != 0) {				
-				start++;
-				int rlength = end - start;
-				return new Region(start, rlength );
-			}
-
-		} catch (BadLocationException x) {
-		}
-
-		return null;
-	}		
 }
