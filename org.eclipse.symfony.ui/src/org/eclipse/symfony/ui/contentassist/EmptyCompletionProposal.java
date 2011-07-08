@@ -14,9 +14,9 @@ import org.eclipse.swt.graphics.Image;
  *
  */
 @SuppressWarnings("restriction")
-public class RouteCompletionProposal extends PHPCompletionProposal {
+public class EmptyCompletionProposal extends PHPCompletionProposal {
 
-	public RouteCompletionProposal(String replacementString,
+	public EmptyCompletionProposal(String replacementString,
 			int replacementOffset, int replacementLength, Image image,
 			String displayString, int relevance) {
 		super(replacementString, replacementOffset, replacementLength, image,

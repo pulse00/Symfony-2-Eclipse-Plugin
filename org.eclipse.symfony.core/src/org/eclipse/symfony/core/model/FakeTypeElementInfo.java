@@ -11,7 +11,7 @@ import org.eclipse.dltk.internal.core.SourceTypeElementInfo;
  *
  */
 @SuppressWarnings("restriction")
-public class RouteTypeElementInfo extends SourceTypeElementInfo {
+public class FakeTypeElementInfo extends SourceTypeElementInfo {
 
 	
 	@Override
