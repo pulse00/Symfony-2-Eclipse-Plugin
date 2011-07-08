@@ -3,8 +3,8 @@ package org.eclipse.symfony.core.model;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.core.INamespace;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -156,14 +156,19 @@ public class Service extends SourceType {
 	@Override
 	public Object getElementInfo() throws ModelException {
 
-		return new RouteTypeElementInfo();
+		return new FakeTypeElementInfo();
 
 	}
 	
+	
 	@Override
-	public ISourceModule getSourceModule() {
+	protected Object openWhenClosed(Object info, IProgressMonitor monitor)
+			throws ModelException {
 
-		return super.getSourceModule();
-	}
+		return new FakeTypeElementInfo();
+
+	}	
+	
+
 	
 }

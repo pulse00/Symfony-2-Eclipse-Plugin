@@ -22,16 +22,13 @@ public class SymfonyPluginImages {
 	
 	private static HashMap<String, ImageDescriptor> fgAvoidSWTErrorMap = null;
 	private static final String T_OBJ = "obj16"; //$NON-NLS-1$
-	private static final String T_OVR = "ovr16"; //$NON-NLS-1$
-	private static final String T_WIZBAN = "wizban"; //$NON-NLS-1$
-	private static final String T_ELCL = "elcl16"; //$NON-NLS-1$
-	private static final String T_DLCL = "dlcl16"; //$NON-NLS-1$
-	private static final String T_ETOOL = "etool16"; //$NON-NLS-1$	
 	
-	public static final String IMG_OBJS_ROUTE= NAME_PREFIX + "route-icon.gif"; 				
+	public static final String IMG_OBJS_ROUTE = NAME_PREFIX + "route-icon.gif"; 				
+	public static final String IMG_OBJS_SERVICE = NAME_PREFIX + "service-icon.gif";
 	
 	
 	public static final ImageDescriptor DESC_OBJS_ROUTE = createManagedFromKey(T_OBJ, IMG_OBJS_ROUTE);	
+	public static final ImageDescriptor DESC_OBJS_SERVICE = createManagedFromKey(T_OBJ, IMG_OBJS_SERVICE);
 	
 	private static ImageDescriptor createManagedFromKey(String prefix, String key) {
 		return createManaged(prefix, key.substring(NAME_PREFIX_LENGTH), key);

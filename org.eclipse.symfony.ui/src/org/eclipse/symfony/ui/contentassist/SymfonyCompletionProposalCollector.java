@@ -12,6 +12,7 @@ import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposalLab
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.symfony.core.builder.SymfonyNature;
 import org.eclipse.symfony.core.model.RouteSource;
+import org.eclipse.symfony.core.model.Service;
 
 /**
  * The {@link SymfonyCompletionProposalCollector} is 
@@ -59,6 +60,8 @@ public class SymfonyCompletionProposalCollector extends
 		// creates a proposal for a route
 		if (element.getClass() == RouteSource.class) {
 			return createRouteProposal(proposal);
+		} else if (element.getClass() == Service.class) {			
+			return createServiceProposal(proposal);
 		}
 		
 		// don't complete anything else or we'll get duplicate entries
@@ -67,6 +70,26 @@ public class SymfonyCompletionProposalCollector extends
 	
 	
 	
+	private IScriptCompletionProposal createServiceProposal(
+			CompletionProposal typeProposal) {
+
+		String completion = new String(typeProposal.getCompletion());
+		int replaceStart = typeProposal.getReplaceStart();
+		int length = getLength(typeProposal);
+		Image image = getImage(((SymfonyCompletionProposalLabelProvider) getLabelProvider())
+				.createTypeImageDescriptor(typeProposal));
+
+		String displayString = ((SymfonyCompletionProposalLabelProvider) getLabelProvider())
+				.createTypeProposalLabel(typeProposal);
+
+		ScriptCompletionProposal scriptProposal = new EmptyCompletionProposal(completion, replaceStart, length, image, displayString, 0);
+
+		scriptProposal.setRelevance(computeRelevance(typeProposal));
+		scriptProposal.setProposalInfo(new ServiceProposalInfo(getSourceModule().getScriptProject(), typeProposal));
+		return scriptProposal;		
+	}
+
+
 	private IScriptCompletionProposal createRouteProposal(
 			final CompletionProposal typeProposal) {
 
@@ -79,7 +102,7 @@ public class SymfonyCompletionProposalCollector extends
 		String displayString = ((SymfonyCompletionProposalLabelProvider) getLabelProvider())
 				.createTypeProposalLabel(typeProposal);
 
-		ScriptCompletionProposal scriptProposal = new RouteCompletionProposal(completion, replaceStart, length, image, displayString, 0);
+		ScriptCompletionProposal scriptProposal = new EmptyCompletionProposal(completion, replaceStart, length, image, displayString, 0);
 
 		scriptProposal.setRelevance(computeRelevance(typeProposal));
 		scriptProposal.setProposalInfo(new RouteProposalInfo(getSourceModule().getScriptProject(), typeProposal));

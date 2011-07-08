@@ -40,14 +40,14 @@ public class RouteSource extends SourceType {
 	@Override
 	public Object getElementInfo() throws ModelException {
 
-		return new RouteTypeElementInfo();
+		return new FakeTypeElementInfo();
 	}
 	
 	@Override
 	protected Object openWhenClosed(Object info, IProgressMonitor monitor)
 			throws ModelException {
 
-		return new RouteTypeElementInfo();
+		return new FakeTypeElementInfo();
 
 	}
 	
