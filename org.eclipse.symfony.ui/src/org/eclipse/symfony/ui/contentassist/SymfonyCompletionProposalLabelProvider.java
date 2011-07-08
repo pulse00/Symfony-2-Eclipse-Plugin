@@ -6,6 +6,7 @@ import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposalLabelProvider;
 import org.eclipse.symfony.core.model.RouteSource;
+import org.eclipse.symfony.ui.SymfonyPluginImages;
 
 
 /**
@@ -35,8 +36,7 @@ public class SymfonyCompletionProposalLabelProvider extends
 		
 		if (element.getClass() == RouteSource.class) {
 			
-			// TODO: return proper route icon
-			return DLTKPluginImages.DESC_OBJS_INTERFACEALT;
+			return SymfonyPluginImages.DESC_OBJS_ROUTE;
 
 		}
 		return super.createTypeImageDescriptor(proposal);

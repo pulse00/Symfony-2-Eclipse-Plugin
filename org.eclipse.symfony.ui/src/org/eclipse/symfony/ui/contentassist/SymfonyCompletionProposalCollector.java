@@ -1,6 +1,7 @@
 package org.eclipse.symfony.ui.contentassist;
 
 import org.eclipse.dltk.core.CompletionProposal;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
@@ -49,12 +50,19 @@ public class SymfonyCompletionProposalCollector extends
 	protected IScriptCompletionProposal createScriptCompletionProposal(
 			CompletionProposal proposal) {
 
+		IModelElement element = proposal.getModelElement();
+		
+		if (element == null) {
+			return null;
+		}
+		
 		// creates a proposal for a route
-		if (proposal.getModelElement().getClass() == RouteSource.class) {			
+		if (element.getClass() == RouteSource.class) {
 			return createRouteProposal(proposal);
 		}
 		
-		return super.createScriptCompletionProposal(proposal);
+		// don't complete anything else or we'll get duplicate entries
+		return null;
 	}
 	
 	

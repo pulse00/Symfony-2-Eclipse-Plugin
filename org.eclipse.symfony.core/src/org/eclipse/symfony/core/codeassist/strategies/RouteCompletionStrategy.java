@@ -29,14 +29,30 @@ import org.eclipse.symfony.index.dao.Route;
 @SuppressWarnings({ "restriction", "deprecation" })
 public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 
+	public static int workaroundCount = 0;
+	
 	public RouteCompletionStrategy(ICompletionContext context) {
 		super(context);
+		
+		
 
 	}
 	
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		
+		// FIXME: this is a VERY dirty hack to report the route completions
+		// only to the SymfonyCompletionProposalCollector which
+		// shows the correct popup information.
+		// otherwise each route will shown twice.
+		//
+		// unfortunately there's no other way using the DLTK mechanism at the moment
+		if (workaroundCount == 0) {
+			workaroundCount++;
+			return;
+		} else if (workaroundCount == 1) {
+			workaroundCount = 0;
+		}
 		
 		//TODO: this needs caching!!!
 		AbstractCompletionContext context = (AbstractCompletionContext) getContext();		
@@ -54,9 +70,8 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 				continue;
 			
 			RouteSource rs = new RouteSource((ModelElement) controller, route.name, route);
-			reporter.reportType(rs, "", range);			
-			
+			reporter.reportType(rs, "", range);
 
-		}
+		}	
 	}
 }
