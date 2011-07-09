@@ -13,5 +13,17 @@
             class="org.eclipse.symfony.twig.codeassist.TwigCompletionContextResolver">
       </resolver>
    </extension>
+   <extension
+         id="id2"
+         point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
+      <scriptCompletionProposalComputer
+            categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
+            class="org.eclipse.symfony.ui.contentassist.SymfonyCompletionProposalComputer"
+            toolkitId="org.eclipse.php.core.PHPNature">
+         <partition
+               type="org.eclipse.twig.TWIG_DEFAULT">
+         </partition>
+      </scriptCompletionProposalComputer>
+   </extension>
 
 </plugin>

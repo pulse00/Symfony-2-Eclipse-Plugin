@@ -21,6 +21,7 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.eclipse.symfony.ui,
+ org.eclipse.symfony.ui.contentassist,
  org.eclipse.symfony.ui.editor.highlighting;uses:="org.eclipse.php.internal.core.ast.nodes,org.eclipse.php.internal.ui.editor.highlighter",
  org.eclipse.symfony.ui.editor.hyperlink,
  org.eclipse.symfony.ui.popup.actions,

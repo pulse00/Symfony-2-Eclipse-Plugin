@@ -193,6 +193,9 @@
        <partition
              type="org.eclipse.php.PHP_DEFAULT">
        </partition>
+       <partition
+             type="org.eclipse.twig.TWIG_DEFAULT">
+       </partition>
     </scriptCompletionProposalComputer>
  </extension>
  <extension

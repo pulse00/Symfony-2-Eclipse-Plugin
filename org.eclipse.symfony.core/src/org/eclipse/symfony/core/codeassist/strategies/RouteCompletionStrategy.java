@@ -2,6 +2,7 @@ package org.eclipse.symfony.core.codeassist.strategies;
 
 import java.util.List;
 
+import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -11,6 +12,7 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
+import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposalCollector;
 import org.eclipse.symfony.core.codeassist.contexts.RouteCompletionContext;
 import org.eclipse.symfony.core.model.RouteSource;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
@@ -41,6 +43,13 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		
+		AbstractCompletionContext context = (AbstractCompletionContext) getContext();
+		CompletionRequestor req = context.getCompletionRequestor();
+		
+		if (req.getClass() == PHPCompletionProposalCollector.class) {
+			return;			
+		}
+		
 		// FIXME: this is a VERY dirty hack to report the route completions
 		// only to the SymfonyCompletionProposalCollector which
 		// shows the correct popup information.
@@ -49,13 +58,14 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 		// unfortunately there's no other way using the DLTK mechanism at the moment
 		if (workaroundCount == 0) {
 			workaroundCount++;
-			return;
-		} else if (workaroundCount == 1) {
+			
+		} else {
 			workaroundCount = 0;
+			return;
 		}
 		
+		
 		//TODO: this needs caching!!!
-		AbstractCompletionContext context = (AbstractCompletionContext) getContext();		
 		ISourceModule module = context.getSourceModule();		
 		List<Route> routes = SymfonyModelAccess.getDefault().findRoutes(module.getScriptProject());		
 		SourceRange range = getReplacementRange(context);

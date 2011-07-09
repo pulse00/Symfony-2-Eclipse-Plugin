@@ -14,7 +14,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.symfony.index,
  org.eclipse.dltk.core.index,
  org.eclipse.dltk.core.index.sql,
- org.eclipse.dltk.core.index.sql.h2
+ org.eclipse.dltk.core.index.sql.h2,
+ org.eclipse.php.ui;bundle-version="3.0.0",
+ org.eclipse.dltk.ui;bundle-version="3.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.antlr.runtime,
