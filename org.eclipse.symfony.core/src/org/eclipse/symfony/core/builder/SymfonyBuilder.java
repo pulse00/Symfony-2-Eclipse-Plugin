@@ -48,8 +48,6 @@ public class SymfonyBuilder extends IncrementalProjectBuilder {
 	protected void fullBuild(final IProgressMonitor monitor)
 			throws CoreException {
 		try {
-			
-			
 			getProject().accept(new ResourceVisitor());
 		} catch (Exception e) {
 			Logger.logException(e);

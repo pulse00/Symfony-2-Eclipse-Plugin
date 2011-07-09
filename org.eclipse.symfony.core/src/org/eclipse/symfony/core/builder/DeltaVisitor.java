@@ -1,12 +1,9 @@
 package org.eclipse.symfony.core.builder;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.symfony.core.log.Logger;
-import org.eclipse.symfony.core.parser.XMLConfigParser;
 
 /**
  * 
@@ -25,46 +22,25 @@ public class DeltaVisitor extends AbstractSymfonyVisitor
 	public boolean visit(IResourceDelta delta) throws CoreException {
 
 		IResource resource = delta.getResource();
+		boolean built = false;
 		
 		switch (delta.getKind()) {
+		
 		case IResourceDelta.ADDED:
-			
-			// handle added resource
-
-			if (resource instanceof IFile) {
-
-				IFile file = (IFile) resource;
-
-				if (resource.getFileExtension().equals("xml")) {
-
-					try {
-						XMLConfigParser parser;
-						parser = new XMLConfigParser(file.getContents());
-						parser.parse();					
-					} catch (Exception e) {
-
-						Logger.logException(e);
-
-					}
-
-				} else if (resource.getFileExtension().equals("yml")) {
-
-//					System.out.println("is yml file");
-				}
-
-			}
-
-			break;
-		case IResourceDelta.REMOVED:
-			// handle removed resource
-			break;
 		case IResourceDelta.CHANGED:
-			// handle changed resource
-			//			checkXML(resource);
+			
+			built = handleResource(resource);
+			break;
+
+		case IResourceDelta.REMOVED:
+
+			//TODO: find a way to remove the routes of a deleted yml/xml file
+			indexer.deleteServices(path.toString());
+			
 			break;
 		}
-		//return true to continue visiting children.
-		return true;
+
+		return built;
 
 	}
 

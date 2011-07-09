@@ -79,6 +79,11 @@ public class SymfonyIndexer {
 		}		
 		
 	}
+		
+	public void deleteServices(String path) {
+		
+		serviceDao.deleteServices(connection, path);
+	}
 	
 	public void enterServices(String path) {
 
@@ -143,4 +148,7 @@ public class SymfonyIndexer {
 			return null;
 		}
 	}
+
+
+
 }
