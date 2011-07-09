@@ -54,7 +54,7 @@ public class Service extends SourceType {
 
 	private String id;
 	
-	private Bundle bundle;
+
 
 	private IPath path;
 	
@@ -119,14 +119,6 @@ public class Service extends SourceType {
 		
 		return fqcn;
 		
-	}
-
-	public Bundle getBundle() {
-		return bundle;
-	}
-
-	public void setBundle(Bundle bundle) {
-		this.bundle = bundle;
 	}
 
 	public String getId() {

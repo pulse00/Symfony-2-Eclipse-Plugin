@@ -139,7 +139,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
 		if (currentAnnotation == null)
 			return true;
 
-		currentAnnotation.addParameter(s);
+//		currentAnnotation.addParameter(s);
 
 		return true;
 

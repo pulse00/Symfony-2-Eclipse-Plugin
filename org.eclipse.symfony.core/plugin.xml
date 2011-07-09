@@ -111,15 +111,5 @@
       </factory>
    </extension>
    <!-- End code assist -->
-   
-   <!-- Provides model elements (like the DIC) to DLTK -->
-   <extension
-         point="org.eclipse.dltk.core.model">
-      <model
-            class="org.eclipse.symfony.core.model.SymfonyModelProvider"
-            id="org.eclipse.symfony.core.symfonymodel"
-            language="org.eclipse.php.core.PHPNature">
-      </model>
-   </extension>
 
 </plugin>
