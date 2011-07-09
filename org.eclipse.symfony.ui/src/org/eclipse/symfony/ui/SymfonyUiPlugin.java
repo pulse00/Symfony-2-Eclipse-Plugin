@@ -1,8 +1,7 @@
 package org.eclipse.symfony.ui;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.symfony.ui.listener.OpenDocumentListener;
+
+import org.eclipse.symfony.ui.viewsupport.ImagesOnFileSystemRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -16,6 +15,9 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 
 	// The shared instance
 	private static SymfonyUiPlugin plugin;
+
+	
+	private ImagesOnFileSystemRegistry fImagesOnFSRegistry;
 	
 	/**
 	 * The constructor
@@ -60,5 +62,13 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 	public static SymfonyUiPlugin getDefault() {
 		return plugin;
 	}
+	
+	public ImagesOnFileSystemRegistry getImagesOnFSRegistry() {
+		if (fImagesOnFSRegistry == null) {
+			fImagesOnFSRegistry = new ImagesOnFileSystemRegistry();
+		}
+		return fImagesOnFSRegistry;
+	}
+	
 
 }

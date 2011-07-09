@@ -6,6 +6,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.ui.text.completion.MemberProposalInfo;
 import org.eclipse.symfony.core.model.RouteSource;
 import org.eclipse.symfony.index.dao.Route;
+import org.eclipse.symfony.ui.utils.HTMLUtils;
 
 /**
  * 
@@ -30,16 +31,8 @@ public class RouteProposalInfo extends MemberProposalInfo {
 			
 			RouteSource routeSource = (RouteSource) getModelElement();
 			Route route = routeSource.getRoute();
-			 
-			StringBuilder info = new StringBuilder();
+			return HTMLUtils.route2Html(route);
 			
-			info.append("<b>Bundle:</b> ");
-			info.append(route.bundle);
-			info.append("<br/><b>Controller:</b> ");
-			info.append(route.controller);
-			info.append("<br/><b>Action:</b> ");
-			info.append(route.action);
-			return info.toString();
 			
 		} catch (Exception e) {
 			e.printStackTrace();

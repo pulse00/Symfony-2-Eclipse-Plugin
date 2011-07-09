@@ -198,8 +198,8 @@
  <extension
        point="org.eclipse.php.ui.phpEditorTextHovers">
     <hover
-          class="org.eclipse.symfony.ui.RouteHover"
-          id="org.eclipse.symfony.ui.hover1"
+          class="org.eclipse.symfony.ui.editor.hover.RouteHover"
+          id="org.eclipse.symfony.ui.routeHover"
           priority="400">
     </hover>
  </extension>

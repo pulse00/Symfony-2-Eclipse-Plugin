@@ -1,5 +1,8 @@
 package org.eclipse.symfony.ui.editor.hyperlink;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
@@ -13,6 +16,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.symfony.core.log.Logger;
@@ -81,30 +85,61 @@ public class RouteHyperlinkDetector extends StringHyperlinkDetector {
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(input.getScriptProject());
 			IType[] types = PhpModelAccess.getDefault().findTypes(null, path.getController() + "Controller", MatchRule.EXACT, 0, 0, scope, null);
 			
+			IType type = null;
+
+			if (types.length > 1) {
+				for (IType t : types) {
+					
+					// filter out test controllers
+					if (t.getFullyQualifiedName() != null && t.getFullyQualifiedName().contains("Tests"))
+						continue;
+					type = t;
+				}
+			} else if (types.length == 1) {
+				type = types[0];
+			}
 			
-			// it should only exist 1 single route for each project with this service id
-			if (types.length != 1) {
-				Logger.debugMSG("No route controller found (" + types.length + ")");
+			if (type == null) {
 				return null;
 			}
 			
-			IType type = types[0];
 			IDLTKSearchScope controllerScope = SearchEngine.createSearchScope(type);
-			IMethod[] methods= PhpModelAccess.getDefault().findMethods(path.getTemplate(), MatchRule.PREFIX,	0, 0, controllerScope, null);
-			
-			if (methods.length == 1) {
+			IMethod[] methods= PhpModelAccess.getDefault().findMethods(path.getTemplate(), MatchRule.PREFIX, 0, 0, controllerScope, null);
 
+			if (methods.length > 1 && canShowMultipleHyperlinks) {
+				
+				List<IHyperlink> links = new ArrayList<IHyperlink>();
+				
+				for (IMethod method : methods) {
+					
+					final IHyperlink link;
+					
+					link = new ModelElementHyperlink(wordRegion, method,
+							new OpenAction(editor));
+					
+					links.add(link);
+					
+					
+				}
+				
+				return (IHyperlink[]) links
+				        .toArray(new IHyperlink[links.size()]);
+				
+			} else if (methods.length == 1) {
+				
 				IMethod method = methods[0];
 				final IHyperlink link;
 				
 				link = new ModelElementHyperlink(wordRegion, method,
-						new OpenAction(editor));			
+						new OpenAction(editor));
 				
-				return new IHyperlink[] { link };
+				return new IHyperlink[] {link};				
 				
-			}			
+			}
+			
 			
 		} catch (Exception e) {			
+			System.err.println(e.getMessage());
 			Logger.logException(e);
 		}
 		
