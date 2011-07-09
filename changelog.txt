@@ -1,3 +1,9 @@
+1.0.26
+
+* added hyperlinks for viewpaths and routes
+* added custom proposal view for codeassist info (routes and services)
+* added hover info for routes
+
 1.0.25
 
 * fixed annotation validation false positive
