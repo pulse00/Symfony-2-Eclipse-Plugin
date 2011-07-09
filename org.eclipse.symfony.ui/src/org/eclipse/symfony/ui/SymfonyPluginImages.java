@@ -45,7 +45,7 @@ public class SymfonyPluginImages {
 			if (fgImageRegistry != null) {
 				// Plugin.logErrorMessage("Image registry already defined");
 				// //$NON-NLS-1$
-				System.err.println("Image registry already defined"); //$NON-NLS-1$
+
 			}
 			return result;
 		} catch (Throwable ex) {

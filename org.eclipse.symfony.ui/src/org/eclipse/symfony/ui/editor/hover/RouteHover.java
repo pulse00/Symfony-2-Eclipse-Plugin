@@ -33,7 +33,6 @@ public class RouteHover extends PHPDocumentationHover {
 	@Override
 	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
 
-		System.err.println("get hover info");
 		IModelElement[] elements = getElementsAt(textViewer, hoverRegion);
 
 		if (elements.length > 0)

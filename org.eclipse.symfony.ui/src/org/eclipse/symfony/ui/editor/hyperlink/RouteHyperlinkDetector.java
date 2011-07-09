@@ -139,7 +139,6 @@ public class RouteHyperlinkDetector extends StringHyperlinkDetector {
 			
 			
 		} catch (Exception e) {			
-			System.err.println(e.getMessage());
 			Logger.logException(e);
 		}
 		
