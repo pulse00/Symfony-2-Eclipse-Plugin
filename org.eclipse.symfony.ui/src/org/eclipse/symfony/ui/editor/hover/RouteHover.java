@@ -35,7 +35,7 @@ public class RouteHover extends PHPDocumentationHover {
 
 		IModelElement[] elements = getElementsAt(textViewer, hoverRegion);
 
-		if (elements.length > 0)
+		if (elements == null || elements.length > 0)
 			return null;
 
 		ISourceModule sm = getEditorInputModelElement();

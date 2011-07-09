@@ -113,7 +113,7 @@ public class HTMLUtils {
 		
 		StringBuffer content = new StringBuffer();
 
-		content.append("<b>Bundle:</b>");
+		content.append("<b>Bundle:</b> ");
 		content.append(route.bundle);
 		content.append("<br/><b>Controller:</b> ");
 		content.append(route.controller);
