@@ -33,6 +33,7 @@ Export-Package: org.antlr.runtime,
  org.eclipse.symfony.core.parser.antlr.error,
  org.eclipse.symfony.core.preferences,
  org.eclipse.symfony.core.util,
+ org.eclipse.symfony.core.util.text,
  org.json.simple,
  org.json.simple.parser
 Bundle-ClassPath: .,

@@ -171,6 +171,7 @@
  
  <!-- org.eclipse.symfony.core.symfonyNature / org.eclipse.php.core.PHPNature -->
  <!-- This doesn't work, as DLTK simply fetches the first nature's labelprovider/proposalfactory -->
+ <!--
  <extension
        point="org.eclipse.dltk.ui.completion">
     <proposalLabelProvider
@@ -182,6 +183,7 @@
           nature="org.eclipse.php.core.PHPNature">
     </proposalFactory>
  </extension>
+ -->
  
  <extension
        id="org.eclipse.symfony.ui.symfonyCompletionProposalComputer"

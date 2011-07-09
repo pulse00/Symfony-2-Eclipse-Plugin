@@ -1,5 +1,4 @@
-package org.eclipse.symfony.core.codeassist.strategies;
-
+package org.eclipse.symfony.twig.codeassist.strategies;
 
 import java.util.List;
 
@@ -11,39 +10,22 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
-import org.eclipse.symfony.core.codeassist.contexts.ViewPathArgumentContext;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
 import org.eclipse.symfony.core.model.ViewPath;
+import org.eclipse.symfony.twig.codeassist.context.ViewPathArgumentContext;
 
-/**
- * 
- * Completes ViewPath parts, ie: 
- * 
- * <pre>
- * 
- * 	$this->render('|  <-- will show all BundleNames
- * 
- *  $this->render('AcmeDemoBundle:|   <-- will show all Controllers
- *    
- *  $this->render('AcmeDemoBundle:Demo:| <--- will show all templates
- * 
- * </pre>
- * 
- * 
- * @author Robert Gruendler <r.gruendler@gmail.com>
- *
- */
 @SuppressWarnings({ "restriction", "deprecation" })
 public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 
 	public ViewPathCompletionStrategy(ICompletionContext context) {
 		super(context);
 
-	}	
+	}
+	
 	
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
-
+	
 		ViewPathArgumentContext context = (ViewPathArgumentContext) getContext();
 		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
 		ISourceModule module = context.getSourceModule();
@@ -85,6 +67,8 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 					reporter.reportKeyword(tpl.getElementName(), "", range);
 				}
 			}
-		}
+		}		
+	
 	}
+
 }

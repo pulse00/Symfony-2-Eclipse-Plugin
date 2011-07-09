@@ -1,5 +1,6 @@
 package org.eclipse.symfony.twig.codeassist;
 
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,8 +10,10 @@ import org.eclipse.symfony.core.codeassist.strategies.RouteCompletionStrategy;
 import org.eclipse.symfony.twig.codeassist.context.RouteCompletionContext;
 import org.eclipse.symfony.twig.codeassist.context.TemplateVariableCompletionContext;
 import org.eclipse.symfony.twig.codeassist.context.TemplateVariableFieldCompletionContext;
+import org.eclipse.symfony.twig.codeassist.context.ViewPathArgumentContext;
 import org.eclipse.symfony.twig.codeassist.strategies.TemplateVariableCompletionStrategy;
 import org.eclipse.symfony.twig.codeassist.strategies.TemplateVariableFieldCompletionStrategy;
+import org.eclipse.symfony.twig.codeassist.strategies.ViewPathCompletionStrategy;
 import org.eclipse.twig.core.codeassist.ITwigCompletionStrategyFactory;
 
 /**
@@ -50,6 +53,9 @@ public class TwigCompletionStrategyFactory implements
 				
 				result.add(new RouteCompletionStrategy(context));
 				
+			} else if (context.getClass() == ViewPathArgumentContext.class) {
+				
+				result.add(new ViewPathCompletionStrategy(context));
 			}
 		}
 		
