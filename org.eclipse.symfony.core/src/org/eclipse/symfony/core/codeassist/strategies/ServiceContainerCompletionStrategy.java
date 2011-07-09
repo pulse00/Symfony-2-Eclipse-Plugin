@@ -3,6 +3,7 @@ package org.eclipse.symfony.core.codeassist.strategies;
 import java.util.List;
 
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
@@ -80,9 +81,17 @@ public class ServiceContainerCompletionStrategy extends
 
 			if (CodeAssistUtils.startsWithIgnoreCase(service.getId(), prefix)) {
 				
-				Service s = new Service((ModelElement) context.getSourceModule(), service.getElementName());
+				IType[] serviceTypes = model.findServiceTypes(service, project);
+				
+				ModelElement parent = null;
+				if (serviceTypes.length > 0) {
+					parent = (ModelElement) serviceTypes[0];
+				} else {
+					parent = (ModelElement) context.getSourceModule();
+				}
+				
+				Service s = new Service(parent, service.getElementName());
 				reporter.reportType(s, "", range);
-				//reporter.reportKeyword(service.getId(), "", range);
 			}
 		}
 	}

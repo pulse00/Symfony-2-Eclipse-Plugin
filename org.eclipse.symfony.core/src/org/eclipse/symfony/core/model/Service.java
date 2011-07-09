@@ -5,7 +5,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceType;
@@ -29,6 +28,8 @@ public class Service extends SourceType {
 	public static final String NAME = "name";
 	public static final String CLASS = "class";
 	public static final Object SYNTHETIC = "synthetic";
+	
+	
 	
 	private IFile file;
 	
@@ -56,7 +57,7 @@ public class Service extends SourceType {
 	private Bundle bundle;
 
 	private IPath path;
-
+	
 	public Service(ModelElement parent, String name) {
 		super(parent, name);
 	}
@@ -167,8 +168,7 @@ public class Service extends SourceType {
 
 		return new FakeTypeElementInfo();
 
-	}	
+	}
 	
 
-	
 }

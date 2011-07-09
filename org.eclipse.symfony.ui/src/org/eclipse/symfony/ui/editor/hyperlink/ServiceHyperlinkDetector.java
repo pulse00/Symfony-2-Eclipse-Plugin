@@ -83,10 +83,8 @@ public class ServiceHyperlinkDetector extends StringHyperlinkDetector {
 			if (s == null) {
 				return null;
 			}
-			
-			IDLTKSearchScope scope = SearchEngine.createSearchScope(input.getScriptProject());			
-			String namespace = s.getNamespace() != null ? s.getNamespace().getQualifiedName() : null;			
-			IType[] types = PhpModelAccess.getDefault().findTypes(namespace, s.getClassName(), MatchRule.EXACT, 0, 0, scope, null);
+
+			IType[] types = SymfonyModelAccess.getDefault().findServiceTypes(s, input.getScriptProject());
 			
 			// it should only exist 1 single service for each project with this service id
 			if (types.length > 1 && canShowMultipleHyperlinks) {

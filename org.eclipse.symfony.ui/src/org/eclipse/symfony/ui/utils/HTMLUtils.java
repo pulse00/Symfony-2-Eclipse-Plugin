@@ -7,10 +7,16 @@ import java.io.StringReader;
 import java.net.URL;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.internal.text.html.HTMLPrinter;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.php.internal.ui.documentation.PHPDocumentationContentAccess;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.symfony.core.log.Logger;
+import org.eclipse.symfony.core.model.Service;
 import org.eclipse.symfony.index.dao.Route;
 import org.eclipse.symfony.ui.SymfonyPluginImages;
 import org.eclipse.symfony.ui.SymfonyUiPlugin;
@@ -33,50 +39,60 @@ public class HTMLUtils {
 	private static String fgStyleSheet;
 	
 	
-	private void foo() {
+	public static String service2Html(Service service) {
 		
-//		StringBuffer buffer = new StringBuffer();
-//		boolean hasContents = false;
-//		IModelElement element = null;
-//		int leadingImageWidth = 20;
-//		for (int i = 0; i < elements.length; i++) {
-//			element = elements[i];
-//			if (element instanceof IMember) {
-//				IMember member = (IMember) element;
-//				HTMLPrinter.addSmallHeader(buffer,
-//						getInfoText(member, constantValue, true, i == 0));
-//				Reader reader = null;
-//				try {
-//					reader = getHTMLContent(member);
-//				} catch (ModelException e) {
-//				}
-//
-//				if (reader != null) {
-//					HTMLPrinter.addParagraph(buffer, reader);
-//				}
-//				if (i != elements.length - 1) {
-//					buffer.append("<hr>");
-//				}
-//				hasContents = true;
-//			} else if (element.getElementType() == IModelElement.FIELD) {
-//				HTMLPrinter.addSmallHeader(buffer,
-//						getInfoText(element, constantValue, true, i == 0));
-//				hasContents = true;
-//			}
-//		}
-//
-//		if (!hasContents)
-//			return null;
-//
-//		if (buffer.length() > 0) {
-//			HTMLPrinter.insertPageProlog(buffer, 0, getStyleSheet());
-//			HTMLPrinter.addPageEpilog(buffer);
-//			return new PHPDocumentationBrowserInformationControlInput(
-//					previousInput, element, buffer.toString(),
-//					leadingImageWidth);
-//		}		
-	}
+		StringBuffer info = new StringBuffer();
+		String styles = getStyleSheet();
+		HTMLPrinter.insertPageProlog(info, 0, styles);
+		
+		URL imageUrl = SymfonyUiPlugin.getDefault().getImagesOnFSRegistry().getImageURL(SymfonyPluginImages.DESC_OBJS_SERVICE);
+		String body = null;
+		
+		if (imageUrl != null) {
+			
+			StringBuffer header = new StringBuffer();
+			String imageName = imageUrl.toExternalForm();
+			
+			SourceModule module = (SourceModule) service.getSourceModule();
+			String name = service.getElementName();
+			
+			try {
+				
+				if (module.getTypes().length > 0) {
+					IType type = module.getTypes()[0];					
+					if (type.getTypes().length > 0) {
+						IType sType = type.getTypes()[0];
+						name = sType.getFullyQualifiedName().replace("$", "\\");						
+						
+						body = PHPDocumentationContentAccess.getHTMLContent(sType);
+						
+					}
+				}
+				
+				
+			} catch (ModelException e) {
+				Logger.logException(e);
 
+			}
+			addImageAndLabel(header, imageName, 16, 16, 2, 2, name, 20, 2, true);
+			HTMLPrinter.addSmallHeader(info, header.toString());
+
+		}
+		
+		
+		StringBuffer content = new StringBuffer();
+		
+
+		if (body != null)
+			content.append(body);
+			
+		HTMLPrinter.addParagraph(info, new StringReader(content.toString()));
+		HTMLPrinter.addPageEpilog(info);
+		
+		return info.toString();		
+		
+	}
+	
 	public static String route2Html (Route route) {
 
 		StringBuffer info = new StringBuffer();

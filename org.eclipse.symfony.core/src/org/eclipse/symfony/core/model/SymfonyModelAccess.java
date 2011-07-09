@@ -1,7 +1,9 @@
 package org.eclipse.symfony.core.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -13,6 +15,7 @@ import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.core.index2.search.ISearchEngine;
@@ -57,6 +60,8 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	private static SymfonyModelAccess modelInstance = null;
 		
 	private SymfonyIndexer index;
+	
+	private Map<Service, IType[]> serviceCache = new HashMap<Service, IType[]>();
 
 	
 	private SymfonyModelAccess() {
@@ -449,6 +454,32 @@ public class SymfonyModelAccess extends PhpModelAccess {
 
 
 		return methods.size() > 0;
+		
+	}
+	
+	
+	public IType[] findServiceTypes(Service service, IScriptProject project) {
+		
+		if (serviceCache.containsKey(service))
+			return serviceCache.get(service);
+		
+		try {
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(project);			
+			String namespace = service.getNamespace() != null ? service.getNamespace().getQualifiedName() : null;
+			IType[] types = findTypes(namespace, service.getClassName(), MatchRule.EXACT, 0, 0, scope, null);
+			serviceCache.put(service, types);
+			return types;
+			
+		} catch (Exception e) {
+			Logger.logException(e);
+
+		}
+
+		if (service != null)
+			Logger.debugMSG("No types found for service: " + service.getId());
+		else Logger.debugMSG("Cannot find service type, service is null");
+		
+		return new IType[] {};		
 		
 	}
 
