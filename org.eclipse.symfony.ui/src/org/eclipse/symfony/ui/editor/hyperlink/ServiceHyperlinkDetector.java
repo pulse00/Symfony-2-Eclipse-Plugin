@@ -1,5 +1,8 @@
 package org.eclipse.symfony.ui.editor.hyperlink;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
@@ -81,23 +84,42 @@ public class ServiceHyperlinkDetector extends StringHyperlinkDetector {
 				return null;
 			}
 			
-			IDLTKSearchScope scope = SearchEngine.createSearchScope(input.getScriptProject());
-			
-			IType[] types = PhpModelAccess.getDefault().findTypes(s.getNamespace().getQualifiedName(), s.getClassName(), MatchRule.EXACT, 0, 0, scope, null);
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(input.getScriptProject());			
+			String namespace = s.getNamespace() != null ? s.getNamespace().getQualifiedName() : null;			
+			IType[] types = PhpModelAccess.getDefault().findTypes(namespace, s.getClassName(), MatchRule.EXACT, 0, 0, scope, null);
 			
 			// it should only exist 1 single service for each project with this service id
-			if (types.length != 1) {
-				Logger.debugMSG("No service found (" + types.length + ")");
-				return null;
+			if (types.length > 1 && canShowMultipleHyperlinks) {
+
+				List<IHyperlink> links = new ArrayList<IHyperlink>();
+				
+				for (IType type : types) {
+					
+					final IHyperlink link;
+					
+					link = new ModelElementHyperlink(wordRegion, type,
+							new OpenAction(editor));			
+					
+					links.add(link);
+					
+				}
+				
+				return (IHyperlink[]) links
+				        .toArray(new IHyperlink[links.size()]);
+				
+				
+			} else if (types.length == 1) {
+				
+				IType type = types[0];			
+				final IHyperlink link;
+				
+				link = new ModelElementHyperlink(wordRegion, type,
+						new OpenAction(editor));			
+				
+				return new IHyperlink[] { link };
+				
 			}
 			
-			IType type = types[0];			
-			final IHyperlink link;
-			
-			link = new ModelElementHyperlink(wordRegion, type,
-					new OpenAction(editor));			
-			
-			return new IHyperlink[] { link };
 			
 		} catch (Exception e) {
 			
