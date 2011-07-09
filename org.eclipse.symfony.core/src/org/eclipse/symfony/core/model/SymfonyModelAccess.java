@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IMethod;
@@ -34,6 +35,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.symfony.core.SymfonyLanguageToolkit;
 import org.eclipse.symfony.core.index.SymfonyElementResolver.TemplateField;
@@ -390,6 +392,8 @@ public class SymfonyModelAccess extends PhpModelAccess {
 			return null;
 
 		IDLTKSearchScope controllerScope = SearchEngine.createSearchScope(controllerSource);
+		
+		
 		return findTypes("", MatchRule.PREFIX, 0, 0, controllerScope, null);
 		
 	}
@@ -412,10 +416,12 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		try {
 			
 			ScriptFolder bundleFolder = findBundleFolder(bundle, project);
-			IProjectFragment fragment = (IProjectFragment) bundleFolder.getParent();
-			IScriptFolder folder = fragment.getScriptFolder("Resources/views/" + controller.replace("Controller", ""));
-			if (folder.exists() && folder.hasChildren()) {
-				return folder.getChildren();
+			IPath path = bundleFolder.getPath().append(new Path("Resources/views/" + controller.replace("Controller", "")));
+			IProjectFragment fragment = bundleFolder.getProjectFragment();
+			IScriptFolder sfolder = fragment.getScriptFolder(path.removeFirstSegments(1).toString());
+			
+			if (sfolder.exists() && sfolder.hasChildren()) {				
+				return sfolder.getChildren();
 			}			
 			
 		} catch (Exception e) {

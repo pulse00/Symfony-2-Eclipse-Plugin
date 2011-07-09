@@ -8,11 +8,13 @@ import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposalCollector;
-import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposalLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.symfony.core.builder.SymfonyNature;
+import org.eclipse.symfony.core.model.Bundle;
+import org.eclipse.symfony.core.model.Controller;
 import org.eclipse.symfony.core.model.RouteSource;
 import org.eclipse.symfony.core.model.Service;
+import org.eclipse.symfony.core.model.Template;
 
 /**
  * The {@link SymfonyCompletionProposalCollector} is 
@@ -52,7 +54,7 @@ public class SymfonyCompletionProposalCollector extends
 			CompletionProposal proposal) {
 
 		IModelElement element = proposal.getModelElement();
-		
+
 		if (element == null) {
 			return null;
 		}
@@ -62,17 +64,42 @@ public class SymfonyCompletionProposalCollector extends
 			return createRouteProposal(proposal);
 		} else if (element.getClass() == Service.class) {			
 			return createServiceProposal(proposal);
+		} else if (element.getClass() == Bundle.class) {
+			return createBundleProposal(proposal);
+		} else if (element.getClass() == Controller.class) {
+			return createControllerProposal(proposal);
+		} else if (element.getClass() == Template.class) {			
+			return createTemplateProposal(proposal);			
 		}
 		
 		// don't complete anything else or we'll get duplicate entries
 		return null;
 	}
 	
-	
-	
-	private IScriptCompletionProposal createServiceProposal(
-			CompletionProposal typeProposal) {
+	private IScriptCompletionProposal createTemplateProposal(
+			CompletionProposal proposal) {
 
+		ScriptCompletionProposal scriptProposal = generateSymfonyProposal(proposal);
+		scriptProposal.setRelevance(computeRelevance(proposal));
+		scriptProposal.setProposalInfo(new TemplateProposalInfo(getSourceModule().getScriptProject(), proposal));
+		return scriptProposal;								
+
+	}
+
+
+	private IScriptCompletionProposal createControllerProposal(
+			CompletionProposal proposal) {
+		
+		ScriptCompletionProposal scriptProposal = generateSymfonyProposal(proposal);
+		scriptProposal.setRelevance(computeRelevance(proposal));
+		scriptProposal.setProposalInfo(new ControllerProposalInfo(getSourceModule().getScriptProject(), proposal));
+		return scriptProposal;								
+		
+	}
+
+
+	private ScriptCompletionProposal generateSymfonyProposal(CompletionProposal typeProposal) {
+		
 		String completion = new String(typeProposal.getCompletion());
 		int replaceStart = typeProposal.getReplaceStart();
 		int length = getLength(typeProposal);
@@ -83,6 +110,28 @@ public class SymfonyCompletionProposalCollector extends
 				.createTypeProposalLabel(typeProposal);
 
 		ScriptCompletionProposal scriptProposal = new EmptyCompletionProposal(completion, replaceStart, length, image, displayString, 0);
+
+		return scriptProposal;
+		
+	}
+	
+	
+	
+	private IScriptCompletionProposal createBundleProposal(
+			CompletionProposal typeProposal) {
+
+		ScriptCompletionProposal scriptProposal = generateSymfonyProposal(typeProposal);
+		scriptProposal.setRelevance(computeRelevance(typeProposal));
+		scriptProposal.setProposalInfo(new BundleProposalInfo(getSourceModule().getScriptProject(), typeProposal));
+		return scriptProposal;				
+
+	}
+
+
+	private IScriptCompletionProposal createServiceProposal(
+			CompletionProposal typeProposal) {
+
+		ScriptCompletionProposal scriptProposal = generateSymfonyProposal(typeProposal);
 
 		scriptProposal.setRelevance(computeRelevance(typeProposal));
 		scriptProposal.setProposalInfo(new ServiceProposalInfo(getSourceModule().getScriptProject(), typeProposal));
@@ -93,16 +142,8 @@ public class SymfonyCompletionProposalCollector extends
 	private IScriptCompletionProposal createRouteProposal(
 			final CompletionProposal typeProposal) {
 
-		String completion = new String(typeProposal.getCompletion());
-		int replaceStart = typeProposal.getReplaceStart();
-		int length = getLength(typeProposal);
-		Image image = getImage(((SymfonyCompletionProposalLabelProvider) getLabelProvider())
-				.createTypeImageDescriptor(typeProposal));
-
-		String displayString = ((SymfonyCompletionProposalLabelProvider) getLabelProvider())
-				.createTypeProposalLabel(typeProposal);
-
-		ScriptCompletionProposal scriptProposal = new EmptyCompletionProposal(completion, replaceStart, length, image, displayString, 0);
+	
+		ScriptCompletionProposal scriptProposal = generateSymfonyProposal(typeProposal);
 
 		scriptProposal.setRelevance(computeRelevance(typeProposal));
 		scriptProposal.setProposalInfo(new RouteProposalInfo(getSourceModule().getScriptProject(), typeProposal));

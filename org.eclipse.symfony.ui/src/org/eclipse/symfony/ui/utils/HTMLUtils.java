@@ -16,7 +16,10 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.php.internal.ui.documentation.PHPDocumentationContentAccess;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.symfony.core.log.Logger;
+import org.eclipse.symfony.core.model.Controller;
 import org.eclipse.symfony.core.model.Service;
+import org.eclipse.symfony.core.model.SymfonyModelAccess;
+import org.eclipse.symfony.core.model.Template;
 import org.eclipse.symfony.index.dao.Route;
 import org.eclipse.symfony.ui.SymfonyPluginImages;
 import org.eclipse.symfony.ui.SymfonyUiPlugin;
@@ -38,7 +41,122 @@ public class HTMLUtils {
 
 	private static String fgStyleSheet;
 	
+	public static String template2Html(Template template) {
+
+		StringBuffer info = new StringBuffer();
+		String styles = getStyleSheet();
+		HTMLPrinter.insertPageProlog(info, 0, styles);
+		
+		URL imageUrl = SymfonyUiPlugin.getDefault().getImagesOnFSRegistry().getImageURL(SymfonyPluginImages.DESC_OBJS_TEMPLATE);
+		String body = null;
+		
+		if (imageUrl != null) {
+			
+			StringBuffer header = new StringBuffer();
+			String imageName = imageUrl.toExternalForm();
+			
+			SourceModule module = (SourceModule) template.getSourceModule();
+			String name = template.getElementName();
+			
+			try {
+				
+				if (module.getTypes().length > 0) {
+					IType type = module.getTypes()[0];					
+					if (type.getTypes().length > 0) {
+						IType sType = type.getTypes()[0];
+						name = sType.getFullyQualifiedName().replace("$", "\\");						
+						
+						body = PHPDocumentationContentAccess.getHTMLContent(sType);
+						
+					}
+				}
+				
+				
+			} catch (ModelException e) {
+				Logger.logException(e);
+
+			}
+			addImageAndLabel(header, imageName, 16, 16, 2, 2, name, 20, 2, true);
+			HTMLPrinter.addSmallHeader(info, header.toString());
+
+		}
+		
+		
+		StringBuffer content = new StringBuffer();
+		
+
+		if (body != null)
+			content.append(body);
+			
+		HTMLPrinter.addParagraph(info, new StringReader(content.toString()));
+		HTMLPrinter.addPageEpilog(info);
+		
+		return info.toString();		
+	}
 	
+	
+	public static String controller2Html(Controller controller) {
+
+		StringBuffer info = new StringBuffer();
+		String styles = getStyleSheet();
+		HTMLPrinter.insertPageProlog(info, 0, styles);
+		
+		URL imageUrl = SymfonyUiPlugin.getDefault().getImagesOnFSRegistry().getImageURL(SymfonyPluginImages.DESC_OBJS_CONTROLLER);
+		String body = null;
+		
+		if (imageUrl != null) {
+			
+			StringBuffer header = new StringBuffer();
+			String imageName = imageUrl.toExternalForm();
+			
+			SourceModule module = (SourceModule) controller.getSourceModule();
+			String name = controller.getElementName();
+			
+			try {
+				
+				if (module.getTypes().length > 0) {
+					IType type = module.getTypes()[0];					
+					if (type.getTypes().length > 0) {
+						IType sType = type.getTypes()[0];
+						name = sType.getFullyQualifiedName().replace("$", "\\");						
+						
+						body = PHPDocumentationContentAccess.getHTMLContent(sType);
+						
+					}
+				}
+				
+				
+			} catch (ModelException e) {
+				Logger.logException(e);
+
+			}
+			addImageAndLabel(header, imageName, 16, 16, 2, 2, name, 20, 2, true);
+			HTMLPrinter.addSmallHeader(info, header.toString());
+
+		}
+		
+		
+		StringBuffer content = new StringBuffer();
+		
+
+		if (body != null)
+			content.append(body);
+			
+		HTMLPrinter.addParagraph(info, new StringReader(content.toString()));
+		HTMLPrinter.addPageEpilog(info);
+		
+		return info.toString();		
+		
+	}
+	
+	
+	/**
+	 * 
+	 * Returns a HTML representation of a Symfony service. 
+	 * 
+	 * @param service
+	 * @return
+	 */
 	public static String service2Html(Service service) {
 		
 		StringBuffer info = new StringBuffer();
@@ -93,6 +211,13 @@ public class HTMLUtils {
 		
 	}
 	
+	/**
+	 * 
+	 * Returns a HTML representation of a Symfony route. 
+	 * 
+	 * @param service
+	 * @return
+	 */
 	public static String route2Html (Route route) {
 
 		StringBuffer info = new StringBuffer();
@@ -126,6 +251,77 @@ public class HTMLUtils {
 		return info.toString();		
 
 	}
+	
+	/**
+	 * 
+	 * Returns a HTML representation of a Symfony bundle. 
+	 * 
+	 * @param service
+	 * @return
+	 */
+	public static String bundle2Html(org.eclipse.symfony.core.model.Bundle bundle) {
+
+		
+		StringBuffer info = new StringBuffer();
+		String styles = getStyleSheet();
+		HTMLPrinter.insertPageProlog(info, 0, styles);
+		
+		URL imageUrl = SymfonyUiPlugin.getDefault().getImagesOnFSRegistry().getImageURL(SymfonyPluginImages.DESC_OBJS_BUNDLE);
+		String body = null;
+		
+		if (imageUrl != null) {
+			
+			StringBuffer header = new StringBuffer();
+			String imageName = imageUrl.toExternalForm();
+			
+			SourceModule module = (SourceModule) bundle.getSourceModule();
+			String name = bundle.getElementName();
+			
+			try {
+				
+				if (module.getTypes().length > 0) {
+					IType type = module.getTypes()[0];					
+					if (type.getTypes().length > 0) {
+						IType sType = type.getTypes()[0];
+						name = sType.getFullyQualifiedName().replace("$", "\\");						
+						
+						body = PHPDocumentationContentAccess.getHTMLContent(sType);
+						
+					}
+				}
+				
+				
+			} catch (ModelException e) {
+				Logger.logException(e);
+
+			}
+			addImageAndLabel(header, imageName, 16, 16, 2, 2, name, 20, 2, true);
+			HTMLPrinter.addSmallHeader(info, header.toString());
+
+		}
+				
+		StringBuffer content = new StringBuffer();		
+
+		if (body != null)
+			content.append(body);
+		
+		StringBuffer ctrl = new StringBuffer();		
+		IType[] controllers = SymfonyModelAccess.getDefault().findBundleControllers(bundle.getElementName(), bundle.getSourceModule().getScriptProject());		
+		ctrl.append("<h2>Controllers:</h2><br/>");		
+		HTMLPrinter.startBulletList(ctrl);
+				
+		for (IType controller : controllers ) {
+			HTMLPrinter.addBullet(ctrl, controller.getElementName());
+		}
+		
+		HTMLPrinter.endBulletList(ctrl);		
+		HTMLPrinter.addParagraph(info, new StringReader(ctrl.toString()));			
+		HTMLPrinter.addParagraph(info, new StringReader(content.toString()));
+		HTMLPrinter.addPageEpilog(info);
+				
+		return info.toString();		
+
+	}		
 	
 	private static String getStyleSheet() {
 		
@@ -208,7 +404,5 @@ public class HTMLUtils {
 		buf.append("'>"); //$NON-NLS-1$
 		buf.append(label);
 		buf.append("</div>"); //$NON-NLS-1$
-	}	
-	
-
+	}
 }

@@ -25,10 +25,16 @@ public class SymfonyPluginImages {
 	
 	public static final String IMG_OBJS_ROUTE = NAME_PREFIX + "route-icon.gif"; 				
 	public static final String IMG_OBJS_SERVICE = NAME_PREFIX + "service-icon.gif";
+	public static final String IMG_OBJS_BUNDLE = NAME_PREFIX + "bundle-icon.gif";
+	public static final String IMG_OBJS_CONTROLLER = NAME_PREFIX + "controller-icon.gif";	
+	public static final String IMG_OBJS_TEMPLATE = NAME_PREFIX + "template-icon.gif";	
 	
 	
 	public static final ImageDescriptor DESC_OBJS_ROUTE = createManagedFromKey(T_OBJ, IMG_OBJS_ROUTE);	
 	public static final ImageDescriptor DESC_OBJS_SERVICE = createManagedFromKey(T_OBJ, IMG_OBJS_SERVICE);
+	public static final ImageDescriptor DESC_OBJS_BUNDLE = createManagedFromKey(T_OBJ, IMG_OBJS_BUNDLE);	
+	public static final ImageDescriptor DESC_OBJS_CONTROLLER = createManagedFromKey(T_OBJ, IMG_OBJS_CONTROLLER);	
+	public static final ImageDescriptor DESC_OBJS_TEMPLATE = createManagedFromKey(T_OBJ, IMG_OBJS_TEMPLATE);	
 	
 	private static ImageDescriptor createManagedFromKey(String prefix, String key) {
 		return createManaged(prefix, key.substring(NAME_PREFIX_LENGTH), key);
