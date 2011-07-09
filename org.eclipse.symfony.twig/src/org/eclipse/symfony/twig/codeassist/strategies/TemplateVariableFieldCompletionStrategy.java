@@ -54,8 +54,6 @@ AbstractTwigCompletionStrategy {
 		String varName = ctx.getVariable();
 		TemplateField var = SymfonyModelAccess.getDefault().findTemplateVariableType("$" + varName, ctx.getSourceModule());
 		
-		System.err.println(varName);
-		
 		if (var == null) {
 			return;
 		}
