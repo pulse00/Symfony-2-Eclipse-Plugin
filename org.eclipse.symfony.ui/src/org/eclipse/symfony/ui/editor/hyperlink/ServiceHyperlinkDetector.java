@@ -34,6 +34,8 @@ import org.eclipse.symfony.core.model.SymfonyModelAccess;
  * 3. Open Definitions of routes when clicking on routes 
  * 
  * 
+ * @deprecated replaced by SymfonySelectionEngine
+ * 
  * @author "Robert Gruendler <r.gruendler@gmail.com>"
  *
  */
@@ -50,79 +52,79 @@ public class ServiceHyperlinkDetector extends StringHyperlinkDetector {
 			IRegion region, boolean canShowMultipleHyperlinks) {
 
 		
-		final PHPStructuredEditor editor = org.eclipse.php.internal.ui.util.EditorUtility
-				.getPHPEditor(textViewer);
-		if (editor == null) {
-			return null;
-		}
-
-		if (region == null) {
-			return null;
-		}
-
-		IModelElement input = EditorUtility.getEditorInputModelElement(editor,
-				false);
-		if (input == null) {
-			return null;
-		}
-		
-		IDocument document = textViewer.getDocument();
-		int offset = region.getOffset();
-		
-		try {
-			
-			// TODO: fix the findWord() method for services like form.factory
-			IRegion wordRegion = findWord(document, offset);
-			
-			if (wordRegion == null)
-				return null;
-
-			String service = document.get(wordRegion.getOffset(), wordRegion.getLength());			
-			Service s = SymfonyModelAccess.getDefault().findService(service, input.getScriptProject().getPath());
-			
-			if (s == null) {
-				return null;
-			}
-
-			IType[] types = SymfonyModelAccess.getDefault().findServiceTypes(s, input.getScriptProject());
-			
-			// it should only exist 1 single service for each project with this service id
-			if (types.length > 1 && canShowMultipleHyperlinks) {
-
-				List<IHyperlink> links = new ArrayList<IHyperlink>();
-				
-				for (IType type : types) {
-					
-					final IHyperlink link;
-					
-					link = new ModelElementHyperlink(wordRegion, type,
-							new OpenAction(editor));			
-					
-					links.add(link);
-					
-				}
-				
-				return (IHyperlink[]) links
-				        .toArray(new IHyperlink[links.size()]);
-				
-				
-			} else if (types.length == 1) {
-				
-				IType type = types[0];			
-				final IHyperlink link;
-				
-				link = new ModelElementHyperlink(wordRegion, type,
-						new OpenAction(editor));			
-				
-				return new IHyperlink[] { link };
-				
-			}
-			
-			
-		} catch (Exception e) {
-			
-			Logger.logException(e);
-		}
+//		final PHPStructuredEditor editor = org.eclipse.php.internal.ui.util.EditorUtility
+//				.getPHPEditor(textViewer);
+//		if (editor == null) {
+//			return null;
+//		}
+//
+//		if (region == null) {
+//			return null;
+//		}
+//
+//		IModelElement input = EditorUtility.getEditorInputModelElement(editor,
+//				false);
+//		if (input == null) {
+//			return null;
+//		}
+//		
+//		IDocument document = textViewer.getDocument();
+//		int offset = region.getOffset();
+//		
+//		try {
+//			
+//			// TODO: fix the findWord() method for services like form.factory
+//			IRegion wordRegion = findWord(document, offset);
+//			
+//			if (wordRegion == null)
+//				return null;
+//
+//			String service = document.get(wordRegion.getOffset(), wordRegion.getLength());			
+//			Service s = SymfonyModelAccess.getDefault().findService(service, input.getScriptProject().getPath());
+//			
+//			if (s == null) {
+//				return null;
+//			}
+//
+//			IType[] types = SymfonyModelAccess.getDefault().findServiceTypes(s, input.getScriptProject());
+//			
+//			// it should only exist 1 single service for each project with this service id
+//			if (types.length > 1 && canShowMultipleHyperlinks) {
+//
+//				List<IHyperlink> links = new ArrayList<IHyperlink>();
+//				
+//				for (IType type : types) {
+//					
+//					final IHyperlink link;
+//					
+//					link = new ModelElementHyperlink(wordRegion, type,
+//							new OpenAction(editor));			
+//					
+//					links.add(link);
+//					
+//				}
+//				
+//				return (IHyperlink[]) links
+//				        .toArray(new IHyperlink[links.size()]);
+//				
+//				
+//			} else if (types.length == 1) {
+//				
+//				IType type = types[0];			
+//				final IHyperlink link;
+//				
+//				link = new ModelElementHyperlink(wordRegion, type,
+//						new OpenAction(editor));			
+//				
+//				return new IHyperlink[] { link };
+//				
+//			}
+//			
+//			
+//		} catch (Exception e) {
+//			
+//			Logger.logException(e);
+//		}
 		
 		return null;
 	}

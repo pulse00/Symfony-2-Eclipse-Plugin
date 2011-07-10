@@ -51,31 +51,11 @@ public class SymfonyTextSequenceUtilities {
 	public static int readViewPathStartIndex(CharSequence textSequence) {
 
 		int startPosition = textSequence.length() -1;		
-		return readViewPathStartIndex(textSequence, startPosition);
+		return readLiteralStartIndex(textSequence, startPosition);
 
 	}
 	
 	
-	public static int readViewPathStartIndex(CharSequence textSequence, int startPosition) {
-		
-		while (startPosition > 0) {
-
-			char ch = textSequence.charAt(startPosition - 1);
-			if (!Character.isLetterOrDigit(ch) && ch != ':' && ch != '.') {
-				break;
-			}
-			startPosition--;
-		}
-		if (startPosition > 0
-				&& (textSequence.charAt(startPosition) == '"' || textSequence.charAt(startPosition) == '\'' )) {
-			startPosition++;
-
-		}
-
-		return startPosition;		
-		
-	}
-
 	/**
 	 * Checks for the existance of a service container function, ie. $this->get( or $this->container->get(
 	 * @param sequence
@@ -176,6 +156,14 @@ public class SymfonyTextSequenceUtilities {
 	}
 
 
+	/**
+	 * Check if the TextSequence is a function which accept route parameters.
+	 * 
+	 * 
+	 * @param statement
+	 * @param project
+	 * @return
+	 */
 	public static boolean isInRouteFunctionParameter(TextSequence statement,
 			IScriptProject project) {
 		
@@ -184,8 +172,47 @@ public class SymfonyTextSequenceUtilities {
 
 	}
 
+	
+	
+	/**
+	 * 
+	 * Read to the start index of a String literal.
+	 * 
+	 * @param textSequence
+	 * @param startPosition
+	 * @return
+	 */
+	public static int readLiteralStartIndex(CharSequence textSequence, int startPosition) {
+		
+		while (startPosition > 0) {
 
-	public static int readViewPathEndIndex(CharSequence textSequence, int startPosition) {
+			char ch = textSequence.charAt(startPosition - 1);
+			if (!Character.isLetterOrDigit(ch) && ch != ':' && ch != '.' && ch != '_') {
+				break;
+			}
+			startPosition--;
+		}
+		if (startPosition > 0
+				&& (textSequence.charAt(startPosition) == '"' || textSequence.charAt(startPosition) == '\'' )) {
+			startPosition++;
+
+		}
+
+		return startPosition;		
+		
+	}
+
+	
+
+	/**
+	 * 
+	 * Read to the end index of a String literal.
+	 * 
+	 * @param textSequence
+	 * @param startPosition
+	 * @return
+	 */
+	public static int readLiteralEndIndex(CharSequence textSequence, int startPosition) {
 
 				
 		int max = textSequence.length() -1;
@@ -193,7 +220,7 @@ public class SymfonyTextSequenceUtilities {
 		while (startPosition < max) {
 
 			char ch = textSequence.charAt(startPosition);
-			if (!Character.isLetterOrDigit(ch) && ch != ':' && ch != '.') {
+			if (!Character.isLetterOrDigit(ch) && ch != ':' && ch != '.' && ch != '_') {
 				break;
 			}
 			startPosition++;

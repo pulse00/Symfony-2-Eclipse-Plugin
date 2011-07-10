@@ -415,9 +415,10 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		try {
 			
 			ScriptFolder bundleFolder = findBundleFolder(bundle, project);
-			IPath path = new Path("Resources/views/" + controller.replace("Controller", ""));
-			IProjectFragment fragment = bundleFolder.getProjectFragment();			
-			IScriptFolder sfolder = fragment.getScriptFolder(path.toString());
+			IProjectFragment fragment = bundleFolder.getProjectFragment();
+			IPath relative = new Path("Resources/views/" + controller.replace("Controller", ""));
+			IPath path = bundleFolder.getPath().append(relative).removeFirstSegments(1);
+			IScriptFolder sfolder = fragment.getScriptFolder(path);
 			
 			if (sfolder.exists() && sfolder.hasChildren()) {				
 				return sfolder.getChildren();
@@ -462,7 +463,14 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		
 	}
 	
-	
+	/**
+	 * Find ITypes of a service
+	 * 
+	 * 
+	 * @param service
+	 * @param project
+	 * @return
+	 */
 	public IType[] findServiceTypes(Service service, IScriptProject project) {
 		
 		if (serviceCache.containsKey(service))
@@ -485,6 +493,19 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		else Logger.debugMSG("Cannot find service type, service is null");
 		
 		return new IType[] {};		
+		
+	}
+	
+	
+	public IType findServiceType(Service service, IScriptProject project) {
+		
+		
+		IType[] types = findServiceTypes(service, project);
+		
+		if (types.length > 0)
+			return types[0];
+		
+		return null;
 		
 	}
 
@@ -679,7 +700,8 @@ public class SymfonyModelAccess extends PhpModelAccess {
 			ScriptFolder bundleFolder = findBundleFolder(bundle, project);
 			IPath path = new Path("Resources/views/");
 			IProjectFragment fragment = bundleFolder.getProjectFragment();			
-			IScriptFolder sfolder = fragment.getScriptFolder(path.toString());
+			IPath viewPath = bundleFolder.getPath().append(path).removeFirstSegments(1);			
+			IScriptFolder sfolder = fragment.getScriptFolder(viewPath.toString());
 			
 			if (sfolder.exists() && sfolder.hasChildren()) {				
 				return sfolder.getChildren();
@@ -739,9 +761,9 @@ public class SymfonyModelAccess extends PhpModelAccess {
 				
 				ScriptFolder bundleFolder = findBundleFolder(bundle, project);
 				IPath path = new Path("Resources/views/" + controller.replace("Controller", ""));
-				
-				IProjectFragment fragment = bundleFolder.getProjectFragment();			
-				IScriptFolder sfolder = fragment.getScriptFolder(path.toString());
+				IProjectFragment fragment = bundleFolder.getProjectFragment();
+				IPath iPath = bundleFolder.getPath().append(path).removeFirstSegments(1);
+				IScriptFolder sfolder = fragment.getScriptFolder(iPath.toString());
 				
 				if (sfolder != null) {
 					return sfolder.getSourceModule(template);
@@ -756,4 +778,54 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		return null;		
 
 	}
+	
+
+	/**
+	 * Find the corresponding {@link IMethod} to a {@link Route}.
+	 * 
+	 * @param route
+	 * @param project
+	 * @return
+	 */
+	public IMethod findAction(Route route, IScriptProject project) {
+
+		ViewPath path = new ViewPath(route.getViewPath());
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
+		IType[] types = findTypes(null, path.getController() + "Controller", MatchRule.EXACT, 0, 0, scope, null);
+		
+		IType type = null;
+
+		if (types.length > 1) {
+			for (IType t : types) {
+				
+				// filter out test controllers
+				if (t.getFullyQualifiedName() != null && t.getFullyQualifiedName().contains("Tests"))
+					continue;
+				type = t;
+			}
+		} else if (types.length == 1) {
+			type = types[0];
+		}
+		
+		if (type == null) {
+			return null;
+		}
+		
+		IDLTKSearchScope controllerScope = SearchEngine.createSearchScope(type);
+		IMethod[] methods= PhpModelAccess.getDefault().findMethods(path.getTemplate(), MatchRule.PREFIX, 0, 0, controllerScope, null);
+
+		if (methods.length > 1) {
+			
+			//TODO ???
+			
+		} else if (methods.length == 1) {
+			
+			return methods[0];
+		}
+		
+		return null;
+		
+	}
+	
+	
 }
