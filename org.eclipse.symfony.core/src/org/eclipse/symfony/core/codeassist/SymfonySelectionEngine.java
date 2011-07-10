@@ -21,6 +21,10 @@ import org.eclipse.symfony.index.dao.Route;
  * symfony model elements for actions like "Open Declaration" - F3 and
  * Hyperlinking.
  * 
+ * TODO: I think a cleaner way to implement is to actually provide the 
+ * model elements as native DLTK model elements somehow, so DLTK knows what 
+ * a Route/Viewpath etc. is and how to resolve it.
+ * 
  * 
  * @see http://wiki.eclipse.org/DLTK_IDE_Guide:Step_3._Towards_an_IDE#Open_declaration_feature.
  * @author Robert Gruendler <r.gruendler@gmail.com>
@@ -67,17 +71,19 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
 				}				
 			}
 			
+			// nope, not a viewpath, check for a route
 			Route route = model.findRoute(literal, project);
 			
 			if (route != null) {
-				
+
 				IMethod method = model.findAction(route, project);
-				
+
 				if (method != null)
 					return new IModelElement[] { method };
 			}
 			
 			
+			// next search for a service
 			Service service = model.findService(literal, project.getPath());
 			
 			if (service != null) {
@@ -90,6 +96,7 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
 			}			
 		}
 		
+		// couldn't find anything
 		return NONE;
 	}
 }

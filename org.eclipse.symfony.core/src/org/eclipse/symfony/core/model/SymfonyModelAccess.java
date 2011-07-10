@@ -789,41 +789,35 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	 */
 	public IMethod findAction(Route route, IScriptProject project) {
 
-		ViewPath path = new ViewPath(route.getViewPath());
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
-		IType[] types = findTypes(null, path.getController() + "Controller", MatchRule.EXACT, 0, 0, scope, null);
+		ViewPath vPath = new ViewPath(route.getViewPath());
 		
-		IType type = null;
+		if (!vPath.isValid())
+			return null;
 
-		if (types.length > 1) {
-			for (IType t : types) {
-				
-				// filter out test controllers
-				if (t.getFullyQualifiedName() != null && t.getFullyQualifiedName().contains("Tests"))
-					continue;
+		IType type = null;
+		
+		IType[] controllers = findBundleControllers(vPath.getBundle(), project);
+		String ctrl = vPath.getController() + "Controller";
+
+		for (IType t : controllers) {
+			
+			if (t.getElementName().equals(ctrl)) {
 				type = t;
+				break;
 			}
-		} else if (types.length == 1) {
-			type = types[0];
 		}
 		
 		if (type == null) {
 			return null;
 		}
 		
-		IDLTKSearchScope controllerScope = SearchEngine.createSearchScope(type);
-		IMethod[] methods= PhpModelAccess.getDefault().findMethods(path.getTemplate(), MatchRule.PREFIX, 0, 0, controllerScope, null);
-
-		if (methods.length > 1) {
-			
-			//TODO ???
-			
-		} else if (methods.length == 1) {
-			
-			return methods[0];
-		}
+		IMethod method = type.getMethod(vPath.getTemplate() + "Action");
 		
-		return null;
+		if (method != null)
+			return method;
+
+		return type.getMethod(vPath.getTemplate());
+		
 		
 	}
 	
