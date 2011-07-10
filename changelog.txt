@@ -1,3 +1,10 @@
+1.0.28
+
+* added support for viewpath completion in twig templates
+* added hyperlink support for root-viewpaths ("::base.html.twig")
+* improved proposal info for viewpaths
+* improved viewpath completion (base paths now supported - "Bundle::|" and "::|")
+
 1.0.26
 
 * added hyperlinks for viewpaths and routes

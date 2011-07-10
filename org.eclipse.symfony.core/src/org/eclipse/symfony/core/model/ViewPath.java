@@ -32,6 +32,7 @@ public class ViewPath {
 	public ViewPath(String path) {
 		
 		_isRoot = false;
+		basePath = false;
 		
 		if (path.contains(":") == false)
 			return;
@@ -74,8 +75,10 @@ public class ViewPath {
 				bundle = parts[0];
 				controller = parts[1];
 				
-				if (controller != null && controller.length() == 0)
+				if (controller != null && controller.length() == 0) {
 					controller = null;
+					basePath = true;
+				}
 				
 				template =parts[2];				
 				break;
@@ -115,7 +118,7 @@ public class ViewPath {
 
 	}
 
-	public boolean isBasePath() {
+	public boolean isBundleBasePath() {
 
 		return basePath;
 	}
