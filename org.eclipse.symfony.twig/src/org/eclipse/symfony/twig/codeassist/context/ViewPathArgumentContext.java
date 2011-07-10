@@ -18,7 +18,7 @@ public class ViewPathArgumentContext extends QuotesContext {
 	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
-		// TODO Auto-generated method stub
+
 		if(super.isValid(sourceModule, offset, requestor)) {
 			
 			 try {
@@ -38,6 +38,7 @@ public class ViewPathArgumentContext extends QuotesContext {
 				 }
 				 
 			} catch (Exception e) {
+				e.printStackTrace();
 				Logger.logException(e);
 			}
 		}

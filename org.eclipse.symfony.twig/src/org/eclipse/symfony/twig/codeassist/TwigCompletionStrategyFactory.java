@@ -55,7 +55,7 @@ public class TwigCompletionStrategyFactory implements
 				
 			} else if (context.getClass() == ViewPathArgumentContext.class) {
 				
-				//result.add(new ViewPathCompletionStrategy(context));
+				result.add(new ViewPathCompletionStrategy(context));
 			}
 		}
 		

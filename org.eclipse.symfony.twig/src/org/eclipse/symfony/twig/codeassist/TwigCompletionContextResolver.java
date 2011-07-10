@@ -31,7 +31,7 @@ public class TwigCompletionContextResolver implements
 				new TemplateVariableCompletionContext(),
 				new TemplateVariableFieldCompletionContext(),
 				new RouteCompletionContext(),
-//				new ViewPathArgumentContext(),
+				new ViewPathArgumentContext(),
 				
 		};
 	}
