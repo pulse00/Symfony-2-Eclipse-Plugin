@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Symfony Core Plugin
 Bundle-SymbolicName: org.eclipse.symfony.core;singleton:=true
-Bundle-Version: 1.0.27.qualifier
+Bundle-Version: 1.0.28.qualifier
 Bundle-Activator: org.eclipse.symfony.core.SymfonyCorePlugin
 Bundle-Vendor: Symfony
 Require-Bundle: org.eclipse.core.runtime,
