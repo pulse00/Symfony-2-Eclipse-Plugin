@@ -3,6 +3,7 @@ package org.eclipse.symfony.core.compiler;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.expressions.StringLiteral;
@@ -12,6 +13,7 @@ import org.eclipse.php.core.compiler.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.symfony.core.builder.SymfonyNature;
 import org.eclipse.symfony.core.model.Service;
 import org.eclipse.symfony.core.model.SymfonyModelAccess;
@@ -116,6 +118,25 @@ public class SourceElementRequestor extends PHPSourceElementRequestorExtension {
 	
 		return true;
 	}
+
+	
+	@Override
+	public boolean visit(MethodDeclaration s) throws Exception {
+	
+	
+		
+		if (s instanceof PHPMethodDeclaration) {
+			
+			
+			
+			
+		}
+		
+		
+		return true;
+	}
+	
+	
 	
 	
 	@Override
