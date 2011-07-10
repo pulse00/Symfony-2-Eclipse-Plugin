@@ -128,4 +128,14 @@ public class ViewPath {
 		return _isRoot;
 	}
 	
+	public boolean isValid() {
+		
+		
+		if (isBundleBasePath() || isRoot())
+			return true;
+
+		return bundle != null && controller != null && template != null;
+		
+	}
+	
 }

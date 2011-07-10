@@ -110,6 +110,14 @@
             priority="100">
       </factory>
    </extension>
+   <extension
+         point="org.eclipse.dltk.core.selectionEngine">
+      <selectionEngine
+            class="org.eclipse.symfony.core.codeassist.SymfonySelectionEngine"
+            nature="org.eclipse.php.core.PHPNature"
+            priority="100">
+      </selectionEngine>
+   </extension>
    <!-- End code assist -->
 
 </plugin>

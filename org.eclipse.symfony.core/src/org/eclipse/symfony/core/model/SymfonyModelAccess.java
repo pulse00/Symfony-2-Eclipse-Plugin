@@ -58,11 +58,11 @@ import org.eclipse.symfony.index.dao.Route;
 public class SymfonyModelAccess extends PhpModelAccess {
 
 
-	private static SymfonyModelAccess modelInstance = null;
-		
-	private SymfonyIndexer index;
-	
+	private static SymfonyModelAccess modelInstance = null;		
+	private SymfonyIndexer index;	
 	private Map<Service, IType[]> serviceCache = new HashMap<Service, IType[]>();
+	
+	private static final IModelElement[] EMPTY = {};	
 
 	
 	private SymfonyModelAccess() {
@@ -690,6 +690,70 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		}
 		
 		return new IModelElement[] {};
+
+	}
+
+	/**
+	 * Find the template for the given viewpath.
+	 * 
+	 * 
+	 * @param viewPath
+	 * @param scriptProject
+	 * @return
+	 */
+	public IModelElement findTemplate(ViewPath viewPath,
+			IScriptProject project) {
+
+		try {
+			
+			String bundle = viewPath.getBundle();
+			String controller = viewPath.getController();
+			String template = viewPath.getTemplate();			
+			
+			
+			if (viewPath.isRoot()) {
+				
+				IPath path = project.getPath().append(new Path("app/Resources/views"));
+				IScriptFolder sfolder = project.findScriptFolder(path);
+				
+				if (sfolder != null) {					
+					return sfolder.getSourceModule(template);
+				}
+			} else if (viewPath.isBundleBasePath()) {				
+				
+				ScriptFolder bundleFolder = findBundleFolder(bundle, project);
+				
+				if (bundleFolder == null)
+					return null;
+				
+				IScriptFolder viewFolder = project.findScriptFolder(bundleFolder.getPath().append(new Path("Resources/views")));
+				
+				if (viewFolder != null) {					
+					return viewFolder.getSourceModule(template);
+				}
+				
+			} else {
+				
+				if (bundle == null || controller == null)
+					return null;
+				
+				ScriptFolder bundleFolder = findBundleFolder(bundle, project);
+				IPath path = new Path("Resources/views/" + controller.replace("Controller", ""));
+				
+				IProjectFragment fragment = bundleFolder.getProjectFragment();			
+				IScriptFolder sfolder = fragment.getScriptFolder(path.toString());
+				
+				if (sfolder != null) {
+					return sfolder.getSourceModule(template);
+				}
+			}
+			
+			
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		
+		return null;		
 
 	}
 }

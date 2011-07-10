@@ -50,7 +50,13 @@ public class SymfonyTextSequenceUtilities {
 	 */
 	public static int readViewPathStartIndex(CharSequence textSequence) {
 
-		int startPosition = textSequence.length() -1;
+		int startPosition = textSequence.length() -1;		
+		return readViewPathStartIndex(textSequence, startPosition);
+
+	}
+	
+	
+	public static int readViewPathStartIndex(CharSequence textSequence, int startPosition) {
 		
 		while (startPosition > 0) {
 
@@ -66,8 +72,8 @@ public class SymfonyTextSequenceUtilities {
 
 		}
 
-		return startPosition;
-
+		return startPosition;		
+		
 	}
 
 	/**
@@ -175,6 +181,30 @@ public class SymfonyTextSequenceUtilities {
 		
 		String method = getMethodName(statement);
 		return SymfonyModelAccess.getDefault().hasRouteMethod(method, project);
+
+	}
+
+
+	public static int readViewPathEndIndex(CharSequence textSequence, int startPosition) {
+
+				
+		int max = textSequence.length() -1;
+		
+		while (startPosition < max) {
+
+			char ch = textSequence.charAt(startPosition);
+			if (!Character.isLetterOrDigit(ch) && ch != ':' && ch != '.') {
+				break;
+			}
+			startPosition++;
+		}
+		if (startPosition > 0
+				&& (textSequence.charAt(startPosition-1) == '"' || textSequence.charAt(startPosition-1) == '\'' )) {
+			startPosition--;
+
+		}
+
+		return startPosition;				
 
 	}
 }
