@@ -4,10 +4,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.ui.text.completion.MemberProposalInfo;
-import org.eclipse.symfony.core.model.Bundle;
 import org.eclipse.symfony.core.model.Controller;
 import org.eclipse.symfony.ui.utils.HTMLUtils;
 
+/**
+ * 
+ * Proposalinfo for controllers.
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 public class ControllerProposalInfo extends MemberProposalInfo {
 
 	public ControllerProposalInfo(IScriptProject project,

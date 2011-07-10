@@ -7,6 +7,7 @@ import java.io.StringReader;
 import java.net.URL;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.SourceModule;
@@ -95,6 +96,14 @@ public class HTMLUtils {
 	}
 	
 	
+	/**
+	 * Return the HTML representation of a Symfony controller for codeassist
+	 * popups and hover tooltips.
+	 *  
+	 * 
+	 * @param controller
+	 * @return
+	 */
 	public static String controller2Html(Controller controller) {
 
 		StringBuffer info = new StringBuffer();
@@ -103,6 +112,9 @@ public class HTMLUtils {
 		
 		URL imageUrl = SymfonyUiPlugin.getDefault().getImagesOnFSRegistry().getImageURL(SymfonyPluginImages.DESC_OBJS_CONTROLLER);
 		String body = null;
+		StringBuffer content = new StringBuffer();
+		StringBuffer methods = new StringBuffer();
+		
 		
 		if (imageUrl != null) {
 			
@@ -118,13 +130,23 @@ public class HTMLUtils {
 					IType type = module.getTypes()[0];					
 					if (type.getTypes().length > 0) {
 						IType sType = type.getTypes()[0];
-						name = sType.getFullyQualifiedName().replace("$", "\\");						
+						name = sType.getFullyQualifiedName().replace("$", "\\");
 						
 						body = PHPDocumentationContentAccess.getHTMLContent(sType);
 						
+						methods.append("<h2> Methods: </h2>");
+						HTMLPrinter.startBulletList(methods);
+						
+						for (IMethod method : sType.getMethods()) {
+							
+							HTMLPrinter.addBullet(methods, method.getElementName());							
+							
+						}
+						
+						HTMLPrinter.endBulletList(methods);						
+						content.append(body);
 					}
-				}
-				
+				}				
 				
 			} catch (ModelException e) {
 				Logger.logException(e);
@@ -135,17 +157,11 @@ public class HTMLUtils {
 
 		}
 		
-		
-		StringBuffer content = new StringBuffer();
-		
-
-		if (body != null)
-			content.append(body);
-			
 		HTMLPrinter.addParagraph(info, new StringReader(content.toString()));
+		HTMLPrinter.addParagraph(info, new StringReader(methods.toString()));
 		HTMLPrinter.addPageEpilog(info);
 		
-		return info.toString();		
+		return info.toString();
 		
 	}
 	
@@ -306,16 +322,27 @@ public class HTMLUtils {
 			content.append(body);
 		
 		StringBuffer ctrl = new StringBuffer();		
-		IType[] controllers = SymfonyModelAccess.getDefault().findBundleControllers(bundle.getElementName(), bundle.getSourceModule().getScriptProject());		
-		ctrl.append("<h2>Controllers:</h2><br/>");		
-		HTMLPrinter.startBulletList(ctrl);
+		IType[] controllers = SymfonyModelAccess.getDefault().findBundleControllers(bundle.getElementName(), bundle.getSourceModule().getScriptProject());
+		
+		if (controllers.length > 0) {
+			
+			ctrl.append("<h2>Controllers:</h2><br/>");		
+			HTMLPrinter.startBulletList(ctrl);
+					
+			for (IType controller : controllers ) {
 				
-		for (IType controller : controllers ) {
-			HTMLPrinter.addBullet(ctrl, controller.getElementName());
+				String elem = controller.getElementName();
+				String name = elem.replace("Controller", "");
+												
+				if (!name.endsWith("\\"))
+					HTMLPrinter.addBullet(ctrl, elem);
+			}
+			
+			HTMLPrinter.endBulletList(ctrl);		
+			HTMLPrinter.addParagraph(info, new StringReader(ctrl.toString()));			
+			
 		}
 		
-		HTMLPrinter.endBulletList(ctrl);		
-		HTMLPrinter.addParagraph(info, new StringReader(ctrl.toString()));			
 		HTMLPrinter.addParagraph(info, new StringReader(content.toString()));
 		HTMLPrinter.addPageEpilog(info);
 				

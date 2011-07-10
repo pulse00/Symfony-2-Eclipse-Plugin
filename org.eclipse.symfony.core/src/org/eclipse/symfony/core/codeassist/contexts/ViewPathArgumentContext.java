@@ -30,40 +30,53 @@ import org.eclipse.symfony.core.util.text.SymfonyTextSequenceUtilities;
  */
 @SuppressWarnings("restriction")
 public class ViewPathArgumentContext extends QuotesContext {
-	
+
 	private ViewPath viewPath;
 
 	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
-		
-		 if (super.isValid(sourceModule, offset, requestor)) {
-			 			 
-			 try {
-				 
-				 TextSequence statement = getStatementText();
-				 IScriptProject project = getSourceModule().getScriptProject();
-				 
-				 if (SymfonyTextSequenceUtilities.isInViewPathFunctionParameter(statement, project) == false)
-					 return false;
-				 
-				 int startOffset = SymfonyTextSequenceUtilities.readViewPathStartIndex(statement);
-				 
-				 
-				 String path = statement.getSource().getFullText().substring(statement.getOriginalOffset(startOffset), offset-1);
-				 
-				 if (path != null) {								
-					 viewPath = new ViewPath(path);
-					 return true;
-				 }
-				 
+
+		if (super.isValid(sourceModule, offset, requestor)) {
+
+			try {
+
+				TextSequence statement = getStatementText();
+				IScriptProject project = getSourceModule().getScriptProject();
+
+				if (SymfonyTextSequenceUtilities.isInViewPathFunctionParameter(statement, project) == false)
+					return false;
+
+				int startOffset = SymfonyTextSequenceUtilities.readViewPathStartIndex(statement);
+
+
+				String path = null;
+
+				if (startOffset == -1) {
+					path = "";
+				} else {					 
+
+					int original = statement.getOriginalOffset(startOffset);
+					int end = offset;
+
+					if (original >= 0 &&  end > original) {
+						path = statement.getSource().getFullText().substring(original, end);
+					}
+					else path = "";
+				}
+
+				if (path != null) {								
+					viewPath = new ViewPath(path);
+					return true;
+				}
+
 			} catch (Exception e) {
-			
+
 				Logger.logException(e);
 			}
-		 }
-		 		 
-		 return false;
+		}
+
+		return false;
 	}
 
 	public ViewPath getViewPath() {

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.internal.resources.Project;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -16,7 +17,6 @@ import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.core.index2.search.ISearchEngine;
@@ -35,7 +35,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
-import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.symfony.core.SymfonyLanguageToolkit;
 import org.eclipse.symfony.core.index.SymfonyElementResolver.TemplateField;
@@ -632,5 +631,65 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		
 		return null;
 		
+	}
+
+	/**
+	 * 
+	 * Find the templates in the projects' root view path.
+	 * 
+	 * FIXME: find a way to not hardcode the path to app/Resource/views
+	 * 
+	 * @param scriptProject
+	 * @return
+	 */
+	public IModelElement[] findRootTemplates(IScriptProject scriptProject) {
+
+		try {
+			
+			IPath path = scriptProject.getPath().append(new Path("app/Resources/views"));
+			IScriptFolder sfolder = scriptProject.findScriptFolder(path);
+			
+			if (sfolder != null && sfolder.exists() && sfolder.hasChildren()) {				
+				return sfolder.getChildren();
+			}			
+			
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		
+		return new IModelElement[] {};
+
+	}
+
+	/**
+	 * 
+	 * Return the templates inside the bundles root viewpath:
+	 * 
+	 * Bundle/Resources/views/*
+	 * 
+	 * @param bundle
+	 * @param project
+	 * @return
+	 */
+	public IModelElement[] findBundleRootTemplates(String bundle,
+			IScriptProject project) {
+
+		try {
+			
+			ScriptFolder bundleFolder = findBundleFolder(bundle, project);
+			IPath path = new Path("Resources/views/");
+			IProjectFragment fragment = bundleFolder.getProjectFragment();			
+			IScriptFolder sfolder = fragment.getScriptFolder(path.toString());
+			
+			if (sfolder.exists() && sfolder.hasChildren()) {				
+				return sfolder.getChildren();
+			}			
+			
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		
+		return new IModelElement[] {};
+
 	}
 }

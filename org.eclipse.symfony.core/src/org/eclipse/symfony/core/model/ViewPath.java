@@ -1,6 +1,7 @@
 package org.eclipse.symfony.core.model;
 
-import java.util.StringTokenizer;
+import org.eclipse.symfony.core.log.Logger;
+
 
 /**
  * 
@@ -26,41 +27,66 @@ public class ViewPath {
 	
 	private boolean basePath;
 	
+	private boolean _isRoot;
+	
 	public ViewPath(String path) {
 		
-		// initialize the viewpath parts as far as possible		
-		if (path.indexOf("::") >=0) {
+		_isRoot = false;
+		
+		if (path.contains(":") == false)
+			return;
+		
+		// "::base.html.twig"
+		if(path.startsWith("::")) {			
+			template = path.replace("::", "");
+			_isRoot = true;
 			
-			StringTokenizer tokenizer = new StringTokenizer(path, "::");
-
-			basePath = true;
-			try {
-				
-				bundle = tokenizer.nextToken();
-				template = tokenizer.nextToken();
-				
-			} catch (Exception e) {
-				
-			}
+		// "AcmeDemobundle::"
+		} else if (path.endsWith("::")) {
+			
+			bundle = path.replace("::", "");
+			controller = null;
+			template = "";
 			
 		} else {
 			
-			StringTokenizer tokenizer = new StringTokenizer(path, ":");
-			basePath = false;
-			// initialize the viewpath parts as far as possible
-			try {
-				
-				bundle = tokenizer.nextToken();
-				controller = tokenizer.nextToken();
-				template = tokenizer.nextToken();
-				
-			} catch (Exception e) {
-				
-			}
+			String[] parts = path.split(":");			
 			
+			switch (parts.length) {
+			
+			case 1:
+				
+				bundle = parts[0];
+				if (bundle != null && bundle.length() == 0)
+					bundle = null;
+				
+				break;
+				
+			case 2:
+				
+				bundle = parts[0];
+				controller = parts[1];
+				
+				break;
+				
+			case 3:
+				
+				bundle = parts[0];
+				controller = parts[1];
+				
+				if (controller != null && controller.length() == 0)
+					controller = null;
+				
+				template =parts[2];				
+				break;
+				
+			default:
+				
+				Logger.debugMSG("Unable to parse viewpath: " + path);
+				break;
+			
+			}
 		}
-		
-		
 	}
 	
 	public String getBundle() {
@@ -92,6 +118,11 @@ public class ViewPath {
 	public boolean isBasePath() {
 
 		return basePath;
+	}
+	
+	public boolean isRoot() {
+		
+		return _isRoot;
 	}
 	
 }

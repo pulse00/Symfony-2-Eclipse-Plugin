@@ -14,6 +14,7 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
@@ -82,38 +83,38 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 		SourceRange range = getReplacementRange(context);
 		IDLTKSearchScope projectScope = SearchEngine.createSearchScope(context.getSourceModule().getScriptProject());
 		
+		String prefix = context.getPrefix();
+		
+
 		// complete the bundle part
-		if (bundle == null) {
+		if (bundle == null && controller == null && template == null) {
 
 			List<String> bundles = model.findBundles(context.getSourceModule().getScriptProject());
 
 			for (String b : bundles) {				
 				
-				
 				IType[] bundleTypes = PhpModelAccess.getDefault().findTypes(b, MatchRule.EXACT, 0, 0, projectScope, null);
 				
 				if (bundleTypes.length == 1) {
 					
-					Bundle bundleType = new Bundle((ModelElement) bundleTypes[0], b);
-					reporter.reportType(bundleType, ":", range);
+					ModelElement bType = (ModelElement) bundleTypes[0];
 					
+					if (CodeAssistUtils.startsWithIgnoreCase(bType.getElementName(), prefix)) {
+						Bundle bundleType = new Bundle(bType, b);
+						reporter.reportType(bundleType, ":", range);						
+					}
 				}
-				
-				//reporter.reportKeyword(b, ":", range);				
 			}			
 			
-		// complete the controller part
-		} else if (controller == null) {			
-			
-			
+		// complete the controller part: "Bundle:| 
+		} else if (controller == null && template == null) {			
 			
 			IType[] controllers = model.findBundleControllers(bundle, module.getScriptProject());
 			
-			
 			if (controllers != null) {
 				for (IType ctrl : controllers) {
-					
-					String name = ctrl.getElementName().replace("Controller", "");					
+
+					String name = ctrl.getElementName().replace("Controller", "");
 					if (!name.endsWith("\\")) {						
 						Controller con = new Controller((ModelElement) ctrl, name);
 						reporter.reportType(con, ":", range);
@@ -122,18 +123,54 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 				}				
 			}
 
-		} else if (template == null) {
+		// complete template path: "Bundle:Controller:|
+		} else if (bundle != null && controller != null && template == null) {
 
 			IModelElement[] templates = model.findTemplates(bundle, controller, module.getScriptProject());
 			
 			if (templates != null) {				
 				for (IModelElement tpl : templates) {
-					
-					Template t = new Template((ModelElement) tpl, tpl.getElementName());
-					reporter.reportType(t, "", range);
+
+					if (CodeAssistUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
+						Template t = new Template((ModelElement) tpl, tpl.getElementName());
+						reporter.reportType(t, "", range);
+					}
 					
 				}
 			}
+			
+		// project root: "::| 
+		} else if (bundle == null && controller == null && template != null) {
+
+			IModelElement[] templates = model.findRootTemplates(module.getScriptProject());
+			
+			if (templates != null) {				
+				for (IModelElement tpl : templates) {
+					
+					if (CodeAssistUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
+						Template t = new Template((ModelElement) tpl, tpl.getElementName());
+						reporter.reportType(t, "", range);
+					}
+					
+				}
+			}
+			
+		// bundle root: "AcmeDemoBundle::| 
+		} else if (bundle != null && controller == null && template != null) {
+			
+			
+			IModelElement[] templates = model.findBundleRootTemplates(bundle, module.getScriptProject());
+			
+			if (templates != null) {				
+				for (IModelElement tpl : templates) {
+					
+					if (CodeAssistUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
+						Template t = new Template((ModelElement) tpl, tpl.getElementName());
+						reporter.reportType(t, "", range);
+					}					
+				}
+			}
+			
 		}
 	}
 }

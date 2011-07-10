@@ -52,11 +52,10 @@ public class SymfonyTextSequenceUtilities {
 
 		int startPosition = textSequence.length() -1;
 		
-
 		while (startPosition > 0) {
 
 			char ch = textSequence.charAt(startPosition - 1);
-			if (!Character.isLetterOrDigit(ch) && ch != ':') {
+			if (!Character.isLetterOrDigit(ch) && ch != ':' && ch != '.') {
 				break;
 			}
 			startPosition--;
@@ -67,7 +66,6 @@ public class SymfonyTextSequenceUtilities {
 
 		}
 
-		//System.err.println(textSequence  + " => " + startPosition);
 		return startPosition;
 
 	}

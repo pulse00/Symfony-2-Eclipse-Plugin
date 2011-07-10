@@ -9,6 +9,7 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
@@ -72,6 +73,8 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 		
 		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
 		
+		String prefix = context.getPrefix();
+		
 		for (Route route : routes) {
 
 			IType controller = model.findController(route.bundle, route.controller, context.getSourceModule().getScriptProject());
@@ -79,8 +82,10 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 			if (controller == null)
 				continue;
 			
-			RouteSource rs = new RouteSource((ModelElement) controller, route.name, route);
-			reporter.reportType(rs, "", range);
+			if (CodeAssistUtils.startsWithIgnoreCase(route.name, prefix)) {
+				RouteSource rs = new RouteSource((ModelElement) controller, route.name, route);
+				reporter.reportType(rs, "", range);
+			}
 
 		}	
 	}
