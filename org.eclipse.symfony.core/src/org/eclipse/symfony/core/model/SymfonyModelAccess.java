@@ -416,9 +416,9 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		try {
 			
 			ScriptFolder bundleFolder = findBundleFolder(bundle, project);
-			IPath path = bundleFolder.getPath().append(new Path("Resources/views/" + controller.replace("Controller", "")));
-			IProjectFragment fragment = bundleFolder.getProjectFragment();
-			IScriptFolder sfolder = fragment.getScriptFolder(path.removeFirstSegments(1).toString());
+			IPath path = new Path("Resources/views/" + controller.replace("Controller", ""));
+			IProjectFragment fragment = bundleFolder.getProjectFragment();			
+			IScriptFolder sfolder = fragment.getScriptFolder(path.toString());
 			
 			if (sfolder.exists() && sfolder.hasChildren()) {				
 				return sfolder.getChildren();

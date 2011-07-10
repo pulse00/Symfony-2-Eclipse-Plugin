@@ -48,14 +48,17 @@ public class ViewPathArgumentContext extends QuotesContext {
 					 return false;
 				 
 				 int startOffset = SymfonyTextSequenceUtilities.readViewPathStartIndex(statement);
+				 
+				 
 				 String path = statement.getSource().getFullText().substring(statement.getOriginalOffset(startOffset), offset-1);
 				 
-				 if (path != null) {									 
+				 if (path != null) {								
 					 viewPath = new ViewPath(path);
 					 return true;
 				 }
 				 
 			} catch (Exception e) {
+			
 				Logger.logException(e);
 			}
 		 }

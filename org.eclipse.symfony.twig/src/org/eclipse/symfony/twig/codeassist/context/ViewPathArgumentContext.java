@@ -4,6 +4,7 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.util.text.TextSequence;
+import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposalCollector;
 import org.eclipse.symfony.core.log.Logger;
 import org.eclipse.symfony.core.model.ViewPath;
 import org.eclipse.symfony.core.util.text.SymfonyTextSequenceUtilities;
@@ -21,24 +22,28 @@ public class ViewPathArgumentContext extends QuotesContext {
 
 		if(super.isValid(sourceModule, offset, requestor)) {
 			
-			 try {
+			 try {				 
+				 				 
+//				 if (getCompletionRequestor().getClass() == PHPCompletionProposalCollector.class) {
+//					 System.err.println("is so");
+//					 return false;
+//				 }
 				 
 				 TextSequence statement = getStatementText();
-				 IScriptProject project = getSourceModule().getScriptProject();
+//				 IScriptProject project = getSourceModule().getScriptProject();
 				 
-				 if (SymfonyTextSequenceUtilities.isInViewPathFunctionParameter(statement, project) == false)
-					 return false;
+//				 if (SymfonyTextSequenceUtilities.isInViewPathFunctionParameter(statement, project) == false)
+//					 return false;
 				 
 				 int startOffset = SymfonyTextSequenceUtilities.readViewPathStartIndex(statement);
-				 String path = statement.getSource().getFullText().substring(statement.getOriginalOffset(startOffset), offset-1);
+				 String path = getDocument().getText().substring(statement.getOriginalOffset(startOffset), offset);
 				 
-				 if (path != null) {									 
+				 if (path != null) {								
 					 viewPath = new ViewPath(path);
 					 return true;
 				 }
 				 
 			} catch (Exception e) {
-				e.printStackTrace();
 				Logger.logException(e);
 			}
 		}

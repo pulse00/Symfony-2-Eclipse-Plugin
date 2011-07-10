@@ -51,6 +51,7 @@ public class SymfonyTextSequenceUtilities {
 	public static int readViewPathStartIndex(CharSequence textSequence) {
 
 		int startPosition = textSequence.length() -1;
+		
 
 		while (startPosition > 0) {
 
@@ -61,10 +62,12 @@ public class SymfonyTextSequenceUtilities {
 			startPosition--;
 		}
 		if (startPosition > 0
-				&& textSequence.charAt(startPosition - 1) == '"') {
-			startPosition--;
+				&& (textSequence.charAt(startPosition) == '"' || textSequence.charAt(startPosition) == '\'' )) {
+			startPosition++;
+
 		}
 
+		//System.err.println(textSequence  + " => " + startPosition);
 		return startPosition;
 
 	}

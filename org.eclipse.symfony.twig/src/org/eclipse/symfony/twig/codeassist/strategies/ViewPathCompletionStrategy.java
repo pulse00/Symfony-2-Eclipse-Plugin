@@ -24,8 +24,25 @@ import org.eclipse.symfony.core.model.Template;
 import org.eclipse.symfony.core.model.ViewPath;
 import org.eclipse.symfony.twig.codeassist.context.ViewPathArgumentContext;
 
+
+/**
+ * 
+ * A viewpath completion strategy for Twig templates:
+ * 
+ * 
+ * <pre> 
+ * 	{% extends '|   <-- shows available Bundles etc. 
+ * </pre>
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 @SuppressWarnings({ "restriction", "deprecation" })
 public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
+
+	private static int workaroundCount = 0;
+
 
 	public ViewPathCompletionStrategy(ICompletionContext context) {
 		super(context);
@@ -43,13 +60,13 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 			return;			
 		}
 
-//		if (workaroundCount == 0) {
-//			workaroundCount++;
-//			
-//		} else {
-//			workaroundCount = 0;
-//			return;
-//		}
+		if (workaroundCount == 0) {
+			workaroundCount++;
+			
+		} else {
+			workaroundCount = 0;
+			return;
+		}
 		
 		
 		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
@@ -85,15 +102,12 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 		// complete the controller part
 		} else if (controller == null) {			
 			
-			
-			
 			IType[] controllers = model.findBundleControllers(bundle, module.getScriptProject());
-			
 			
 			if (controllers != null) {
 				for (IType ctrl : controllers) {
 					
-					String name = ctrl.getElementName().replace("Controller", "");					
+					String name = ctrl.getElementName().replace("Controller", "");
 					if (!name.endsWith("\\")) {						
 						Controller con = new Controller((ModelElement) ctrl, name);
 						reporter.reportType(con, ":", range);
@@ -116,5 +130,4 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 			}
 		}
 	}
-
 }
