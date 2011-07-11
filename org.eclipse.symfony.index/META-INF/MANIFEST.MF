@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Symfony Index
 Bundle-SymbolicName: org.eclipse.symfony.index;singleton:=true
-Bundle-Version: 1.0.28.qualifier
+Bundle-Version: 1.0.30.qualifier
 Bundle-Activator: org.eclipse.symfony.index.SymfonyIndex
 Require-Bundle: org.eclipse.core.runtime,
  org.h2
