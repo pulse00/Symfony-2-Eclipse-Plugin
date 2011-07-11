@@ -415,10 +415,9 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		try {
 			
 			ScriptFolder bundleFolder = findBundleFolder(bundle, project);
-			IProjectFragment fragment = bundleFolder.getProjectFragment();
 			IPath relative = new Path("Resources/views/" + controller.replace("Controller", ""));
-			IPath path = bundleFolder.getPath().append(relative).removeFirstSegments(1);
-			IScriptFolder sfolder = fragment.getScriptFolder(path);
+			IPath path = bundleFolder.getPath().append(relative);
+			IScriptFolder sfolder = project.findScriptFolder(path);
 			
 			if (sfolder.exists() && sfolder.hasChildren()) {				
 				return sfolder.getChildren();
@@ -698,10 +697,9 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		try {
 			
 			ScriptFolder bundleFolder = findBundleFolder(bundle, project);
-			IPath path = new Path("Resources/views/");
-			IProjectFragment fragment = bundleFolder.getProjectFragment();			
-			IPath viewPath = bundleFolder.getPath().append(path).removeFirstSegments(1);			
-			IScriptFolder sfolder = fragment.getScriptFolder(viewPath.toString());
+			IPath path = new Path("Resources/views/");			
+			IPath viewPath = bundleFolder.getPath().append(path);			
+			IScriptFolder sfolder = project.findScriptFolder(viewPath);
 			
 			if (sfolder.exists() && sfolder.hasChildren()) {				
 				return sfolder.getChildren();
@@ -761,9 +759,8 @@ public class SymfonyModelAccess extends PhpModelAccess {
 				
 				ScriptFolder bundleFolder = findBundleFolder(bundle, project);
 				IPath path = new Path("Resources/views/" + controller.replace("Controller", ""));
-				IProjectFragment fragment = bundleFolder.getProjectFragment();
-				IPath iPath = bundleFolder.getPath().append(path).removeFirstSegments(1);
-				IScriptFolder sfolder = fragment.getScriptFolder(iPath.toString());
+				IPath iPath = bundleFolder.getPath().append(path);
+				IScriptFolder sfolder = project.findScriptFolder(iPath);
 				
 				if (sfolder != null) {
 					return sfolder.getSourceModule(template);
