@@ -373,8 +373,10 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 
 						service = ModelUtils.extractServiceFromCall(exp);
 
-						if (service != null) {
-							TemplateVariable tempVar= new TemplateVariable(currentMethod, var.getName(), exp.sourceStart(), exp.sourceEnd(), service.getNamespace().getQualifiedName(), service.getClassName());							
+						String fqsn =  service.getNamespace() != null ? service.getNamespace().getQualifiedName() : null;
+						
+						if (service != null && fqsn != null) {
+							TemplateVariable tempVar= new TemplateVariable(currentMethod, var.getName(), exp.sourceStart(), exp.sourceEnd(), fqsn, service.getClassName());							
 							deferredVariables.push(tempVar);
 						}
 
@@ -401,9 +403,14 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 						// Possible solution: check if there's an event fired when the
 						// build is completed and store those return types in a global
 						// singleton, evaluate them when the whole build process is finished.
-						TemplateVariable tempVar = SymfonyModelAccess.getDefault()
-								.createTemplateVariableByReturnType(currentMethod, callName, 
-										service.getClassName(), service.getNamespace().getQualifiedName(), var.getName());
+						
+						
+						String fqsn = service.getNamespace() != null ? service.getNamespace().getQualifiedName() : null;
+						TemplateVariable tempVar = null;
+
+							tempVar = SymfonyModelAccess.getDefault()
+									.createTemplateVariableByReturnType(currentMethod, callName, 
+											service.getClassName(), fqsn, var.getName());							
 
 						if (tempVar != null) {								
 														
