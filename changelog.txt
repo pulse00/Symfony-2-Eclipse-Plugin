@@ -1,3 +1,7 @@
+1.0.31
+
+* fixed bug in template variable codeassist
+
 1.0.30
 
 * added "Open Declaration" F3 support for @Template annotations
