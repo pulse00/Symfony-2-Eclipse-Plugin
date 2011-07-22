@@ -373,9 +373,12 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 
 						service = ModelUtils.extractServiceFromCall(exp);
 
-						String fqsn =  service.getNamespace() != null ? service.getNamespace().getQualifiedName() : null;
 						
-						if (service != null && fqsn != null) {
+						
+						if (service != null) {
+							
+							String fqsn =  service.getNamespace() != null ? service.getNamespace().getQualifiedName() : null;							
+							
 							TemplateVariable tempVar= new TemplateVariable(currentMethod, var.getName(), exp.sourceStart(), exp.sourceEnd(), fqsn, service.getClassName());							
 							deferredVariables.push(tempVar);
 						}

@@ -794,6 +794,19 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		IType type = null;
 		
 		IType[] controllers = findBundleControllers(vPath.getBundle(), project);
+		
+		if (controllers == null) {			
+			String msg = "Unable to find bundle controllers ";
+			if (vPath != null)
+				msg += vPath.getBundle();
+			
+			if (project != null) {
+				msg += " project: " + project.getElementName();
+			}
+			Logger.debugMSG(msg);
+			return null;
+		}
+		
 		String ctrl = vPath.getController() + "Controller";
 
 		for (IType t : controllers) {
