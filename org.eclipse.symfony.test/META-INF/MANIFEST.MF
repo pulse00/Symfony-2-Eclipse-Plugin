@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
-Bundle-SymbolicName: org.eclipse.symfony.test
+Bundle-SymbolicName: com.dubture.symfony.test
 Bundle-Version: 1.0.24.qualifier
-Fragment-Host: org.eclipse.symfony.core;bundle-version="1.0.0.qualifier"
+Fragment-Host: com.dubture.symfony.core;bundle-version="1.0.0.qualifier"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit,
- org.eclipse.symfony.core;bundle-version="1.0.0",
+ com.dubture.symfony.core;bundle-version="1.0.0",
  org.eclipse.dltk.core.tests;bundle-version="3.0.0",
  org.eclipse.php.core.tests;bundle-version="3.0.0"

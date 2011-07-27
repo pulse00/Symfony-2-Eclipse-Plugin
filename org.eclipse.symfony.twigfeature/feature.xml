@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.symfony.twigfeature"
+      id="com.dubture.symfony.twigfeature"
       label="Symfony Twig Support"
       version="1.0.31.qualifier"
       provider-name="https://github.com/pulse00/Symfony-2-Eclipse-Plugin">
@@ -25,7 +25,7 @@
    </url>
 
    <plugin
-         id="org.eclipse.symfony.twig"
+         id="com.dubture.symfony.twig"
          download-size="0"
          install-size="0"
          version="0.0.0"

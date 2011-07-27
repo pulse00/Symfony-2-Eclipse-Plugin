@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
-            class="org.eclipse.symfony.index.preferences.SymfonyIndexPreferences">
+            class="com.dubture.symfony.index.preferences.SymfonyIndexPreferences">
       </initializer>
    </extension>
 

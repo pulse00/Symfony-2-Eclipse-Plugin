@@ -17,7 +17,7 @@
             </separator>
          </menu>
          <action
-               class="org.eclipse.symfony.ui.popup.actions.AddSymfonyNature"
+               class="com.dubture.symfony.ui.popup.actions.AddSymfonyNature"
                enablesFor="1"
                id="org.eclipse.symfony.ui.newAction"
                label="%action.label"
@@ -29,13 +29,13 @@
  <extension
        point="org.eclipse.ui.preferencePages">
     <page
-          class="org.eclipse.symfony.ui.preferences.SymfonyPreferencePage"
+          class="com.dubture.symfony.ui.preferences.SymfonyPreferencePage"
           id="org.eclipse.symfony.ui.preferences.SymfonyPreferencePage"
           name="%page.name">
     </page>
     <page
           category="org.eclipse.symfony.ui.preferences.SymfonyPreferencePage"
-          class="org.eclipse.symfony.ui.preferences.ServicesPreferencePage"
+          class="com.dubture.symfony.ui.preferences.ServicesPreferencePage"
           id="org.eclipse.symfony.ui.page1"
           name="%Services">
     </page>
@@ -61,21 +61,21 @@
        point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
     <hyperlinkDetector
           activate="true"
-          class="org.eclipse.symfony.ui.editor.hyperlink.ServiceHyperlinkDetector"
+          class="com.dubture.symfony.ui.editor.hyperlink.ServiceHyperlinkDetector"
           id="org.eclipse.symfony.ui.hyperlinkDetector"
           name="%hyperlinkDetector.name"
           targetId="org.eclipse.php.core.phpsource">
     </hyperlinkDetector>
     <hyperlinkDetector
           activate="true"
-          class="org.eclipse.symfony.ui.editor.hyperlink.RouteHyperlinkDetector"
+          class="com.dubture.symfony.ui.editor.hyperlink.RouteHyperlinkDetector"
           id="org.eclipse.symfony.ui.routeDetector"
           name="%routeDetector.name"
           targetId="org.eclipse.php.core.phpsource">
     </hyperlinkDetector>
     <hyperlinkDetector
           activate="true"
-          class="org.eclipse.symfony.ui.editor.hyperlink.ViewpathHyperlinkDetector"
+          class="com.dubture.symfony.ui.editor.hyperlink.ViewpathHyperlinkDetector"
           id="org.eclipse.symfony.ui.viewpathDetector"
           name="%routeDetector.name"
           targetId="org.eclipse.php.core.phpsource">
@@ -93,7 +93,7 @@
  <extension
        point="org.eclipse.ui.propertyPages">
     <page
-          class="org.eclipse.symfony.ui.preferences.ServicesPreferencePage"
+          class="com.dubture.symfony.ui.preferences.ServicesPreferencePage"
           id="org.eclipse.symfony.ui.servicePreferencePage"
           name="%servicesPreferencePage">
        <enabledWhen>
@@ -103,14 +103,14 @@
        </enabledWhen>
        <filter
              name="nature"
-             value="org.eclipse.symfony.core.symfonyNature">
+             value="com.dubture.symfony.core.symfonyNature">
        </filter>
     </page>
  </extension>
  <extension
        point="org.eclipse.core.runtime.preferences">
     <initializer
-          class="org.eclipse.symfony.ui.preferences.PreferenceInitializer">
+          class="com.dubture.symfony.ui.preferences.PreferenceInitializer">
     </initializer>
  </extension>
  <extension
@@ -118,7 +118,7 @@
     <image
           icon="ico/full/obj16/symfony_icon.gif"
           id="org.eclipse.symfony.ui.symfonyNatureImage"
-          natureId="org.eclipse.symfony.core.symfonyNature">
+          natureId="com.dubture.symfony.core.symfonyNature">
     </image>
  </extension>
  <extension
@@ -139,7 +139,7 @@
           label="Sample Action Set"
           visible="false">
        <action
-             class="org.eclipse.symfony.ui.actions.SwitchContextAction"
+             class="com.dubture.symfony.ui.actions.SwitchContextAction"
              definitionId="org.eclipse.symfony.ui.edit.text.switchContext"
              id="org.eclipse.symfony.ui.actions.SwitchContextAction"
              label="&amp;Sample Action"
@@ -169,7 +169,7 @@
 
  </extension>
  
- <!-- org.eclipse.symfony.core.symfonyNature / org.eclipse.php.core.PHPNature -->
+ <!-- com.dubture.symfony.core.symfonyNature / org.eclipse.php.core.PHPNature -->
  <!-- This doesn't work, as DLTK simply fetches the first nature's labelprovider/proposalfactory -->
  <!--
  <extension
@@ -190,7 +190,7 @@
        point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
     <scriptCompletionProposalComputer
           categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
-          class="org.eclipse.symfony.ui.contentassist.SymfonyCompletionProposalComputer"
+          class="com.dubture.symfony.ui.contentassist.SymfonyCompletionProposalComputer"
           toolkitId="org.eclipse.php.core.PHPNature">
        <partition
              type="org.eclipse.php.PHP_DEFAULT">
@@ -203,7 +203,7 @@
  <extension
        point="org.eclipse.php.ui.phpEditorTextHovers">
     <hover
-          class="org.eclipse.symfony.ui.editor.hover.RouteHover"
+          class="com.dubture.symfony.ui.editor.hover.RouteHover"
           id="org.eclipse.symfony.ui.routeHover"
           priority="400">
     </hover>

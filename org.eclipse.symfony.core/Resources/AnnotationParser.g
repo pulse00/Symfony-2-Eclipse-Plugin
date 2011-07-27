@@ -20,9 +20,9 @@ RHTYPE;
 }
 
 @header {
-package org.eclipse.symfony.core.parser.antlr;
+package com.dubture.symfony.core.parser.antlr;
 
-import org.eclipse.symfony.core.parser.antlr.error.IAnnotationErrorReporter;
+import com.dubture.symfony.core.parser.antlr.error.IAnnotationErrorReporter;
 }
 
 

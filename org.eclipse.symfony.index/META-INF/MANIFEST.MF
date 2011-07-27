@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Symfony Index
-Bundle-SymbolicName: org.eclipse.symfony.index;singleton:=true
+Bundle-SymbolicName: com.dubture.symfony.index;singleton:=true
 Bundle-Version: 1.0.30.qualifier
-Bundle-Activator: org.eclipse.symfony.index.SymfonyIndex
+Bundle-Activator: com.dubture.symfony.index.SymfonyIndex
 Require-Bundle: org.eclipse.core.runtime,
  org.h2
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.eclipse.symfony.index,
- org.eclipse.symfony.index.dao
+Export-Package: com.dubture.symfony.index,
+ com.dubture.symfony.index.dao
 Bundle-Vendor: Symfony

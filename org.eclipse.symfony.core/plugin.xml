@@ -9,7 +9,7 @@
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="org.eclipse.symfony.core.builder.SymfonyNature">
+               class="com.dubture.symfony.core.builder.SymfonyNature">
          </run>
       </runtime>
       <builder
@@ -21,7 +21,7 @@
    <extension
          point="org.eclipse.dltk.core.language">
       <language
-            class="org.eclipse.symfony.core.SymfonyLanguageToolkit"
+            class="com.dubture.symfony.core.SymfonyLanguageToolkit"
             nature="org.eclipse.php.core.PHPNature"
             priority="100">
       </language>
@@ -33,7 +33,7 @@
       <builder
             hasNature="true">
          <run
-               class="org.eclipse.symfony.core.builder.SymfonyBuilder">
+               class="com.dubture.symfony.core.builder.SymfonyBuilder">
          </run>
       </builder>
    </extension>
@@ -41,7 +41,7 @@
    
 	<!-- Preferences -->
 	<extension point="org.eclipse.core.runtime.preferences">
-    	<initializer class="org.eclipse.symfony.core.preferences.PreferenceInitializer">
+    	<initializer class="com.dubture.symfony.core.preferences.PreferenceInitializer">
     	</initializer>
  	</extension>   
  	
@@ -51,7 +51,7 @@
    <extension
          point="org.eclipse.dltk.core.buildParticipant">
       <buildParticipant
-            class="org.eclipse.symfony.core.builder.SymfonyBuildParticipantFactory"
+            class="com.dubture.symfony.core.builder.SymfonyBuildParticipantFactory"
             id="org.eclipse.symfony.core.buildParticipant"
             name="Symfony Builder"
             nature="org.eclipse.php.core.PHPNature">
@@ -60,7 +60,7 @@
    <extension
          point="org.eclipse.dltk.core.indexerParticipant">
       <indexerParticipant
-            class="org.eclipse.symfony.core.index.SymfonyIndexerParticipant"
+            class="com.dubture.symfony.core.index.SymfonyIndexerParticipant"
             nature="org.eclipse.php.core.PHPNature"
             targetId="org.eclipse.dltk.core.index.sql.indexer">
       </indexerParticipant>
@@ -71,7 +71,7 @@
    <extension
          point="org.eclipse.php.core.phpIndexingVisitors">
       <visitor
-            class="org.eclipse.symfony.core.index.SymfonyIndexingVisitorExtension">
+            class="com.dubture.symfony.core.index.SymfonyIndexingVisitorExtension">
       </visitor>
    </extension>
    
@@ -80,7 +80,7 @@
    <extension
          point="org.eclipse.php.core.phpSourceElementRequestors">
       <requestor
-            class="org.eclipse.symfony.core.compiler.SourceElementRequestor">
+            class="com.dubture.symfony.core.compiler.SourceElementRequestor">
       </requestor>
    </extension>
    
@@ -89,31 +89,31 @@
    <extension
          point="org.eclipse.php.core.completionStrategyFactories">
       <factory
-            class="org.eclipse.symfony.core.codeassist.SymfonyCompletionStrategyFactory">
+            class="com.dubture.symfony.core.codeassist.SymfonyCompletionStrategyFactory">
       </factory>
    </extension>
    
    <extension
          point="org.eclipse.php.core.completionContextResolvers">
       <resolver
-            class="org.eclipse.symfony.core.codeassist.SymfonyCompletionContextResolver"></resolver>
+            class="com.dubture.symfony.core.codeassist.SymfonyCompletionContextResolver"></resolver>
    </extension>
    
    <extension
          point="org.eclipse.php.core.goalEvaluatorFactories">
       <factory
-            class="org.eclipse.symfony.core.goals.ContainerAwareGoalEvaluatorFactory"
+            class="com.dubture.symfony.core.goals.ContainerAwareGoalEvaluatorFactory"
             priority="100">
       </factory>
       <factory
-            class="org.eclipse.symfony.core.goals.TemplateGoalEvaluatorFactory"
+            class="com.dubture.symfony.core.goals.TemplateGoalEvaluatorFactory"
             priority="100">
       </factory>
    </extension>
    <extension
          point="org.eclipse.dltk.core.selectionEngine">
       <selectionEngine
-            class="org.eclipse.symfony.core.codeassist.SymfonySelectionEngine"
+            class="com.dubture.symfony.core.codeassist.SymfonySelectionEngine"
             nature="org.eclipse.php.core.PHPNature"
             priority="100">
       </selectionEngine>

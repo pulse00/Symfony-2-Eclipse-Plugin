@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.symfony.feature"
+      id="com.dubture.symfony.feature"
       label="Symfony Core Feature"
       version="1.0.31.qualifier"
       provider-name="https://github.com/pulse00/Symfony-2-Eclipse-Plugin">

@@ -4,13 +4,13 @@
    <extension
          point="org.eclipse.twig.core.completionStrategyResolvers">
       <resolver
-            class="org.eclipse.symfony.twig.codeassist.TwigCompletionStrategyFactory">
+            class="com.dubture.symfony.twig.codeassist.TwigCompletionStrategyFactory">
       </resolver>
    </extension>
    <extension
          point="org.eclipse.twig.core.completionContextResolvers">
       <resolver
-            class="org.eclipse.symfony.twig.codeassist.TwigCompletionContextResolver">
+            class="com.dubture.symfony.twig.codeassist.TwigCompletionContextResolver">
       </resolver>
    </extension>
    <extension
@@ -18,7 +18,7 @@
          point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
       <scriptCompletionProposalComputer
             categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
-            class="org.eclipse.symfony.ui.contentassist.SymfonyCompletionProposalComputer"
+            class="com.dubture.symfony.ui.contentassist.SymfonyCompletionProposalComputer"
             toolkitId="org.eclipse.php.core.PHPNature">
          <partition
                type="org.eclipse.twig.TWIG_DEFAULT">
