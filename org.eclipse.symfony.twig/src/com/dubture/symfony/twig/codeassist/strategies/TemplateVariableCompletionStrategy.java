@@ -12,12 +12,12 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.typeinference.FakeField;
-import org.eclipse.twig.core.codeassist.strategies.AbstractTwigCompletionStrategy;
 
 import com.dubture.symfony.core.index.SymfonyElementResolver.TemplateField;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.util.PathUtils;
 import com.dubture.symfony.twig.codeassist.context.TemplateVariableCompletionContext;
+import com.dubture.twig.core.codeassist.strategies.AbstractTwigCompletionStrategy;
 
 
 /**

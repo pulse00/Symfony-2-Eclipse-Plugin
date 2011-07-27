@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.strategies.AbstractCompletionStrategy;
-import org.eclipse.twig.core.codeassist.ITwigCompletionStrategyFactory;
 
 import com.dubture.symfony.core.codeassist.strategies.RouteCompletionStrategy;
 import com.dubture.symfony.twig.codeassist.context.RouteCompletionContext;
@@ -16,6 +15,7 @@ import com.dubture.symfony.twig.codeassist.context.ViewPathArgumentContext;
 import com.dubture.symfony.twig.codeassist.strategies.TemplateVariableCompletionStrategy;
 import com.dubture.symfony.twig.codeassist.strategies.TemplateVariableFieldCompletionStrategy;
 import com.dubture.symfony.twig.codeassist.strategies.ViewPathCompletionStrategy;
+import com.dubture.twig.core.codeassist.ITwigCompletionStrategyFactory;
 
 /**
  * 

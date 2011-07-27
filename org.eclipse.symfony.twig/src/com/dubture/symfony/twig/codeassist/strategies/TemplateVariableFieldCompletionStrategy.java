@@ -14,11 +14,11 @@ import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
-import org.eclipse.twig.core.codeassist.context.VariableFieldContext;
-import org.eclipse.twig.core.codeassist.strategies.AbstractTwigCompletionStrategy;
 
 import com.dubture.symfony.core.index.SymfonyElementResolver.TemplateField;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
+import com.dubture.twig.core.codeassist.context.VariableFieldContext;
+import com.dubture.twig.core.codeassist.strategies.AbstractTwigCompletionStrategy;
 
 
 

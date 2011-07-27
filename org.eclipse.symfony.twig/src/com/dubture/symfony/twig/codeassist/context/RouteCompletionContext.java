@@ -4,8 +4,9 @@ package com.dubture.symfony.twig.codeassist.context;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.util.text.TextSequence;
-import org.eclipse.twig.core.codeassist.context.QuotesContext;
-import org.eclipse.twig.core.util.text.TwigTextSequenceUtilities;
+
+import com.dubture.twig.core.codeassist.context.QuotesContext;
+import com.dubture.twig.core.util.text.TwigTextSequenceUtilities;
 
 /**
  * 
