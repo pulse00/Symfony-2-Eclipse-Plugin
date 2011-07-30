@@ -140,6 +140,10 @@ public class PathUtils {
 		String viewName = PathUtils.getViewFromTemplatePath(sourceModule.getPath());
 		
 		IType controller = model.findControllerByTemplate(sourceModule);		
+		
+		if (controller == null)
+			return null;
+		
 		String bundle = ModelUtils.extractBundleName(controller.getFullyQualifiedName());
 		
 		if (bundle == null)

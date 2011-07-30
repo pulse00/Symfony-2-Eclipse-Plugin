@@ -179,6 +179,9 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	 */
 	public List<TemplateField> findTemplateVariables(IType controller) {
 
+		if (controller == null)
+			return new ArrayList<TemplateField>();
+		
 		// create a searchscope for the whole ScriptProject,
 		// as view variables can be declared across controllers
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(controller.getScriptProject());
