@@ -21,7 +21,7 @@
             class="com.dubture.symfony.ui.contentassist.SymfonyCompletionProposalComputer"
             toolkitId="org.eclipse.php.core.PHPNature">
          <partition
-               type="org.eclipse.twig.TWIG_DEFAULT">
+               type="com.dubture.twig.TWIG_DEFAULT">
          </partition>
       </scriptCompletionProposalComputer>
    </extension>

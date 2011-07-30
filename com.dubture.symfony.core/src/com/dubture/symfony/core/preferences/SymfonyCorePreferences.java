@@ -26,7 +26,7 @@ public class SymfonyCorePreferences {
 		
 		//TODO: check if there's a cleaner way to get the preferences from the ui
 		// plugin than hardcoding the ID
-		String severity = Platform.getPreferencesService().getString("org.eclipse.symfony.ui", 
+		String severity = Platform.getPreferencesService().getString("com.dubture.symfony.ui", 
 				SymfonyCoreConstants.ANNOTATION_PROBLEM_SEVERITY, SymfonyCoreConstants.ANNOTATION_WARNING, null);
 		
 		if (severity == null) {			

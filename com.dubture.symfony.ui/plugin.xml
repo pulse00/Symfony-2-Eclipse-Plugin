@@ -6,10 +6,10 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
-            id="org.eclipse.symfony.ui.addnature"
+            id="com.dubture.symfony.ui.addnature"
             objectClass="org.eclipse.core.resources.IProject">
          <menu
-               id="org.eclipse.symfony.ui.menu1"
+               id="com.dubture.symfony.ui.menu1"
                label="%menu.label"
                path="additions">
             <separator
@@ -19,9 +19,9 @@
          <action
                class="com.dubture.symfony.ui.popup.actions.AddSymfonyNature"
                enablesFor="1"
-               id="org.eclipse.symfony.ui.newAction"
+               id="com.dubture.symfony.ui.newAction"
                label="%action.label"
-               menubarPath="org.eclipse.symfony.ui.menu1/project">
+               menubarPath="com.dubture.symfony.ui.menu1/project">
          </action>
       </objectContribution>
    </extension>
@@ -30,13 +30,13 @@
        point="org.eclipse.ui.preferencePages">
     <page
           class="com.dubture.symfony.ui.preferences.SymfonyPreferencePage"
-          id="org.eclipse.symfony.ui.preferences.SymfonyPreferencePage"
+          id="com.dubture.symfony.ui.preferences.SymfonyPreferencePage"
           name="%page.name">
     </page>
     <page
-          category="org.eclipse.symfony.ui.preferences.SymfonyPreferencePage"
+          category="com.dubture.symfony.ui.preferences.SymfonyPreferencePage"
           class="com.dubture.symfony.ui.preferences.ServicesPreferencePage"
-          id="org.eclipse.symfony.ui.page1"
+          id="com.dubture.symfony.ui.page1"
           name="%Services">
     </page>
  </extension>
@@ -44,7 +44,7 @@
  <extension
        point="org.eclipse.ui.views">
     <category
-          id="org.eclipse.symfony.ui"
+          id="com.dubture.symfony.ui"
           name="%category.name">
     </category>
  </extension>
@@ -62,21 +62,21 @@
     <hyperlinkDetector
           activate="true"
           class="com.dubture.symfony.ui.editor.hyperlink.ServiceHyperlinkDetector"
-          id="org.eclipse.symfony.ui.hyperlinkDetector"
+          id="com.dubture.symfony.ui.hyperlinkDetector"
           name="%hyperlinkDetector.name"
           targetId="org.eclipse.php.core.phpsource">
     </hyperlinkDetector>
     <hyperlinkDetector
           activate="true"
           class="com.dubture.symfony.ui.editor.hyperlink.RouteHyperlinkDetector"
-          id="org.eclipse.symfony.ui.routeDetector"
+          id="com.dubture.symfony.ui.routeDetector"
           name="%routeDetector.name"
           targetId="org.eclipse.php.core.phpsource">
     </hyperlinkDetector>
     <hyperlinkDetector
           activate="true"
           class="com.dubture.symfony.ui.editor.hyperlink.ViewpathHyperlinkDetector"
-          id="org.eclipse.symfony.ui.viewpathDetector"
+          id="com.dubture.symfony.ui.viewpathDetector"
           name="%routeDetector.name"
           targetId="org.eclipse.php.core.phpsource">
     </hyperlinkDetector>            
@@ -86,7 +86,7 @@
  <extension
        point="org.eclipse.wst.sse.ui.semanticHighlighting">
         <highlighting
-          class="org.eclipse.symfony.ui.editor.highlighting.AnnotationHighlighting"
+          class="com.dubture.symfony.ui.editor.highlighting.AnnotationHighlighting"
           target="org.eclipse.php.core.phpsource">
         </highlighting> 
  </extension>
@@ -94,7 +94,7 @@
        point="org.eclipse.ui.propertyPages">
     <page
           class="com.dubture.symfony.ui.preferences.ServicesPreferencePage"
-          id="org.eclipse.symfony.ui.servicePreferencePage"
+          id="com.dubture.symfony.ui.servicePreferencePage"
           name="%servicesPreferencePage">
        <enabledWhen>
           <adapt
@@ -117,7 +117,7 @@
        point="org.eclipse.ui.ide.projectNatureImages">
     <image
           icon="ico/full/obj16/symfony_icon.gif"
-          id="org.eclipse.symfony.ui.symfonyNatureImage"
+          id="com.dubture.symfony.ui.symfonyNatureImage"
           natureId="com.dubture.symfony.core.symfonyNature">
     </image>
  </extension>
@@ -135,13 +135,13 @@
 		</actionSet>
        -->
     <actionSet
-          id="org.eclipse.symfony.ui.switchContext"
+          id="com.dubture.symfony.ui.switchContext"
           label="Sample Action Set"
           visible="false">
        <action
              class="com.dubture.symfony.ui.actions.SwitchContextAction"
-             definitionId="org.eclipse.symfony.ui.edit.text.switchContext"
-             id="org.eclipse.symfony.ui.actions.SwitchContextAction"
+             definitionId="com.dubture.symfony.ui.edit.text.switchContext"
+             id="com.dubture.symfony.ui.actions.SwitchContextAction"
              label="&amp;Sample Action"
              menubarPath="navigate/open.ext"
              retarget="true">
@@ -151,7 +151,7 @@
  <extension
        point="org.eclipse.ui.actionSetPartAssociations">
     <actionSetPartAssociation
-          targetID="org.eclipse.symfony.ui.switchContext">
+          targetID="com.dubture.symfony.ui.switchContext">
        <part
              id="org.eclipse.php.ui.explorer">
        </part>
@@ -164,7 +164,7 @@
        point="org.eclipse.ui.commands">
 		<command name="Switch Context"
 			description="Switch context"
-			categoryId="org.eclipse.ui.category.navigate" id="org.eclipse.symfony.ui.edit.text.switchContext">
+			categoryId="org.eclipse.ui.category.navigate" id="com.dubture.symfony.ui.edit.text.switchContext">
 		</command>
 
  </extension>
@@ -175,18 +175,18 @@
  <extension
        point="org.eclipse.dltk.ui.completion">
     <proposalLabelProvider
-          class="org.eclipse.symfony.ui.contentassist.SymfonyCompletionProposalLabelProvider"
+          class="com.dubture.symfony.ui.contentassist.SymfonyCompletionProposalLabelProvider"
           nature="org.eclipse.php.core.PHPNature">
     </proposalLabelProvider>
     <proposalFactory
-          class="org.eclipse.symfony.ui.SymfonyCompletionProposalFactory"
+          class="com.dubture.symfony.ui.SymfonyCompletionProposalFactory"
           nature="org.eclipse.php.core.PHPNature">
     </proposalFactory>
  </extension>
  -->
  
  <extension
-       id="org.eclipse.symfony.ui.symfonyCompletionProposalComputer"
+       id="com.dubture.symfony.ui.symfonyCompletionProposalComputer"
        point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
     <scriptCompletionProposalComputer
           categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
@@ -196,7 +196,7 @@
              type="org.eclipse.php.PHP_DEFAULT">
        </partition>
        <partition
-             type="org.eclipse.twig.TWIG_DEFAULT">
+             type="com.dubture.twig.TWIG_DEFAULT">
        </partition>
     </scriptCompletionProposalComputer>
  </extension>
@@ -204,7 +204,7 @@
        point="org.eclipse.php.ui.phpEditorTextHovers">
     <hover
           class="com.dubture.symfony.ui.editor.hover.RouteHover"
-          id="org.eclipse.symfony.ui.routeHover"
+          id="com.dubture.symfony.ui.routeHover"
           priority="400">
     </hover>
  </extension>

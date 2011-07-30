@@ -13,7 +13,7 @@
          </run>
       </runtime>
       <builder
-            id="org.eclipse.symfony.core.symfonyBuilder">
+            id="com.dubture.symfony.core.symfonyBuilder">
       </builder>
    </extension>
    
@@ -52,7 +52,7 @@
          point="org.eclipse.dltk.core.buildParticipant">
       <buildParticipant
             class="com.dubture.symfony.core.builder.SymfonyBuildParticipantFactory"
-            id="org.eclipse.symfony.core.buildParticipant"
+            id="com.dubture.symfony.core.buildParticipant"
             name="Symfony Builder"
             nature="org.eclipse.php.core.PHPNature">
       </buildParticipant>
