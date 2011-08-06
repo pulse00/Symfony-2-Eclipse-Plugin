@@ -106,10 +106,12 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 
 			if (docs != null) {
 
-				//TODO: use the AnnotationParser for this instead
-				BufferedReader buffer = new BufferedReader(new StringReader(docs.getLongDescription()));
+				String comment = docs.getLongDescription();
 				
-
+				if (comment == null || comment.length() == 0)
+					comment = docs.getShortDescription();
+				
+				BufferedReader buffer = new BufferedReader(new StringReader(comment));
 
 				try {
 					String line;
