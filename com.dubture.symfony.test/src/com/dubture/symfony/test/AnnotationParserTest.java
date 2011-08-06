@@ -59,9 +59,6 @@ public class AnnotationParserTest extends TestCase {
 		
 	}
 	
-	
-
-	
 	@Test
 	public void testTemplatePath() {
 		
@@ -77,7 +74,14 @@ public class AnnotationParserTest extends TestCase {
 		assertNotNull(args);		
 		String route = args.get("name");		
 		assertNotNull(route);
-		assertEquals("'_blog'", route);		
+		assertEquals("'_blog'", route);
+		
+	}
+	
+	@Test
+	public void testRoute2() {
+		
+		root = getRootNode("@Route(\"/.{_format}\", name=\"post\", defaults={\"_format\" = \"html\"}, requirements={\"format\" = \"html|rss\"})\"", false);
 		
 	}
 

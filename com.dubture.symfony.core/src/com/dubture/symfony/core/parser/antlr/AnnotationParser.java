@@ -1,4 +1,4 @@
-// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-07-27 08:49:44
+// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-08-06 15:54:58
 
 package com.dubture.symfony.core.parser.antlr;
 
@@ -155,7 +155,7 @@ public class AnnotationParser extends Parser {
 
 
             // AST REWRITE
-            // elements: argument_list, ann_class
+            // elements: ann_class, argument_list
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -631,7 +631,7 @@ public class AnnotationParser extends Parser {
 
 
             // AST REWRITE
-            // elements: arguments, argument
+            // elements: argument, arguments
             // token labels: 
             // rule labels: retval
             // token list labels: 

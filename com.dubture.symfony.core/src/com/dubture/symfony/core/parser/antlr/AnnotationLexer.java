@@ -1,4 +1,4 @@
-// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationLexer.g 2011-07-27 08:49:44
+// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationLexer.g 2011-08-06 15:54:58
 
 package com.dubture.symfony.core.parser.antlr;
 
@@ -379,7 +379,7 @@ public class AnnotationLexer extends Lexer {
                         int alt4=2;
                         int LA4_0 = input.LA(1);
 
-                        if ( ((LA4_0>='-' && LA4_0<=':')||(LA4_0>='A' && LA4_0<='Z')||LA4_0=='_'||(LA4_0>='a' && LA4_0<='{')||LA4_0=='}') ) {
+                        if ( ((LA4_0>='-' && LA4_0<=':')||(LA4_0>='A' && LA4_0<='Z')||LA4_0=='_'||(LA4_0>='a' && LA4_0<='}')) ) {
                             alt4=1;
                         }
 
@@ -412,7 +412,7 @@ public class AnnotationLexer extends Lexer {
                         int alt5=2;
                         int LA5_0 = input.LA(1);
 
-                        if ( ((LA5_0>='-' && LA5_0<=':')||(LA5_0>='A' && LA5_0<='Z')||LA5_0=='_'||(LA5_0>='a' && LA5_0<='{')||LA5_0=='}') ) {
+                        if ( ((LA5_0>='-' && LA5_0<=':')||(LA5_0>='A' && LA5_0<='Z')||LA5_0=='_'||(LA5_0>='a' && LA5_0<='}')) ) {
                             alt5=1;
                         }
 
@@ -475,7 +475,7 @@ public class AnnotationLexer extends Lexer {
             // AnnotationLexer.g:76:25: ( LETTER | DIGIT | SYMBOL )
             // AnnotationLexer.g:
             {
-            if ( (input.LA(1)>='-' && input.LA(1)<=':')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='{')||input.LA(1)=='}' ) {
+            if ( (input.LA(1)>='-' && input.LA(1)<=':')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='}') ) {
                 input.consume();
 
             }
@@ -584,10 +584,10 @@ public class AnnotationLexer extends Lexer {
     // $ANTLR start "SYMBOL"
     public final void mSYMBOL() throws RecognitionException {
         try {
-            // AnnotationLexer.g:82:16: ( UNDER | '-' | '/' | ':' | '.' | '{' | '}' )
+            // AnnotationLexer.g:82:16: ( UNDER | '-' | '/' | ':' | '.' | '{' | '}' | '|' )
             // AnnotationLexer.g:
             {
-            if ( (input.LA(1)>='-' && input.LA(1)<='/')||input.LA(1)==':'||input.LA(1)=='_'||input.LA(1)=='{'||input.LA(1)=='}' ) {
+            if ( (input.LA(1)>='-' && input.LA(1)<='/')||input.LA(1)==':'||input.LA(1)=='_'||(input.LA(1)>='{' && input.LA(1)<='}') ) {
                 input.consume();
 
             }

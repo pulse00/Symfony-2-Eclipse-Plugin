@@ -118,6 +118,9 @@ public class ModelUtils {
 				prefix = token;
 			}
 			
+			if (token.equals("Bundle"))
+				continue;
+			
 			if (token.endsWith("Bundle")) {
 				return prefix + token;
 			}

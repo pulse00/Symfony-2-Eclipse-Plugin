@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
@@ -278,7 +279,10 @@ PhpIndexingVisitorExtension {
 				}
 			}
 						
-			for (Route route : controllerIndexer.getRoutes()) {
+			Stack<Route> routes = controllerIndexer.getRoutes();
+			
+			
+			for (Route route : routes) {
 				Logger.debugMSG("indexing route: " + route.toString());
 				indexer.addRoute(route, sourceModule.getScriptProject().getPath());
 			}
