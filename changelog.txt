@@ -1,3 +1,7 @@
+1.0.32
+
+* support for various twig improvements
+
 1.0.31
 
 * fixed bug in template variable codeassist
