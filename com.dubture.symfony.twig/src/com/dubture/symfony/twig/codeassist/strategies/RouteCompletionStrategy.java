@@ -1,4 +1,4 @@
-package com.dubture.symfony.core.codeassist.strategies;
+package com.dubture.symfony.twig.codeassist.strategies;
 
 import java.util.List;
 
@@ -13,7 +13,6 @@ import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
-import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposalCollector;
 
 import com.dubture.symfony.core.codeassist.contexts.RouteCompletionContext;
 import com.dubture.symfony.core.model.RouteSource;
@@ -48,17 +47,26 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 		AbstractCompletionContext context = (AbstractCompletionContext) getContext();
 		CompletionRequestor req = context.getCompletionRequestor();
 		
-		
 		// FIXME: this is a VERY dirty hack to report the route completions
 		// only to the SymfonyCompletionProposalCollector which
 		// shows the correct popup information.
 		// otherwise each route will shown twice.
 		//
 		// unfortunately there's no other way using the DLTK mechanism at the moment
-				
+		
 		if (!req.getClass().getName().contains("Symfony")) {
 			return;			
 		}
+		
+		if (workaroundCount == 0) {
+			workaroundCount++;
+			
+		} else {
+			workaroundCount = 0;
+			return;
+		}
+
+		//ENDFIXME
 		
 		//TODO: this needs caching!!!
 		ISourceModule module = context.getSourceModule();		

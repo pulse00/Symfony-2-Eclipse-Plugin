@@ -21,6 +21,17 @@ public class SymfonyCompletionProposalComputer extends
 	protected ScriptCompletionProposalCollector createCollector(
 			ScriptContentAssistInvocationContext context) {
 		
+		
 		return new SymfonyCompletionProposalCollector(context.getDocument(), context.getSourceModule(), true);
+		
+//		try {
+//			if (context.getSourceModule().getUnderlyingResource().getFileExtension().equals("php"))
+//				return new SymfonyCompletionProposalCollector(context.getDocument(), context.getSourceModule(), true);
+//		} catch (Exception e) {
+//
+//			e.printStackTrace();
+//		}
+//		
+//		return super.createCollector(context);
 	}
 }
