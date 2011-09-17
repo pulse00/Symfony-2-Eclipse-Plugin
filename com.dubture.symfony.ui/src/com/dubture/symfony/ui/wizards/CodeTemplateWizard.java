@@ -61,30 +61,29 @@ abstract public class CodeTemplateWizard extends Wizard implements INewWizard {
 	protected ISelection selection;
 	protected CodeTemplateWizardPage codeTemplateWizardPage;
 	
+	
+	public CompiledTemplate compileTemplate() {
+		
+		final String containerName = codeTemplateWizardPage.getContainerName();		
+		final String fileName = getFileName();
+
+		return compileTemplate(containerName, fileName, getTemplateName(), getContextTypeID());
+		
+	}
+	
+	
 	public CompiledTemplate compileTemplate(String containerName, String fileName, String templateName, String contextID) {
 
 		Template template = getTemplateStore().findTemplate(templateName, contextID);
 
 		if (template != null) {
-			return SymfonyTemplateStore.compileTemplate(getTemplatesContextTypeRegistry(), template, containerName, fileName);	
+			return SymfonyTemplateStore.compileTemplate(getTemplatesContextTypeRegistry(), template, containerName, fileName, null);
 		}
 
 		return null;
 
 	}
 
-
-	public CompiledTemplate compileTemplate(String templateName, String contextID) {
-
-		Template template = getTemplateStore().findTemplate(templateName, contextID);
-
-		if (template != null) {
-			return SymfonyTemplateStore.compileTemplate(getTemplatesContextTypeRegistry(), template);	
-		}
-
-		return null;
-
-	}	
 
 	protected ContextTypeRegistry getTemplatesContextTypeRegistry() {
 		return SymfonyUiPlugin.getDefault().getCodeTemplateContextRegistry();
@@ -162,12 +161,10 @@ abstract public class CodeTemplateWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 
-		final String containerName = codeTemplateWizardPage
-				.getContainerName();
-		
+		final String containerName = codeTemplateWizardPage.getContainerName();		
 		final String fileName = getFileName();
 				
-		final PHPTemplateStore.CompiledTemplate template = compileTemplate(containerName, fileName, getTemplateName(), getContextTypeID());
+		final PHPTemplateStore.CompiledTemplate template = compileTemplate();
 
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor)

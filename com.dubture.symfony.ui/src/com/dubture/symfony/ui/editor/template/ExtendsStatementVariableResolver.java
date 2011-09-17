@@ -4,6 +4,14 @@ import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
 
+
+/**
+ * 
+ * Resolves ${extends} variables in code templates.
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 public class ExtendsStatementVariableResolver extends TemplateVariableResolver {
 
 	public ExtendsStatementVariableResolver(String type, String description) {
@@ -16,26 +24,29 @@ public class ExtendsStatementVariableResolver extends TemplateVariableResolver {
 	public void resolve(TemplateVariable variable, TemplateContext context) {
 		
 		
-		System.err.println("resolve: " + variable.getValues());
-		
-//		if (context instanceof SymfonyTemplateContext) {
-//			
-//			SymfonyTemplateContext symfonyContext = (SymfonyTemplateContext) context;
-//			
-//			try {
-//				
-//				ISourceModule module = symfonyContext.getSourceModule();				
-//				String path = module.getPath().removeFileExtension().segment(module.getPath().segmentCount()-1);
-//				variable.setValue(path.toString());
-//				variable.setResolved(true);
-//				
-//				
-//			} catch (Exception e) {
-//
-//				e.printStackTrace();
-//			}			
-//		}			
-	}	
-	
+		if (context instanceof SymfonyTemplateContext) {
+			
+			SymfonyTemplateContext symfonyContext = (SymfonyTemplateContext) context;
+			
+			try {
+				
+				String value = symfonyContext.getVariable("extends");
+				
+				if (value != null && value.length() > 0) {
+					
+					String statement = "extends " + value;					
+					variable.setValue(statement);
+				} else {
+					variable.setValue("");
+				}
+				
+				variable.setResolved(true);				
+				
+				
+			} catch (Exception e) {
 
+				e.printStackTrace();
+			}			
+		}			
+	}
 }

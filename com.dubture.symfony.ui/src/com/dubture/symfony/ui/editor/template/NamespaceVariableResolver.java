@@ -30,28 +30,25 @@ public class NamespaceVariableResolver extends TemplateVariableResolver {
 	@Override
 	public void resolve(TemplateVariable variable, TemplateContext context) {
 		
-		
-		System.err.println("resolve: " + variable.getValues());;
-		
-//		if (context instanceof SymfonyTemplateContext) {
-//			
-//			try {
-//			
-//				SymfonyTemplateContext symfonyContext = (SymfonyTemplateContext) context;
-//				ISourceModule module = symfonyContext.getSourceModule();
-//				IPath path = module.getPath().removeLastSegments(1);
-//				String ns = SymfonyModelAccess.getDefault().findNameSpace(module.getScriptProject(), path);
-//				
-//				if (ns != null) {
-//					variable.setValue(ns);
-//					variable.setResolved(true);
-//				}
-//				
-//				
-//			} catch (Exception e) {
-//
-//				e.printStackTrace();
-//			}			
-//		}			
+		if (context instanceof SymfonyTemplateContext) {
+			
+			try {
+			
+				SymfonyTemplateContext symfonyContext = (SymfonyTemplateContext) context;
+				ISourceModule module = symfonyContext.getSourceModule();
+				IPath path = module.getPath().removeLastSegments(1);
+				String ns = SymfonyModelAccess.getDefault().findNameSpace(module.getScriptProject(), path);
+				
+				if (ns != null) {
+					variable.setValue(ns);
+					variable.setResolved(true);
+				}
+				
+				
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}			
+		}			
 	}	
 }

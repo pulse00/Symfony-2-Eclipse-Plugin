@@ -17,6 +17,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 	
 }
 </template>
+
+
 <template
 	name="symfonyclass"
 	description="%description.newsymfony.class"

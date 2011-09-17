@@ -85,7 +85,9 @@
 	<extension point="org.eclipse.ui.perspectiveExtensions">
 		<perspectiveExtension targetID="org.eclipse.php.perspective">
 			<newWizardShortcut id="com.dubture.symfony.ui.wizards.ControllerCreationWizard" />
+			<newWizardShortcut id="com.dubture.symfony.ui.wizards.ClassCreationWizard" />			
 		</perspectiveExtension>
+		
 	</extension>	
 	
 	

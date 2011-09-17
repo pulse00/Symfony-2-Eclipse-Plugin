@@ -20,8 +20,16 @@ import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
 
-import com.dubture.symfony.ui.editor.template.SymfonyTemplateContext;
+import com.dubture.symfony.ui.editor.template.CodeTemplateContextType;
+import com.dubture.symfony.ui.editor.template.CodeTemplateVariableHolder;
 
+/**
+ * 
+ * Templatestore for symfony code templates.
+ * 
+ * @author Robert Gründler <r.gruendler@gmail.com>
+ *
+ */
 @SuppressWarnings("restriction")
 public class SymfonyTemplateStore extends PHPTemplateStore {
 
@@ -32,15 +40,13 @@ public class SymfonyTemplateStore extends PHPTemplateStore {
 	}
 	
 	
-	public static CompiledTemplate compileTemplate(
-			ContextTypeRegistry contextTypeRegistry, Template template,
-			String containerName, String fileName) {
+	public static CompiledTemplate compileTemplate(ContextTypeRegistry contextTypeRegistry, Template template, String containerName, String fileName, CodeTemplateVariableHolder varHolder) {
+		
 		String string = null;
 		int offset = 0;
 		if (template != null) {
 			IDocument document = new Document();
-			DocumentTemplateContext context = getContext(contextTypeRegistry,
-					template, containerName, fileName, document);
+			DocumentTemplateContext context = getContext(contextTypeRegistry, template, containerName, fileName, document, varHolder);
 			TemplateBuffer buffer = null;
 			try {
 				buffer = context.evaluate(template);
@@ -64,14 +70,10 @@ public class SymfonyTemplateStore extends PHPTemplateStore {
 	}
 	
 	
-	public static CompiledTemplate compileTemplate(
-			ContextTypeRegistry contextTypeRegistry, Template template) {
-		return compileTemplate(contextTypeRegistry, template, null, null);
-	}
 	
 	private static DocumentTemplateContext getContext(
 			ContextTypeRegistry contextTypeRegistry, Template template,
-			String containerName, String fileName, IDocument document) {
+			String containerName, String fileName, IDocument document, CodeTemplateVariableHolder varHolder) {
 
 		if (fileName == null) {
 			return new DocumentTemplateContext(contextTypeRegistry
@@ -85,8 +87,10 @@ public class SymfonyTemplateStore extends PHPTemplateStore {
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 		TemplateContextType type = contextTypeRegistry.getContextType(template
 				.getContextTypeId());
-		return ((ScriptTemplateContextType) type).createContext(document, 0, 0,
-				sourceModule);
+		
+
+		
+		return ((CodeTemplateContextType) type).createContext(document, 0, 0,sourceModule, varHolder);
 	}
 	
 

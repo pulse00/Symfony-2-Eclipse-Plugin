@@ -1,7 +1,13 @@
 package com.dubture.symfony.ui.wizards.classes;
 
+import org.eclipse.jface.text.templates.Template;
+import org.eclipse.php.internal.ui.preferences.PHPTemplateStore.CompiledTemplate;
+
+import com.dubture.symfony.ui.editor.template.CodeTemplateVariableHolder;
+import com.dubture.symfony.ui.preferences.SymfonyTemplateStore;
 import com.dubture.symfony.ui.wizards.CodeTemplateWizard;
 
+@SuppressWarnings("restriction")
 public class ClassCreationWizard extends CodeTemplateWizard {
 
 	
@@ -10,6 +16,31 @@ public class ClassCreationWizard extends CodeTemplateWizard {
 		setWindowTitle("Create class"); 
 		setNeedsProgressMonitor(true);
 	}	
+
+	public CompiledTemplate compileTemplate() {
+		
+		final String containerName = codeTemplateWizardPage.getContainerName();		
+		final String fileName = getFileName();
+
+		Template template = getTemplateStore().findTemplate(getTemplateName(), getContextTypeID());
+
+		CodeTemplateVariableHolder varHolder = new CodeTemplateVariableHolder();
+		ClassCreationWizardPage page = (ClassCreationWizardPage) codeTemplateWizardPage;
+				
+		String superclass = page.getSuperclass();		
+		String[] parts = superclass.split("\\\\");		
+		superclass = parts.length > 0 ? parts[parts.length-1] : "";		
+		varHolder.set("extends", superclass);
+		varHolder.set("use_parent", page.getSuperclass());
+		
+		if (template != null) {
+			return SymfonyTemplateStore.compileTemplate(getTemplatesContextTypeRegistry(), template, containerName, fileName, varHolder);	
+		}
+
+		return null;
+		
+	}
+	
 	
 	public void addPages() {
 		

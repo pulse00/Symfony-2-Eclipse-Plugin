@@ -20,7 +20,7 @@ public class SymfonyTemplateContextType extends PhpTemplateContextType {
 	@Override
 	public ScriptTemplateContext createContext(IDocument document, int completionPosition, int length, ISourceModule sourceModule) {
 		
-		return new SymfonyTemplateContext(this, document, completionPosition, length,sourceModule);
+		return new SymfonyTemplateContext(this, document, completionPosition, length,sourceModule, null);
 		
 	}
 	

@@ -18,11 +18,11 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 
 	private static final String CONTROLLER_CONTEXTTYPE = "php_new_file_context";
 
-	@Override
+	
 	public ScriptTemplateContext createContext(IDocument document,
-			int completionPosition, int length, ISourceModule sourceModule) {
+			int completionPosition, int length, ISourceModule sourceModule, CodeTemplateVariableHolder varHolder) {
 
-		return new SymfonyTemplateContext(this, document, completionPosition, length, sourceModule);	
+		return new SymfonyTemplateContext(this, document, completionPosition, length, sourceModule, varHolder);
 	}
 	
 	public CodeTemplateContextType(String contextName, String name) {
@@ -49,5 +49,13 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 		registry.addContextType(new CodeTemplateContextType(CodeTemplateContextType.CONTROLLER_CONTEXTTYPE));
 		
 		
+	}
+
+	@Override
+	public ScriptTemplateContext createContext(IDocument document,
+			int completionPosition, int length, ISourceModule sourceModule) {
+
+		
+		return new SymfonyTemplateContext(this, document, completionPosition, length, sourceModule, null);
 	}
 }

@@ -1,25 +1,33 @@
 package com.dubture.symfony.ui.wizards.classes;
 
 import org.eclipse.core.resources.IContainer;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.search.IDLTKSearchConstants;
+import org.eclipse.dltk.internal.ui.dialogs.OpenTypeSelectionDialog2;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
+import org.eclipse.php.internal.ui.PHPUILanguageToolkit;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
@@ -31,9 +39,12 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 
 
 	protected Text fileText;
+	protected Text superClassText;
+	
 	protected ISelection selection;
 
 	protected Label targetResourceLabel;
+	protected Label superClassLabel;
 
 	/**
 	 * Constructor for SampleNewWizardPage.
@@ -47,6 +58,56 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		setImageDescriptor(SymfonyPluginImages.DESC_WIZBAN_ADD_SYMFONY_FILE);
 		this.selection = selection;
 	}
+	
+	private SelectionListener superClassSelectionListener  = new SelectionListener() {
+		
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+
+			final Shell p = DLTKUIPlugin.getActiveWorkbenchShell();
+			OpenTypeSelectionDialog2 dialog = new OpenTypeSelectionDialog2(p,
+					true, PlatformUI.getWorkbench().getProgressService(), null,
+					IDLTKSearchConstants.TYPE, PHPUILanguageToolkit.getInstance());
+
+			dialog.setTitle("Superclass selection");
+			dialog.setMessage("Select superclass");
+
+			int result = dialog.open();
+			if (result != IDialogConstants.OK_ID)
+				return;
+			
+			Object[] types = dialog.getResult();
+			if (types != null && types.length > 0) {
+				IModelElement type = null;
+				for (int i = 0; i < types.length; i++) {
+					type = (IModelElement) types[i];
+					try {
+													
+						String superclass = "";
+						
+						if (type.getParent() == null)
+							return;
+						
+						superclass += type.getParent().getElementName() + "\\";
+						superclass += type.getElementName();
+						
+						superClassText.setText(superclass);
+
+					} catch (Exception x) {
+
+					}
+				}
+			}				
+			
+			
+		}
+		
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	};
 
 	/**
 	 * @see IDialogPage#createControl(Composite)
@@ -60,9 +121,20 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		layout.numColumns = 3;
 		layout.verticalSpacing = 9;
 		
-
+		
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = 400;
+		
+		superClassLabel = new Label(container, SWT.NULL);
+		superClassLabel.setText("Superclass");
+		
+		superClassText = new Text(container, SWT.BORDER | SWT.SINGLE);
+		superClassText.setLayoutData(gd);
+		
+		Button button = new Button(container, SWT.NULL);
+		button.setText("Browse");
+				
+		button.addSelectionListener(superClassSelectionListener);	
 
 		targetResourceLabel = new Label(container, SWT.NULL);
 		targetResourceLabel.setText("Controller name");
@@ -82,11 +154,11 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		initialize();
 		dialogChanged();
 		setControl(container);
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(parent,
-						IPHPHelpContextIds.CREATING_A_PHP_FILE_WITHIN_A_PROJECT);
+//		PlatformUI
+//				.getWorkbench()
+//				.getHelpSystem()
+//				.setHelp(parent,
+//						IPHPHelpContextIds.CREATING_A_PHP_FILE_WITHIN_A_PROJECT);
 	}
 
 	/**
@@ -204,5 +276,10 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		return fileText.getText();
 	}
 
+	public String getSuperclass() {
+
+		return superClassText.getText();
+
+	}
 
 }
