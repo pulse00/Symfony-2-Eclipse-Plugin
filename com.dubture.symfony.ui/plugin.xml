@@ -82,6 +82,32 @@
     </hyperlinkDetector>            
  </extension>
  
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension targetID="org.eclipse.php.perspective">
+			<newWizardShortcut id="com.dubture.symfony.ui.wizards.ControllerCreationWizard" />
+		</perspectiveExtension>
+	</extension>	
+	
+	<!--
+	<extension point="org.eclipse.wst.common.frameworks.ui.extendableWizard">
+		<extendableWizard
+			id="com.dubture.symfony.ui.wizards.ControllerCreationWizard" />
+	</extension>
+	-->
+	
+	<extension point="org.eclipse.ui.newWizards">
+	
+		<category name="%category.name.1" id="com.dubture.symfony.project.ui" />
+		
+		<wizard id="com.dubture.symfony.ui.wizards.ControllerCreationWizard"
+			category="com.dubture.symfony.project.ui" class="com.dubture.symfony.ui.wizards.ControllerCreationWizard"
+			name="%wizard.name.0" icon="ico/full/obj16/add_php_file.gif" />			            
+
+		<!--
+		<primaryWizard id="com.dubture.symfony.ui.wizards.ControllerCreationWizard" />
+		-->
+        
+	</extension>
  
  <extension
        point="org.eclipse.wst.sse.ui.semanticHighlighting">
@@ -184,6 +210,21 @@
     </proposalFactory>
  </extension>
  -->
+ 
+	<!--Templates:-->
+	<extension point="org.eclipse.ui.editors.templates">
+
+		<contextType name="%templates.symfony.contextType.name" class="com.dubture.symfony.ui.editor.template.SymfonyTemplateContextType" id="symfony" />
+			
+		<include file="templates/symfonydefault-templates.xml"
+			translations="$nl$/templates/symfonydefault-templates.properties" />
+			
+  		<resolver class="com.dubture.symfony.ui.editor.template.SymfonyNamespaceVariableResolver"
+        	contextTypeId="symfony" type="src">
+  		</resolver>
+
+	</extension>
+ 
  
  <extension
        id="com.dubture.symfony.ui.symfonyCompletionProposalComputer"

@@ -1,0 +1,16 @@
+<templates>
+<!-- new PHP templates --><template	name="symfonycontroller"	description="%description.newsymfony.controller"	id="com.dubture.symfony.ui.editor.templates.new.controller"	context="php_new_file_context"	enabled="true">&lt;?php	
+namespace ${namespace};
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+	class ${class_name} {
+
+	public function indexAction() {
+		${cursor};
+	}
+	
+}
+</template>
+<!--  php templates -->
+
+</templates>

@@ -1,9 +1,17 @@
 package com.dubture.symfony.ui;
 
 
+import java.io.IOException;
+
+import org.eclipse.jface.text.templates.ContextTypeRegistry;
+import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.ui.editor.template.CodeTemplateContextType;
+import com.dubture.symfony.ui.preferences.SymfonyTemplateStore;
 import com.dubture.symfony.ui.viewsupport.ImagesOnFileSystemRegistry;
 
 /**
@@ -19,6 +27,11 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 
 	
 	private ImagesOnFileSystemRegistry fImagesOnFSRegistry;
+	
+	
+	private SymfonyTemplateStore fCodeTemplateStore;
+	
+	protected ContextTypeRegistry codeTypeRegistry = null;	
 	
 	/**
 	 * The constructor
@@ -70,6 +83,38 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 		}
 		return fImagesOnFSRegistry;
 	}
+	
+	public TemplateStore getCodeTemplateStore() {
+		if (fCodeTemplateStore == null) {
+
+			fCodeTemplateStore = new SymfonyTemplateStore(
+					getCodeTemplateContextRegistry(), getPreferenceStore(),
+					PreferenceConstants.CODE_TEMPLATES_KEY);
+
+			try {
+				fCodeTemplateStore.load();
+			} catch (IOException e) {
+				Logger.logException(e);
+			}
+		}
+
+		return fCodeTemplateStore;
+	}
+	
+	public ContextTypeRegistry getCodeTemplateContextRegistry() {
+		if (codeTypeRegistry == null) {
+			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
+
+			
+			CodeTemplateContextType.registerContextTypes(registry);
+
+			codeTypeRegistry = registry;
+		}
+
+		return codeTypeRegistry;
+	}
+	
+	
 	
 
 }
