@@ -834,6 +834,35 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		
 		
 	}
+
+	public String findNameSpace(IScriptProject iScriptProject, final IPath path) {
+
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(iScriptProject);
+		ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
+		final List<String> namespaces = new ArrayList<String>();
+
+		engine.search(ISymfonyModelElement.NAMESPACE, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+
+			@Override
+			public void match(int elementType, int flags, int offset, int length,
+					int nameOffset, int nameLength, String elementName,
+					String metadata, String doc, String qualifier, String parent,
+					ISourceModule sourceModule, boolean isReference) {
+
+				if (path.toString().startsWith(elementName)) {					
+					namespaces.add(path.toString().replace(elementName, ""));
+				}
+
+			}
+		}, null);
+
+		
+		if (namespaces.size() == 1) {			
+			return namespaces.get(0).replace("/", "\\");
+		}
+		return null;
+
+	}
 	
 	
 }

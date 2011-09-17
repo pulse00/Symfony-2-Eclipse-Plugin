@@ -8,6 +8,8 @@ import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
 
+import com.dubture.symfony.core.model.SymfonyModelAccess;
+
 /**
  * 
  * Resolves "namespace" variables in new classes.
@@ -42,16 +44,17 @@ public class SymfonyNamespaceVariableResolver extends TemplateVariableResolver {
 		
 		if (context instanceof SymfonyTemplateContext) {
 			
-			SymfonyTemplateContext symfonyContext = (SymfonyTemplateContext) context;
-			
 			try {
-				
+			
+				SymfonyTemplateContext symfonyContext = (SymfonyTemplateContext) context;
 				ISourceModule module = symfonyContext.getSourceModule();
-				
 				IPath path = module.getPath().removeLastSegments(1);
+				String ns = SymfonyModelAccess.getDefault().findNameSpace(module.getScriptProject(), path);
 				
-				variable.setValue(path.toString().replace("/", "\\"));
-				variable.setResolved(true);
+				if (ns != null) {
+					variable.setValue(ns);
+					variable.setResolved(true);
+				}
 				
 				
 			} catch (Exception e) {
