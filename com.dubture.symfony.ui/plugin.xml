@@ -94,12 +94,23 @@
 		<category name="%category.name.1" id="com.dubture.symfony.project.ui" />
 		
 		<wizard
-        category="com.dubture.symfony.project.ui"
-        class="com.dubture.symfony.ui.wizards.ControllerCreationWizard"
-        icon="ico/full/obj16/add_php_file.gif"
-        id="com.dubture.symfony.ui.wizards.ControllerCreationWizard"
-        name="%wizard.new.controller"
-        project="false"/>			            
+        	category="com.dubture.symfony.project.ui"
+        	class="com.dubture.symfony.ui.wizards.controller.ControllerCreationWizard"
+        	icon="ico/full/obj16/add_php_file.gif"
+        	id="com.dubture.symfony.ui.wizards.ControllerCreationWizard"
+        	name="%wizard.new.controller"
+        	project="false">
+        </wizard>
+        
+		<wizard
+        	category="com.dubture.symfony.project.ui"
+        	class="com.dubture.symfony.ui.wizards.classes.ClassCreationWizard"
+        	icon="ico/full/obj16/add_php_file.gif"
+        	id="com.dubture.symfony.ui.wizards.ClassCreationWizard"
+        	name="%wizard.new.class"
+        	project="false">
+        </wizard>
+        
 
         
 	</extension>
@@ -203,7 +214,7 @@
 		<include file="templates/symfonydefault-templates.xml"
 			translations="$nl$/templates/symfonydefault-templates.properties" />
 			
-  		<resolver class="com.dubture.symfony.ui.editor.template.SymfonyNamespaceVariableResolver"
+  		<resolver class="com.dubture.symfony.ui.editor.template.NamespaceVariableResolver"
         	contextTypeId="symfony" type="src">
   		</resolver>
 

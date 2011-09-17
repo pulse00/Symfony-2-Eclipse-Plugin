@@ -858,7 +858,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 
 		
 		if (namespaces.size() == 1) {			
-			return namespaces.get(0).replace("/", "\\");
+			return namespaces.get(0).replaceFirst("/", "").replace("/", "\\");
 		}
 		return null;
 

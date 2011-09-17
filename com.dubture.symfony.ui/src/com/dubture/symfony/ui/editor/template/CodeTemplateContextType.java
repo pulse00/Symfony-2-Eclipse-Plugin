@@ -30,8 +30,10 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 
 
 		//TODO: externalize Strings
-		addResolver(new SymfonyNamespaceVariableResolver("namespace", "Symfony Namespace Resolver"));
-		addResolver(new SymfonyClassNameVariableResolver("class_name", "Symfony Classname Resolver"));
+		addResolver(new NamespaceVariableResolver("namespace", "Symfony Namespace Resolver"));
+		addResolver(new ClassNameVariableResolver("class_name", "Symfony Classname Resolver"));
+		addResolver(new UseStatementVariableResolver("use_parent", "Symfony UseStatement Resolver"));
+		addResolver(new ExtendsStatementVariableResolver("extends", "Symfony ExtendsStatement Resolver"));
 
 
 	}	
