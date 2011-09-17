@@ -88,24 +88,19 @@
 		</perspectiveExtension>
 	</extension>	
 	
-	<!--
-	<extension point="org.eclipse.wst.common.frameworks.ui.extendableWizard">
-		<extendableWizard
-			id="com.dubture.symfony.ui.wizards.ControllerCreationWizard" />
-	</extension>
-	-->
 	
 	<extension point="org.eclipse.ui.newWizards">
 	
 		<category name="%category.name.1" id="com.dubture.symfony.project.ui" />
 		
-		<wizard id="com.dubture.symfony.ui.wizards.ControllerCreationWizard"
-			category="com.dubture.symfony.project.ui" class="com.dubture.symfony.ui.wizards.ControllerCreationWizard"
-			name="%wizard.name.0" icon="ico/full/obj16/add_php_file.gif" />			            
+		<wizard
+        category="com.dubture.symfony.project.ui"
+        class="com.dubture.symfony.ui.wizards.ControllerCreationWizard"
+        icon="ico/full/obj16/add_php_file.gif"
+        id="com.dubture.symfony.ui.wizards.ControllerCreationWizard"
+        name="%wizard.new.controller"
+        project="false"/>			            
 
-		<!--
-		<primaryWizard id="com.dubture.symfony.ui.wizards.ControllerCreationWizard" />
-		-->
         
 	</extension>
  
@@ -149,17 +144,6 @@
  </extension>
  <extension
        point="org.eclipse.ui.actionSets">
-       <!--
-		<actionSet label="%OpenActionSet.label" description="%OpenActionSet.description"
-			visible="false" id="org.eclipse.php.ui.A_OpenActionSet">
-			<action definitionId="org.eclipse.php.ui.edit.text.php.open.type.hierarchy"
-				label="%OpenTypeHierarchyAction.label" retarget="true" menubarPath="navigate/open.ext"
-				id="org.eclipse.php.ui.actions.OpenTypeHierarchy" />
-			<action definitionId="org.eclipse.php.ui.edit.text.php.open.call.hierarchy"
-				label="%OpenCallHierarchyAction.label" retarget="true" menubarPath="navigate/open.ext"
-				id="org.eclipse.php.ui.actions.OpenCallHierarchy" />
-		</actionSet>
-       -->
     <actionSet
           id="com.dubture.symfony.ui.switchContext"
           label="Sample Action Set"

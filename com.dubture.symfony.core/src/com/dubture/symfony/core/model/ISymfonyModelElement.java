@@ -15,11 +15,13 @@ public interface ISymfonyModelElement {
 	
 	// containers
 	int BUNDLE = 200;	
-	
+	int NAMESPACE = 201;
 	
 	// method types
 	int VIEW_METHOD = 300;
 	int ROUTE_METHOD = 301;
+	
+		
 	
 
 

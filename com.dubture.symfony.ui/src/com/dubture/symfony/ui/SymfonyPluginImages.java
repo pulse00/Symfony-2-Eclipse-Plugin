@@ -34,7 +34,11 @@ public class SymfonyPluginImages {
 	public static final ImageDescriptor DESC_OBJS_SERVICE = createManagedFromKey(T_OBJ, IMG_OBJS_SERVICE);
 	public static final ImageDescriptor DESC_OBJS_BUNDLE = createManagedFromKey(T_OBJ, IMG_OBJS_BUNDLE);	
 	public static final ImageDescriptor DESC_OBJS_CONTROLLER = createManagedFromKey(T_OBJ, IMG_OBJS_CONTROLLER);	
-	public static final ImageDescriptor DESC_OBJS_TEMPLATE = createManagedFromKey(T_OBJ, IMG_OBJS_TEMPLATE);	
+	public static final ImageDescriptor DESC_OBJS_TEMPLATE = createManagedFromKey(T_OBJ, IMG_OBJS_TEMPLATE);
+
+	private static final String T_WIZBAN = "wizban"; //$NON-NLS-1$
+	
+	public static final ImageDescriptor DESC_WIZBAN_ADD_SYMFONY_FILE = create(T_WIZBAN, "newpfile_wiz.gif");//$NON-NLS-1$	
 	
 	private static ImageDescriptor createManagedFromKey(String prefix, String key) {
 		return createManaged(prefix, key.substring(NAME_PREFIX_LENGTH), key);

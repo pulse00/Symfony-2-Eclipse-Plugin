@@ -3,7 +3,7 @@
 namespace ${namespace};
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-	class ${class_name} {
+	class ${class_name} extends Controller {
 
 	public function indexAction() {
 		${cursor};

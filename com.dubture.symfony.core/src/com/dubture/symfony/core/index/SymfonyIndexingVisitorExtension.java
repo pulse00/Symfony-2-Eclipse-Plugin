@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -21,9 +22,12 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
 import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ExpressionStatement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
+import org.eclipse.php.internal.core.compiler.ast.nodes.InfixExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -35,6 +39,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 
 import com.dubture.symfony.core.builder.SymfonyNature;
+import com.dubture.symfony.core.index.visitor.RegisterNamespaceVisitor;
 import com.dubture.symfony.core.index.visitor.TemplateVariableVisitor;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.ISymfonyModelElement;
@@ -104,7 +109,6 @@ PhpIndexingVisitorExtension {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean visit(Statement s) throws Exception {
-
 		
 		if (s instanceof ExpressionStatement) {
 			
@@ -114,9 +118,19 @@ PhpIndexingVisitorExtension {
 			
 				PHPCallExpression call = (PHPCallExpression) stmt.getExpr();
 				
-				
+				if (("registerNamespaces".equals(call.getName()) || "registerNamespaceFallbacks".equals(call.getName()))
+						&& call.getReceiver() instanceof VariableReference) {
+
+					RegisterNamespaceVisitor registrar = new RegisterNamespaceVisitor(sourceModule);
+					registrar.visit(call);
+					
+					for (IPath namespace : registrar.getNamespaces()) {						
+						ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.NAMESPACE, 0, 0, namespace.toString(), null, null);
+						requestor.addReference(info);						
+					}
+				}				
 				// TODO: check if the variable implements Symfony\Component\DependencyInjection\ContainerInterface
-				if("setAlias".equals(call.getName())) {
+				else if("setAlias".equals(call.getName())) {
 					
 					if (call.getReceiver() instanceof VariableReference) {
 						
@@ -135,7 +149,6 @@ PhpIndexingVisitorExtension {
 								
 									String id = SymfonyTextSequenceUtilities.removeQuotes(alias.getValue());
 									String ref = "alias_" + SymfonyTextSequenceUtilities.removeQuotes(reference.getValue());
-									
 									
 									indexer.addService(id, ref, sourceModule.getScriptProject().getPath().toString(), 0);								
 									indexer.exitServices();
