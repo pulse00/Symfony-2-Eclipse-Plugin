@@ -12,27 +12,17 @@ import org.eclipse.jface.text.templates.TemplateVariableResolver;
  * 
  * @author Robert Gründler <r.gruendler@gmail.com>
  *
- */public class SymfonyClassNameVariableResolver extends TemplateVariableResolver {
+ *
+ */
+ public class ClassNameVariableResolver extends TemplateVariableResolver {
 
-	protected SymfonyClassNameVariableResolver(String type, String description) {
+	protected ClassNameVariableResolver(String type, String description) {
 		
 		super(type, description);		
 
 	}
 	
-	public SymfonyClassNameVariableResolver() {
-	
-		super();		
 		
-	}
-	
-	@Override
-	protected String resolve(TemplateContext context) {
-
-		return super.resolve(context);
-	}
-	
-	
 	@Override
 	public void resolve(TemplateVariable variable, TemplateContext context) {
 		

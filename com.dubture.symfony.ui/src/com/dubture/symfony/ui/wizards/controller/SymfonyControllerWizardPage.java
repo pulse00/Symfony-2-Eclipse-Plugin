@@ -1,10 +1,7 @@
-package com.dubture.symfony.ui.wizards;
+package com.dubture.symfony.ui.wizards.controller;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -12,11 +9,9 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -28,6 +23,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 import com.dubture.symfony.ui.SymfonyPluginImages;
+import com.dubture.symfony.ui.wizards.CodeTemplateWizardPage;
 
 /**
  * 
@@ -37,21 +33,21 @@ import com.dubture.symfony.ui.SymfonyPluginImages;
  *
  */
 @SuppressWarnings("restriction")
-public class SymfonyControllerWizardPage extends WizardPage {
+public class SymfonyControllerWizardPage extends CodeTemplateWizardPage {
 
+	
 	protected Text fileText;
-	private ISelection selection;
+	protected ISelection selection;
 
 	protected Label targetResourceLabel;
-	private String containerText;
 
 	/**
 	 * Constructor for SampleNewWizardPage.
 	 * 
 	 * @param pageName
 	 */
-	public SymfonyControllerWizardPage(final ISelection selection) {
-		super("wizardPage"); //$NON-NLS-1$
+	public SymfonyControllerWizardPage(final ISelection selection, String initialFileName) {
+		super("wizardPage", initialFileName); //$NON-NLS-1$
 		setTitle("New Controller"); //$NON-NLS-1$
 		setDescription("Create a new Symfony controller"); //$NON-NLS-1$
 		setImageDescriptor(SymfonyPluginImages.DESC_WIZBAN_ADD_SYMFONY_FILE);
@@ -75,7 +71,7 @@ public class SymfonyControllerWizardPage extends WizardPage {
 		gd.widthHint = 400;
 
 		targetResourceLabel = new Label(container, SWT.NULL);
-		targetResourceLabel.setText(PHPUIMessages.PHPFileCreationWizardPage_7); //$NON-NLS-1$
+		targetResourceLabel.setText("Controller name");
 
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		fileText.setFocus();
@@ -125,16 +121,17 @@ public class SymfonyControllerWizardPage extends WizardPage {
 			}
 
 			if (container != null) {
-				containerText = container.getFullPath().toString();
+				containerName = container.getFullPath().toString();
 			}
 		}
-		setInitialFileName("ControllerName"); //$NON-NLS-1$
+		setInitialFileName(initialFileName); //$NON-NLS-1$
 	}
 
 	protected void setInitialFileName(final String fileName) {
 		
+		fileText.setFocus();
 		fileText.setText(fileName);
-		fileText.setSelection(0, 14);
+		fileText.setSelection(0, fileName.length());
 	}
 
 
@@ -203,43 +200,15 @@ public class SymfonyControllerWizardPage extends WizardPage {
 		updateStatus(null);
 	}
 
-	protected IContainer getContainer(final String text) {
-		final Path path = new Path(text);
-
-		final IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-				.findMember(path);
-		return resource instanceof IContainer ? (IContainer) resource : null;
-
-	}
-
 	protected void updateStatus(final String message) {
 		setErrorMessage(message);
 		setPageComplete(message == null);
 	}
 
-	public String getContainerName() {
-		return containerText;
-	}
-
-	public void setContainerName(String containerPath) {
-		containerText = containerPath;
-	}
 
 	public String getFileName() {
 		return fileText.getText();
 	}
 
-	public IProject getProject() {
-		String projectName = getContainerName();
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IResource resource = root.findMember(new Path(projectName));
-		IProject project = null;
-		if (resource instanceof IProject) {
-			project = (IProject) resource;
-		} else if (resource != null) {
-			project = resource.getProject();
-		}
-		return project;
-	}
 
 }
