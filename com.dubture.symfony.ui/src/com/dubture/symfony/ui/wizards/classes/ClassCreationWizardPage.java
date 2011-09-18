@@ -1,14 +1,13 @@
 package com.dubture.symfony.ui.wizards.classes;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.internal.ui.dialogs.OpenTypeSelectionDialog2;
@@ -18,8 +17,8 @@ import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.PHPUILanguageToolkit;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.SWT;
@@ -27,8 +26,10 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -67,8 +68,8 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 	 */
 	public ClassCreationWizardPage(final ISelection selection, String initialFileName) {
 		super("wizardPage", initialFileName); //$NON-NLS-1$
-		setTitle("New Class"); //$NON-NLS-1$
-		setDescription("Create a new class"); //$NON-NLS-1$
+		setTitle("PHP Class"); //$NON-NLS-1$
+		setDescription("Create a new PHP class"); //$NON-NLS-1$
 		setImageDescriptor(SymfonyPluginImages.DESC_WIZBAN_ADD_SYMFONY_FILE);
 		this.selection = selection;
 	}
@@ -88,6 +89,49 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		
 	}
 	
+	
+	private SelectionListener changeListener = new SelectionListener() {
+		
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			dialogChanged();			
+		}
+		
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+
+			
+		}
+	};
+	
+	
+	private SelectionListener interfaceRemoveListener = new SelectionListener() {
+		
+		@SuppressWarnings("rawtypes")
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			
+			ISelection select = interfaceTable.getSelection();
+			
+			if (select instanceof StructuredSelection) {
+				
+				StructuredSelection selection = (StructuredSelection) select;				
+				Iterator it = selection.iterator();
+				
+				while(it.hasNext()) {					
+					String next = (String) it.next();					
+					interfaces.remove(next);					
+				}
+				
+				interfaceTable.setInput(interfaces);
+			}
+		}
+		
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			
+		}
+	};
 	
 	
 	private SelectionListener superClassSelectionListener  = new SelectionListener() {
@@ -195,46 +239,64 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		gd.widthHint = 400;
 		
 		superClassLabel = new Label(container, SWT.NULL);
-		superClassLabel.setText("Superclass");
+		superClassLabel.setText("Superclass:");
 		
 		superClassText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		superClassText.setLayoutData(gd);
 		
 		Button button = new Button(container, SWT.NULL);
-		button.setText("Browse");
+		button.setText("Browse...");
 				
 		button.addSelectionListener(superClassSelectionListener);	
 
 		targetResourceLabel = new Label(container, SWT.NULL);
-		targetResourceLabel.setText("Controller name");
+		targetResourceLabel.setText("Class name:");
 
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		fileText.setFocus();
 		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 2;
-		// gd.widthHint = 300;
+				
 		fileText.setLayoutData(gd);
 		fileText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
 				dialogChanged();
 			}
 		});
+		
+		Label empty = new Label(container, SWT.None);
+		empty.setText("");
 
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 2;
+		Label modifierLabel = new Label(container, SWT.NULL);
+		modifierLabel.setText("Modifiers:");
+
+		gd = new GridData();
+		gd.verticalAlignment = SWT.LEFT;		
 		
-		abstractCheckbox = new Button(container, SWT.CHECK);	
+		RowLayout modifierLayout = new RowLayout(SWT.HORIZONTAL);
+		
+		Composite modifierContainer = new Composite(container, SWT.NULL);
+		modifierContainer.setLayout(modifierLayout);
+		
+		abstractCheckbox = new Button(modifierContainer, SWT.CHECK | SWT.LEFT);	
 		abstractCheckbox.setText("abstract");
+		abstractCheckbox.addSelectionListener(changeListener);
 		
-	    finalCheckbox = new Button(container, SWT.CHECK);
+	    finalCheckbox = new Button(modifierContainer, SWT.CHECK | SWT.LEFT);
 	    finalCheckbox.setText("final");		
+	    finalCheckbox.addSelectionListener(changeListener);
 		
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 2;
+	    Label dummyLabel = new Label(container, SWT.NULL);
+	    dummyLabel.setText("");
+	    
+		gd = new GridData();
+		gd.verticalAlignment = SWT.TOP;
+		
+		Label interfaceLabel = new Label(container, SWT.NULL);
+		interfaceLabel.setText("Interfaces:");
+		interfaceLabel.setLayoutData(gd);
 		
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = GridData.FILL;
-		gridData.horizontalSpan = 2;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;		
@@ -242,22 +304,34 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		interfaceTable = new TableViewer(container, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		
-		
-				
 		interfaceTable.setContentProvider(ArrayContentProvider.getInstance());
 		interfaceTable.setInput(interfaces);
-		
-		
 		interfaceTable.getControl().setLayoutData(gridData);
 		
-		Button addInterface = new Button(container, SWT.NULL);
-		addInterface.setText("Add");
+		FillLayout buttonLayout = new FillLayout();
+		buttonLayout.type = SWT.VERTICAL;
 		
+		gd = new GridData();
+		gd.verticalAlignment = SWT.TOP;
+		
+		Composite buttonContainer = new Composite(container, SWT.NULL);
+		buttonContainer.setLayout(buttonLayout);
+		buttonContainer.setLayoutData(gd);
+		
+		
+		Button addInterface = new Button(buttonContainer, SWT.NULL);
+		addInterface.setText("Add...");
 		addInterface.addSelectionListener(interfaceSelectionListener);
+
+		Button removeInterface = new Button(buttonContainer, SWT.NULL);
+		removeInterface.setText("Remove");
+		
+		removeInterface.addSelectionListener(interfaceRemoveListener);
 
 		initialize();
 		dialogChanged();
 		setControl(container);
+		
 //		PlatformUI
 //				.getWorkbench()
 //				.getHelpSystem()
@@ -312,6 +386,10 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		final String container = getContainerName();
 		final String fileName = getFileName();
 
+		if (abstractCheckbox.getSelection() && finalCheckbox.getSelection()) {			
+			updateStatus("A class cannot be abstract and final at the same time");
+			return;
+		}
 		if (container.length() == 0) {
 			updateStatus(PHPUIMessages.PHPFileCreationWizardPage_10); //$NON-NLS-1$
 			return;
@@ -327,9 +405,11 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		}
 		if (fileName != null
 				&& !fileName.equals("") && containerFolder.getFile(new Path(fileName)).exists()) { //$NON-NLS-1$
-			updateStatus(PHPUIMessages.PHPFileCreationWizardPage_14); //$NON-NLS-1$
+			updateStatus("The specified class already exists"); //$NON-NLS-1$
 			return;
 		}
+		
+		
 
 		int dotIndex = fileName.lastIndexOf('.');
 		if (fileName.length() == 0 || dotIndex == 0) {
@@ -348,25 +428,7 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 			}
 		}
 
-		final IContentType contentType = Platform.getContentTypeManager()
-				.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 		
-//		if (!contentType.isAssociatedWith(fileName)) {
-//			// fixed bug 195274
-//			// get the extensions from content type
-//			final String[] fileExtensions = contentType
-//					.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
-//			StringBuffer buffer = new StringBuffer(
-//					PHPUIMessages.PHPFileCreationWizardPage_17); //$NON-NLS-1$
-//			buffer.append(fileExtensions[0]);
-//			for (String extension : fileExtensions) {
-//				buffer.append(", ").append(extension); //$NON-NLS-1$
-//			}
-//			buffer.append("]"); //$NON-NLS-1$
-//			updateStatus(buffer.toString());
-//			return;
-//		}
-
 		updateStatus(null);
 	}
 
@@ -377,7 +439,7 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 
 
 	public String getFileName() {
-		return fileText.getText();
+		return fileText.getText() + ".php";
 	}
 
 	public String getSuperclass() {
@@ -395,15 +457,13 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 
 	public String getModifiers() {
 
-		String modifiers = "";
-		
-		if (abstractCheckbox.isEnabled())
-			modifiers = "abstract ";
+		if (abstractCheckbox.getSelection())
+			return "abstract ";
 
-		if (finalCheckbox.isEnabled())
-			modifiers += "final ";
+		if (finalCheckbox.getSelection())
+			return "final ";
 			
-		return modifiers;
+		return "";
 		
 	}
 }

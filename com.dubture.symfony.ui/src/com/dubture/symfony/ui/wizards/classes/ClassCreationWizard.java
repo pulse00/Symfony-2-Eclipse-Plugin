@@ -13,7 +13,7 @@ public class ClassCreationWizard extends CodeTemplateWizard {
 	
 	public ClassCreationWizard() {
 		super();
-		setWindowTitle("Create class"); 
+		setWindowTitle("New PHP Class"); 
 		setNeedsProgressMonitor(true);
 	}	
 
@@ -56,7 +56,7 @@ public class ClassCreationWizard extends CodeTemplateWizard {
 	@Override
 	protected String getFileName() {
 		
-		return codeTemplateWizardPage.getFileName() + ".php";
+		return codeTemplateWizardPage.getFileName();
 		
 	}
 	
