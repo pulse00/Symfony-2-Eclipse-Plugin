@@ -2,11 +2,16 @@ package com.dubture.symfony.ui.wizards.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IScriptProject;
 
+import com.dubture.symfony.core.model.Bundle;
+import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.ui.wizards.CodeTemplateWizard;
 
 
@@ -31,7 +36,7 @@ public class ControllerCreationWizard extends CodeTemplateWizard {
 	 */
 	public void addPages() {
 		
-		codeTemplateWizardPage = new SymfonyControllerWizardPage(selection, "NewController");
+		codeTemplateWizardPage = new ControllerWizardPage(selection, "NewController");
 		addPage(codeTemplateWizardPage);
 
 	}
@@ -44,17 +49,35 @@ public class ControllerCreationWizard extends CodeTemplateWizard {
 		
 		try {
 			
-			IFolder folder = getProject().getFolder("/src/Acme/DemoBundle/Resources/views/ControllerName");			
-			folder.create(true, false, null);
+			SymfonyModelAccess model = SymfonyModelAccess.getDefault();
 			
-			IFile file  = folder.getFile("index.html.twig");
+			String container = codeTemplateWizardPage.getContainerName();
+			System.err.println(container);
 			
-			String contents = "{% extends 'layout.html.twig'  %}";
-			InputStream source = new ByteArrayInputStream(contents.getBytes());		
+			IScriptProject project = DLTKCore.create(getProject());
 			
-			file.create(source, false, null);
+			if (project == null)
+				return res;
 			
-		} catch (CoreException e) {
+			List<String> bundle = model.getNameSpaces(project);
+			
+			for (String ns : bundle) {
+				
+				System.err.println(ns);
+			}
+			
+			
+//			IFolder folder = getProject().getFolder("/src/Acme/DemoBundle/Resources/views/ControllerName");			
+//			folder.create(true, false, null);
+//			
+//			IFile file  = folder.getFile("index.html.twig");
+//			
+//			String contents = "{% extends 'layout.html.twig'  %}";
+//			InputStream source = new ByteArrayInputStream(contents.getBytes());		
+//			
+//			file.create(source, false, null);
+			
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

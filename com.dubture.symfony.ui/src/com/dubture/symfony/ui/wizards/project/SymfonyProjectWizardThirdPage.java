@@ -72,9 +72,11 @@ public class SymfonyProjectWizardThirdPage extends PHPProjectWizardThirdPage {
 
 					IPath[] exclusion = {};
 
-					if (folder.getName().equals("app")) {						
-						exclusion = new IPath[] {new Path("app/cache")};						
+					if (folder.getName().equals("app")) {
+						exclusion = new IPath[] { new Path("app/cache") };
 					}
+					
+					
 					IBuildpathEntry entry =  DLTKCore.newSourceEntry(folder.getFullPath(), exclusion);
 					entries.add(entry);					
 				}
@@ -115,7 +117,7 @@ public class SymfonyProjectWizardThirdPage extends PHPProjectWizardThirdPage {
 		final IScriptProject scriptProject = DLTKCore.create(projectHandle);		
 
 		File file = null;
-		final List<IBuildpathEntry> entries = new ArrayList<IBuildpathEntry>();		
+		final List<IBuildpathEntry> entries = new ArrayList<IBuildpathEntry>();
 		level = 0;
 
 		try {

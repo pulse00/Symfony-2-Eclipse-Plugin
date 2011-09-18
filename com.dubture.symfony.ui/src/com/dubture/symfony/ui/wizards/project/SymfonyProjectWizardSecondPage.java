@@ -141,7 +141,9 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 				buildpathEntries = (IBuildpathEntry[]) cpEntries
 						.toArray(new IBuildpathEntry[cpEntries.size()]);
 				
-				includepathEntries = new IncludePath[0];//setProjectBaseIncludepath();
+//				buildpathEntries = new IBuildpathEntry[0];
+//				includepathEntries = new IncludePath[0];
+				setProjectBaseIncludepath();
 
 				monitor.worked(20);
 			}
