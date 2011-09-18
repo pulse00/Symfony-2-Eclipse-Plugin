@@ -1,0 +1,3 @@
+[submodule "symfony/standard"]
+	path = symfony/standard
+	url = git@github.com:pulse00/symfony-standard.git
