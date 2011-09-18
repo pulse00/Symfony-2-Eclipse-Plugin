@@ -1,5 +1,8 @@
 package com.dubture.symfony.ui.wizards.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
@@ -7,18 +10,31 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.dialogs.IDialogPage;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
@@ -33,20 +49,21 @@ import com.dubture.symfony.ui.wizards.CodeTemplateWizardPage;
  *
  */
 @SuppressWarnings("restriction")
-public class SymfonyControllerWizardPage extends CodeTemplateWizardPage {
+public class ControllerWizardPage extends CodeTemplateWizardPage {
 
-	
+
 	protected Text fileText;
 	protected ISelection selection;
 
 	protected Label targetResourceLabel;
+	private List<String> actions = new ArrayList<String>();
 
 	/**
 	 * Constructor for SampleNewWizardPage.
 	 * 
 	 * @param pageName
 	 */
-	public SymfonyControllerWizardPage(final ISelection selection, String initialFileName) {
+	public ControllerWizardPage(final ISelection selection, String initialFileName) {
 		super("wizardPage", initialFileName); //$NON-NLS-1$
 		setTitle("New Controller"); //$NON-NLS-1$
 		setDescription("Create a new Symfony controller"); //$NON-NLS-1$
@@ -58,20 +75,20 @@ public class SymfonyControllerWizardPage extends CodeTemplateWizardPage {
 	 * @see IDialogPage#createControl(Composite)
 	 */
 	public void createControl(final Composite parent) {
-		
+
 		final Composite container = new Composite(parent, SWT.NULL);
-		
+
 		final GridLayout layout = new GridLayout();
 		container.setLayout(layout);
 		layout.numColumns = 3;
 		layout.verticalSpacing = 9;
-		
+
 
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = 400;
 
 		targetResourceLabel = new Label(container, SWT.NULL);
-		targetResourceLabel.setText("Controller name");
+		targetResourceLabel.setText("Controller name:");
 
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		fileText.setFocus();
@@ -85,15 +102,158 @@ public class SymfonyControllerWizardPage extends CodeTemplateWizardPage {
 			}
 		});
 
+		gd = new GridData();
+		gd.verticalAlignment = SWT.TOP;
+
+		Label label = new Label(container, SWT.NULL);
+		label.setText("Actions:");
+		label.setLayoutData(gd);
+
+
+		createActionTable(container);
+
+		FillLayout buttonLayout = new FillLayout();
+		buttonLayout.type = SWT.VERTICAL;
+
+		gd = new GridData();
+		gd.verticalAlignment = SWT.TOP;
+
+		Composite buttonContainer = new Composite(container, SWT.NULL);
+		buttonContainer.setLayout(buttonLayout);
+		buttonContainer.setLayoutData(gd);
+
+
+		Button addInterface = new Button(buttonContainer, SWT.NULL);
+		addInterface.setText("Add...");
+		//		addInterface.addSelectionListener(interfaceSelectionListener);
+
+		Button removeInterface = new Button(buttonContainer, SWT.NULL);
+		removeInterface.setText("Remove");
+
+		//		removeInterface.addSelectionListener(interfaceRemoveListener);
+
+
 		initialize();
 		dialogChanged();
 		setControl(container);
 		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(parent,
-						IPHPHelpContextIds.CREATING_A_PHP_FILE_WITHIN_A_PROJECT);
+		.getWorkbench()
+		.getHelpSystem()
+		.setHelp(parent,
+				IPHPHelpContextIds.CREATING_A_PHP_FILE_WITHIN_A_PROJECT);
 	}
+	
+
+	public class ActionModel {
+		
+		public String name;
+
+		public ActionModel(String name) {
+			
+			this.name = name;
+			
+		}
+
+		public String toString() {
+			return name;
+		}
+	}	
+
+	private class ControllerContentProvider implements IStructuredContentProvider {
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+		 */
+		public Object[] getElements(Object inputElement) {
+						
+			return (ActionModel[])inputElement;
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+		 */
+		public void dispose() {
+
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+		 */
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+
+		}
+
+	}	
+
+
+	private void createActionTable(Composite composite) {
+
+		GridData gridData = new GridData();
+		gridData.verticalAlignment = GridData.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		gridData.horizontalAlignment = GridData.FILL;		
+
+		
+		final TableViewer v = new TableViewer(composite,SWT.BORDER|SWT.FULL_SELECTION);
+		v.getControl().setLayoutData(gridData);
+		
+		v.setLabelProvider(new LabelProvider());
+		v.setContentProvider(new ControllerContentProvider());
+		v.setCellModifier(new ICellModifier() {
+
+			public boolean canModify(Object element, String property) {
+				return true;
+			}
+
+			public Object getValue(Object element, String property) {
+				
+				return ((ActionModel)element).name + "";
+				
+			}
+
+			public void modify(Object element, String property, Object value) {
+				
+				TableItem item = (TableItem)element;
+				((ActionModel)item.getData()).name = value.toString();
+				v.update(item.getData(), null);
+				
+			}
+
+		});
+		v.setColumnProperties(new String[] { "name", "route" });
+		v.setCellEditors(new CellEditor[] { new TextCellEditor(v.getTable()),new TextCellEditor(v.getTable()) });
+
+		TableColumn column = new TableColumn(v.getTable(),SWT.NONE);
+		column.setWidth(100);
+		column.setText("Name");
+
+		column = new TableColumn(v.getTable(),SWT.NONE);
+		column.setWidth(100);
+		column.setText("Route");
+
+		ActionModel[] model = createModel();
+		v.setInput(model);
+		v.getTable().setLinesVisible(true);
+		v.getTable().setHeaderVisible(true);
+
+		v.getTable().addListener(SWT.EraseItem, new Listener() {
+
+			/* (non-Javadoc)
+			 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
+			 */
+			public void handleEvent(Event event) {
+				event.detail &= ~SWT.SELECTED;
+			}
+		});
+	}
+
+	private ActionModel[] createModel() {
+		
+		ActionModel[] elements = new ActionModel[1];		
+		elements[0] = new ActionModel("index");		
+		return elements;
+	}	
 
 	/**
 	 * Tests if the current workbench selection is a suitable container to use.
@@ -128,7 +288,7 @@ public class SymfonyControllerWizardPage extends CodeTemplateWizardPage {
 	}
 
 	protected void setInitialFileName(final String fileName) {
-		
+
 		fileText.setFocus();
 		fileText.setText(fileName);
 		fileText.setSelection(0, fileName.length());
@@ -180,22 +340,22 @@ public class SymfonyControllerWizardPage extends CodeTemplateWizardPage {
 
 		final IContentType contentType = Platform.getContentTypeManager()
 				.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
-		
-//		if (!contentType.isAssociatedWith(fileName)) {
-//			// fixed bug 195274
-//			// get the extensions from content type
-//			final String[] fileExtensions = contentType
-//					.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
-//			StringBuffer buffer = new StringBuffer(
-//					PHPUIMessages.PHPFileCreationWizardPage_17); //$NON-NLS-1$
-//			buffer.append(fileExtensions[0]);
-//			for (String extension : fileExtensions) {
-//				buffer.append(", ").append(extension); //$NON-NLS-1$
-//			}
-//			buffer.append("]"); //$NON-NLS-1$
-//			updateStatus(buffer.toString());
-//			return;
-//		}
+
+		//		if (!contentType.isAssociatedWith(fileName)) {
+		//			// fixed bug 195274
+		//			// get the extensions from content type
+		//			final String[] fileExtensions = contentType
+		//					.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+		//			StringBuffer buffer = new StringBuffer(
+		//					PHPUIMessages.PHPFileCreationWizardPage_17); //$NON-NLS-1$
+		//			buffer.append(fileExtensions[0]);
+		//			for (String extension : fileExtensions) {
+		//				buffer.append(", ").append(extension); //$NON-NLS-1$
+		//			}
+		//			buffer.append("]"); //$NON-NLS-1$
+		//			updateStatus(buffer.toString());
+		//			return;
+		//		}
 
 		updateStatus(null);
 	}
