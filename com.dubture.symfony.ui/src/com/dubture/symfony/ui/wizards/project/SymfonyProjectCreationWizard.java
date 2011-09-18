@@ -7,7 +7,6 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard;
-import org.eclipse.php.internal.ui.wizards.PHPProjectWizardSecondPage;
 import org.eclipse.php.internal.ui.wizards.PHPProjectWizardThirdPage;
 
 import com.dubture.symfony.core.builder.SymfonyNature;
@@ -45,7 +44,7 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 		addPage(fFirstPage);
 
 		// Second page (Include Path)
-		fSecondPage = new PHPProjectWizardSecondPage(fFirstPage);
+		fSecondPage = new SymfonyProjectWizardSecondPage(fFirstPage);
 		fSecondPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page2Title);
 		fSecondPage
 				.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page2Description);

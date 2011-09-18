@@ -47,7 +47,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 		setDescription("Create a Symfony project in the workspace or in an external location.");
 		fInitialName = ""; //$NON-NLS-1$$
 	}
-	
+		
 
 	public void createControl(Composite parent) {
 		

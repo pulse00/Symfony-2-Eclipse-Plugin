@@ -1,5 +1,12 @@
 package com.dubture.symfony.ui.wizards.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+
 import com.dubture.symfony.ui.wizards.CodeTemplateWizard;
 
 
@@ -27,6 +34,33 @@ public class ControllerCreationWizard extends CodeTemplateWizard {
 		codeTemplateWizardPage = new SymfonyControllerWizardPage(selection, "NewController");
 		addPage(codeTemplateWizardPage);
 
+	}
+	
+	
+	@Override
+	public boolean performFinish() {
+	
+		boolean res = super.performFinish();
+		
+		try {
+			
+			IFolder folder = getProject().getFolder("/src/Acme/DemoBundle/Resources/views/ControllerName");			
+			folder.create(true, false, null);
+			
+			IFile file  = folder.getFile("index.html.twig");
+			
+			String contents = "{% extends 'layout.html.twig'  %}";
+			InputStream source = new ByteArrayInputStream(contents.getBytes());		
+			
+			file.create(source, false, null);
+			
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return res;
+		
 	}
 
 	@Override
