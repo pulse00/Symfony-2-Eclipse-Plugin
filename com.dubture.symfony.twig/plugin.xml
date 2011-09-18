@@ -25,5 +25,11 @@
          </partition>
       </scriptCompletionProposalComputer>
    </extension>
+   <extension
+         point="com.dubture.symfony.ui.projectWizardExtension">
+      <wizardextension
+            class="com.dubture.symfony.twig.ui.TwigProjectWizardExtension">
+      </wizardextension>
+   </extension>
 
 </plugin>

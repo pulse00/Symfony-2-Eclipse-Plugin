@@ -12,10 +12,11 @@ Require-Bundle: org.eclipse.core.runtime,
  com.dubture.twig.core,
  com.dubture.symfony.index,
  org.eclipse.jface.text,
+ org.eclipse.ui,
  org.eclipse.wst.sse.core,
  org.eclipse.dltk.ui;bundle-version="3.0.0",
  org.eclipse.php.ui;bundle-version="3.0.0",
- com.dubture.symfony.ui;bundle-version="1.0.25"
+ com.dubture.symfony.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Symfony

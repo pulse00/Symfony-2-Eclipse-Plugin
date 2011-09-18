@@ -26,5 +26,6 @@ Export-Package: com.dubture.symfony.ui,
  com.dubture.symfony.ui.editor.highlighting;uses:="org.eclipse.php.internal.core.ast.nodes,org.eclipse.php.internal.ui.editor.highlighter",
  com.dubture.symfony.ui.editor.hyperlink,
  com.dubture.symfony.ui.popup.actions,
- com.dubture.symfony.ui.preferences
+ com.dubture.symfony.ui.preferences,
+ com.dubture.symfony.ui.wizards
 Bundle-ClassPath: .

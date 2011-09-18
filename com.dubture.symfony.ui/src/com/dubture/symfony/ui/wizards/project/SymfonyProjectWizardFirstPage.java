@@ -1,9 +1,13 @@
 package com.dubture.symfony.ui.wizards.project;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
@@ -32,13 +36,19 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
+import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.ui.wizards.ISymfonyProjectWizardExtension;
+
 @SuppressWarnings("restriction")
 public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 	
 	
+	public static final String WIZARDEXTENSION_ID = "com.dubture.symfony.ui.projectWizardExtension";
 	
 	private SymfonySupportGroup symfonySupportGroup;
 	private SymfonyLayoutGroup fSymfonyLayoutGroup;
+	
+	private List<ISymfonyProjectWizardExtension> extensions = new ArrayList<ISymfonyProjectWizardExtension>();
 	
 	public SymfonyProjectWizardFirstPage() {
 				
@@ -110,6 +120,13 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 		return symfonySupportGroup.getSelection();
 	}
 	
+	public List<ISymfonyProjectWizardExtension> getExtensions() {
+		
+		return extensions;
+		
+	}
+	
+	
 	public class SymfonySupportGroup implements SelectionListener {
 
 		private final Group fGroup;
@@ -119,6 +136,8 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 			return PHPUiPlugin.getDefault().getPreferenceStore()
 					.getBoolean((PreferenceConstants.JavaScriptSupportEnable));
 		}
+		
+		
 
 		public SymfonySupportGroup(Composite composite,
 				WizardPage projectWizardFirstPage) {
@@ -130,16 +149,38 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
 					true));
 			fGroup.setText("Symfony"); //$NON-NLS-1$
-
-			fEnableJavaScriptSupport = new Button(fGroup, SWT.CHECK | SWT.RIGHT);
-			fEnableJavaScriptSupport
-					.setText("Enable Twig support"); //$NON-NLS-1$
-			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING,
-					SWT.CENTER, false, false));
-			fEnableJavaScriptSupport.addSelectionListener(this);
-			fEnableJavaScriptSupport.setSelection(PHPUiPlugin.getDefault()
-					.getPreferenceStore()
-					.getBoolean((PreferenceConstants.JavaScriptSupportEnable)));
+			
+			IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(WIZARDEXTENSION_ID);
+			
+			extensions = new ArrayList<ISymfonyProjectWizardExtension>();
+			
+			try {
+				
+				for (IConfigurationElement e : config) {
+					
+					final Object object = e.createExecutableExtension("class");
+					
+					if (object instanceof ISymfonyProjectWizardExtension) {				
+						
+						ISymfonyProjectWizardExtension extension = (ISymfonyProjectWizardExtension) object;
+						
+						extension.addElements(fGroup);
+						extensions.add(extension);
+						
+					
+					}
+				}
+				
+			} catch (Exception e) {
+				Logger.logException(e);		
+			}		
+			
+			
+			// hide the symfony group if no extensions is filling it up
+			if (config.length == 0)
+				fGroup.setVisible(false);
+			
+			
 		}
 
 		public void widgetDefaultSelected(SelectionEvent e) {
