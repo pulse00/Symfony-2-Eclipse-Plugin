@@ -6,15 +6,15 @@ import java.util.Map;
 public class CodeTemplateVariableHolder {
 	
 	
-	private Map<String, String> variables = new HashMap<String, String>();	
+	private Map<String, Object> variables = new HashMap<String, Object>();	
 	
-	public void set(String key, String value) {
+	public void set(String key, Object value) {
 		
 		variables.put(key, value);
 		
 	}
 	
-	public String get(String key) {
+	public Object get(String key) {
 		
 		if (!variables.containsKey(key))
 			return "";

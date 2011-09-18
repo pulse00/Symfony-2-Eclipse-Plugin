@@ -30,7 +30,7 @@ public class ExtendsStatementVariableResolver extends TemplateVariableResolver {
 			
 			try {
 				
-				String value = symfonyContext.getVariable("extends");
+				String value = (String) symfonyContext.getTemplateVariable("extends");
 				
 				if (value != null && value.length() > 0) {
 					

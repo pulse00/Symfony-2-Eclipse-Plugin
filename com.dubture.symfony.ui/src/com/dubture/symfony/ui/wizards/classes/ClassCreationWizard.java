@@ -19,7 +19,7 @@ public class ClassCreationWizard extends CodeTemplateWizard {
 
 	public CompiledTemplate compileTemplate() {
 		
-		final String containerName = codeTemplateWizardPage.getContainerName();		
+		final String containerName = codeTemplateWizardPage.getContainerName();
 		final String fileName = getFileName();
 
 		Template template = getTemplateStore().findTemplate(getTemplateName(), getContextTypeID());
@@ -29,9 +29,12 @@ public class ClassCreationWizard extends CodeTemplateWizard {
 				
 		String superclass = page.getSuperclass();		
 		String[] parts = superclass.split("\\\\");		
-		superclass = parts.length > 0 ? parts[parts.length-1] : "";		
+		superclass = parts.length > 0 ? parts[parts.length-1] : "";
+		
 		varHolder.set("extends", superclass);
 		varHolder.set("use_parent", page.getSuperclass());
+		varHolder.set("interfaces", page.getInterfaces());
+		varHolder.set("class_modifiers", page.getModifiers());
 		
 		if (template != null) {
 			return SymfonyTemplateStore.compileTemplate(getTemplatesContextTypeRegistry(), template, containerName, fileName, varHolder);	

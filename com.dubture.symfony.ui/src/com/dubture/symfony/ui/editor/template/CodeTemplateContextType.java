@@ -34,6 +34,9 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 		addResolver(new ClassNameVariableResolver("class_name", "Symfony Classname Resolver"));
 		addResolver(new UseStatementVariableResolver("use_parent", "Symfony UseStatement Resolver"));
 		addResolver(new ExtendsStatementVariableResolver("extends", "Symfony ExtendsStatement Resolver"));
+		addResolver(new InterfaceVariableResolver("interfaces", "Symfony Interface Resolver"));
+		addResolver(new InterfaceMethodsVariableResolver("supermethods", "Symfony Supermethods Resolver"));
+		addResolver(new ClassModifierVariableResolver("class_modifiers", "Symfony classmodifier resolver"));
 
 
 	}	

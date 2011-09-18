@@ -1,5 +1,8 @@
 package com.dubture.symfony.ui.editor.template;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
@@ -19,26 +22,50 @@ public class UseStatementVariableResolver extends TemplateVariableResolver {
 		super(type, description);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void resolve(TemplateVariable variable, TemplateContext context) {
 		
 		
 		if (context instanceof SymfonyTemplateContext) {
 			
-			SymfonyTemplateContext symfonyContext = (SymfonyTemplateContext) context;
-			
 			try {
+			
+				List<String> statements = new ArrayList<String>();
 				
-				String value = symfonyContext.getVariable("use_parent");
+				
+				SymfonyTemplateContext symfonyContext = (SymfonyTemplateContext) context;
+				String value = (String) symfonyContext.getTemplateVariable("use_parent");
+				
+				List<String> interfaces = (List<String>) symfonyContext.getTemplateVariable("interfaces");
+				
+				if (interfaces!= null && interfaces.size() > 0) {					
+					for (String i : interfaces) {
+						
+						String stmt = "use " + i.replaceFirst("/", "").replace("/", "\\") + ";";
+						
+						if (!statements.contains(stmt))
+							statements.add(stmt);						
+						
+					}					
+				}
 				
 				if (value != null && value.length() > 0) {
 					
 					String statement = "use " + value + ";";
-					variable.setValue(statement);
-				} else {
-					variable.setValue("");
+					
+					if (!statements.contains(statement))
+						statements.add(statement);
+					
 				}
 				
+				String s = "";
+				
+				for (String statement : statements) {				
+					s += statement + "\n";					
+				}				
+				
+				variable.setValue(s);
 				variable.setResolved(true);				
 				
 				

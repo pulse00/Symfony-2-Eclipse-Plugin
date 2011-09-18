@@ -34,11 +34,13 @@ ${use_parent}
  *
  * @author ${user}
  */
-class ${class_name} ${extends} {
+${class_modifiers}class ${class_name} ${extends} ${interfaces} {
 
 	public function __construct() {
 		${cursor};
 	}
+	
+	${supermethods}
 	
 }
 </template>

@@ -1,5 +1,8 @@
 package com.dubture.symfony.ui.wizards.classes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
@@ -12,8 +15,10 @@ import org.eclipse.dltk.internal.ui.dialogs.OpenTypeSelectionDialog2;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogPage;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.PHPUILanguageToolkit;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -45,6 +50,15 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 
 	protected Label targetResourceLabel;
 	protected Label superClassLabel;
+	
+	private List<String> interfaces = new ArrayList<String>();
+	
+	private TableViewer interfaceTable;
+	
+	private Button abstractCheckbox;
+	private Button finalCheckbox;
+	
+	
 
 	/**
 	 * Constructor for SampleNewWizardPage.
@@ -58,19 +72,30 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		setImageDescriptor(SymfonyPluginImages.DESC_WIZBAN_ADD_SYMFONY_FILE);
 		this.selection = selection;
 	}
+
+	
+	private OpenTypeSelectionDialog2 getDialog(int type, String title, String message) {
+		
+		final Shell p = DLTKUIPlugin.getActiveWorkbenchShell();
+		OpenTypeSelectionDialog2 dialog = new OpenTypeSelectionDialog2(p,
+				true, PlatformUI.getWorkbench().getProgressService(), null,
+				type, PHPUILanguageToolkit.getInstance());
+
+		dialog.setTitle(title);
+		dialog.setMessage(message);
+
+		return dialog;
+		
+	}
+	
+	
 	
 	private SelectionListener superClassSelectionListener  = new SelectionListener() {
 		
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 
-			final Shell p = DLTKUIPlugin.getActiveWorkbenchShell();
-			OpenTypeSelectionDialog2 dialog = new OpenTypeSelectionDialog2(p,
-					true, PlatformUI.getWorkbench().getProgressService(), null,
-					IDLTKSearchConstants.TYPE, PHPUILanguageToolkit.getInstance());
-
-			dialog.setTitle("Superclass selection");
-			dialog.setMessage("Select superclass");
+			OpenTypeSelectionDialog2 dialog = getDialog(IDLTKSearchConstants.TYPE, "Superclass selection", "Select superclass");
 
 			int result = dialog.open();
 			if (result != IDialogConstants.OK_ID)
@@ -108,6 +133,50 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 			
 		}
 	};
+	
+	
+	private SelectionListener interfaceSelectionListener = new SelectionListener() {
+		
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			
+			OpenTypeSelectionDialog2 dialog = getDialog(IDLTKSearchConstants.TYPE, "Interface selection", "Select interface");
+
+			int result = dialog.open();
+			if (result != IDialogConstants.OK_ID)
+				return;
+			
+			Object[] types = dialog.getResult();
+			if (types != null && types.length > 0) {
+				IModelElement type = null;
+				for (int i = 0; i < types.length; i++) {
+					type = (IModelElement) types[i];
+					try {
+													
+						String _interface = "";
+						
+						if (type.getParent() == null)
+							return;
+						
+						_interface += type.getParent().getElementName() + "\\";
+						_interface += type.getElementName();
+						
+						interfaces.add(_interface);						
+						interfaceTable.setInput(interfaces);
+
+					} catch (Exception x) {
+
+					}
+				}
+			}				
+		}
+		
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			
+		}
+	};
+	
 
 	/**
 	 * @see IDialogPage#createControl(Composite)
@@ -150,6 +219,41 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 				dialogChanged();
 			}
 		});
+
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		
+		abstractCheckbox = new Button(container, SWT.CHECK);	
+		abstractCheckbox.setText("abstract");
+		
+	    finalCheckbox = new Button(container, SWT.CHECK);
+	    finalCheckbox.setText("final");		
+		
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		
+		GridData gridData = new GridData();
+		gridData.verticalAlignment = GridData.FILL;
+		gridData.horizontalSpan = 2;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		gridData.horizontalAlignment = GridData.FILL;		
+		
+		interfaceTable = new TableViewer(container, SWT.MULTI | SWT.H_SCROLL
+				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+		
+		
+				
+		interfaceTable.setContentProvider(ArrayContentProvider.getInstance());
+		interfaceTable.setInput(interfaces);
+		
+		
+		interfaceTable.getControl().setLayoutData(gridData);
+		
+		Button addInterface = new Button(container, SWT.NULL);
+		addInterface.setText("Add");
+		
+		addInterface.addSelectionListener(interfaceSelectionListener);
 
 		initialize();
 		dialogChanged();
@@ -281,5 +385,25 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		return superClassText.getText();
 
 	}
+	
+	public List<String> getInterfaces() {
+		
+		return interfaces;
+		
+	}
 
+
+	public String getModifiers() {
+
+		String modifiers = "";
+		
+		if (abstractCheckbox.isEnabled())
+			modifiers = "abstract ";
+
+		if (finalCheckbox.isEnabled())
+			modifiers += "final ";
+			
+		return modifiers;
+		
+	}
 }

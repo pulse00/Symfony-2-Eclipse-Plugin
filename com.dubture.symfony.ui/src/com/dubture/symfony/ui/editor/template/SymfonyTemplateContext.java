@@ -36,7 +36,7 @@ public class SymfonyTemplateContext extends PhpTemplateContext {
 	}
 	
 	
-	public String getVariable(String key) {
+	public Object getTemplateVariable(String key) {
 		
 		return varHolder.get(key);
 		
