@@ -7,7 +7,6 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard;
-import org.eclipse.php.internal.ui.wizards.PHPProjectWizardThirdPage;
 
 import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.log.Logger;
@@ -51,7 +50,7 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 		addPage(fSecondPage);
 
 		// Third page (Include Path)
-		fThirdPage = new PHPProjectWizardThirdPage(fFirstPage);
+		fThirdPage = new SymfonyProjectWizardThirdPage(fFirstPage);
 		fThirdPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page3Title);
 		fThirdPage
 				.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page3Description);

@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.sse.core,
  org.eclipse.wst.sse.ui,
  org.eclipse.ui.ide,
- com.dubture.symfony.index
+ com.dubture.symfony.index,
+ org.eclipse.wst.jsdt.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dubture.symfony.ui,

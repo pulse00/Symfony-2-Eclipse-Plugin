@@ -1,3 +1,3 @@
-[submodule "symfony/standard"]
-	path = symfony/standard
+[submodule "com.dubture.symfony.core/Resources/symfony/standard"]
+	path = com.dubture.symfony.core/Resources/symfony/standard
 	url = git@github.com:pulse00/symfony-standard.git

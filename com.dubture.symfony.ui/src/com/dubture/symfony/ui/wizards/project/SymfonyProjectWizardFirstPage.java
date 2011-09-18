@@ -47,6 +47,14 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 		setDescription("Create a Symfony project in the workspace or in an external location.");
 		fInitialName = ""; //$NON-NLS-1$$
 	}
+	
+//	@Override
+//	public IWizardPage getNextPage() {
+//
+//		IWizardPage[] pages = getWizard().getPages();
+//		
+//		return pages[2];
+//	}
 		
 
 	public void createControl(Composite parent) {
@@ -280,6 +288,15 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID,
 					new String[] { prefID }, data).open();
 		}
+		
+		
 	}	
+	
+	
+	public boolean shouldSupportJavascript() {
+		
+		return fJavaScriptSupportGroup.shouldSupportJavaScript();
+		
+	}
 
 }
