@@ -1,11 +1,15 @@
 package com.dubture.symfony.core.util;
 
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.Service;
 
 /**
@@ -97,5 +101,37 @@ public class JsonUtils {
 			Logger.logException(e);
 			return new JSONArray();
 		}
+	}
+
+	@SuppressWarnings({ "restriction", "unchecked" })
+	public static JSONObject createBundle(ISourceModule sourceModule,
+			ClassDeclaration classDec, NamespaceDeclaration namespace) {
+
+		JSONObject bundle = new JSONObject();
+		
+		bundle.put(Bundle.NAME, classDec.getName());
+		bundle.put(Bundle.NAMESPACE, namespace != null ? namespace.getName() : "");
+		bundle.put(Bundle.PATH, sourceModule.getPath().removeLastSegments(1).toString());
+						
+		return bundle;
+		
+	}
+
+	public static Bundle unpackBundle(String metadata) {
+
+		try {
+			JSONObject json = (JSONObject) parser.parse(metadata);
+			Bundle bundle = new Bundle(null, (String) json.get(Bundle.NAME));
+			bundle.setPath((String) json.get(Bundle.PATH));
+			
+			return bundle;
+		} catch (ParseException e) {
+			
+			Logger.logException(e);
+
+		}
+		
+		return null;
+
 	}
 }

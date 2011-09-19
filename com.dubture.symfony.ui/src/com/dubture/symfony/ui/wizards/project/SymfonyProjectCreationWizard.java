@@ -68,6 +68,8 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 	@Override
 	public boolean performFinish() {
 
+		boolean res = super.performFinish();
+		
 		try {			
 
 			IProject project = fFirstPage.getProjectHandle();
@@ -90,16 +92,12 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 			String[] natures = description.getNatureIds();
 
 			String[] newNatures = new String[natures.length + extensionNatures.size() + 1];
-			System.arraycopy(natures, 0, newNatures, 1, natures.length);
-			
+			System.arraycopy(natures, 0, newNatures, 1, natures.length);			
 			
 			newNatures[0] = SymfonyNature.NATURE_ID;
-			
-			
-			for (int i=0; i < extensionNatures.size(); i++) {
-				
-				newNatures[natures.length + 1 + i] = extensionNatures.get(i);
-				
+						
+			for (int i=0; i < extensionNatures.size(); i++) {			
+				newNatures[natures.length + 1 + i] = extensionNatures.get(i);				
 			}
 			
 			description.setNatureIds(newNatures);
@@ -110,7 +108,7 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 			Logger.logException(e);			
 		}
 
-		return super.performFinish();
+		return res;
 
 	}
 }

@@ -1,5 +1,7 @@
 package com.dubture.symfony.ui.wizards;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -58,5 +60,7 @@ public abstract class CodeTemplateWizardPage extends WizardPage {
 
 	}
 	
-	public abstract String getFileName();	
+	public abstract String getFileName();
+
+
 }

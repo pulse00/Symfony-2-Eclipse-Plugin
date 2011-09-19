@@ -57,6 +57,7 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 
 	protected Label targetResourceLabel;
 	private List<String> actions = new ArrayList<String>();
+	private TableViewer viewer;
 
 	/**
 	 * Constructor for SampleNewWizardPage.
@@ -195,12 +196,12 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 		gridData.horizontalAlignment = GridData.FILL;		
 
 		
-		final TableViewer v = new TableViewer(composite,SWT.BORDER|SWT.FULL_SELECTION);
-		v.getControl().setLayoutData(gridData);
+		viewer = new TableViewer(composite,SWT.BORDER|SWT.FULL_SELECTION);
+		viewer.getControl().setLayoutData(gridData);
 		
-		v.setLabelProvider(new LabelProvider());
-		v.setContentProvider(new ControllerContentProvider());
-		v.setCellModifier(new ICellModifier() {
+		viewer.setLabelProvider(new LabelProvider());
+		viewer.setContentProvider(new ControllerContentProvider());
+		viewer.setCellModifier(new ICellModifier() {
 
 			public boolean canModify(Object element, String property) {
 				return true;
@@ -216,28 +217,28 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 				
 				TableItem item = (TableItem)element;
 				((ActionModel)item.getData()).name = value.toString();
-				v.update(item.getData(), null);
+				viewer.update(item.getData(), null);
 				
 			}
 
 		});
-		v.setColumnProperties(new String[] { "name", "route" });
-		v.setCellEditors(new CellEditor[] { new TextCellEditor(v.getTable()),new TextCellEditor(v.getTable()) });
+		viewer.setColumnProperties(new String[] { "name", "route" });
+		viewer.setCellEditors(new CellEditor[] { new TextCellEditor(viewer.getTable()),new TextCellEditor(viewer.getTable()) });
 
-		TableColumn column = new TableColumn(v.getTable(),SWT.NONE);
+		TableColumn column = new TableColumn(viewer.getTable(),SWT.NONE);
 		column.setWidth(100);
 		column.setText("Name");
 
-		column = new TableColumn(v.getTable(),SWT.NONE);
+		column = new TableColumn(viewer.getTable(),SWT.NONE);
 		column.setWidth(100);
 		column.setText("Route");
 
 		ActionModel[] model = createModel();
-		v.setInput(model);
-		v.getTable().setLinesVisible(true);
-		v.getTable().setHeaderVisible(true);
+		viewer.setInput(model);
+		viewer.getTable().setLinesVisible(true);
+		viewer.getTable().setHeaderVisible(true);
 
-		v.getTable().addListener(SWT.EraseItem, new Listener() {
+		viewer.getTable().addListener(SWT.EraseItem, new Listener() {
 
 			/* (non-Javadoc)
 			 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
@@ -369,6 +370,17 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 	public String getFileName() {
 		return fileText.getText();
 	}
-
-
+	
+	public List<String> getActions() {
+		
+		ActionModel[] model = (ActionModel[]) viewer.getInput();		
+		List<String> actions = new ArrayList<String>();		
+		
+		for (ActionModel action : model) {			
+			actions.add(action.name);
+		}		
+		
+		return actions;
+		
+	}
 }

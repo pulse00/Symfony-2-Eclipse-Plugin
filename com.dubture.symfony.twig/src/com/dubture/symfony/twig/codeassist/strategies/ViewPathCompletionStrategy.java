@@ -92,18 +92,18 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 		// complete the bundle part
 		if (bundle == null && controller == null && template == null) {
 
-			List<String> bundles = model.findBundles(context.getSourceModule().getScriptProject());
+			List<Bundle> bundles = model.findBundles(context.getSourceModule().getScriptProject());
 
-			for (String b : bundles) {				
+			for (Bundle b : bundles) {				
 				
-				IType[] bundleTypes = PhpModelAccess.getDefault().findTypes(b, MatchRule.EXACT, 0, 0, projectScope, null);
+				IType[] bundleTypes = PhpModelAccess.getDefault().findTypes(b.getElementName(), MatchRule.EXACT, 0, 0, projectScope, null);
 				
 				if (bundleTypes.length == 1) {
 					
 					ModelElement bType = (ModelElement) bundleTypes[0];
 					
 					if (CodeAssistUtils.startsWithIgnoreCase(bType.getElementName(), prefix)) {
-						Bundle bundleType = new Bundle(bType, b);
+						Bundle bundleType = new Bundle(bType, b.getElementName());
 						reporter.reportType(bundleType, ":", range);						
 					}
 				}

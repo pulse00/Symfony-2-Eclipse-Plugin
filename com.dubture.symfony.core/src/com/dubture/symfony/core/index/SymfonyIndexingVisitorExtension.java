@@ -22,12 +22,9 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
 import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ExpressionStatement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.InfixExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -37,6 +34,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.json.simple.JSONObject;
 
 import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.index.visitor.RegisterNamespaceVisitor;
@@ -226,7 +224,9 @@ PhpIndexingVisitorExtension {
 						if (fqcn.equals(SymfonyCoreConstants.BUNDLE_FQCN) && ! isTestOrFixture) {
 
 							int length = (currentClass.sourceEnd() - currentClass.sourceEnd());
-							ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.BUNDLE, currentClass.sourceStart(), length, currentClass.getName(), null, namespace.getName());
+							
+							JSONObject meta = JsonUtils.createBundle(sourceModule, currentClass, namespace);
+							ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.BUNDLE, currentClass.sourceStart(), length, currentClass.getName(), meta.toJSONString(), namespace.getName());
 							requestor.addReference(info);
 							
 						}						

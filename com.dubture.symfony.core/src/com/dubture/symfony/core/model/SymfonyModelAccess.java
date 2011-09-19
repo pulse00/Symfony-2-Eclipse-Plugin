@@ -12,7 +12,6 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
@@ -40,6 +39,7 @@ import org.eclipse.php.internal.core.model.PhpModelAccess;
 import com.dubture.symfony.core.SymfonyLanguageToolkit;
 import com.dubture.symfony.core.index.SymfonyElementResolver.TemplateField;
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.core.util.JsonUtils;
 import com.dubture.symfony.core.util.PathUtils;
 import com.dubture.symfony.index.IServiceHandler;
 import com.dubture.symfony.index.SymfonyIndexer;
@@ -329,11 +329,11 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	 * @param project
 	 * @return
 	 */
-	public List<String> findBundles(IScriptProject project) {
+	public List<Bundle> findBundles(IScriptProject project) {
 		
 		 IDLTKSearchScope scope = SearchEngine.createSearchScope(project.getScriptProject());			 		 
 		 ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());		 
-		 final List<String> bundles = new ArrayList<String>();
+		 final List<Bundle> bundles = new ArrayList<Bundle>();
 		 
 		 engine.search(ISymfonyModelElement.BUNDLE, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
 			
@@ -343,7 +343,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 					String metadata, String doc, String qualifier, String parent,
 					ISourceModule sourceModule, boolean isReference) {
 
-				bundles.add(elementName);				
+				bundles.add(JsonUtils.unpackBundle(metadata));				
 				
 			}
 		}, null);

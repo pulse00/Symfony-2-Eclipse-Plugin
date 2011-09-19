@@ -1,6 +1,8 @@
 package com.dubture.symfony.core.model;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
@@ -12,9 +14,40 @@ import org.eclipse.dltk.internal.core.hierarchy.FakeType;
 @SuppressWarnings("restriction")
 public class Bundle extends SourceType {
 
+	public static final String NAME = "name";	
+	public static final String NAMESPACE = "namespace";
+	public static final String PATH = "path";
+	
+	private String _path = null;
+	
+	
 	public Bundle(ModelElement parent, String name) {
 		super(parent, name);
+		
+		
+	}
+	
+	public void setPath(String path) {
+		
+		_path = path;
+		
+	}
+	
 
+	@Override
+	public IPath getPath() {
+
+		IPath path = null;
+		
+		try {
+			path = super.getPath();
+		} catch (Exception e) {
+			
+			path = new Path(_path);
+			
+		}		
+		
+		return path;
 	}
 	
 	@Override
