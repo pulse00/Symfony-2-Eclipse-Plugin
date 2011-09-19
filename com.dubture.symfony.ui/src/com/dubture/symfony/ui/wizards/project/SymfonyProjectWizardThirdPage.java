@@ -16,14 +16,19 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IAccessRule;
+import org.eclipse.dltk.core.IBuildpathAttribute;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.php.internal.ui.wizards.PHPProjectWizardFirstPage;
 import org.eclipse.php.internal.ui.wizards.PHPProjectWizardThirdPage;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.Bundle;
 
@@ -47,6 +52,8 @@ public class SymfonyProjectWizardThirdPage extends PHPProjectWizardThirdPage {
 
 	public SymfonyProjectWizardThirdPage(PHPProjectWizardFirstPage mainPage) {
 		super(mainPage);
+		
+
 
 	}
 
@@ -75,8 +82,7 @@ public class SymfonyProjectWizardThirdPage extends PHPProjectWizardThirdPage {
 					if (folder.getName().equals("app")) {
 						exclusion = new IPath[] { new Path("app/cache") };
 					}
-					
-					
+
 					IBuildpathEntry entry =  DLTKCore.newSourceEntry(folder.getFullPath(), exclusion);
 					entries.add(entry);					
 				}
@@ -90,7 +96,6 @@ public class SymfonyProjectWizardThirdPage extends PHPProjectWizardThirdPage {
 			} else if (file.isFile()) {				
 				FileInputStream fis = new FileInputStream(file);				
 				IFile iFile = project.getFile(path);				
-
 				iFile.create(fis, true, null);
 			}
 
@@ -105,7 +110,6 @@ public class SymfonyProjectWizardThirdPage extends PHPProjectWizardThirdPage {
 	}
 
 	private void installSymfony(final IProgressMonitor monitor) {
-
 
 		monitor.beginTask("initializing symfony", 100);
 		monitor.worked(10);
@@ -138,19 +142,23 @@ public class SymfonyProjectWizardThirdPage extends PHPProjectWizardThirdPage {
 					for (File f : files) {
 						importFile(f, scriptProject.getProject(), entries);
 					}
-
-					init(scriptProject, (IBuildpathEntry[]) entries.toArray(new IBuildpathEntry[entries.size()]), true);
-					monitor.worked(90);					
+					
+					
+		            BuildPathUtils.addEntriesToBuildPath(scriptProject, entries);
+					monitor.worked(90);
 
 				}
 			}
 
 		} catch (URISyntaxException e) {
 			Logger.logException(e);
+			e.printStackTrace();
 		} catch (IOException e) {
 			Logger.logException(e);
+			e.printStackTrace();
 		} catch (ModelException e) {
 			Logger.logException(e);
+			e.printStackTrace();
 		} finally {
 			
 			symfonyInstalled = true;
@@ -158,27 +166,21 @@ public class SymfonyProjectWizardThirdPage extends PHPProjectWizardThirdPage {
 			monitor.done();					
 		}
 	}
-
-
-
+	
+	
+	
 	@Override
-	protected void updateProject(final IProgressMonitor monitor)
-			throws CoreException, InterruptedException {
+	public void setVisible(boolean visible) {
 
-
-		if (symfonyInstalled == true)
-			return;
+		if (!symfonyInstalled)
+			installSymfony(new NullProgressMonitor());				
 		
-		
-		Display.getDefault().asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				installSymfony(monitor);
-
-			}
-		});
+		super.setVisible(visible);
 	}
+	
+	
+
+
 	
 	@Override
 	public void performFinish(final IProgressMonitor monitor) throws CoreException, InterruptedException {

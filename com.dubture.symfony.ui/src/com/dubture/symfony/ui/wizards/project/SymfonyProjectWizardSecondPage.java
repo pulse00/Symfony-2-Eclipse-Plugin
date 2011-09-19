@@ -138,12 +138,12 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 				List cpEntries = new ArrayList();
 				cpEntries.add(DLTKCore.newSourceEntry(projectPath));
 
-				buildpathEntries = (IBuildpathEntry[]) cpEntries
-						.toArray(new IBuildpathEntry[cpEntries.size()]);
+//				buildpathEntries = (IBuildpathEntry[]) cpEntries
+//						.toArray(new IBuildpathEntry[cpEntries.size()]);
 				
-//				buildpathEntries = new IBuildpathEntry[0];
-//				includepathEntries = new IncludePath[0];
-				setProjectBaseIncludepath();
+				buildpathEntries = new IBuildpathEntry[0];
+				includepathEntries = new IncludePath[0];
+//				setProjectBaseIncludepath();
 
 				monitor.worked(20);
 			}
