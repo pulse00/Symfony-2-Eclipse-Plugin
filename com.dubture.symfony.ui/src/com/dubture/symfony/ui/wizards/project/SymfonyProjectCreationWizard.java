@@ -1,5 +1,8 @@
 package com.dubture.symfony.ui.wizards.project;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
@@ -65,27 +68,40 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 	@Override
 	public boolean performFinish() {
 
-		boolean res = super.performFinish();
-
 		try {			
 
-			IProject project = fLastPage.getScriptProject().getProject();
+			IProject project = fFirstPage.getProjectHandle();
 			SymfonyProjectWizardFirstPage firstPage = (SymfonyProjectWizardFirstPage) fFirstPage;
 
+			List<String> extensionNatures = new ArrayList<String>();
+			
 			// let extensions handle the project first
 			for (ISymfonyProjectWizardExtension e : firstPage.getExtensions()) {
 
-				ISymfonyProjectWizardExtension extension = (ISymfonyProjectWizardExtension) e;
-				extension.performFinish(project);
+				ISymfonyProjectWizardExtension extension = (ISymfonyProjectWizardExtension) e;				
+				String nature = extension.getNature();
+				
+				if (nature != null)
+					extensionNatures.add(nature);
 
 			}
 
 			IProjectDescription description = project.getDescription();
 			String[] natures = description.getNatureIds();
 
-			String[] newNatures = new String[natures.length + 1];
+			String[] newNatures = new String[natures.length + extensionNatures.size() + 1];
 			System.arraycopy(natures, 0, newNatures, 1, natures.length);
+			
+			
 			newNatures[0] = SymfonyNature.NATURE_ID;
+			
+			
+			for (int i=0; i < extensionNatures.size(); i++) {
+				
+				newNatures[natures.length + 1 + i] = extensionNatures.get(i);
+				
+			}
+			
 			description.setNatureIds(newNatures);
 			project.setDescription(description, null);
 
@@ -94,7 +110,7 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 			Logger.logException(e);			
 		}
 
-		return res;
+		return super.performFinish();
 
 	}
 }

@@ -1,7 +1,6 @@
 package com.dubture.symfony.ui.wizards.project;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -58,13 +57,6 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 		fInitialName = ""; //$NON-NLS-1$$
 	}
 	
-//	@Override
-//	public IWizardPage getNextPage() {
-//
-//		IWizardPage[] pages = getWizard().getPages();
-//		
-//		return pages[2];
-//	}
 		
 
 	public void createControl(Composite parent) {

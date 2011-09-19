@@ -139,9 +139,15 @@ public class SymfonyProjectWizardThirdPage extends PHPProjectWizardThirdPage {
 
 				if (files != null && scriptProject != null && scriptProject.isOpen()) {
 
+					
+					IBuildpathEntry[] raw = scriptProject.getRawBuildpath();
+					
+					BuildPathUtils.removeEntryFromBuildPath(scriptProject, raw[0]);
+					
 					for (File f : files) {
 						importFile(f, scriptProject.getProject(), entries);
 					}
+					
 					
 					
 		            BuildPathUtils.addEntriesToBuildPath(scriptProject, entries);
@@ -196,5 +202,8 @@ public class SymfonyProjectWizardThirdPage extends PHPProjectWizardThirdPage {
 
 			}
 		});
+		
+		
+		super.performFinish(monitor);
 	}	
 }

@@ -138,12 +138,13 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 				List cpEntries = new ArrayList();
 				cpEntries.add(DLTKCore.newSourceEntry(projectPath));
 
-//				buildpathEntries = (IBuildpathEntry[]) cpEntries
-//						.toArray(new IBuildpathEntry[cpEntries.size()]);
+				buildpathEntries = (IBuildpathEntry[]) cpEntries
+						.toArray(new IBuildpathEntry[cpEntries.size()]);
+				includepathEntries = setProjectBaseIncludepath();
 				
-				buildpathEntries = new IBuildpathEntry[0];
-				includepathEntries = new IncludePath[0];
-//				setProjectBaseIncludepath();
+//				buildpathEntries = new IBuildpathEntry[0];
+//				includepathEntries = new IncludePath[0];
+				
 
 				monitor.worked(20);
 			}
@@ -187,8 +188,8 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 		IScriptProject scriptProject = getScriptProject();
 		if (scriptProject != null) {
 			return scriptProject.getProject();
+		}
+		return null;
 	}
-	return null;
-}
 	
 }
