@@ -37,7 +37,9 @@ public class RoutingParserTest extends TestCase {
 			
 			assertEquals("blog", route.name);
 			assertEquals("/blog", route.pattern);
-			assertEquals("AcmeBlogBundle:Blog:index", route.controller);
+			assertEquals("Blog", route.controller);
+			assertEquals("index", route.action);
+			assertEquals("AcmeBlogBundle", route.bundle);
 			
 		} catch (Exception e) {
 
