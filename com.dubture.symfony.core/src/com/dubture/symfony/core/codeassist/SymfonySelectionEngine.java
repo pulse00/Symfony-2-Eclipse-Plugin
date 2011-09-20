@@ -79,18 +79,21 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
 
 		if (startOffset >= 0 && endOffset != 0 && (endOffset > startOffset)) {
 
-			// try to resolve a viewepath first
+
 			String literal = content.substring(startOffset, endOffset);
-			ViewPath viewPath = new ViewPath(literal);
-
-			if (viewPath.isValid()) {
-
-				IModelElement template = model.findTemplate(viewPath, project);
-
-				if (template != null) {
-					return new IModelElement[] { template };
-				}				
-			}
+			
+			// viewpaths are linked using ViewpathHyperlinkDetector
+//			// try to resolve a viewepath first
+//			ViewPath viewPath = new ViewPath(literal);
+//
+//			if (viewPath.isValid()) {
+//
+//				IModelElement template = model.findTemplate(viewPath, project);
+//
+//				if (template != null) {
+//					return new IModelElement[] { template };
+//				}				
+//			}
 
 			// nope, not a viewpath, check for a route
 			Route route = model.findRoute(literal, project);

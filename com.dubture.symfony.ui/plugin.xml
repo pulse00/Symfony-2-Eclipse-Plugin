@@ -78,7 +78,7 @@
           activate="true"
           class="com.dubture.symfony.ui.editor.hyperlink.ViewpathHyperlinkDetector"
           id="com.dubture.symfony.ui.viewpathDetector"
-          name="%routeDetector.name"
+          name="%viewpathDetector.name"
           targetId="org.eclipse.php.core.phpsource">
     </hyperlinkDetector>            
  </extension>
