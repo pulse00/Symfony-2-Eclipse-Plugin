@@ -60,4 +60,11 @@ public class ProjectOptions {
 		return CorePreferencesSupport.getInstance().getWorkspacePreferencesValue(Keys.SYNTHETIC_SERVICES);
 		
 	}
+	
+	public static final boolean setSupportingTwig(boolean value,
+			IProject project) {
+		return CorePreferencesSupport.getInstance()
+				.setProjectSpecificPreferencesValue(Keys.TWIG_SUPPORT,
+						Boolean.toString(value), project);
+	}	
 }

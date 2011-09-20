@@ -8,24 +8,42 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.ui.dialogs.OpenTypeSelectionDialog2;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogPage;
+import org.eclipse.jface.fieldassist.AutoCompleteField;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.jface.fieldassist.IContentProposal;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.ui.PHPUILanguageToolkit;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -59,7 +77,7 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 	private Button abstractCheckbox;
 	private Button finalCheckbox;
 	
-	
+	private String[] cities = new String[] { "Aachen", "Berlin", "Bremen", "Bochum" };	
 
 	/**
 	 * Constructor for SampleNewWizardPage.
@@ -220,7 +238,81 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 			
 		}
 	};
+	private AutoCompleteField acField;
 	
+	
+	private class SuperclassProvider implements IContentProposalProvider {
+
+		@Override
+		public IContentProposal[] getProposals(String contents, int position) {
+
+			
+		         ArrayList list = new ArrayList();
+		         
+		         for (String city : cities) {
+ 
+		               list.add(makeContentProposal(city, city));
+
+		         }
+		         return (IContentProposal[]) list.toArray(new IContentProposal[list.size()]);
+
+
+		}
+		
+		private IContentProposal makeContentProposal(final String proposal, final String label) {
+			
+			return new IContentProposal() {
+				
+				@Override
+				public String getLabel() {
+					return proposal + " - " + label;
+				}
+				
+				@Override
+				public String getDescription() {
+					return null;
+				}
+				
+				@Override
+				public int getCursorPosition() {
+					return proposal.length();
+				}
+				
+				@Override
+				public String getContent() {
+					return proposal;
+				}
+			};
+		}
+		
+	}
+	
+	private KeyListener acListener = new KeyListener() {
+		
+		@Override
+		public void keyReleased(KeyEvent e) {
+
+			
+		}
+		
+		@Override
+		public void keyPressed(KeyEvent e) {
+
+			List<String> props = new ArrayList<String>();
+			
+			IScriptProject project = DLTKCore.create(getProject());
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
+			IType[] types = PhpModelAccess.getDefault().findTypes(superClassText.getText(), MatchRule.PREFIX, 0, 0, scope, null);
+			
+			for (IType type : types) {					
+				props.add(type.getElementName());					
+			}
+										
+			acField.setProposals((String[]) props.toArray(new String[props.size()]));			
+			
+		}
+	};
+	private ControlDecoration decoration;
 
 	/**
 	 * @see IDialogPage#createControl(Composite)
@@ -243,6 +335,30 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		
 		superClassText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		superClassText.setLayoutData(gd);
+		superClassText.addKeyListener(acListener);
+		superClassText.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {				
+				decoration.hide();				
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				decoration.show();				
+			}
+		});
+
+
+		acField = new AutoCompleteField(superClassText, new TextContentAdapter(), null);
+		
+		decoration = new ControlDecoration(superClassLabel, SWT.RIGHT | SWT.TOP);
+		Image errorImage = FieldDecorationRegistry.getDefault()
+		        .getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL).getImage();
+		decoration.setImage(errorImage);
+		decoration.setDescriptionText("Content assist available.");
+		decoration.setShowHover(true);
+		decoration.hide();
 		
 		Button button = new Button(container, SWT.NULL);
 		button.setText("Browse...");

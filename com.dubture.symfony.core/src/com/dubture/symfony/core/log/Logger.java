@@ -14,7 +14,7 @@ public class Logger {
 
 	private static final String PLUGIN_ID = SymfonyCorePlugin.ID;
 
-	private static final String TRACEFILTER_LOCATION = "/debug/tracefilter"; //$NON-NLS-1$
+	private static final String TRACEFILTER_LOCATION = "/debug"; //$NON-NLS-1$
 
 	public static final int OK = IStatus.OK; // 0
 	public static final int INFO = IStatus.INFO; // 1
@@ -109,13 +109,14 @@ public class Logger {
 		String traceFilter = Platform.getDebugOption(PLUGIN_ID
 				+ TRACEFILTER_LOCATION);
 		if (traceFilter != null) {
-			StringTokenizer tokenizer = new StringTokenizer(traceFilter, ","); //$NON-NLS-1$
-			while (tokenizer.hasMoreTokens()) {
-				String cat = tokenizer.nextToken().trim();
-				if (category.equals(cat)) {
-					return true;
-				}
-			}
+			return true;
+//			StringTokenizer tokenizer = new StringTokenizer(traceFilter, ","); //$NON-NLS-1$
+//			while (tokenizer.hasMoreTokens()) {
+//				String cat = tokenizer.nextToken().trim();
+//				if (category.equals(cat)) {
+//					return true;
+//				}
+//			}
 		}
 		return false;
 	}
