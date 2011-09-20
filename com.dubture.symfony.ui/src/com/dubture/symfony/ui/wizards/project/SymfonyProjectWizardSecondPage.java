@@ -25,9 +25,11 @@ import org.eclipse.dltk.internal.ui.util.CoreUtility;
 import org.eclipse.dltk.internal.ui.wizards.BuildpathDetector;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.wizards.PHPProjectWizardFirstPage;
 import org.eclipse.php.internal.ui.wizards.PHPProjectWizardSecondPage;
@@ -138,12 +140,12 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 				List cpEntries = new ArrayList();
 				cpEntries.add(DLTKCore.newSourceEntry(projectPath));
 
-				buildpathEntries = (IBuildpathEntry[]) cpEntries
-						.toArray(new IBuildpathEntry[cpEntries.size()]);
-				includepathEntries = setProjectBaseIncludepath();
+//				buildpathEntries = (IBuildpathEntry[]) cpEntries
+//						.toArray(new IBuildpathEntry[cpEntries.size()]);
+//				includepathEntries = setProjectBaseIncludepath();
 				
-//				buildpathEntries = new IBuildpathEntry[0];
-//				includepathEntries = new IncludePath[0];
+				buildpathEntries = new IBuildpathEntry[0];
+				includepathEntries = new IncludePath[0];
 				
 
 				monitor.worked(20);
@@ -182,8 +184,7 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 		}
 	}
 		
-	
-	
+		
 	private IProject getProject() {
 		IScriptProject scriptProject = getScriptProject();
 		if (scriptProject != null) {
@@ -192,4 +193,11 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 		return null;
 	}
 	
+	
+	// Symfony2 requires > PHP 5.3
+	protected void setPhpLangOptions() {
+				
+		ProjectOptions.setSupportingAspTags(false, getProject());
+		ProjectOptions.setPhpVersion(PHPVersion.PHP5_3, getProject());
+	}
 }

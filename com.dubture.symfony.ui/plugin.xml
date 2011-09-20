@@ -37,8 +37,14 @@
     <page
           category="com.dubture.symfony.ui.preferences.SymfonyPreferencePage"
           class="com.dubture.symfony.ui.preferences.ServicesPreferencePage"
-          id="com.dubture.symfony.ui.page1"
+          id="com.dubture.symfony.ui.services"
           name="%Services">
+    </page>
+    <page
+          category="com.dubture.symfony.ui.preferences.SymfonyPreferencePage"
+          class="com.dubture.symfony.ui.preferences.LibraryPreferencePage"
+          id="com.dubture.symfony.ui.library"
+          name="%Library">
     </page>
  </extension>
  

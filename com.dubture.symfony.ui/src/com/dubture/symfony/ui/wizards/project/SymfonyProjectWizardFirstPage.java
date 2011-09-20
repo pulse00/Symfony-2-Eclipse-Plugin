@@ -1,6 +1,7 @@
 package com.dubture.symfony.ui.wizards.project;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -10,10 +11,10 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
-import org.eclipse.dltk.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.SelectionButtonDialogField;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PHPProjectLayoutPreferencePage;
@@ -24,6 +25,7 @@ import org.eclipse.php.internal.ui.wizards.LocationGroup;
 import org.eclipse.php.internal.ui.wizards.NameGroup;
 import org.eclipse.php.internal.ui.wizards.PHPProjectWizardFirstPage;
 import org.eclipse.php.internal.ui.wizards.WizardFragment;
+import org.eclipse.php.internal.ui.wizards.fields.ComboDialogField;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -35,6 +37,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
+import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.ui.wizards.ISymfonyProjectWizardExtension;
 
@@ -69,6 +72,14 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 		// create UI elements
 		fNameGroup = new NameGroup(composite, fInitialName, getShell());
 		fPHPLocationGroup = new LocationGroup(composite, fNameGroup, getShell());
+		
+		fPHPLocationGroup.addObserver(new Observer() {
+			
+			@Override
+			public void update(Observable arg0, Object arg1) {
+				fSymfonyLayoutGroup.setEnabled(!fPHPLocationGroup.isExistingLocation());
+			}
+		});
 
 		CompositeData data = new CompositeData();
 		data.setParetnt(composite);
@@ -77,12 +88,13 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 		fragment = (WizardFragment) Platform.getAdapterManager().loadAdapter(
 				data, PHPProjectWizardFirstPage.class.getName());
 
-		fVersionGroup = new VersionGroup(composite);
+		// don't really have a choice with Symfony2 ;)
+//		fVersionGroup = new VersionGroup(composite);		
+		
 		fSymfonyLayoutGroup = new SymfonyLayoutGroup(composite);
 		fJavaScriptSupportGroup = new JavaScriptSupportGroup(composite, this);
 		
 		symfonySupportGroup = new SymfonySupportGroup(composite, this);		
-
 		fDetectGroup = new DetectGroup(composite, fPHPLocationGroup, fNameGroup);
 
 		// establish connections
@@ -142,31 +154,21 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 					true));
 			fGroup.setText("Symfony"); //$NON-NLS-1$
 			
-			IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(WIZARDEXTENSION_ID);
-			
+			IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(WIZARDEXTENSION_ID);			
 			extensions = new ArrayList<ISymfonyProjectWizardExtension>();
 			
-			try {
-				
-				for (IConfigurationElement e : config) {
-					
-					final Object object = e.createExecutableExtension("class");
-					
-					if (object instanceof ISymfonyProjectWizardExtension) {				
-						
-						ISymfonyProjectWizardExtension extension = (ISymfonyProjectWizardExtension) object;
-						
+			try {				
+				for (IConfigurationElement e : config) {				
+					final Object object = e.createExecutableExtension("class");					
+					if (object instanceof ISymfonyProjectWizardExtension) {										
+						ISymfonyProjectWizardExtension extension = (ISymfonyProjectWizardExtension) object;						
 						extension.addElements(fGroup);
 						extensions.add(extension);
-						
-					
 					}
-				}
-				
+				}				
 			} catch (Exception e) {
 				Logger.logException(e);		
-			}		
-			
+			}					
 			
 			// hide the symfony group if no extensions is filling it up
 			if (config.length == 0)
@@ -179,9 +181,9 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 		}
 
 		public void widgetSelected(SelectionEvent e) {
-			// PHPUiPlugin.getDefault().getPreferenceStore().setValue(
-			// (PreferenceConstants.JavaScriptSupportEnable),
-			// fEnableJavaScriptSupport.getSelection());
+			 PHPUiPlugin.getDefault().getPreferenceStore().setValue(
+			 (PreferenceConstants.JavaScriptSupportEnable),
+			 fEnableJavaScriptSupport.getSelection());
 		}
 
 		public boolean getSelection() {
@@ -196,39 +198,66 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 	public class SymfonyLayoutGroup implements Observer, SelectionListener,
 			IDialogFieldListener {
 
-		private final SelectionButtonDialogField fStdRadio, fSrcBinRadio;
+		private SelectionButtonDialogField fStdRadio, fSrcBinRadio;
 		private Group fGroup;
 		private Link fPreferenceLink;
 		private SelectionButtonDialogField fStdRadio2;
+		private ComboDialogField projectLayout;
+		private ComboDialogField dialog;
 
 		public SymfonyLayoutGroup(Composite composite) {
-			final int numColumns = 3;
+			final int numColumns = 4;
 
-			fStdRadio = new SelectionButtonDialogField(SWT.RADIO);
-			fStdRadio
-					.setLabelText("Symfony Standard Edition (with vendors)"); //$NON-NLS-1$
-			fStdRadio.setDialogFieldListener(this);
+			String[] layouts = new String[] {
+					"Standard Edition (vendors)",
+					"Standard Edition (no vendors)",
+					"Custom project layout"
+					};
+			
+			final Map<String, String[]> available = new HashMap<String, String[]>();
 			
 			
-			fStdRadio2 = new SelectionButtonDialogField(SWT.RADIO);
-			fStdRadio2
-					.setLabelText("Symfony Standard Edition (without vendors)"); //$NON-NLS-1$
-			fStdRadio2.setDialogFieldListener(this);
+			available.put(layouts[0], new String[]
+					{SymfonyVersion.Symfony2_1.getAlias(),
+					SymfonyVersion.Symfony2.getAlias()}
+					);
+
+			available.put(layouts[1], new String[]
+					{SymfonyVersion.Symfony2_1.getAlias(),
+					SymfonyVersion.Symfony2.getAlias()}
+					);
+
+			available.put(layouts[2], new String[]
+					{"Standard Edition (vendors)",
+					"Standard Edition (no vendors)",
+					"Custom project layout"});
+			
+			projectLayout = new ComboDialogField(SWT.READ_ONLY);
+			projectLayout.setLabelText("");
+			projectLayout.setItems(layouts);			
 			
 			
-
-			fSrcBinRadio = new SelectionButtonDialogField(SWT.RADIO);
-			fSrcBinRadio
-					.setLabelText("Custom project layout"); //$NON-NLS-1$
-			fSrcBinRadio.setDialogFieldListener(this);
-
-			// getting Preferences default choice
-			boolean useSrcBin = PreferenceConstants.getPreferenceStore()
-					.getBoolean(PreferenceConstants.SRCBIN_FOLDERS_IN_NEWPROJ);
-
-			fSrcBinRadio.setSelection(useSrcBin);
-			fStdRadio.setSelection(!useSrcBin);
-
+			dialog = new ComboDialogField(SWT.READ_ONLY);
+			dialog.setLabelText("Select layout:");
+			dialog.setItems(layouts);			
+			
+			dialog.setDialogFieldListener(new org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener() {
+				
+				@Override
+				public void dialogFieldChanged(
+						org.eclipse.php.internal.ui.wizards.fields.DialogField field) {
+					
+					String[] items = dialog.getItems();
+					
+					String index = items[dialog.getSelectionIndex()];
+					String[] selection = available.get(index);
+					
+					projectLayout.setItems(selection);
+					projectLayout.selectItem(0);					
+					
+				}
+			});
+			
 			// createContent
 			fGroup = new Group(composite, SWT.NONE);
 			fGroup.setFont(composite.getFont());
@@ -237,23 +266,29 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 					true));
 			fGroup.setText(PHPUIMessages.LayoutGroup_OptionBlock_Title); //$NON-NLS-1$
 
-			fStdRadio.doFillIntoGrid(fGroup, 3);
-			fStdRadio2.doFillIntoGrid(fGroup, 3);
+			dialog.doFillIntoGrid(fGroup, 2);
 			
-			LayoutUtil
-					.setHorizontalGrabbing(fStdRadio.getSelectionButton(null));
+			projectLayout.doFillIntoGrid(fGroup, 2);
+			dialog.selectItem(0);
+			projectLayout.selectItem(0);
 
-			fSrcBinRadio.doFillIntoGrid(fGroup, 2);
-
-			fPreferenceLink = new Link(fGroup, SWT.NONE);
-			fPreferenceLink
-					.setText(PHPUIMessages.ToggleLinkingAction_link_description); //$NON-NLS-1$
-			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING,
-					true, false));
-			fPreferenceLink.addSelectionListener(this);
-			fPreferenceLink.setEnabled(true);
+			
+//			fPreferenceLink = new Link(fGroup, SWT.NONE);
+//			fPreferenceLink
+//					.setText(PHPUIMessages.ToggleLinkingAction_link_description); //$NON-NLS-1$
+//			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING,
+//					true, false));
+//			fPreferenceLink.addSelectionListener(this);
+//			fPreferenceLink.setEnabled(true);
 
 			updateEnableState();
+		}
+
+		public void setEnabled(boolean b) {
+
+			dialog.setEnabled(b);
+			projectLayout.setEnabled(b);
+			
 		}
 
 		/*
@@ -267,16 +302,17 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 		}
 
 		private void updateEnableState() {
-			if (fDetectGroup == null)
-				return;
-
-			final boolean detect = fDetectGroup.mustDetect();
-			fStdRadio.setEnabled(!detect);
-			fSrcBinRadio.setEnabled(!detect);
-
-			if (fGroup != null) {
-				fGroup.setEnabled(!detect);
-			}
+			
+//			if (fDetectGroup == null)
+//				return;
+//
+//			final boolean detect = fDetectGroup.mustDetect();
+//			fStdRadio.setEnabled(!detect);
+//			fSrcBinRadio.setEnabled(!detect);
+//
+//			if (fGroup != null) {
+//				fGroup.setEnabled(!detect);
+//			}
 		}
 
 		/**
@@ -331,5 +367,14 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 		return fJavaScriptSupportGroup.shouldSupportJavaScript();
 		
 	}
+	
+	// Symfony requires php 5.3
+	public PHPVersion getPHPVersionValue() {
+		
+		return PHPVersion.PHP5_3;
+		
+	}
+	
+	
 
 }

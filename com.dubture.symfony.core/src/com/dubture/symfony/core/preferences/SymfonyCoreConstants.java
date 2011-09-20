@@ -49,5 +49,9 @@ public class SymfonyCoreConstants {
 	public static final String BUNDLE_FQCN 			= "Symfony\\Component\\HttpKernel\\Bundle\\Bundle";
 
 
+	// the symfony version
+	public static final String SYMFONY_VERSION		= "symfony_version";
+
+
 
 }

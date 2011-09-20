@@ -23,6 +23,7 @@ public class CorePreferenceConstants {
 	public interface Keys {
 		public static final String SYNTHETIC_SERVICES = "synthetic_services";
 		public static final String TWIG_SUPPORT = "twig_support";
+		public static final String SYMFONY_VERSION = "symfony_versio";
 	}
 
 	

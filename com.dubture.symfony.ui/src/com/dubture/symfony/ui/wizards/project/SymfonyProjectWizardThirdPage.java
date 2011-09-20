@@ -71,7 +71,7 @@ public class SymfonyProjectWizardThirdPage extends PHPProjectWizardThirdPage {
 				IFolder folder = project.getFolder(path);
 
 				if (!folder.exists()) {
-					folder.create(true, false, null);	
+					folder.create(true, true, null);	
 				}
 
 				// add root folders to buildpath
