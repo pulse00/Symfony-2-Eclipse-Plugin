@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IParameter;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -14,6 +15,7 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
+import org.eclipse.php.ui.CodeGeneration;
 
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 
@@ -49,7 +51,8 @@ public class InterfaceMethodsVariableResolver extends TemplateVariableResolver {
 					String superMethods = "";					
 					SymfonyModelAccess model = SymfonyModelAccess.getDefault();
 					
-					IDLTKSearchScope scope = SearchEngine.createSearchScope(symfonyContext.getSourceModule().getScriptProject());
+					IScriptProject scriptProject =symfonyContext.getSourceModule().getScriptProject();
+					IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 					
 					String[] array = {"string", "Boolean"};					
 					List<String> internal = new ArrayList<String>(Arrays.asList(array));
@@ -60,6 +63,10 @@ public class InterfaceMethodsVariableResolver extends TemplateVariableResolver {
 						
 						for (IType type : types) {
 							for (IMethod method : type.getMethods()) {
+								
+								CodeGeneration.getMethodComment(method, null, null);
+
+								String body = CodeGeneration.getMethodBodyContent(scriptProject, method.getParent().getElementName(), method.getElementName(), false, "", "\n");								
 								
 								String methodString = "public function ";
 								methodString += method.getElementName() + "(";

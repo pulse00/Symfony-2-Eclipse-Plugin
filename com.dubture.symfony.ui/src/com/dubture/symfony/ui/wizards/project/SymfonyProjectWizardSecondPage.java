@@ -1,10 +1,14 @@
 package com.dubture.symfony.ui.wizards.project;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -21,22 +25,32 @@ import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.internal.ui.util.CoreUtility;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.wizards.BuildpathDetector;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.project.ProjectOptions;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.wizards.PHPProjectWizardFirstPage;
 import org.eclipse.php.internal.ui.wizards.PHPProjectWizardSecondPage;
 
+import com.dubture.symfony.core.log.Logger;
+
+/**
+ * 
+ * Initializes the Symfony project structure and adds the folders to the buildpath.
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com> 
+ *
+ */
 @SuppressWarnings("restriction")
 public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 
+	private int level;
+	private String symfonyPath;	
 	public SymfonyProjectWizardSecondPage(PHPProjectWizardFirstPage mainPage) {
 		super(mainPage);
 	}
@@ -51,6 +65,8 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 		IScriptProject create = DLTKCore.create(projectHandle);
 		super.init(create, null, false);
 		fCurrProjectLocation = getProjectLocationURI();
+		
+		boolean installSymfony = true;
 
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
@@ -83,8 +99,12 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 
 			IBuildpathEntry[] buildpathEntries = null;
 			IncludePath[] includepathEntries = null;
+			
+			SymfonyProjectWizardFirstPage firstPage = (SymfonyProjectWizardFirstPage) fFirstPage;
 
-			if (fFirstPage.getDetect()) {
+			if (firstPage.getDetect()) {
+				
+				installSymfony = false;
 				includepathEntries = setProjectBaseIncludepath();
 				if (!getProject().getFile(FILENAME_BUILDPATH).exists()) {
 
@@ -97,43 +117,22 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 				} else {
 					monitor.worked(20);
 				}
-			} else if (fFirstPage.hasPhpSourceFolder()) {
-				// need to create sub-folders and set special build/include
-				// paths
-				IPreferenceStore store = getPreferenceStore();
-				IPath srcPath = new Path(
-						store.getString(PreferenceConstants.SRCBIN_SRCNAME));
-				IPath binPath = new Path(
-						store.getString(PreferenceConstants.SRCBIN_BINNAME));
+			} else if (firstPage.hasSymfonyStandardEdition()) {
 
-				if (srcPath.segmentCount() > 0) {
-					IFolder folder = getProject().getFolder(srcPath);
-					CoreUtility.createFolder(folder, true, true,
-							new SubProgressMonitor(monitor, 10));
-				} else {
-					monitor.worked(10);
-				}
-
-				if (binPath.segmentCount() > 0) {
-					IFolder folder = getProject().getFolder(binPath);
-					CoreUtility.createFolder(folder, true, true,
-							new SubProgressMonitor(monitor, 10));
-				} else {
-					monitor.worked(10);
-				}
-
-				final IPath projectPath = getProject().getFullPath();
-
-				// configure the buildpath entries, including the default
-				// InterpreterEnvironment library.
+				// flat project layout
+				IPath projectPath = getProject().getFullPath();
 				List cpEntries = new ArrayList();
-				cpEntries.add(DLTKCore.newSourceEntry(projectPath
-						.append(srcPath)));
+				cpEntries.add(DLTKCore.newSourceEntry(projectPath));
 
-				buildpathEntries = (IBuildpathEntry[]) cpEntries
-						.toArray(new IBuildpathEntry[cpEntries.size()]);
-				includepathEntries = new IncludePath[] { new IncludePath(
-						getProject().getFolder(srcPath), getProject()) };
+//				buildpathEntries = (IBuildpathEntry[]) cpEntries
+//						.toArray(new IBuildpathEntry[cpEntries.size()]);
+//				includepathEntries = setProjectBaseIncludepath();
+				
+				buildpathEntries = new IBuildpathEntry[0];
+				includepathEntries = new IncludePath[0];				
+
+				monitor.worked(20);
+				
 			} else {
 				// flat project layout
 				IPath projectPath = getProject().getFullPath();
@@ -178,6 +177,9 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 					new IBuildpathEntry[] {});
 			IncludePathManager.getInstance().setIncludePath(getProject(),
 					includepathEntries);
+			
+			if (installSymfony)
+				installSymfony(new SubProgressMonitor(monitor, 50));
 
 		} finally {
 			monitor.done();
@@ -200,4 +202,107 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 		ProjectOptions.setSupportingAspTags(false, getProject());
 		ProjectOptions.setPhpVersion(PHPVersion.PHP5_3, getProject());
 	}
+	
+	private void importFile(File file, IProject project, List<IBuildpathEntry> entries) {
+
+		try {
+
+			level++;
+
+			String path = file.getAbsolutePath().replace(symfonyPath, "");
+
+			// import the directory
+			if(file.isDirectory() && ! file.isHidden()) {
+
+				IFolder folder = project.getFolder(path);
+
+				if (!folder.exists()) {
+					folder.create(true, true, null);	
+				}
+
+				// add root folders to buildpath
+				if (level == 1 && ! folder.getFullPath().toString().endsWith("bin")) {
+
+					IPath[] exclusion = {};
+
+					if (folder.getName().equals("app")) {
+						exclusion = new IPath[] { new Path("app/cache") };
+					} else if (folder.getName().equals("vendor")) {
+						exclusion = new IPath[] { new Path("bundles/Sensio/Bundle/GeneratorBundle/Resources/skeleton/") };
+					}
+
+					IBuildpathEntry entry =  DLTKCore.newSourceEntry(folder.getFullPath(), exclusion);
+					entries.add(entry);					
+				}
+
+				// now import recursively
+				for (File f : file.listFiles()) {			
+					importFile(f, project, entries);					
+				}
+
+				// create the project file
+			} else if (file.isFile()) {				
+				FileInputStream fis = new FileInputStream(file);				
+				IFile iFile = project.getFile(path);				
+				iFile.create(fis, true, null);
+			}
+
+			level--;
+
+		} catch (CoreException e) {
+			Logger.logException(e);
+		} catch (FileNotFoundException e) {
+			Logger.logException(e);
+		}
+
+	}
+
+	public void installSymfony(IProgressMonitor monitor) {
+
+		if (monitor == null)
+			monitor = new NullProgressMonitor();
+		
+		SymfonyProjectWizardFirstPage firstPage = (SymfonyProjectWizardFirstPage) fFirstPage;
+		monitor.beginTask("Installing symfony...", 100);
+		monitor.worked(10);
+
+		IProject projectHandle = fFirstPage.getProjectHandle();
+		final IScriptProject scriptProject = DLTKCore.create(projectHandle);		
+
+		File file = null;
+		final List<IBuildpathEntry> entries = new ArrayList<IBuildpathEntry>();
+		level = 0;
+
+		try {
+			
+			file = new File(firstPage.getLibraryPath());
+			symfonyPath = new Path(firstPage.getLibraryPath()).toString();
+
+			if (file.isDirectory()) {
+
+				final File[] files = file.listFiles();
+
+				if(!scriptProject.isOpen()) {
+					scriptProject.open(monitor);
+				} 
+
+				if (files != null && scriptProject != null && scriptProject.isOpen()) {
+
+					for (File f : files) {
+						importFile(f, scriptProject.getProject(), entries);
+					}
+					
+		            BuildPathUtils.addEntriesToBuildPath(scriptProject, entries);
+					monitor.worked(90);
+
+				}
+			}
+		} catch (ModelException e) {
+			Logger.logException(e);
+		} finally {
+			
+			monitor.worked(100);
+			monitor.done();					
+		}
+	}	
 }

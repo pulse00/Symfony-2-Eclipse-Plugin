@@ -6,7 +6,7 @@
          <meta.schema plugin="com.dubture.symfony.ui" id="projectWizardExtension" name="Symfony New Project Wizard Extension"/>
       </appinfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension point allows other plugins to provide a checkbox in the Symfony project creation wizard for adding additional natures to the new project.
       </documentation>
    </annotation>
 
@@ -85,7 +85,7 @@
          <meta.section type="apiinfo"/>
       </appinfo>
       <documentation>
-         [Enter API information here.]
+         Extension classes need to implement com.dubture.symfony.ui.wizards.ISymfonyProjectWizardExtension.
       </documentation>
    </annotation>
 

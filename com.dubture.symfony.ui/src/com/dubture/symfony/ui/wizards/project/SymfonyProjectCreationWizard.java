@@ -83,7 +83,7 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 				ISymfonyProjectWizardExtension extension = (ISymfonyProjectWizardExtension) e;				
 				String nature = extension.getNature();
 				
-				if (nature != null)
+				if (nature != null && extension.isActivated())
 					extensionNatures.add(nature);
 
 			}

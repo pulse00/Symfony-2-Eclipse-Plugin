@@ -1,5 +1,7 @@
 package com.dubture.symfony.ui.wizards.project;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,12 +9,13 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
-import org.eclipse.dltk.internal.ui.wizards.dialogfields.SelectionButtonDialogField;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -36,9 +39,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.osgi.framework.Bundle;
 
+import com.dubture.symfony.core.SymfonyCorePlugin;
 import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.ui.Messages;
+import com.dubture.symfony.ui.SymfonyUiPlugin;
 import com.dubture.symfony.ui.wizards.ISymfonyProjectWizardExtension;
 
 @SuppressWarnings("restriction")
@@ -198,12 +205,11 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 	public class SymfonyLayoutGroup implements Observer, SelectionListener,
 			IDialogFieldListener {
 
-		private SelectionButtonDialogField fStdRadio, fSrcBinRadio;
 		private Group fGroup;
+		//TODO: link to preference page
 		private Link fPreferenceLink;
-		private SelectionButtonDialogField fStdRadio2;
-		private ComboDialogField projectLayout;
-		private ComboDialogField dialog;
+		private ComboDialogField customLayout;		
+		private ComboDialogField standardLayout;
 
 		public SymfonyLayoutGroup(Composite composite) {
 			final int numColumns = 4;
@@ -218,42 +224,42 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 			
 			
 			available.put(layouts[0], new String[]
-					{SymfonyVersion.Symfony2_1.getAlias(),
-					SymfonyVersion.Symfony2.getAlias()}
+					{SymfonyVersion.Symfony2_0_1.getAlias()}
 					);
 
 			available.put(layouts[1], new String[]
-					{SymfonyVersion.Symfony2_1.getAlias(),
-					SymfonyVersion.Symfony2.getAlias()}
+					{SymfonyVersion.Symfony2_0_1.getAlias()}
 					);
 
-			available.put(layouts[2], new String[]
-					{"Standard Edition (vendors)",
-					"Standard Edition (no vendors)",
-					"Custom project layout"});
+			IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
 			
-			projectLayout = new ComboDialogField(SWT.READ_ONLY);
-			projectLayout.setLabelText("");
-			projectLayout.setItems(layouts);			
+			String thing = store.getString(Messages.LibraryPreferencePage_1);			
+			String[] paths = thing.split(":");
+						
+			available.put(layouts[2], paths);
+			
+			customLayout = new ComboDialogField(SWT.READ_ONLY);
+			customLayout.setLabelText("");
+			customLayout.setItems(layouts);			
 			
 			
-			dialog = new ComboDialogField(SWT.READ_ONLY);
-			dialog.setLabelText("Select layout:");
-			dialog.setItems(layouts);			
+			standardLayout = new ComboDialogField(SWT.READ_ONLY);
+			standardLayout.setLabelText("Select layout:");
+			standardLayout.setItems(layouts);			
 			
-			dialog.setDialogFieldListener(new org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener() {
+			standardLayout.setDialogFieldListener(new org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener() {
 				
 				@Override
 				public void dialogFieldChanged(
 						org.eclipse.php.internal.ui.wizards.fields.DialogField field) {
 					
-					String[] items = dialog.getItems();
+					String[] items = standardLayout.getItems();
 					
-					String index = items[dialog.getSelectionIndex()];
+					String index = items[standardLayout.getSelectionIndex()];
 					String[] selection = available.get(index);
 					
-					projectLayout.setItems(selection);
-					projectLayout.selectItem(0);					
+					customLayout.setItems(selection);
+					customLayout.selectItem(0);					
 					
 				}
 			});
@@ -266,11 +272,11 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 					true));
 			fGroup.setText(PHPUIMessages.LayoutGroup_OptionBlock_Title); //$NON-NLS-1$
 
-			dialog.doFillIntoGrid(fGroup, 2);
+			standardLayout.doFillIntoGrid(fGroup, 2);
 			
-			projectLayout.doFillIntoGrid(fGroup, 2);
-			dialog.selectItem(0);
-			projectLayout.selectItem(0);
+			customLayout.doFillIntoGrid(fGroup, 2);
+			standardLayout.selectItem(0);
+			customLayout.selectItem(0);
 
 			
 //			fPreferenceLink = new Link(fGroup, SWT.NONE);
@@ -286,8 +292,8 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
 		public void setEnabled(boolean b) {
 
-			dialog.setEnabled(b);
-			projectLayout.setEnabled(b);
+			standardLayout.setEnabled(b);
+			customLayout.setEnabled(b);
 			
 		}
 
@@ -315,16 +321,6 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 //			}
 		}
 
-		/**
-		 * Return <code>true</code> if the user specified to create
-		 * 'application' and 'public' folders.
-		 * 
-		 * @return returns <code>true</code> if the user specified to create
-		 *         'source' and 'bin' folders.
-		 */
-		public boolean isDetailedLayout() {
-			return fSrcBinRadio.isSelected();
-		}
 
 		/*
 		 * (non-Javadoc)
@@ -357,8 +353,21 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID,
 					new String[] { prefID }, data).open();
 		}
-		
-		
+
+		public boolean hasSymfonyStandardEdition() {
+
+			return standardLayout.getSelectionIndex() <= 2;
+
+		}
+
+		public SymfonyVersion getSymfonyVersion() {
+
+			if (customLayout.getSelectionIndex() == 0) {
+				return SymfonyVersion.Symfony2_0_1;
+			}
+			
+			return null;
+		}
 	}	
 	
 	
@@ -376,5 +385,40 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 	}
 	
 	
+	public boolean hasSymfonyStandardEdition() {
+		
+		return fSymfonyLayoutGroup.hasSymfonyStandardEdition(); 
+		
+	}
+	
+	public SymfonyVersion getSymfonyVersion() {
+		
+		return fSymfonyLayoutGroup.getSymfonyVersion();
+		
+	}
+	
+	public String getLibraryPath() {
+		
+		String path = null;
+		
+		try {
+			
+			// built in standard edition is selected
+			if (hasSymfonyStandardEdition()) {				
+				Bundle bundle = Platform.getBundle(SymfonyCorePlugin.ID);
+				URL fileURL = bundle.getEntry("Resources/symfony/standard");
+				path = FileLocator.toFileURL(fileURL).getPath().toString();
+				
+			// custom symfony installation is selected
+			} else {				
+				path = fSymfonyLayoutGroup.customLayout.getText();							
+			}
+		} catch (IOException e) {
+			Logger.logException(e);
+		}
+		
+		return path;
+		
+	}
 
 }

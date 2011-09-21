@@ -21,8 +21,9 @@ public class TwigProjectWizardExtension implements
 	public void addElements(Group fGroup) {
 
 		enableTwigSupport = new Button(fGroup, SWT.CHECK | SWT.RIGHT);
-		enableTwigSupport.setText("Enable Twig support");
+		enableTwigSupport.setText("Enable Twig support for this project");
 		enableTwigSupport.setLayoutData(new GridData(SWT.BEGINNING,SWT.CENTER, false, false));
+		enableTwigSupport.setSelection(true);
 		
 //		enableTwigSupport.setSelection(PHPUiPlugin.getDefault().getPreferenceStore().getBoolean((PreferenceConstants.JavaScriptSupportEnable)));
 		
@@ -36,5 +37,10 @@ public class TwigProjectWizardExtension implements
 		
 	}
 
+	@Override
+	public boolean isActivated() {
 
+		return enableTwigSupport.getSelection();
+
+	}
 }

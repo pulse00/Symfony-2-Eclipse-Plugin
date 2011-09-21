@@ -7,5 +7,7 @@ public interface ISymfonyProjectWizardExtension {
 	void addElements(Group fGroup);
 
 	String getNature();
+	
+	boolean isActivated();
 
 }
