@@ -20,6 +20,7 @@ import org.eclipse.dltk.internal.ui.dialogs.OpenTypeSelectionDialog2;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogPage;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.fieldassist.AutoCompleteField;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -313,6 +314,7 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		}
 	};
 	private ControlDecoration decoration;
+	private Button commentCheckbox;
 
 	/**
 	 * @see IDialogPage#createControl(Composite)
@@ -443,6 +445,13 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		removeInterface.setText("Remove");
 		
 		removeInterface.addSelectionListener(interfaceRemoveListener);
+		
+		
+		Label commentLabel = new Label(container, SWT.NONE);
+		commentLabel.setText("Generate element comments:");
+		
+		commentCheckbox = new Button(container, SWT.CHECK);
+
 
 		initialize();
 		dialogChanged();
@@ -543,12 +552,20 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 				}
 			}
 		}
-
+				
+		String text = fileText.getText();
+		
+		if (text.length() > 0 && Character.isLowerCase(fileText.getText().charAt(0))) {						
+			setMessage("Classes starting with lowercase letters are discouraged", IMessageProvider.WARNING);						
+		} else {
+			setMessage("");
+		}
 		
 		updateStatus(null);
 	}
 
 	protected void updateStatus(final String message) {
+		
 		setErrorMessage(message);
 		setPageComplete(message == null);
 	}
@@ -580,6 +597,12 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 			return "final ";
 			
 		return "";
+		
+	}
+	
+	public boolean shouldGenerateComments() {
+
+		return commentCheckbox.getSelection();
 		
 	}
 }

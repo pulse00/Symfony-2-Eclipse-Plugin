@@ -35,6 +35,8 @@ public class ClassCreationWizard extends CodeTemplateWizard {
 		varHolder.set("use_parent", page.getSuperclass());
 		varHolder.set("interfaces", page.getInterfaces());
 		varHolder.set("class_modifiers", page.getModifiers());
+		varHolder.set("generate_comments", page.shouldGenerateComments());
+		
 		
 		if (template != null) {
 			return SymfonyTemplateStore.compileTemplate(getTemplatesContextTypeRegistry(), template, containerName, fileName, varHolder);	
