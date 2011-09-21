@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.Stack;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.json.simple.JSONArray;
@@ -47,30 +49,39 @@ public abstract class AbstractSymfonyVisitor {
 		
 		try {
 			
-			if (resource instanceof IFile && resource.getFileExtension() != null) {
-
-				indexer = SymfonyIndexer.getInstance();
-				file = (IFile) resource;
-				path = resource.getFullPath();
-				resource.getParent();
-				timestamp = (int) resource.getLocalTimeStamp();
-				
-				if (resource.getFileExtension().equals("xml"))
-				{				
-					loadXML();
-					built = true;
-
-				} else if (resource.getFileExtension().equals("yml")) {
+				if (resource instanceof IProject || resource instanceof IFolder) {
 					
-					if (resource.getName().equals("services.yml")) {					
-						loadYaml();
-						built = true;
-					} else if (resource.getName().contains("routing")) {
-						loadYamlRouting();
-						built = true;
-					}
+					return resource.getProject().hasNature(SymfonyNature.NATURE_ID);
+					
 				}
-			}
+					
+				if (resource instanceof IFile) {
+					
+					indexer = SymfonyIndexer.getInstance();
+					file = (IFile) resource;
+					path = resource.getFullPath();
+					resource.getParent();
+					timestamp = (int) resource.getLocalTimeStamp();
+					
+					if (resource.getFileExtension().equals("xml"))
+					{				
+						loadXML();
+						built = true;
+
+					} else if (resource.getFileExtension().equals("yml")) {
+						
+						if (resource.getName().equals("services.yml")) {					
+							loadYaml();
+							built = true;
+						} else if (resource.getName().contains("routing")) {
+							loadYamlRouting();
+							built = true;
+						}
+					}
+					
+				}
+
+			
 		} catch (Exception e) {
 
 			Logger.logException(e);
@@ -183,6 +194,8 @@ public abstract class AbstractSymfonyVisitor {
 						}
 					}
 				}
+				
+				System.err.println("index service");
 				indexer.addService(id, phpClass, path.toString(), timestamp);
 			}
 			
