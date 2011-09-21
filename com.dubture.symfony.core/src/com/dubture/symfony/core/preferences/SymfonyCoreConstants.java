@@ -48,10 +48,20 @@ public class SymfonyCoreConstants {
 	// core classes
 	public static final String BUNDLE_FQCN 			= "Symfony\\Component\\HttpKernel\\Bundle\\Bundle";
 
-
 	// the symfony version
-	public static final String SYMFONY_VERSION		= "symfony_version";
-
+	public static final String SYMFONY_VERSION		= "symfony_version";	
+	
+	// Paths	
+	public static final String APP_PATH				= "app";
+	public static final String VENDOR_PATH			= "vendor";
+	public static final String CACHE_PATH			= APP_PATH + "/cache";
+	public static final String LOG_PATH				= APP_PATH + "/logs";
+	public static final String SKELETON_PATH		= "bundles/Sensio/Bundle/GeneratorBundle/Resources/skeleton";
+	
+	public static final String BUILTIN_SYMFONY		= "/Resources/symfony/standard/";
+	public static final String BUILTIN_VENDOR		= "vendors";
+	public static final String BUILTIN_NO_VENDOR	= "novendors";	
+	
 
 
 }

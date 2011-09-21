@@ -1,6 +1,6 @@
 package com.dubture.symfony.ui.wizards.project;
 
-import java.io.IOException;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,11 +9,22 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.WizardPage;
@@ -44,6 +55,7 @@ import org.osgi.framework.Bundle;
 import com.dubture.symfony.core.SymfonyCorePlugin;
 import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.ui.Messages;
 import com.dubture.symfony.ui.SymfonyUiPlugin;
 import com.dubture.symfony.ui.wizards.ISymfonyProjectWizardExtension;
@@ -51,11 +63,12 @@ import com.dubture.symfony.ui.wizards.ISymfonyProjectWizardExtension;
 @SuppressWarnings("restriction")
 public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 	
-	
 	public static final String WIZARDEXTENSION_ID = "com.dubture.symfony.ui.projectWizardExtension";
 	
 	private SymfonySupportGroup symfonySupportGroup;
 	private SymfonyLayoutGroup fSymfonyLayoutGroup;
+	
+	protected Validator validator;
 	
 	private List<ISymfonyProjectWizardExtension> extensions = new ArrayList<ISymfonyProjectWizardExtension>();
 	
@@ -112,10 +125,12 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 		// initialize all elements
 		fNameGroup.notifyObservers();
 		// create and connect validator
-		fPdtValidator = new Validator();
+		validator = new Validator();
 
-		fNameGroup.addObserver(fPdtValidator);
-		fPHPLocationGroup.addObserver(fPdtValidator);
+		fNameGroup.addObserver(validator);
+		fPHPLocationGroup.addObserver(validator);
+		fSymfonyLayoutGroup.addObserver(validator);
+		
 
 		setControl(composite);
 		Dialog.applyDialogFont(composite);
@@ -202,15 +217,20 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 	/**
 	 * Request a project layout.
 	 */
-	public class SymfonyLayoutGroup implements Observer, SelectionListener,
+	public class SymfonyLayoutGroup extends Observable implements Observer, SelectionListener,
 			IDialogFieldListener {
 
 		private Group fGroup;
 		//TODO: link to preference page
-		private Link fPreferenceLink;
-		private ComboDialogField customLayout;		
-		private ComboDialogField standardLayout;
+		private Link fPreferenceLink;		
+		private ComboDialogField versionSelector;		
+		private ComboDialogField layoutSelector;
 
+		protected void fireEvent() {
+			setChanged();
+			notifyObservers();
+		}
+				
 		public SymfonyLayoutGroup(Composite composite) {
 			final int numColumns = 4;
 
@@ -238,29 +258,41 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 						
 			available.put(layouts[2], paths);
 			
-			customLayout = new ComboDialogField(SWT.READ_ONLY);
-			customLayout.setLabelText("");
-			customLayout.setItems(layouts);			
+			versionSelector = new ComboDialogField(SWT.READ_ONLY);
+			versionSelector.setLabelText("");
+			versionSelector.setItems(layouts);			
 			
 			
-			standardLayout = new ComboDialogField(SWT.READ_ONLY);
-			standardLayout.setLabelText("Select layout:");
-			standardLayout.setItems(layouts);			
+			layoutSelector = new ComboDialogField(SWT.READ_ONLY);
+			layoutSelector.setLabelText("Select layout:");
+			layoutSelector.setItems(layouts);			
 			
-			standardLayout.setDialogFieldListener(new org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener() {
+			layoutSelector.setDialogFieldListener(new org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener() {
 				
 				@Override
 				public void dialogFieldChanged(
 						org.eclipse.php.internal.ui.wizards.fields.DialogField field) {
 					
-					String[] items = standardLayout.getItems();
+					String[] items = layoutSelector.getItems();
 					
-					String index = items[standardLayout.getSelectionIndex()];
+					String index = items[layoutSelector.getSelectionIndex()];
 					String[] selection = available.get(index);
 					
-					customLayout.setItems(selection);
-					customLayout.selectItem(0);					
+					versionSelector.setItems(selection);
+					versionSelector.selectItem(0);
 					
+					fireEvent();
+					
+				}
+			});
+			
+			versionSelector.setDialogFieldListener(new org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener() {
+				
+				@Override
+				public void dialogFieldChanged(
+						org.eclipse.php.internal.ui.wizards.fields.DialogField field) {
+
+						fireEvent();					
 				}
 			});
 			
@@ -272,11 +304,11 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 					true));
 			fGroup.setText(PHPUIMessages.LayoutGroup_OptionBlock_Title); //$NON-NLS-1$
 
-			standardLayout.doFillIntoGrid(fGroup, 2);
+			layoutSelector.doFillIntoGrid(fGroup, 2);
 			
-			customLayout.doFillIntoGrid(fGroup, 2);
-			standardLayout.selectItem(0);
-			customLayout.selectItem(0);
+			versionSelector.doFillIntoGrid(fGroup, 2);
+			layoutSelector.selectItem(0);
+			versionSelector.selectItem(0);
 
 			
 //			fPreferenceLink = new Link(fGroup, SWT.NONE);
@@ -287,40 +319,14 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 //			fPreferenceLink.addSelectionListener(this);
 //			fPreferenceLink.setEnabled(true);
 
-			updateEnableState();
 		}
 
 		public void setEnabled(boolean b) {
 
-			standardLayout.setEnabled(b);
-			customLayout.setEnabled(b);
+			layoutSelector.setEnabled(b);
+			versionSelector.setEnabled(b);
 			
 		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.util.Observer#update(java.util.Observable,
-		 * java.lang.Object)
-		 */
-		public void update(Observable o, Object arg) {
-			updateEnableState();
-		}
-
-		private void updateEnableState() {
-			
-//			if (fDetectGroup == null)
-//				return;
-//
-//			final boolean detect = fDetectGroup.mustDetect();
-//			fStdRadio.setEnabled(!detect);
-//			fSrcBinRadio.setEnabled(!detect);
-//
-//			if (fGroup != null) {
-//				fGroup.setEnabled(!detect);
-//			}
-		}
-
 
 		/*
 		 * (non-Javadoc)
@@ -333,17 +339,6 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 			widgetDefaultSelected(e);
 		}
 
-		/*
-		 * @see
-		 * org.eclipse.jdt.internal.ui.wizards.dialogfields.IDialogFieldListener
-		 * #dialogFieldChanged(org.eclipse.jdt.internal.ui.wizards.dialogfields.
-		 * DialogField)
-		 * 
-		 * @since 3.5
-		 */
-		public void dialogFieldChanged(DialogField field) {
-			updateEnableState();
-		}
 
 		public void widgetDefaultSelected(SelectionEvent e) {
 
@@ -356,17 +351,29 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
 		public boolean hasSymfonyStandardEdition() {
 
-			return standardLayout.getSelectionIndex() <= 2;
+			return layoutSelector.getSelectionIndex() <= 2;
 
 		}
 
 		public SymfonyVersion getSymfonyVersion() {
 
-			if (customLayout.getSelectionIndex() == 0) {
+			if (versionSelector.getSelectionIndex() == 0) {
 				return SymfonyVersion.Symfony2_0_1;
 			}
 			
 			return null;
+		}
+
+		@Override
+		public void dialogFieldChanged(DialogField field) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void update(Observable o, Object arg) {
+			// TODO Auto-generated method stub
+			
 		}
 	}	
 	
@@ -397,28 +404,175 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 		
 	}
 	
-	public String getLibraryPath() {
+	public String getLibraryPath() throws Exception {
 		
 		String path = null;
 		
 		try {
 			
 			// built in standard edition is selected
-			if (hasSymfonyStandardEdition()) {				
+			if (hasSymfonyStandardEdition()) {
+				
+				String entry = SymfonyCoreConstants.BUILTIN_SYMFONY;
+				
+				String selection = fSymfonyLayoutGroup.versionSelector.getText();				
+				String parts[] = selection.split(" ");				
+				String version = parts[1];
+				
+				int index = fSymfonyLayoutGroup.layoutSelector.getSelectionIndex(); 
+
+				if (index == 0) {				
+					entry += SymfonyCoreConstants.BUILTIN_VENDOR + "/" + version;					
+				} else if (index == 1) {					
+					entry += SymfonyCoreConstants.BUILTIN_NO_VENDOR + "/" + version;
+				} else {					
+					throw new Exception("Invalid library selection");
+				}
+				
 				Bundle bundle = Platform.getBundle(SymfonyCorePlugin.ID);
-				URL fileURL = bundle.getEntry("Resources/symfony/standard");
+				URL fileURL = bundle.getEntry(entry);
 				path = FileLocator.toFileURL(fileURL).getPath().toString();
 				
 			// custom symfony installation is selected
 			} else {				
-				path = fSymfonyLayoutGroup.customLayout.getText();							
+				path = fSymfonyLayoutGroup.versionSelector.getText();							
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Logger.logException(e);
 		}
 		
 		return path;
 		
 	}
+	
+	public final class Validator implements Observer {
 
+		@Override
+		public void update(Observable arg0, Object arg1) {
+
+			final IWorkspace workspace = DLTKUIPlugin.getWorkspace();
+			final String name = fNameGroup.getName();
+			// check whether the project name field is empty
+			if (name.length() == 0) {
+				setErrorMessage(null);
+				setMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_enterProjectName);
+				setPageComplete(false);
+				return;
+			}
+			// check whether the project name is valid
+			final IStatus nameStatus = workspace.validateName(name,
+					IResource.PROJECT);
+			if (!nameStatus.isOK()) {
+				setErrorMessage(nameStatus.getMessage());
+				setPageComplete(false);
+				return;
+			}
+			// check whether project already exists
+			final IProject handle = getProjectHandle();
+
+			if (!isInLocalServer()) {
+				if (handle.exists()) {
+					setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_projectAlreadyExists);
+					setPageComplete(false);
+					return;
+				}
+			}
+
+			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
+					.getProjects();
+			String newProjectNameLowerCase = name.toLowerCase();
+			for (IProject currentProject : projects) {
+				String existingProjectName = currentProject.getName();
+				if (existingProjectName.toLowerCase().equals(
+						newProjectNameLowerCase)) {
+					setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_projectAlreadyExists);
+					setPageComplete(false);
+					return;
+				}
+			}
+
+			final String location = fPHPLocationGroup.getLocation()
+					.toOSString();
+			// check whether location is empty
+			if (location.length() == 0) {
+				setErrorMessage(null);
+				setMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_enterLocation);
+				setPageComplete(false);
+				return;
+			}
+			// check whether the location is a syntactically correct path
+			if (!Path.EMPTY.isValidPath(location)) {
+				setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_invalidDirectory);
+				setPageComplete(false);
+				return;
+			}
+			// check whether the location has the workspace as prefix
+			IPath projectPath = Path.fromOSString(location);
+			if (!fPHPLocationGroup.isInWorkspace()
+					&& Platform.getLocation().isPrefixOf(projectPath)) {
+				setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_cannotCreateInWorkspace);
+				setPageComplete(false);
+				return;
+			}
+			// If we do not place the contents in the workspace validate the
+			// location.
+			if (!fPHPLocationGroup.isInWorkspace()) {
+				IEnvironment environment = getEnvironment();
+				if (EnvironmentManager.isLocal(environment)) {
+					final IStatus locationStatus = workspace
+							.validateProjectLocation(handle, projectPath);
+					File file = projectPath.toFile();
+					if (!locationStatus.isOK()) {
+						setErrorMessage(locationStatus.getMessage());
+						setPageComplete(false);
+						return;
+					}
+
+//					if (!canCreate(projectPath.toFile())) {
+//						setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_invalidDirectory);
+//						setPageComplete(false);
+//						return;
+//					}
+				}
+			}
+
+			if (fragment != null) {
+				fragment.getWizardModel().putObject("ProjectName",
+						fNameGroup.getName());
+				if (!fragment.isComplete()) {
+					setErrorMessage((String) fragment.getWizardModel()
+							.getObject(ERROR_MESSAGE));
+					setPageComplete(false);
+					return;
+				}
+			}
+			
+			if (fSymfonyLayoutGroup.layoutSelector.getSelectionIndex() == 2) {
+				
+				String path;
+				try {
+					path = getLibraryPath();					
+					File file = new File(path);
+					
+					if (!file.exists()) {
+						setErrorMessage("Directory for custom project layout does not exist.");
+						setPageComplete(false);
+						return;											
+					}
+				} catch (Exception e) {
+					Logger.logException(e);
+					setErrorMessage("Directory for custom project layout does not exist.");
+					setPageComplete(false);
+					return;					
+				}
+				
+			}
+
+			setPageComplete(true);
+			setErrorMessage(null);
+			setMessage(null);
+			
+			
+		}
+	}
 }

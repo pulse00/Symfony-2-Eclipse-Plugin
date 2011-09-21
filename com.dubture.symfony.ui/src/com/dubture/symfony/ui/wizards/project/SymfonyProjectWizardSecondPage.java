@@ -38,6 +38,7 @@ import org.eclipse.php.internal.ui.wizards.PHPProjectWizardFirstPage;
 import org.eclipse.php.internal.ui.wizards.PHPProjectWizardSecondPage;
 
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 
 /**
  * 
@@ -225,10 +226,13 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 
 					IPath[] exclusion = {};
 
-					if (folder.getName().equals("app")) {
-						exclusion = new IPath[] { new Path("app/cache") };
-					} else if (folder.getName().equals("vendor")) {
-						exclusion = new IPath[] { new Path("bundles/Sensio/Bundle/GeneratorBundle/Resources/skeleton/") };
+					if (folder.getName().equals(SymfonyCoreConstants.APP_PATH)) {
+						exclusion = new IPath[] { 
+								new Path(SymfonyCoreConstants.CACHE_PATH),
+								new Path(SymfonyCoreConstants.LOG_PATH)
+								};						
+					} else if (folder.getName().equals(SymfonyCoreConstants.VENDOR_PATH)) {
+						exclusion = new IPath[] { new Path(SymfonyCoreConstants.SKELETON_PATH) };
 					}
 
 					IBuildpathEntry entry =  DLTKCore.newSourceEntry(folder.getFullPath(), exclusion);
@@ -298,6 +302,8 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 				}
 			}
 		} catch (ModelException e) {
+			Logger.logException(e);
+		} catch (Exception e) {
 			Logger.logException(e);
 		} finally {
 			
