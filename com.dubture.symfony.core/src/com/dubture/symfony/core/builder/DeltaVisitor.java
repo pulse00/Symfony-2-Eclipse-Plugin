@@ -35,7 +35,9 @@ public class DeltaVisitor extends AbstractSymfonyVisitor
 		case IResourceDelta.REMOVED:
 
 			//TODO: find a way to remove the routes of a deleted yml/xml file
-			indexer.deleteServices(path.toString());
+			
+			if (path != null)
+				indexer.deleteServices(path.toString());
 			
 			break;
 		}

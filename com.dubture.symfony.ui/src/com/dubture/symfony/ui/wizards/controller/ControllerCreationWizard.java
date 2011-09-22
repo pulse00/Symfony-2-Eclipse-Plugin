@@ -8,6 +8,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 
 import com.dubture.symfony.core.log.Logger;
@@ -82,16 +83,36 @@ public class ControllerCreationWizard extends CodeTemplateWizard {
 				return res;
 			}
 			
-			IFolder viewFolder = getProject().getFolder(viewPath.append(getFileName().replace("Controller.php", "")));			
-			viewFolder.create(true, false, null);
+			IFolder viewFolder = getProject().getFolder(viewPath.append(getFileName().replace("Controller.php", "")));
+			
+			if (viewFolder == null) {
+				Logger.log(Logger.ERROR, "unable to create view folder: " + viewPath.toString());
+				return res;
+			}
+			
+			if (!viewFolder.exists())
+				viewFolder.create(true, false, null);
+			
+			IModelElement[] bundleRootTemplates = model.findBundleRootTemplates(bundle.getElementName(), project);			
+			String contents = "";
+			
+			// extend the bundle root template if it's only a single template
+			if (bundleRootTemplates.length == 1) {
+				
+				IModelElement template = bundleRootTemplates[0];				
+				String[] parts = template.getElementName().split("\\.");
+				
+				//TODO: retrieve file extension via project settings (.twig | .php | etc )
+				if (parts.length > 0) {
+					contents = String.format("{%% extends '%s::%s.html.twig'  %%}", bundle.getElementName(), parts[0]);	
+				}
+			}
 			
 			for (String action : getActions()) {
 				
 				IFile file  = viewFolder.getFile(String.format("%s.html.twig", action));
-				String contents = String.format("{%% extends '%s::layout.html.twig'  %%}", bundle.getElementName());
-				InputStream source = new ByteArrayInputStream(contents.getBytes());			
-				file.create(source, false, null);
-				
+				InputStream source = new ByteArrayInputStream(contents.getBytes());
+				file.create(source, false, null);				
 			}
 			
 		} catch (Exception e) {
