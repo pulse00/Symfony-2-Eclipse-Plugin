@@ -264,5 +264,28 @@
           priority="400">
     </hover>
  </extension>
+ <extension
+       point="org.eclipse.debug.ui.launchShortcuts">
+    <shortcut
+          class="com.dubture.symfony.ui.launching.LaunchActionShortcut"
+          description="%launchAction.description&#x0A;"
+          icon="ico/full/obj16/server_run.gif"
+          id="com.dubture.symfony.ui.server.launchSymfonyAction"
+          label="%launchActionShortcut.label"
+          modes="run, debug">
+			<contextualLaunch>
+				<contextLabel mode="run" label="%symfonyServerShortcut.label" />
+				<contextLabel mode="debug" label="%symfonyServerShortcut.label" />
+				<enablement>
+					<count value="1" />
+	 				<!-- Pass a 'webPage' argument for the enablement test -->
+					<test args="webPage" property="org.eclipse.php.debug.ui.launchablePHP" value="true" />
+				</enablement>
+			</contextualLaunch>
+			<configurationType
+				id="org.eclipse.php.debug.core.launching.webPageLaunch">
+			</configurationType>          
+    </shortcut>
+ </extension>
  
 </plugin>
