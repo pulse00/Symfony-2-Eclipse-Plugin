@@ -89,8 +89,9 @@ public class InterfaceMethodsVariableResolver extends TemplateVariableResolver {
 								// first line of first method docblock doesn't need indentation
 								String prefix = i++ == 0 ? "" : indendation;
 								methodString = prefix + comment + delim + indendation;
-								
-								
+																
+							} else {
+								methodString = i++ <= 0 ? "" : indendation;
 							}
 							
 							superMethods += methodString + "protected " + method.getSource().replace(";", " {" + delim + indendation + delim + delim + indendation + "}" + delim + delim);

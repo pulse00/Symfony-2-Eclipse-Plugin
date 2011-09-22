@@ -289,7 +289,20 @@ PhpIndexingVisitorExtension {
 					ReferenceInfo info = new ReferenceInfo(IModelElement.USER_ELEMENT, start, length, name, metadata, namespace);
 					requestor.addReference(info);
 					
+				} else if (variable.isScalar()) {
+					
+					name = variable.getName();
+
+					String metadata = JsonUtils.createScalar(name, viewPath);
+					
+					Logger.debugMSG("add scalar info: " + name +  " " + metadata + " " + namespace);
+					
+					ReferenceInfo info = new ReferenceInfo(IModelElement.USER_ELEMENT, start, length, name, metadata, null);
+					requestor.addReference(info);
+					
 				}
+				
+				
 			}
 						
 			Stack<Route> routes = controllerIndexer.getRoutes();

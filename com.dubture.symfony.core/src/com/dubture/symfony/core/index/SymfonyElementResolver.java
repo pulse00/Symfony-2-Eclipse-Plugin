@@ -41,8 +41,14 @@ public class SymfonyElementResolver extends PhpElementResolver {
 		if (elementType == IModelElement.USER_ELEMENT) {
 
 			try {				
+				
+				String type = JsonUtils.getElementType(metadata);
+				
+				if (type == null)
+					return null;
+				
 				// we can only handle references at the moment
-				if (JsonUtils.getElementType(metadata).equals("reference")) {
+				if (type.equals("reference")) {
 					
 					JSONObject data = JsonUtils.getReferenceData(metadata);
 					
@@ -59,6 +65,16 @@ public class SymfonyElementResolver extends PhpElementResolver {
 						return new TemplateField(parentElement, elementName, q, className, viewPath);
 
 					}			
+				} else if (type.equals("scalar")) {
+					
+					JSONObject data = JsonUtils.getScalar(metadata);
+
+					String className = (String) data.get("elementName");
+					String viewPath = (String) data.get("viewPath");
+					
+					ModelElement parentElement = (ModelElement) sourceModule;
+					return new TemplateField(parentElement, elementName, null, className, viewPath);			
+
 				}
 			} catch (Exception e) {
 				Logger.logException(e);

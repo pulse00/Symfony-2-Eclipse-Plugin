@@ -134,4 +134,33 @@ public class JsonUtils {
 		return null;
 
 	}
+
+	@SuppressWarnings("unchecked")
+	public static String createScalar(String elementName, String viewPath) {
+
+		JSONObject data = new JSONObject();
+		data.put("elementName", elementName);
+		data.put("viewPath", viewPath);
+		
+		JSONObject header = new JSONObject();
+		header.put("type", "scalar");
+		header.put("data", data);
+		
+		return header.toString();		
+		
+
+	}
+
+	public static JSONObject getScalar(String metadata) {
+
+		try {
+			JSONObject header = (JSONObject) parser.parse(metadata);
+			return (JSONObject) header.get("data");
+		} catch (ParseException e) {
+
+			Logger.logException(e);
+		}
+		return null;
+
+	}
 }

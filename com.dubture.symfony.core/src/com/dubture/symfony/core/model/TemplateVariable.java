@@ -103,6 +103,12 @@ public class TemplateVariable  {
 		
 	}
 	
+	public boolean isScalar() {
+		
+		return namespace == null && className == null;
+		
+	}
+	
 	public String toString() {
 				
 		return getName() + " => " + getNamespace() + " - " + getClassName() + " " + getMethod();		

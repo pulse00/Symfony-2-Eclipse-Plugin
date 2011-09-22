@@ -461,6 +461,10 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 							deferredVariables.push(variable);
 						}
 					}
+				} else if (s.getValue().getClass() == Scalar.class) {
+					
+					TemplateVariable variable = new TemplateVariable(currentMethod, var.getName(), var.sourceStart(), var.sourceEnd(), null, null);
+					deferredVariables.push(variable);
 				}
 			}
 		}
