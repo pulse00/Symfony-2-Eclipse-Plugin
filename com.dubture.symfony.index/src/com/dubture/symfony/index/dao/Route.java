@@ -83,5 +83,12 @@ public class Route {
 		
 		return String.format("%s:%s:%s", bundle, controller, action);
 	}
+	
+
+	public String getName() {
+		
+		
+		return name;
+	}
 
 }

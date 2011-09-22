@@ -45,6 +45,25 @@ ${class_modifiers}class ${class_name} ${extends} ${interfaces} {
 }
 </template>
 
+
+<template
+	name="symfonyAnnotationAction"
+	description="%description.newsymfony.annotationAction"
+	id="com.dubture.symfony.ui.editor.templates.new.annotationAction"
+	context="php_new_file_context"
+	enabled="true">	
+/**
+* @Route("${routePattern}", name="{$routeName}")
+* @Template()
+*/
+public function ${actionName}Action()
+{	
+
+	return array();
+	
+}
+</template>
+
 <!--  php templates -->
 
 </templates>

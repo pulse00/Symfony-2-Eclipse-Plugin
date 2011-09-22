@@ -5,40 +5,46 @@ import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.mapping.ModelProvider;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.dialogs.IDialogPage;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.wizards.fields.ComboDialogField;
+import org.eclipse.php.internal.ui.wizards.fields.DialogField;
+import org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener;
+import org.eclipse.php.internal.ui.wizards.fields.SelectionButtonDialogField;
+import org.eclipse.php.internal.ui.wizards.fields.StringDialogField;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
+import com.dubture.symfony.core.model.Action;
+import com.dubture.symfony.index.dao.Route;
 import com.dubture.symfony.ui.SymfonyPluginImages;
+import com.dubture.symfony.ui.SymfonyUiPlugin;
 import com.dubture.symfony.ui.wizards.CodeTemplateWizardPage;
 
 /**
@@ -58,12 +64,33 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 	protected Label targetResourceLabel;
 	private List<String> actions = new ArrayList<String>();
 	private TableViewer viewer;
+	private Button addAction;
+	private Button removeAction;
+	private ComboDialogField routeType;
+	private Link routeTypeLink;
+	private StringDialogField routePrefix;
+	
+	private static final Image CHECKED = SymfonyPluginImages.DESC_OBJS_ROUTE.createImage();	
+	private static final Image UNCHECKED = SymfonyPluginImages.DESC_OBJS_ROUTE.createImage();	
+	
+	
+	private enum ModelProvider {
+		
+		INSTANCE;
 
-	/**
-	 * Constructor for SampleNewWizardPage.
-	 * 
-	 * @param pageName
-	 */
+		private List<Action> actions;
+
+		private ModelProvider() {
+			actions = new ArrayList<Action>();
+			actions.add(new Action(null, "index"));
+		}
+
+		public List<Action> getActions() {
+			return actions;
+		}		
+	}
+
+
 	public ControllerWizardPage(final ISelection selection, String initialFileName) {
 		super("wizardPage", initialFileName); //$NON-NLS-1$
 		setTitle("New Controller"); //$NON-NLS-1$
@@ -81,12 +108,11 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 
 		final GridLayout layout = new GridLayout();
 		container.setLayout(layout);
-		layout.numColumns = 3;
+		layout.numColumns = 4;
 		layout.verticalSpacing = 9;
 
 
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.widthHint = 400;
 
 		targetResourceLabel = new Label(container, SWT.NULL);
 		targetResourceLabel.setText("Controller name:");
@@ -94,8 +120,7 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		fileText.setFocus();
 		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 2;
-		// gd.widthHint = 300;
+		
 		fileText.setLayoutData(gd);
 		fileText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
@@ -103,6 +128,55 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 			}
 		});
 
+
+		final SelectionButtonDialogField createActions = new SelectionButtonDialogField(SWT.CHECK);
+		createActions.setLabelText("Generate actions");
+		createActions.doFillIntoGrid(container, 2);
+		
+		createActions.setDialogFieldListener(new IDialogFieldListener() {
+			
+			@Override
+			public void dialogFieldChanged(DialogField field) {
+
+				boolean enabled = createActions.isSelected();
+				
+				
+				viewer.getControl().setEnabled(enabled);
+				addAction.setEnabled(enabled);
+				removeAction.setEnabled(enabled);
+				routeType.setEnabled(enabled);
+//				routeTypeLink.setEnabled(enabled);
+				routePrefix.setEnabled(enabled);
+				
+			}
+		});
+		
+		
+
+		routePrefix = new StringDialogField();
+		routePrefix.setLabelText("Prefix");
+		routePrefix.doFillIntoGrid(container, 2);
+		routePrefix.setEnabled(false);
+
+		
+		String[] items = new String[] {"Annotation", "Yaml", "XML"};
+		
+		routeType = new ComboDialogField(SWT.READ_ONLY);
+		routeType.setLabelText("Route type:");
+		routeType.doFillIntoGrid(container, 2);
+		routeType.setItems(items);
+		routeType.selectItem(0);
+		routeType.setEnabled(false);
+
+
+		gd = new GridData();
+		gd.horizontalSpan = 4;
+		gd.horizontalAlignment = SWT.LEFT;
+		
+//		routeTypeLink = new Link(container, SWT.NONE);
+//		routeTypeLink.setText("Configure default...");
+//		routeTypeLink.setEnabled(false);
+		
 		gd = new GridData();
 		gd.verticalAlignment = SWT.TOP;
 
@@ -119,17 +193,21 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 		gd = new GridData();
 		gd.verticalAlignment = SWT.TOP;
 
+		createViewer(container);
 		Composite buttonContainer = new Composite(container, SWT.NULL);
 		buttonContainer.setLayout(buttonLayout);
 		buttonContainer.setLayoutData(gd);
 
-
-		Button addInterface = new Button(buttonContainer, SWT.NULL);
-		addInterface.setText("Add...");
+		viewer.getControl().setEnabled(false);
+		
+		addAction = new Button(buttonContainer, SWT.NULL);
+		addAction.setText("Add...");
+		addAction.setEnabled(false);
 		//		addInterface.addSelectionListener(interfaceSelectionListener);
 
-		Button removeInterface = new Button(buttonContainer, SWT.NULL);
-		removeInterface.setText("Remove");
+		removeAction = new Button(buttonContainer, SWT.NULL);
+		removeAction.setText("Remove");
+		removeAction.setEnabled(false);
 
 		//		removeInterface.addSelectionListener(interfaceRemoveListener);
 
@@ -143,46 +221,103 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 		.setHelp(parent,
 				IPHPHelpContextIds.CREATING_A_PHP_FILE_WITHIN_A_PROJECT);
 	}
-	
 
-	public class ActionModel {
+	private void createViewer(Composite parent) {
 		
-		public String name;
+		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
+				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+		
+		createColumns(viewer);
+		final Table table = viewer.getTable();
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
 
-		public ActionModel(String name) {
+		viewer.setContentProvider(new ArrayContentProvider());
+		// Get the content for the viewer, setInput will call getElements in the
+		// contentProvider
+		viewer.setInput(ModelProvider.INSTANCE.getActions());
+
+		// Make the selection available to other views
+		//		getSite().setSelectionProvider(viewer);
+		// Set the sorter for the table
+
+		// Layout the viewer
+		GridData gridData = new GridData();
+		gridData.verticalAlignment = GridData.FILL;
+		gridData.horizontalSpan = 2;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		gridData.horizontalAlignment = GridData.FILL;
+		viewer.getControl().setLayoutData(gridData);
+	}
+
+	public TableViewer getViewer() {
+		return viewer;
+	}
+
+	// This will create the columns for the table
+	private void createColumns(final TableViewer viewer) {
+		
+		String[] titles = { "Name", "Route", "Template" };
+		int[] bounds = { 100, 100, 100 };
+
+		// First column is for the action name
+		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				Action p = (Action) element;
+				return p.getElementName();
+			}
+		});
+
+		// Second column is for the route
+		col = createTableViewerColumn(titles[1], bounds[1], 1);
+		col.setLabelProvider(new ColumnLabelProvider() {
 			
-			this.name = name;
-			
-		}
+			@Override
+			public String getText(Object element) {
+				Action p = (Action) element;
+				
+				Route route = p.getRoute();
+				
+				if (route != null)
+					return route.getName();
+				
+				return null;
 
-		public String toString() {
-			return name;
-		}
-	}	
+			}
+		});
 
-	private class ControllerContentProvider implements IStructuredContentProvider {
+		// Second column is for the template creation
+		col = createTableViewerColumn(titles[2], bounds[2], 2);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return null;
+			}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-		 */
-		public Object[] getElements(Object inputElement) {
-						
-			return (ActionModel[])inputElement;
-		}
+			@Override
+			public Image getImage(Object element) {
+				if (((Action) element).hasTemplate()) {
+					return CHECKED;
+				} else {
+					return UNCHECKED;
+				}
+			}
+		});
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-		 */
-		public void dispose() {
+	}
 
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-		 */
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-
-		}
+	private TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber) {
+		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer,
+				SWT.NONE);
+		final TableColumn column = viewerColumn.getColumn();
+		column.setText(title);
+		column.setWidth(bound);
+		column.setResizable(true);
+		column.setMoveable(true);
+		return viewerColumn;
 
 	}	
 
@@ -195,66 +330,10 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 		gridData.grabExcessVerticalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;		
 
-		
-		viewer = new TableViewer(composite,SWT.BORDER|SWT.FULL_SELECTION);
-		viewer.getControl().setLayoutData(gridData);
-		
-		viewer.setLabelProvider(new LabelProvider());
-		viewer.setContentProvider(new ControllerContentProvider());
-		viewer.setCellModifier(new ICellModifier() {
 
-			public boolean canModify(Object element, String property) {
-				return true;
-			}
 
-			public Object getValue(Object element, String property) {
-				
-				return ((ActionModel)element).name + "";
-				
-			}
-
-			public void modify(Object element, String property, Object value) {
-				
-				TableItem item = (TableItem)element;
-				((ActionModel)item.getData()).name = value.toString();
-				viewer.update(item.getData(), null);
-				
-			}
-
-		});
-		viewer.setColumnProperties(new String[] { "name", "route" });
-		viewer.setCellEditors(new CellEditor[] { new TextCellEditor(viewer.getTable()),new TextCellEditor(viewer.getTable()) });
-
-		TableColumn column = new TableColumn(viewer.getTable(),SWT.NONE);
-		column.setWidth(100);
-		column.setText("Name");
-
-		column = new TableColumn(viewer.getTable(),SWT.NONE);
-		column.setWidth(100);
-		column.setText("Route");
-
-		ActionModel[] model = createModel();
-		viewer.setInput(model);
-		viewer.getTable().setLinesVisible(true);
-		viewer.getTable().setHeaderVisible(true);
-
-		viewer.getTable().addListener(SWT.EraseItem, new Listener() {
-
-			/* (non-Javadoc)
-			 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
-			 */
-			public void handleEvent(Event event) {
-				event.detail &= ~SWT.SELECTED;
-			}
-		});
 	}
 
-	private ActionModel[] createModel() {
-		
-		ActionModel[] elements = new ActionModel[1];		
-		elements[0] = new ActionModel("index");		
-		return elements;
-	}	
 
 	/**
 	 * Tests if the current workbench selection is a suitable container to use.
@@ -339,8 +418,7 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 			}
 		}
 
-		final IContentType contentType = Platform.getContentTypeManager()
-				.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+
 
 		//		if (!contentType.isAssociatedWith(fileName)) {
 		//			// fixed bug 195274
@@ -370,17 +448,10 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 	public String getFileName() {
 		return fileText.getText();
 	}
-	
-	public List<String> getActions() {
-		
-		ActionModel[] model = (ActionModel[]) viewer.getInput();		
-		List<String> actions = new ArrayList<String>();		
-		
-		for (ActionModel action : model) {			
-			actions.add(action.name);
-		}		
-		
-		return actions;
-		
+
+	public List<Action> getActions() {
+
+		return ModelProvider.INSTANCE.actions;
+
 	}
 }

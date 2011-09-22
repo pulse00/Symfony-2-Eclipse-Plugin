@@ -66,7 +66,7 @@ abstract public class CodeTemplateWizard extends Wizard implements INewWizard {
 		
 		final String containerName = codeTemplateWizardPage.getContainerName();		
 		final String fileName = getFileName();
-
+		
 		return compileTemplate(containerName, fileName, getTemplateName(), getContextTypeID());
 		
 	}

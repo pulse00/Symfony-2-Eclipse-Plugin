@@ -12,6 +12,7 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.core.model.Action;
 import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.ui.wizards.CodeTemplateWizard;
@@ -108,11 +109,13 @@ public class ControllerCreationWizard extends CodeTemplateWizard {
 				}
 			}
 			
-			for (String action : getActions()) {
+			for (Action action : getActions()) {
 				
-				IFile file  = viewFolder.getFile(String.format("%s.html.twig", action));
-				InputStream source = new ByteArrayInputStream(contents.getBytes());
-				file.create(source, false, null);				
+				if (action.hasTemplate()) {
+					IFile file  = viewFolder.getFile(String.format("%s.html.twig", action.getElementName()));
+					InputStream source = new ByteArrayInputStream(contents.getBytes());
+					file.create(source, false, null);
+				}
 			}
 			
 		} catch (Exception e) {
@@ -123,7 +126,7 @@ public class ControllerCreationWizard extends CodeTemplateWizard {
 		
 	}
 
-	private List<String> getActions() {
+	private List<Action> getActions() {
 
 		return ( (ControllerWizardPage) codeTemplateWizardPage).getActions();
 		
