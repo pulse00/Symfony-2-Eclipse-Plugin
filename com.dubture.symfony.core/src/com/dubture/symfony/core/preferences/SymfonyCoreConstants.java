@@ -60,7 +60,13 @@ public class SymfonyCoreConstants {
 	
 	public static final String BUILTIN_SYMFONY		= "/Resources/symfony/standard/";
 	public static final String BUILTIN_VENDOR		= "vendors";
-	public static final String BUILTIN_NO_VENDOR	= "novendors";	
+	public static final String BUILTIN_NO_VENDOR	= "novendors";
+	
+	
+	// routing types
+	public static final String ANNOTATION			= "annotation";
+	public static final String YAML					= "yaml";
+	public static final String XML					= "xml";
 	
 
 

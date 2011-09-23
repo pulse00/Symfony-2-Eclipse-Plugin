@@ -30,4 +30,5 @@ Export-Package: com.dubture.symfony.ui,
  com.dubture.symfony.ui.popup.actions,
  com.dubture.symfony.ui.preferences,
  com.dubture.symfony.ui.wizards
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/snakeyaml-1.8.jar

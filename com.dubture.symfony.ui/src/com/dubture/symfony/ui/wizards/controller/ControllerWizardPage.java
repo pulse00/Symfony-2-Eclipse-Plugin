@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 import com.dubture.symfony.core.model.Action;
+import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.index.dao.Route;
 import com.dubture.symfony.ui.SymfonyPluginImages;
 import com.dubture.symfony.ui.SymfonyUiPlugin;
@@ -82,7 +83,7 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 
 		private ModelProvider() {
 			actions = new ArrayList<Action>();
-			actions.add(new Action(null, "index"));
+			actions.add(new Action(null, "index", "/", "viewpath"));
 		}
 
 		public List<Action> getActions() {
@@ -453,5 +454,27 @@ public class ControllerWizardPage extends CodeTemplateWizardPage {
 
 		return ModelProvider.INSTANCE.actions;
 
+	}
+
+	public String getRouteType() {
+	
+		switch (routeType.getSelectionIndex()) {
+
+		case 0:
+			return SymfonyCoreConstants.ANNOTATION;
+		case 1:
+			return SymfonyCoreConstants.YAML;
+		case 2:
+			return SymfonyCoreConstants.XML;
+		}
+		
+		return null;
+		
+	}
+	
+	public String getRoutePrefix() {
+				
+		return routePrefix.getText();
+		
 	}
 }

@@ -6,15 +6,19 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
+import org.yaml.snakeyaml.Loader;
+import org.yaml.snakeyaml.Yaml;
 
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.Action;
 import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
+import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.ui.wizards.CodeTemplateWizard;
 
 
@@ -91,6 +95,14 @@ public class ControllerCreationWizard extends CodeTemplateWizard {
 				return res;
 			}
 			
+			String routeType = getRouteType();
+			String routePrefix = getRoutePrefix();
+			
+			if (routeType != SymfonyCoreConstants.ANNOTATION) {
+				createRoutes(routeType, routePrefix, project, bundle);
+			}
+			
+			
 			if (!viewFolder.exists())
 				viewFolder.create(true, false, null);
 			
@@ -125,6 +137,47 @@ public class ControllerCreationWizard extends CodeTemplateWizard {
 		return res;
 		
 	}
+
+	
+	private void createRoutes(String routeType, String routePrefix, IScriptProject project, Bundle bundle) throws CoreException {
+
+		if (routeType.equals(SymfonyCoreConstants.YAML)) {
+			
+			IFile ymlConfig = project.getProject().getFile(project.getPath().append("app/config/routing.yml"));
+			
+			if (!ymlConfig.exists()) {				
+				InputStream input = new ByteArrayInputStream(new String().getBytes());
+				ymlConfig.create(input, true, null);
+			}
+			
+			Yaml yaml = new Yaml();
+			Object o = yaml.load(ymlConfig.getContents());
+			
+			System.err.println(o.getClass().toString());
+			
+			
+		} else if (routeType.equals(SymfonyCoreConstants.XML)) {
+			
+			
+		}
+		
+		
+	}
+
+
+	private String getRoutePrefix() {
+
+		return ( (ControllerWizardPage) codeTemplateWizardPage).getRoutePrefix();
+		
+	}
+
+
+	private String getRouteType() {
+		
+		return ( (ControllerWizardPage) codeTemplateWizardPage).getRouteType();
+		
+	}
+
 
 	private List<Action> getActions() {
 
