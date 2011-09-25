@@ -83,6 +83,7 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
 			String literal = content.substring(startOffset, endOffset);
 			
 			// viewpaths are linked using ViewpathHyperlinkDetector
+			
 //			// try to resolve a viewepath first
 //			ViewPath viewPath = new ViewPath(literal);
 //

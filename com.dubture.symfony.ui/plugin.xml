@@ -87,6 +87,13 @@
           name="%viewpathDetector.name"
           targetId="org.eclipse.php.core.phpsource">
     </hyperlinkDetector>            
+    <hyperlinkDetector
+          activate="true"
+          class="com.dubture.symfony.ui.editor.hyperlink.AssetHyperlinkDetector"
+          id="com.dubture.symfony.ui.javascriptDetector"
+          name="%javascriptDetector.name"
+          targetId="org.eclipse.php.core.phpsource">
+    </hyperlinkDetector>                
  </extension>
  
 	<extension point="org.eclipse.ui.perspectiveExtensions">
@@ -112,7 +119,7 @@
         	project="true">
         </wizard>
 		
-		
+		<!-- https://github.com/sensio/SensioGeneratorBundle can be used for this, no need to implement it in the plugin
 		<wizard
         	category="com.dubture.symfony.project.ui"
         	class="com.dubture.symfony.ui.wizards.controller.ControllerCreationWizard"
@@ -121,6 +128,7 @@
         	name="%wizard.new.controller"
         	project="false">
         </wizard>
+        -->
         
 		<wizard
         	category="com.dubture.symfony.project.ui"
