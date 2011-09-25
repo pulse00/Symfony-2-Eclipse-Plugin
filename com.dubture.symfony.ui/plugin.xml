@@ -295,5 +295,13 @@
 			</configurationType>          
     </shortcut>
  </extension>
+ <extension
+       point="org.eclipse.ui.console.consoleFactories">
+    <consoleFactory
+          class="com.dubture.symfony.ui.console.SymfonyConsoleFactory"
+          icon="ico/full/obj16/symfony_icon.gif"
+          label="Symfony">
+    </consoleFactory>
+ </extension>
  
 </plugin>
