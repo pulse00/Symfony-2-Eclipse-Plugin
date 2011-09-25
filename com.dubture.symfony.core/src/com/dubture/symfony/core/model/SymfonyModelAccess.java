@@ -887,5 +887,21 @@ public class SymfonyModelAccess extends PhpModelAccess {
 
 		return namespaces;
 				
+	}
+
+	public IPath resolveBundleShortcut(String string, IScriptProject project) {
+		
+		String bundle = string.replace("@", "");
+		// split at camelcase
+//		String[] parts = bundle.split("(?<!^)(?=[A-Z])");
+		
+		IScriptFolder folder = findBundleFolder(bundle, project);
+		
+		
+		if (folder != null)
+			return folder.getPath();
+		
+		return null;
+		
 	}	
 }

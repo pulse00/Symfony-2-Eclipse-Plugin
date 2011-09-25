@@ -2,6 +2,7 @@ package com.dubture.symfony.ui.editor.hyperlink;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
@@ -13,6 +14,7 @@ import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.core.model.SymfonyModelAccess;
 
 
 /**
@@ -43,7 +45,6 @@ public class AssetHyperlinkDetector extends StringHyperlinkDetector {
 		if (sourceModule == null)
 			return null;
 		
-
 		IDocument document = textViewer.getDocument();
 		int offset = region.getOffset();
 
@@ -56,17 +57,50 @@ public class AssetHyperlinkDetector extends StringHyperlinkDetector {
 
 			String path = document.get(wordRegion.getOffset(), wordRegion.getLength());
 			
+			// only resolve .js and .css files
 			if (! (path.endsWith(".js") || path.endsWith(".css")) ) {
 				return null;
 			}
-						
+
+			
 			IScriptProject scriptProject = sourceModule.getScriptProject();			
 			IProject project = scriptProject.getProject();			
-			IFile file = project.getFile(new Path("web/" + path));			
+
+			IPath filePath = null;
 			
-			IHyperlink hyperlink = new AssetHyperlink(wordRegion, file);
+			// the resource starts with a bundle alias
+			if (path.startsWith("@")) {
+				
+				String[] parts = path.split("/");
+				
+				if (parts.length <= 0)
+					return null;
+				
+				filePath = SymfonyModelAccess.getDefault().resolveBundleShortcut(parts[0], scriptProject);
+				
+				if (filePath != null) {
+					
+					// prepare the relative path
+					path = path.replace(parts[0], "").replaceFirst("/", "");
+				
+					filePath = filePath.removeFirstSegments(1).append(path);
+				}
+				
+			// it's a regular asset string, try to resolve it in the web folder
+			} else {
+				filePath = new Path("web/" + path);
+			}
+									
+			if (filePath == null)
+				return null;
 			
-			return new IHyperlink[] { hyperlink };			
+			IFile file = project.getFile(filePath);			
+			
+			if (!file.exists()) {
+				return null;
+			}
+			
+			return new IHyperlink[] { new AssetHyperlink(wordRegion, file) };			
 			
 		} catch (Exception e) {			
 			Logger.logException(e.getMessage(), e);			
