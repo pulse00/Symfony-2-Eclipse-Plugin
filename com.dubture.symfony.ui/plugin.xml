@@ -303,5 +303,23 @@
           label="Symfony">
     </consoleFactory>
  </extension>
+ <extension
+       point="org.eclipse.php.ui.quickFixProcessors">
+    <quickFixProcessor
+          class="com.dubture.symfony.ui.quickfix.InterfaceMethodQuickFixProcessor"
+          id="com.dubture.symfony.ui.interfaceQuickfixProcessor"
+          name="InterfaceMethod Problem Marker">
+    </quickFixProcessor>
+ </extension>
+ <extension
+       id="interfacemethodmarker"
+       point="org.eclipse.core.resources.markers">
+    <persistent
+          value="true">
+    </persistent>
+    <super
+          type="org.eclipse.php.core.phpproblemmarker">
+    </super>
+ </extension>
  
 </plugin>

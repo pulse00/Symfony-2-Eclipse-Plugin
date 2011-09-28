@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Symfony Core Plugin
 Bundle-SymbolicName: com.dubture.symfony.core;singleton:=true
-Bundle-Version: 1.0.32.qualifier
+Bundle-Version: 1.0.33.qualifier
 Bundle-Activator: com.dubture.symfony.core.SymfonyCorePlugin
 Bundle-Vendor: Symfony
 Require-Bundle: org.eclipse.core.runtime,
@@ -23,6 +23,7 @@ Export-Package: com.dubture.symfony.core,
  com.dubture.symfony.core.builder,
  com.dubture.symfony.core.codeassist.contexts,
  com.dubture.symfony.core.codeassist.strategies,
+ com.dubture.symfony.core.compiler,
  com.dubture.symfony.core.index,
  com.dubture.symfony.core.log,
  com.dubture.symfony.core.model,

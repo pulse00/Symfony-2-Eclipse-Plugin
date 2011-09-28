@@ -21,8 +21,6 @@ import com.dubture.symfony.core.visitor.AnnotationVisitor;
 public class SymfonyBuildParticipant implements IBuildParticipant {
 
 	
-	
-	
 	private ModuleDeclaration getModuleDeclaration(IBuildContext context) {
 		
 		ISourceModule sourceModule = context.getSourceModule();		
