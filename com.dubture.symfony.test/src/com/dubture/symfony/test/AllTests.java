@@ -23,7 +23,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	RoutingParserTest.class,
 	ControllerTest.class,
 	PathUtilsTest.class,
-	
+	ModelUtilsTest.class,	
 	})
 public class AllTests {
 

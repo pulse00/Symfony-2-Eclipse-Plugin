@@ -124,6 +124,9 @@ public class ModelUtils {
 			if (token.endsWith("Bundle")) {
 				return prefix + token;
 			}
+			
+			if (i > 1) 
+				prefix += token;
 		}
 		
 		return null;
