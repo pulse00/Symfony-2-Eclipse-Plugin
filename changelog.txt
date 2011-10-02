@@ -1,3 +1,11 @@
+1.0.35
+
+* Added hyperlinks for assets
+* Added "PHP Class" wizard
+* Added "New Symfony Project" wizard
+* Added validation for implemented Interface methods
+* Couple of bugfixes
+
 1.0.32
 
 * support for various twig improvements

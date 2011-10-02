@@ -2,7 +2,7 @@
 <feature
       id="com.dubture.symfony.twigfeature"
       label="Symfony Twig Support"
-      version="1.0.32.qualifier"
+      version="1.0.33.qualifier"
       provider-name="https://github.com/pulse00/Symfony-2-Eclipse-Plugin">
 
    <description url="https://github.com/pulse00/Symfony-2-Eclipse-Plugin">
