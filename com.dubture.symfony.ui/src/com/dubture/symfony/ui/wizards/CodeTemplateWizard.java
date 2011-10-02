@@ -169,10 +169,9 @@ abstract public class CodeTemplateWizard extends Wizard implements INewWizard {
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor)
 					throws InvocationTargetException {
-				try {
-					new FileCreator().createFile(CodeTemplateWizard.this,
-							containerName, fileName, monitor, template.string,
-							template.offset);
+				try {					
+					new FileCreator().createFile(CodeTemplateWizard.this, containerName, 
+							fileName, monitor, template.string, template.offset);
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
 				} finally {
@@ -185,6 +184,8 @@ abstract public class CodeTemplateWizard extends Wizard implements INewWizard {
 		} catch (InterruptedException e) {
 			return false;
 		} catch (InvocationTargetException e) {
+			com.dubture.symfony.core.log.Logger.logException(e.getMessage(), e);
+//			e.printStackTrace();
 			Throwable realException = e.getTargetException();
 			MessageDialog.openError(getShell(),
 					PHPUIMessages.PHPFileCreationWizard_0,

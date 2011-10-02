@@ -3,7 +3,6 @@ package com.dubture.symfony.core.visitor;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
@@ -19,12 +18,10 @@ import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.php.internal.core.ast.nodes.MethodDeclaration;
 import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
@@ -154,6 +151,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
 			
 			if (interf instanceof FullyQualifiedReference) {
 				
+				
 				FullyQualifiedReference fqr = (FullyQualifiedReference) interf;				
 				IType[] types = PhpModelAccess.getDefault().findTypes(fqr.getName(), MatchRule.EXACT, 0, 0, scope, null);
 				
@@ -175,10 +173,15 @@ public class AnnotationVisitor extends PHPASTVisitor {
 						ProblemSeverity severity = SymfonyCorePreferences.getAnnotationSeverity();
 						int lineNo = context.getLineTracker().getLineInformationOfOffset(fqr.sourceStart()).getOffset();
 						
-						String message = unimplemented.size() + " unimplemented method";
 						
-						if (unimplemented.size() > 1)
-							message += "s";
+						String message = "Missing method implementations: ";
+						
+						for (IMethod m : unimplemented) {
+							
+							message += m.getElementName() + ", ";
+							
+						}
+						
 						
 						
 						IProblem problem = new DefaultProblem(context.getFileName(), message, ISymfonyProblem.InterfaceRelated,
@@ -188,6 +191,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
 						
 					}					
 				}
+				
 			}
 		}
 		

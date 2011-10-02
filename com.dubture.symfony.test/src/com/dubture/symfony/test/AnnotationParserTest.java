@@ -207,11 +207,8 @@ public class AnnotationParserTest extends TestCase {
 			tree.accept(visitor);
 				
 			if (expectFail && reporter.hasErrors() == false) {
-				
-				System.err.println(line + " " + reporter.hasErrors());
 				fail();
-			}
-				
+			}				
 			
 			return visitor;
 			

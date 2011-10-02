@@ -38,14 +38,6 @@ public class InterfaceMethodCompletionProposal extends PHPCompletionProposal {
 	}
 	
 	
-	@Override
-	public void apply(IDocument document, char trigger, int offset) {
-
-		System.err.println("apply");
-		super.apply(document, trigger, offset);
-	}
-	
-	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void apply(ITextViewer viewer, char trigger, int stateMask,

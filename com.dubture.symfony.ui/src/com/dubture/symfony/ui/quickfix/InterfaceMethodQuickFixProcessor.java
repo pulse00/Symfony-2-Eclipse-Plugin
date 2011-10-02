@@ -22,7 +22,6 @@ public class InterfaceMethodQuickFixProcessor implements IQuickFixProcessor {
 	public boolean hasCorrections(ISourceModule unit, int problemId) {
 
 		if (problemId == ISymfonyProblem.InterfaceRelated) {
-			System.err.println("can correct");
 			return true;
 		}
 

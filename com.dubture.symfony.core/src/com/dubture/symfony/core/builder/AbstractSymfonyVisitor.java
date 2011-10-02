@@ -41,64 +41,60 @@ public abstract class AbstractSymfonyVisitor {
 	protected SymfonyIndexer indexer;
 	protected int timestamp;
 	protected JSONArray syntheticServices;
-	
+
 
 	protected boolean handleResource(IResource resource) {
 
 		boolean built = false;
-		
+
 		try {
-			
-				if (resource instanceof IProject || resource instanceof IFolder) {
-					
-					return resource.getProject().hasNature(SymfonyNature.NATURE_ID);
-					
-				}
-					
-				if (resource instanceof IFile) {
-					
-					indexer = SymfonyIndexer.getInstance();
-					file = (IFile) resource;
-					path = resource.getFullPath();
-					resource.getParent();
-					timestamp = (int) resource.getLocalTimeStamp();
-					
-					if (resource.getFileExtension().equals("xml"))
-					{				
-						loadXML();
+
+			if (resource instanceof IProject || resource instanceof IFolder) {
+				return resource.getProject().hasNature(SymfonyNature.NATURE_ID);
+			}
+
+			if (resource instanceof IFile) {
+
+				indexer = SymfonyIndexer.getInstance();
+				file = (IFile) resource;
+				path = resource.getFullPath();
+				resource.getParent();
+				timestamp = (int) resource.getLocalTimeStamp();
+				
+				if (resource.getFileExtension().equals("xml"))
+				{				
+					loadXML();
+					built = true;
+
+				} else if (resource.getFileExtension().equals("yml")) {
+
+					if (resource.getName().equals("services.yml")) {					
+						loadYaml();
 						built = true;
-
-					} else if (resource.getFileExtension().equals("yml")) {
-						
-						if (resource.getName().equals("services.yml")) {					
-							loadYaml();
-							built = true;
-						} else if (resource.getName().contains("routing")) {
-							loadYamlRouting();
-							built = true;
-						}
+					} else if (resource.getName().contains("routing")) {
+						loadYamlRouting();
+						built = true;
 					}
-					
 				}
+			}
 
-			
+
 		} catch (Exception e) {
-
 			Logger.logException(e);
 		}
-		
+
 		return built;
-		
+
 	}
-	
+
 
 	protected JSONArray getSynthetics() {
-		
+
 		if (syntheticServices == null)
 			syntheticServices = ProjectOptions.getSyntheticServices(file.getProject());;
-		
-		return syntheticServices;
-		
+
+			return syntheticServices;
+
 	}
 
 
@@ -108,9 +104,9 @@ public abstract class AbstractSymfonyVisitor {
 
 			YamlRoutingParser parser = new YamlRoutingParser(file.getContents());
 			parser.parse();
-			
+
 			indexRoutes(parser.getRoutes());		
-			
+
 		} catch (ScannerException se) {
 			Logger.logException(se);
 		} catch (Exception e) {		
@@ -126,14 +122,14 @@ public abstract class AbstractSymfonyVisitor {
 			indexer.addRoute(route, file.getProject().getFullPath());
 		}
 		indexer.exitRoutes();		
-		
+
 	}
 
 
 	protected void loadYaml() {
 
 		try {
-			
+
 			YamlConfigParser parser = new YamlConfigParser(file.getContents());
 			parser.parse();
 
@@ -158,7 +154,7 @@ public abstract class AbstractSymfonyVisitor {
 			if (parser.hasServices()) {
 				indexServices(parser.getServices());
 			}
-			
+
 			if (parser.hasRoutes()) {
 				indexRoutes(parser.getRoutes());
 			}
@@ -177,14 +173,14 @@ public abstract class AbstractSymfonyVisitor {
 
 			indexer.enterServices(path.toString());
 			Iterator it = services.keySet().iterator();
-			
+
 			JSONArray synths = getSynthetics();
 
 			while(it.hasNext()) {
 
 				String id = (String) it.next();
 				String phpClass = services.get(id);				
-				
+
 				if(phpClass.equals(Service.SYNTHETIC)) {
 					for (Object o : synths) {
 						JSONObject service = (JSONObject) o;
@@ -194,11 +190,10 @@ public abstract class AbstractSymfonyVisitor {
 						}
 					}
 				}
-				
-				System.err.println("index service");
+
 				indexer.addService(id, phpClass, path.toString(), timestamp);
 			}
-			
+
 			indexer.exitServices();			
 
 		} catch (Exception e) {

@@ -303,6 +303,10 @@
           label="Symfony">
     </consoleFactory>
  </extension>
+ 
+ <!-- TODO: finish implementation -->
+ 
+ <!--
  <extension
        point="org.eclipse.php.ui.quickFixProcessors">
     <quickFixProcessor
@@ -321,5 +325,6 @@
           type="org.eclipse.php.core.phpproblemmarker">
     </super>
  </extension>
+ -->
  
 </plugin>

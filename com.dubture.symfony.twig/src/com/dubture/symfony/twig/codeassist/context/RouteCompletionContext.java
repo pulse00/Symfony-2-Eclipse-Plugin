@@ -3,7 +3,6 @@ package com.dubture.symfony.twig.codeassist.context;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 import com.dubture.twig.core.codeassist.context.QuotesContext;
@@ -37,18 +36,11 @@ public class RouteCompletionContext extends QuotesContext {
 				 return false;
 			 }			
 			 
-			 try {
-				//System.err.println("is twig context " + sourceModule.getUnderlyingResource().getFileExtension());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			return true;
 			
 		}
 		
-		
-//		System.err.println("no twig context");
 		return false;
+		
 	}
 }

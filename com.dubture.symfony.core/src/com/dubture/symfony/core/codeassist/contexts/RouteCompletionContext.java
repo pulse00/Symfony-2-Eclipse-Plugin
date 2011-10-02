@@ -42,11 +42,8 @@ public class RouteCompletionContext extends QuotesContext {
 				 IScriptProject project = getSourceModule().getScriptProject();
 				 
 				 if (SymfonyTextSequenceUtilities.isInRouteFunctionParameter(statement, project) == false) {
-					 System.err.println("not in route function");
 					 return false;
 				 }
-				 
-//				 System.err.println("is symfony context "  + sourceModule.getUnderlyingResource().getFileExtension());
 				 
 				 return true;
 				 
@@ -55,7 +52,6 @@ public class RouteCompletionContext extends QuotesContext {
 			}
 		}
 		
-//		System.err.println("no symfony context");
 		return false;
 	}
 }

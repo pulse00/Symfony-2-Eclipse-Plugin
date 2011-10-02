@@ -11,7 +11,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
-import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
 import com.dubture.symfony.core.log.Logger;
@@ -152,9 +151,6 @@ public class ControllerCreationWizard extends CodeTemplateWizard {
 			
 			Yaml yaml = new Yaml();
 			Object o = yaml.load(ymlConfig.getContents());
-			
-			System.err.println(o.getClass().toString());
-			
 			
 		} else if (routeType.equals(SymfonyCoreConstants.XML)) {
 			
