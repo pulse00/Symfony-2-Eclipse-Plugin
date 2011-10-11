@@ -61,17 +61,17 @@ public abstract class AbstractSymfonyVisitor {
 				resource.getParent();
 				timestamp = (int) resource.getLocalTimeStamp();
 				
-				if (resource.getFileExtension().equals("xml"))
+				if ("xml".equals(resource.getFileExtension()))
 				{				
 					loadXML();
 					built = true;
 
-				} else if (resource.getFileExtension().equals("yml")) {
+				} else if ("yml".equals(resource.getFileExtension())) {
 
-					if (resource.getName().equals("services.yml")) {					
+					if ("services.yml".equals(resource.getName())) {					
 						loadYaml();
 						built = true;
-					} else if (resource.getName().contains("routing")) {
+					} else if ("routing".equals(resource.getName())) {
 						loadYamlRouting();
 						built = true;
 					}

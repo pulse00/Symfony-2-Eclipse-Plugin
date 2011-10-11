@@ -60,7 +60,6 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 			return;			
 		}
 		
-		//TODO: this needs caching!!!
 		ISourceModule module = context.getSourceModule();		
 		List<Route> routes = SymfonyModelAccess.getDefault().findRoutes(module.getScriptProject());		
 		SourceRange range = getReplacementRange(context);

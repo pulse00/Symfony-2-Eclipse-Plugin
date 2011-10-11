@@ -1,5 +1,7 @@
 package com.dubture.symfony.core.model;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +29,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ScriptFolder;
 import org.eclipse.dltk.internal.core.ScriptProject;
+import org.eclipse.dltk.internal.core.util.LRUCache;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -65,6 +68,9 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	
 	private static final IModelElement[] EMPTY = {};	
 
+	
+	private LRUCache controllerCache = new LRUCache();
+	private LRUCache serviceCache2 = new LRUCache();
 	
 	private SymfonyModelAccess() {
 
@@ -526,6 +532,12 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	 */
 	public Service findService(final String id, IPath path) {
 		
+		String key = id + path.toString();
+		
+		if (serviceCache2.get(key) != null) {
+			return (Service) serviceCache2.get(key);
+		}
+		
 		final List<Service> services = new ArrayList<Service>();
 		
 		if (index == null) {
@@ -539,8 +551,6 @@ public class SymfonyModelAccess extends PhpModelAccess {
 			
 			@Override
 			public void handle(String id, String phpClass, String path) {
-				
-				
 				services.add(new Service(id, phpClass, path, null));				
 			}
 		});
@@ -556,11 +566,14 @@ public class SymfonyModelAccess extends PhpModelAccess {
 				String alias = fqcn.substring(fqcn.indexOf("_")+1);
 				Service reference = SymfonyModelAccess.getDefault().findService(alias, service.getPath());
 				
-				if (reference != null)
+				if (reference != null) {
+					serviceCache2.put(key, reference);
 					return reference;
+				}
 				
 			}			
 			
+			serviceCache2.put(key, service);
 			return service;
 		}
 		
@@ -637,6 +650,13 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	public IType findController(String bundle, String controller,
 			IScriptProject scriptProject) {
 
+		String name = scriptProject.getElementName();
+		String key = bundle + controller + name;
+		
+		if ( (controllerCache.get(key)) != null) {
+			return (IType) controllerCache.get(key);
+		}
+		
 		ScriptFolder bundleFolder = findBundleFolder(bundle, scriptProject);
 		if(bundleFolder == null)
 			return null;
@@ -650,8 +670,10 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		
 		IType[] controllers = findTypes(controller, MatchRule.PREFIX, 0, 0, controllerScope, null); 
 		
-		if(controllers.length == 1)
+		if(controllers.length == 1) {			
+			controllerCache.put(key, controllers[0]);
 			return controllers[0];
+		}
 		
 		return null;
 		
