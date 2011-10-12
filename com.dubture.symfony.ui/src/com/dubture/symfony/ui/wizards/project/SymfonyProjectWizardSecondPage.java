@@ -210,7 +210,8 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 
 			level++;
 
-			String path = file.getAbsolutePath().replace(symfonyPath, "");
+			// handle windows path separators
+			String path = file.getAbsolutePath().replace("\\", "/").replace(symfonyPath, "");
 
 			// import the directory
 			if(file.isDirectory() && ! file.isHidden()) {
