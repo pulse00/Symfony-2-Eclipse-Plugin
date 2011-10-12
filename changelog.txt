@@ -1,3 +1,8 @@
+1.0.36
+
+* Updated to symfony 2.0.4
+* Codeassist performance improvements
+
 1.0.35
 
 * Added hyperlinks for assets
