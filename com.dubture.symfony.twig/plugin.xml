@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="com.dubture.twig.core.completionStrategyResolvers">
+      <resolver
+            class="com.dubture.symfony.twig.codeassist.TwigCompletionStrategyFactory">
+      </resolver>
+   </extension>
+   <extension
+         point="com.dubture.twig.core.completionContextResolvers">
+      <resolver
+            class="com.dubture.symfony.twig.codeassist.TwigCompletionContextResolver">
+      </resolver>
+   </extension>
+   <extension
+         id="id2"
+         point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
+      <scriptCompletionProposalComputer
+            categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
+            class="com.dubture.symfony.ui.contentassist.SymfonyCompletionProposalComputer"
+            toolkitId="org.eclipse.php.core.PHPNature">
+         <partition
+               type="com.dubture.twig.TWIG_DEFAULT">
+         </partition>
+      </scriptCompletionProposalComputer>
+   </extension>
+   <extension
+         point="com.dubture.symfony.ui.projectWizardExtension">
+      <wizardextension
+            class="com.dubture.symfony.twig.ui.TwigProjectWizardExtension">
+      </wizardextension>
+   </extension>
+
+</plugin>

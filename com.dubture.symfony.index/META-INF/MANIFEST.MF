@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Symfony Index
+Bundle-SymbolicName: com.dubture.symfony.index;singleton:=true
+Bundle-Version: 1.0.36.qualifier
+Bundle-Activator: com.dubture.symfony.index.SymfonyIndex
+Require-Bundle: org.eclipse.core.runtime,
+ org.h2
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: com.dubture.symfony.index,
+ com.dubture.symfony.index.dao
+Bundle-Vendor: Symfony

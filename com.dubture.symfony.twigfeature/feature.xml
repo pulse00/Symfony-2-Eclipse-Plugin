@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.dubture.symfony.twigfeature"
+      label="Symfony Twig Support"
+      version="1.0.36.qualifier"
+      provider-name="https://github.com/pulse00/Symfony-2-Eclipse-Plugin">
+
+   <description url="https://github.com/pulse00/Symfony-2-Eclipse-Plugin">
+      Provides contextual codeassist inside twig templates, requires the Eclipse Twig plugin: https://github.com/pulse00/Twig-Eclipse-Plugin
+   </description>
+
+   <copyright url="http://www.opensource.org/licenses/mit-license.php">
+      http://www.opensource.org/licenses/mit-license.php
+   </copyright>
+
+   <license url="http://www.opensource.org/licenses/mit-license.php">
+      http://www.opensource.org/licenses/mit-license.php
+   </license>
+
+   <url>
+      <update label="Symfony  Eclipse Plugin" url="http://pulse00.github.com/Symfony-2-Eclipse-Plugin/"/>
+      <discovery label="github repository" url="https://github.com/pulse00/Symfony-2-Eclipse-Plugin"/>
+      <discovery label="Symfony" url="http://symfony.com"/>
+      <discovery label="Twig" url="http://www.twig-project.org/"/>
+   </url>
+
+   <plugin
+         id="com.dubture.symfony.twig"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

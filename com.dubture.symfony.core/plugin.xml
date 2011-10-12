@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+	<!-- The Symfony2 Project Nature -->
+   <extension
+         id="symfonyNature"
+         name="Symfony Project Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.dubture.symfony.core.builder.SymfonyNature">
+         </run>
+      </runtime>
+      <builder
+            id="com.dubture.symfony.core.symfonyBuilder">
+      </builder>
+   </extension>
+   
+   <!-- The Symfony2 core builder - visits xml and yml files to parse the configuration -->
+   <extension
+         point="org.eclipse.dltk.core.language">
+      <language
+            class="com.dubture.symfony.core.SymfonyLanguageToolkit"
+            nature="org.eclipse.php.core.PHPNature"
+            priority="100">
+      </language>
+   </extension> 
+   <extension
+         id="symfonyBuilder"
+         name="Symfony Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="com.dubture.symfony.core.builder.SymfonyBuilder">
+         </run>
+      </builder>
+   </extension>
+   
+   
+	<!-- Preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+    	<initializer class="com.dubture.symfony.core.preferences.PreferenceInitializer">
+    	</initializer>
+ 	</extension>   
+ 	
+	<!-- The Symfony2 dltk builder - traverses AST nodes during building to parse model elements like Bundles/AppKernel etc. -->	
+	
+	<!-- org.eclipse.php.core.PHPNature -->
+   <extension
+         point="org.eclipse.dltk.core.buildParticipant">
+      <buildParticipant
+            class="com.dubture.symfony.core.builder.SymfonyBuildParticipantFactory"
+            id="com.dubture.symfony.core.buildParticipant"
+            name="Symfony Builder"
+            nature="org.eclipse.php.core.PHPNature">
+      </buildParticipant>
+   </extension>
+   <extension
+         point="org.eclipse.dltk.core.indexerParticipant">
+      <indexerParticipant
+            class="com.dubture.symfony.core.index.SymfonyIndexerParticipant"
+            nature="org.eclipse.php.core.PHPNature"
+            targetId="org.eclipse.dltk.core.index.sql.indexer">
+      </indexerParticipant>
+   </extension>
+   
+   
+   <!-- The Symfony2 indexing visitor - traverses the AST nodes to contribute model elements to the index like Routings and Annotations -->
+   <extension
+         point="org.eclipse.php.core.phpIndexingVisitors">
+      <visitor
+            class="com.dubture.symfony.core.index.SymfonyIndexingVisitorExtension">
+      </visitor>
+   </extension>
+   
+
+	<!-- PDT SourceElementRequestor - not used at the moment -->   
+   <extension
+         point="org.eclipse.php.core.phpSourceElementRequestors">
+      <requestor
+            class="com.dubture.symfony.core.compiler.SourceElementRequestor">
+      </requestor>
+   </extension>
+   
+
+	<!-- Code assist -->   
+   <extension
+         point="org.eclipse.php.core.completionStrategyFactories">
+      <factory
+            class="com.dubture.symfony.core.codeassist.SymfonyCompletionStrategyFactory">
+      </factory>
+   </extension>
+   
+   <extension
+         point="org.eclipse.php.core.completionContextResolvers">
+      <resolver
+            class="com.dubture.symfony.core.codeassist.SymfonyCompletionContextResolver"></resolver>
+   </extension>
+   
+   <extension
+         point="org.eclipse.php.core.goalEvaluatorFactories">
+      <factory
+            class="com.dubture.symfony.core.goals.ContainerAwareGoalEvaluatorFactory"
+            priority="100">
+      </factory>
+      <factory
+            class="com.dubture.symfony.core.goals.TemplateGoalEvaluatorFactory"
+            priority="100">
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.dltk.core.selectionEngine">
+      <selectionEngine
+            class="com.dubture.symfony.core.codeassist.SymfonySelectionEngine"
+            nature="org.eclipse.php.core.PHPNature"
+            priority="100">
+      </selectionEngine>
+   </extension>
+   <!-- End code assist -->
+
+</plugin>

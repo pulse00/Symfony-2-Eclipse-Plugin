@@ -1,0 +1,69 @@
+<templates>
+<!-- new PHP templates -->
+<template	name="symfonycontroller"	description="%description.newsymfony.controller"	id="com.dubture.symfony.ui.editor.templates.new.controller"	context="php_new_file_context"	enabled="true">&lt;?php	
+namespace ${namespace};
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+	
+/**
+ *
+ *
+ * @author ${user}
+ */class ${class_name} extends Controller {
+
+	public function indexAction() {
+		${cursor};
+	}
+	
+}
+</template>
+
+
+<template
+	name="symfonyclass"
+	description="%description.newsymfony.class"
+	id="com.dubture.symfony.ui.editor.templates.new.class"
+	context="php_new_file_context"
+	enabled="true">&lt;?php	
+namespace ${namespace};
+
+${use_parent}
+	
+/**
+ *
+ *
+ * @author ${user}
+ */
+${class_modifiers}class ${class_name} ${extends} ${interfaces} {
+
+	public function __construct() {
+		${cursor};
+	}
+	
+	${supermethods}
+	
+}
+</template>
+
+
+<template
+	name="symfonyAnnotationAction"
+	description="%description.newsymfony.annotationAction"
+	id="com.dubture.symfony.ui.editor.templates.new.annotationAction"
+	context="php_new_file_context"
+	enabled="true">	
+/**
+* @Route("${routePattern}", name="{$routeName}")
+* @Template()
+*/
+public function ${actionName}Action()
+{	
+
+	return array();
+	
+}
+</template>
+
+<!--  php templates -->
+
+</templates>

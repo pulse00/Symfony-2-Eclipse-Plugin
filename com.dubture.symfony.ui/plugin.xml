@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="projectWizardExtension" name="Symfony New Project Wizard Extension" schema="schema/projectWizardExtension.exsd"/>	
+	
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="com.dubture.symfony.ui.addnature"
+            objectClass="org.eclipse.core.resources.IProject">
+         <menu
+               id="com.dubture.symfony.ui.menu1"
+               label="%menu.label"
+               path="additions">
+            <separator
+                  name="project">
+            </separator>
+         </menu>
+         <action
+               class="com.dubture.symfony.ui.popup.actions.AddSymfonyNature"
+               enablesFor="1"
+               id="com.dubture.symfony.ui.newAction"
+               label="%action.label"
+               menubarPath="com.dubture.symfony.ui.menu1/project">
+         </action>
+      </objectContribution>
+   </extension>
+
+ <extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+          class="com.dubture.symfony.ui.preferences.SymfonyPreferencePage"
+          id="com.dubture.symfony.ui.preferences.SymfonyPreferencePage"
+          name="%page.name">
+    </page>
+    <page
+          category="com.dubture.symfony.ui.preferences.SymfonyPreferencePage"
+          class="com.dubture.symfony.ui.preferences.ServicesPreferencePage"
+          id="com.dubture.symfony.ui.services"
+          name="%Services">
+    </page>
+    <page
+          category="com.dubture.symfony.ui.preferences.SymfonyPreferencePage"
+          class="com.dubture.symfony.ui.preferences.LibraryPreferencePage"
+          id="com.dubture.symfony.ui.library"
+          name="%Library">
+    </page>
+ </extension>
+ 
+ <extension
+       point="org.eclipse.ui.views">
+    <category
+          id="com.dubture.symfony.ui"
+          name="%category.name">
+    </category>
+ </extension>
+ 
+ <extension
+       point="org.eclipse.help.contexts">
+    <contexts
+          file="contexts.xml">
+    </contexts>
+ </extension>
+ 
+ 
+ <extension
+       point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+    <hyperlinkDetector
+          activate="true"
+          class="com.dubture.symfony.ui.editor.hyperlink.ServiceHyperlinkDetector"
+          id="com.dubture.symfony.ui.hyperlinkDetector"
+          name="%hyperlinkDetector.name"
+          targetId="org.eclipse.php.core.phpsource">
+    </hyperlinkDetector>
+    <hyperlinkDetector
+          activate="true"
+          class="com.dubture.symfony.ui.editor.hyperlink.RouteHyperlinkDetector"
+          id="com.dubture.symfony.ui.routeDetector"
+          name="%routeDetector.name"
+          targetId="org.eclipse.php.core.phpsource">
+    </hyperlinkDetector>
+    <hyperlinkDetector
+          activate="true"
+          class="com.dubture.symfony.ui.editor.hyperlink.ViewpathHyperlinkDetector"
+          id="com.dubture.symfony.ui.viewpathDetector"
+          name="%viewpathDetector.name"
+          targetId="org.eclipse.php.core.phpsource">
+    </hyperlinkDetector>            
+    <hyperlinkDetector
+          activate="true"
+          class="com.dubture.symfony.ui.editor.hyperlink.AssetHyperlinkDetector"
+          id="com.dubture.symfony.ui.javascriptDetector"
+          name="%javascriptDetector.name"
+          targetId="org.eclipse.php.core.phpsource">
+    </hyperlinkDetector>                
+ </extension>
+ 
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension targetID="org.eclipse.php.perspective">
+			<newWizardShortcut id="com.dubture.symfony.ui.wizards.ControllerCreationWizard" />
+			<newWizardShortcut id="com.dubture.symfony.ui.wizards.ClassCreationWizard" />			
+			<newWizardShortcut id="com.dubture.symfony.ui.wizards.ProjectCreationWizard" />
+		</perspectiveExtension>
+		
+	</extension>	
+	
+	
+	<extension point="org.eclipse.ui.newWizards">
+	
+		<category name="%category.name.1" id="com.dubture.symfony.project.ui" />
+		
+		<wizard
+        	category="com.dubture.symfony.project.ui"
+        	class="com.dubture.symfony.ui.wizards.project.SymfonyProjectCreationWizard"
+        	icon="ico/full/obj16/add_php_file.gif"
+        	id="com.dubture.symfony.ui.wizards.ProjectCreationWizard"
+        	name="%wizard.new.symfonyproject"
+        	project="true">
+        </wizard>
+		
+		<!-- https://github.com/sensio/SensioGeneratorBundle can be used for this, no need to implement it in the plugin
+		<wizard
+        	category="com.dubture.symfony.project.ui"
+        	class="com.dubture.symfony.ui.wizards.controller.ControllerCreationWizard"
+        	icon="ico/full/obj16/add_php_file.gif"
+        	id="com.dubture.symfony.ui.wizards.ControllerCreationWizard"
+        	name="%wizard.new.controller"
+        	project="false">
+        </wizard>
+        -->
+        
+		<wizard
+        	category="com.dubture.symfony.project.ui"
+        	class="com.dubture.symfony.ui.wizards.classes.ClassCreationWizard"
+        	icon="ico/full/obj16/add_php_file.gif"
+        	id="com.dubture.symfony.ui.wizards.ClassCreationWizard"
+        	name="%wizard.new.class"
+        	project="false">
+        </wizard>
+        
+
+        
+	</extension>
+ 
+ <extension
+       point="org.eclipse.wst.sse.ui.semanticHighlighting">
+        <highlighting
+          class="com.dubture.symfony.ui.editor.highlighting.AnnotationHighlighting"
+          target="org.eclipse.php.core.phpsource">
+        </highlighting> 
+ </extension>
+ <extension
+       point="org.eclipse.ui.propertyPages">
+    <page
+          class="com.dubture.symfony.ui.preferences.ServicesPreferencePage"
+          id="com.dubture.symfony.ui.servicePreferencePage"
+          name="%servicesPreferencePage">
+       <enabledWhen>
+          <adapt
+                type="org.eclipse.core.resources.IProject">
+          </adapt>
+       </enabledWhen>
+       <filter
+             name="nature"
+             value="com.dubture.symfony.core.symfonyNature">
+       </filter>
+    </page>
+ </extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="com.dubture.symfony.ui.preferences.PreferenceInitializer">
+    </initializer>
+ </extension>
+ <extension
+       point="org.eclipse.ui.ide.projectNatureImages">
+    <image
+          icon="ico/full/obj16/symfony_icon.gif"
+          id="com.dubture.symfony.ui.symfonyNatureImage"
+          natureId="com.dubture.symfony.core.symfonyNature">
+    </image>
+ </extension>
+ <extension
+       point="org.eclipse.ui.actionSets">
+    <actionSet
+          id="com.dubture.symfony.ui.switchContext"
+          label="Sample Action Set"
+          visible="false">
+       <action
+             class="com.dubture.symfony.ui.actions.SwitchContextAction"
+             definitionId="com.dubture.symfony.ui.edit.text.switchContext"
+             id="com.dubture.symfony.ui.actions.SwitchContextAction"
+             label="&amp;Sample Action"
+             menubarPath="navigate/open.ext"
+             retarget="true">
+       </action>
+    </actionSet>
+ </extension>
+ <extension
+       point="org.eclipse.ui.actionSetPartAssociations">
+    <actionSetPartAssociation
+          targetID="com.dubture.symfony.ui.switchContext">
+       <part
+             id="org.eclipse.php.ui.explorer">
+       </part>
+       <part
+             id="org.eclipse.php.editor">
+       </part>
+    </actionSetPartAssociation>
+ </extension>
+ <extension
+       point="org.eclipse.ui.commands">
+		<command name="Switch Context"
+			description="Switch context"
+			categoryId="org.eclipse.ui.category.navigate" id="com.dubture.symfony.ui.edit.text.switchContext">
+		</command>
+
+ </extension>
+ 
+ <!-- com.dubture.symfony.core.symfonyNature / org.eclipse.php.core.PHPNature -->
+ <!-- This doesn't work, as DLTK simply fetches the first nature's labelprovider/proposalfactory -->
+ <!--
+ <extension
+       point="org.eclipse.dltk.ui.completion">
+    <proposalLabelProvider
+          class="com.dubture.symfony.ui.contentassist.SymfonyCompletionProposalLabelProvider"
+          nature="org.eclipse.php.core.PHPNature">
+    </proposalLabelProvider>
+    <proposalFactory
+          class="com.dubture.symfony.ui.SymfonyCompletionProposalFactory"
+          nature="org.eclipse.php.core.PHPNature">
+    </proposalFactory>
+ </extension>
+ -->
+ 
+	<!--Templates:-->
+	<extension point="org.eclipse.ui.editors.templates">
+
+		<contextType name="%templates.symfony.contextType.name" class="com.dubture.symfony.ui.editor.template.SymfonyTemplateContextType" id="symfony" />
+			
+		<include file="templates/symfonydefault-templates.xml"
+			translations="$nl$/templates/symfonydefault-templates.properties" />
+			
+  		<resolver class="com.dubture.symfony.ui.editor.template.NamespaceVariableResolver"
+        	contextTypeId="symfony" type="src">
+  		</resolver>
+
+	</extension>
+ 
+ 
+ <extension
+       id="com.dubture.symfony.ui.symfonyCompletionProposalComputer"
+       point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
+    <scriptCompletionProposalComputer
+          categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
+          class="com.dubture.symfony.ui.contentassist.SymfonyCompletionProposalComputer"
+          toolkitId="org.eclipse.php.core.PHPNature">
+       <partition
+             type="org.eclipse.php.PHP_DEFAULT">
+       </partition>
+       <partition
+             type="com.dubture.twig.TWIG_DEFAULT">
+       </partition>
+    </scriptCompletionProposalComputer>
+ </extension>
+ <extension
+       point="org.eclipse.php.ui.phpEditorTextHovers">
+    <hover
+          class="com.dubture.symfony.ui.editor.hover.RouteHover"
+          id="com.dubture.symfony.ui.routeHover"
+          priority="400">
+    </hover>
+ </extension>
+ <extension
+       point="org.eclipse.debug.ui.launchShortcuts">
+    <shortcut
+          class="com.dubture.symfony.ui.launching.LaunchActionShortcut"
+          description="%launchAction.description&#x0A;"
+          icon="ico/full/obj16/server_run.gif"
+          id="com.dubture.symfony.ui.server.launchSymfonyAction"
+          label="%launchActionShortcut.label"
+          modes="run, debug">
+			<contextualLaunch>
+				<contextLabel mode="run" label="%symfonyServerShortcut.label" />
+				<contextLabel mode="debug" label="%symfonyServerShortcut.label" />
+				<enablement>
+					<count value="1" />
+	 				<!-- Pass a 'webPage' argument for the enablement test -->
+					<test args="webPage" property="org.eclipse.php.debug.ui.launchablePHP" value="true" />
+				</enablement>
+			</contextualLaunch>
+			<configurationType
+				id="org.eclipse.php.debug.core.launching.webPageLaunch">
+			</configurationType>          
+    </shortcut>
+ </extension>
+ <extension
+       point="org.eclipse.ui.console.consoleFactories">
+    <consoleFactory
+          class="com.dubture.symfony.ui.console.SymfonyConsoleFactory"
+          icon="ico/full/obj16/symfony_icon.gif"
+          label="Symfony">
+    </consoleFactory>
+ </extension>
+ 
+ <!-- TODO: finish implementation -->
+ 
+ <!--
+ <extension
+       point="org.eclipse.php.ui.quickFixProcessors">
+    <quickFixProcessor
+          class="com.dubture.symfony.ui.quickfix.InterfaceMethodQuickFixProcessor"
+          id="com.dubture.symfony.ui.interfaceQuickfixProcessor"
+          name="InterfaceMethod Problem Marker">
+    </quickFixProcessor>
+ </extension>
+ <extension
+       id="interfacemethodmarker"
+       point="org.eclipse.core.resources.markers">
+    <persistent
+          value="true">
+    </persistent>
+    <super
+          type="org.eclipse.php.core.phpproblemmarker">
+    </super>
+ </extension>
+ -->
+ 
+</plugin>

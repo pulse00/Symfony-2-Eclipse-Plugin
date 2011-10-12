@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Symfony Twig Plugin
+Bundle-SymbolicName: com.dubture.symfony.twig;singleton:=true
+Bundle-Version: 1.0.36.qualifier
+Bundle-Activator: com.dubture.symfony.twig.SymfonyTwigPlugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.dltk.core,
+ org.eclipse.php.core,
+ com.dubture.symfony.core,
+ com.dubture.twig.core,
+ com.dubture.symfony.index,
+ org.eclipse.jface.text,
+ org.eclipse.ui,
+ org.eclipse.wst.sse.core,
+ org.eclipse.dltk.ui,
+ org.eclipse.php.ui,
+ com.dubture.symfony.ui
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: Symfony
