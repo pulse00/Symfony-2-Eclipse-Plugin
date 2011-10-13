@@ -11,6 +11,7 @@ import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
@@ -69,12 +70,15 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 	final private String bundle;
 
 	private String controller;
+	
+	private ISourceModule source;
 
-	public TemplateVariableVisitor(List<UseStatement> useStatements, NamespaceDeclaration namespace) {
+	public TemplateVariableVisitor(List<UseStatement> useStatements, NamespaceDeclaration namespace, ISourceModule source) {
 
 		this.namespace = namespace;
 		this.useStatements = useStatements;
 		
+		this.source = source;
 		bundle = ModelUtils.extractBundleName(namespace);
 
 		
@@ -376,7 +380,7 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 					// are we requesting a Service?
 					if (exp.getName().equals("get")) {
 
-						service = ModelUtils.extractServiceFromCall(exp);
+						service = ModelUtils.extractServiceFromCall(exp, source.getScriptProject().getPath());
 
 						
 						
@@ -393,7 +397,7 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 					} else if (exp.getReceiver().getClass() == PHPCallExpression.class) {
 
 						// try to extract a service if it's a Servicecontainer call
-						service = ModelUtils.extractServiceFromCall((PHPCallExpression) exp.getReceiver());
+						service = ModelUtils.extractServiceFromCall((PHPCallExpression) exp.getReceiver(), source.getScriptProject().getPath());
 
 						// nothing found, return
 						if (service == null || exp.getCallName() == null) {

@@ -518,11 +518,6 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		
 	}
 
-	public Service findService(String className) {
-	
-		return findService(className, null);
-	}
-
 	/**
 	 * 
 	 * @param Retrieve a single service by service id
@@ -532,6 +527,11 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	 */
 	public Service findService(final String id, IPath path) {
 		
+		if (path == null) {
+			
+			Logger.debugMSG("cannot find service without path: " + id);
+			return null;
+		}
 		String key = id + path.toString();
 		
 		if (serviceCache2.get(key) != null) {

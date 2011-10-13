@@ -179,7 +179,7 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 			IncludePathManager.getInstance().setIncludePath(getProject(),
 					includepathEntries);
 			
-			if (installSymfony)
+			if (installSymfony) 
 				installSymfony(new SubProgressMonitor(monitor, 50));
 
 		} finally {
@@ -209,6 +209,7 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 		try {
 
 			level++;
+			
 
 			// handle windows path separators
 			String path = file.getAbsolutePath().replace("\\", "/").replace(symfonyPath, "");
@@ -255,8 +256,10 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 			level--;
 
 		} catch (CoreException e) {
+			e.printStackTrace();
 			Logger.logException(e);
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 			Logger.logException(e);
 		}
 
@@ -267,6 +270,7 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
 		
+		
 		SymfonyProjectWizardFirstPage firstPage = (SymfonyProjectWizardFirstPage) fFirstPage;
 		monitor.beginTask("Installing symfony...", 100);
 		monitor.worked(10);
@@ -276,6 +280,7 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 
 		File file = null;
 		final List<IBuildpathEntry> entries = new ArrayList<IBuildpathEntry>();
+		
 		level = 0;
 
 		try {
@@ -303,8 +308,10 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 				}
 			}
 		} catch (ModelException e) {
+			e.printStackTrace();
 			Logger.logException(e);
 		} catch (Exception e) {
+			e.printStackTrace();
 			Logger.logException(e);
 		} finally {
 			

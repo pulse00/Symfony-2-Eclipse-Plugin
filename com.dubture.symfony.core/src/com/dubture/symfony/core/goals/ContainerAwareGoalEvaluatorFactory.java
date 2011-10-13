@@ -74,6 +74,7 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
 			return null;
 		}
 		
+		MethodContext context = (MethodContext) goal.getContext();
 		// MethodContext context = (MethodContext) goal.getContext();		
 		// PHPClassType classType = (PHPClassType) context.getInstanceType();
 				
@@ -113,7 +114,8 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
 								// string literals.
 								String className = ((Scalar)first).getValue().replace("'", "").replace("\"", "");
 								
-								Service service = SymfonyModelAccess.getDefault().findService(className);
+								
+								Service service = SymfonyModelAccess.getDefault().findService(className,context.getSourceModule().getScriptProject().getPath());
 
 								// we got a service match, return the goalevaluator.
 								if (service != null) {

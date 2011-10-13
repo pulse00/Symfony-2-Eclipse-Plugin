@@ -244,7 +244,7 @@ PhpIndexingVisitorExtension {
 						// the ControllerIndexer does the actual work of parsing the
 						// the relevant elements inside the controller
 						// which are then being collected in the endVisit() method
-						controllerIndexer = new TemplateVariableVisitor(useStatements, namespace);
+						controllerIndexer = new TemplateVariableVisitor(useStatements, namespace, sourceModule);
 						currentClass.traverse(controllerIndexer);
 
 					} 

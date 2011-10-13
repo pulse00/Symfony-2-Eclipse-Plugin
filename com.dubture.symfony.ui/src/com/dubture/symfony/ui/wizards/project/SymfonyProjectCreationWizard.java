@@ -69,7 +69,7 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 	public boolean performFinish() {
 
 		boolean res = super.performFinish();
-		
+
 		try {			
 
 			IProject project = fFirstPage.getProjectHandle();

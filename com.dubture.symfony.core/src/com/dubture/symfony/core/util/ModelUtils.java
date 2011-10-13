@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
@@ -41,10 +42,11 @@ public class ModelUtils {
 	 * @return
 	 */
 	@SuppressWarnings({ "rawtypes" })
-	public static Service extractServiceFromCall(PHPCallExpression call) {
+	public static Service extractServiceFromCall(PHPCallExpression call, IPath path) {
 
 		ASTNode receiver = call.getReceiver();
 
+		
 		
 		if (receiver instanceof VariableReference) {
 
@@ -66,7 +68,7 @@ public class ModelUtils {
 						//TODO: check if there are PDT utils for stripping away quotes from
 						// string literals.
 
-						Service service = SymfonyModelAccess.getDefault().findService(((Scalar)first).getValue());
+						Service service = SymfonyModelAccess.getDefault().findService(((Scalar)first).getValue(), path);
 						
 
 						// we got a service match, return the goalevaluator.

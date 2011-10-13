@@ -430,6 +430,13 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 				}
 				
 				Bundle bundle = Platform.getBundle(SymfonyCorePlugin.ID);
+				
+				// for some weird reason the symfony files can't be resolved
+				// if the root of the bundle is not accessed initially
+				
+				System.err.println("trying to find root");
+				URL root = FileLocator.toFileURL(bundle.getEntry("/"));
+				System.err.println("root: " + root);
 				URL fileURL = bundle.getEntry(entry);
 				path = FileLocator.toFileURL(fileURL).getPath().toString();
 				
