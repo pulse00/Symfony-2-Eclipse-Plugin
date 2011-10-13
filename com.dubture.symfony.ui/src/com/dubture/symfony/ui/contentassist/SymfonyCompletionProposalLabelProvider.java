@@ -56,4 +56,25 @@ public class SymfonyCompletionProposalLabelProvider extends
 		
 		return super.createTypeImageDescriptor(proposal);
 	}
+	
+	
+	
+	@Override
+	public String createTypeProposalLabel(CompletionProposal typeProposal) {
+
+		
+		// show the id of the service in the proposal popup, so
+		// the UsestatementInjector can inject to correct fully qualified name
+		if (typeProposal.getModelElement() instanceof Service) {
+			
+			Service service = (Service) typeProposal.getModelElement();
+						
+			if (service.getId() != null)
+				return service.getId();			
+			
+		}
+		
+		return super.createTypeProposalLabel(typeProposal);
+		
+	}
 }

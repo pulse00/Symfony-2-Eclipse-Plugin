@@ -62,10 +62,17 @@ public class Service extends SourceType {
 		super(parent, name);
 	}
 	
+
+	public void setId(String id) {
+		
+		this.id = id;
+		
+	}
 	
 	public Service(IFile resource, String id, String clazz) {
 		
 		super(null, id);
+		
 		
 		file = resource;
 		setFqcn(clazz);
@@ -80,6 +87,18 @@ public class Service extends SourceType {
 			namespace = clazz.substring(0,lastPart);
 			className = clazz.substring(lastPart + 1);
 		}
+	}
+	
+	@Override
+	public String getElementName() {
+
+		
+		if (className != null)
+			return className;
+		
+		return super.getElementName();
+
+		
 	}
 
 	public Service(String id, String phpClass, String path, Scalar scalar) {

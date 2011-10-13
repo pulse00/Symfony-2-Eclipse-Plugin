@@ -6,6 +6,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.internal.core.hierarchy.FakeType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
@@ -91,7 +92,10 @@ public class ServiceContainerCompletionStrategy extends
 					parent = (ModelElement) context.getSourceModule();
 				}
 				
-				Service s = new Service(parent, service.getElementName());
+				
+				Service s = new Service(parent, service.getElementName());		
+				s.setId(service.getId());
+				
 				reporter.reportType(s, "", range);
 			}
 		}

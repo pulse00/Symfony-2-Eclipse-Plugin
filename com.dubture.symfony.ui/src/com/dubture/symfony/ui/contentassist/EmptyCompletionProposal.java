@@ -4,6 +4,8 @@ import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposal;
 import org.eclipse.swt.graphics.Image;
 
+import com.dubture.symfony.core.model.Service;
+
 
 /**
  * A {@link ScriptCompletionProposal} for Symfony routes.
@@ -23,12 +25,29 @@ public class EmptyCompletionProposal extends PHPCompletionProposal {
 				displayString, relevance);
 
 	}
-	
+		
 	
 	@Override
 	public String getAdditionalProposalInfo() {
 
-		return "";
+		return "";	
+	
+	}
+	
+	
+	@Override
+	public String getReplacementString() {
+
+		if (getModelElement() instanceof Service) {
+			
+			Service service = (Service) getModelElement();
+			
+			if (service.getId() != null)
+				return service.getId();			
+			
+		}
+		
+		return super.getReplacementString();
 	}
 	
 }
