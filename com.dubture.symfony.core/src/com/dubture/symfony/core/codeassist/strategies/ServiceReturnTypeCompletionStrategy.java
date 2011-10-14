@@ -68,12 +68,14 @@ public class ServiceReturnTypeCompletionStrategy extends ClassMembersStrategy {
 		// if that's possible.
 		//
 		// this way, we could avoid the SearchEngine call here
-		IType[] types = getTypes(context, service.getClassName(), service.getNamespace().getQualifiedName());
 		
-		// ambigous types found, return nothing
-		// any better ideas out there?
-		if (types.length != 1)
+		String namespace = service.getSimpleNamespace();
+		
+		IType[] types = getTypes(context, service.getClassName(), namespace);
+		
+		if (types.length != 1) {
 			return;
+		}
 				
 		IType type = types[0];		
 		SourceRange range = getReplacementRange(context);		
@@ -91,15 +93,9 @@ public class ServiceReturnTypeCompletionStrategy extends ClassMembersStrategy {
 		IDLTKSearchScope scope = createSearchScope();
 
 		List<IType> result = new LinkedList<IType>();
-		if (prefix.length() > 1 && prefix.toUpperCase().equals(prefix)) {
-			// Search by camel-case
-			IType[] types = PhpModelAccess.getDefault().findTypes(pkg, prefix,
-					MatchRule.CAMEL_CASE, trueFlag, falseFlag, scope, null);
-			result.addAll(Arrays.asList(types));
-		}
 		
 		IType[] types = PhpModelAccess.getDefault().findTypes(pkg, prefix,
-				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
+				MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		result.addAll(Arrays.asList(types));
 
 		return (IType[]) result.toArray(new IType[result.size()]);		

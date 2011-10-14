@@ -181,5 +181,11 @@ public class Service extends SourceType {
 
 	}
 	
+	public String getSimpleNamespace() {
+		
+		return namespace;
+		
+	}
+	
 
 }

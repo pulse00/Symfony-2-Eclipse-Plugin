@@ -78,7 +78,7 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 	private Button abstractCheckbox;
 	private Button finalCheckbox;
 	
-	private String[] cities = new String[] { "Aachen", "Berlin", "Bremen", "Bochum" };	
+//	private String[] cities = new String[] { "Aachen", "Berlin", "Bremen", "Bochum" };	
 
 	/**
 	 * Constructor for SampleNewWizardPage.
@@ -242,52 +242,6 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 	private AutoCompleteField acField;
 	
 	
-	private class SuperclassProvider implements IContentProposalProvider {
-
-		@Override
-		public IContentProposal[] getProposals(String contents, int position) {
-
-			
-		         ArrayList list = new ArrayList();
-		         
-		         for (String city : cities) {
- 
-		               list.add(makeContentProposal(city, city));
-
-		         }
-		         return (IContentProposal[]) list.toArray(new IContentProposal[list.size()]);
-
-
-		}
-		
-		private IContentProposal makeContentProposal(final String proposal, final String label) {
-			
-			return new IContentProposal() {
-				
-				@Override
-				public String getLabel() {
-					return proposal + " - " + label;
-				}
-				
-				@Override
-				public String getDescription() {
-					return null;
-				}
-				
-				@Override
-				public int getCursorPosition() {
-					return proposal.length();
-				}
-				
-				@Override
-				public String getContent() {
-					return proposal;
-				}
-			};
-		}
-		
-	}
-	
 	private KeyListener acListener = new KeyListener() {
 		
 		@Override
@@ -305,10 +259,12 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
 			IType[] types = PhpModelAccess.getDefault().findTypes(superClassText.getText(), MatchRule.PREFIX, 0, 0, scope, null);
 			
-			for (IType type : types) {					
+			for (IType type : types) {		
+				
 				props.add(type.getElementName());					
 			}
-										
+				
+			
 			acField.setProposals((String[]) props.toArray(new String[props.size()]));			
 			
 		}
@@ -352,15 +308,19 @@ public class ClassCreationWizardPage extends CodeTemplateWizardPage {
 		});
 
 
-		acField = new AutoCompleteField(superClassText, new TextContentAdapter(), null);
+		//TODO: find a way to retrieve the fully qualified name in the autocompletion
+		// this doesn't perform when simply calling type.getFullyQualifiedname() in the proposal handler
 		
-		decoration = new ControlDecoration(superClassLabel, SWT.RIGHT | SWT.TOP);
-		Image errorImage = FieldDecorationRegistry.getDefault()
-		        .getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL).getImage();
-		decoration.setImage(errorImage);
-		decoration.setDescriptionText("Content assist available.");
-		decoration.setShowHover(true);
-		decoration.hide();
+//		acField = new AutoCompleteField(superClassText, new TextContentAdapter(), null);
+		
+//		decoration = new ControlDecoration(superClassLabel, SWT.RIGHT | SWT.TOP);
+		
+//		Image errorImage = FieldDecorationRegistry.getDefault()
+//		        .getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL).getImage();
+//		decoration.setImage(errorImage);
+//		decoration.setDescriptionText("Content assist available.");
+//		decoration.setShowHover(true);
+//		decoration.hide();
 		
 		Button button = new Button(container, SWT.NULL);
 		button.setText("Browse...");
