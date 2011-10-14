@@ -13,7 +13,6 @@ import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
-import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposalCollector;
 
 import com.dubture.symfony.core.codeassist.contexts.RouteCompletionContext;
 import com.dubture.symfony.core.model.RouteSource;

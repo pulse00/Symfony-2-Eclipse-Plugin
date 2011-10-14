@@ -11,6 +11,7 @@ import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.strategies.GlobalTypesStrategy;
 import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
@@ -60,32 +61,22 @@ public class AnnotationCompletionStrategy extends PHPDocTagStrategy {
 		AnnotationCompletionContext context = (AnnotationCompletionContext) ctx;
 		SourceRange replaceRange = getReplacementRange(context);
 		
+		String suffix = "()";		
+		String prefix = context.getPrefix();
 		
-		// getting the parameter suffix from the class constructor
-		// makes no sense in this context, as we can't parse
-		// the annotation parameters from PHP classes
-		// unless there's at least some semi-standardized
-		// way of describing annotations in the classes
-		// which represent them
-		//String suffix = getSuffix(context);
-		
-		
-		String suffix = "()";
-		
-		IType[] types = getTypes(context);
+		IType[] types = getTypes(context, prefix);
 		for (IType type : types) {			
 			reporter.reportType(type, suffix, replaceRange);
 		}		
+
+		// handles ORM\ cases for "use Doctrine\ORM\Mapping as ORM; UseStatements
+		GlobalTypesStrategy gt = new GlobalTypesStrategy(context);		
+		gt.apply(reporter);
+		
 	}
 	
-	private IType[] getTypes(AnnotationCompletionContext context) {
+	private IType[] getTypes(AnnotationCompletionContext context, String prefix) {
 		
-
-		//TODO: this is basically just c/p from ClassInstantiationStrategy
-		// 
-		// check if we're in the right scope in here and what those
-		// trueFlag / falseFlags actually do.
-		String prefix = "";
 
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {

@@ -392,6 +392,12 @@ public class AnnotationVisitor extends PHPASTVisitor {
 						//TODO: search for matching classes using PDT SearchEngine
 						
 					}
+				} else if (annotationNamespace != null && annotationClass != null) {
+					
+					String ns = annotationNamespace + annotationClass;
+					
+					if (fqcn.startsWith(annotationNamespace))
+						found = true;
 				}
 
 				if (found == true)
