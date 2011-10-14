@@ -1,7 +1,5 @@
 package com.dubture.symfony.core.model;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -325,6 +323,31 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		
 		
 		return index.findRoutes(project.getPath());
+		
+	}
+	
+	
+	public Map<String, String> findAnnotationClasses(IScriptProject project) {
+		
+		 IDLTKSearchScope scope = SearchEngine.createSearchScope(project.getScriptProject());			 		 
+		 ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());		 
+		 final Map<String, String> annotations = new HashMap<String, String>();
+		 
+		 engine.search(ISymfonyModelElement.ANNOTATION, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+			
+			@Override
+			public void match(int elementType, int flags, int offset, int length,
+					int nameOffset, int nameLength, String elementName,
+					String metadata, String doc, String qualifier, String parent,
+					ISourceModule sourceModule, boolean isReference) {
+
+				annotations.put(elementName, qualifier);				
+				
+			}
+		}, null);
+		
+		
+		 return annotations;
 		
 	}
 	

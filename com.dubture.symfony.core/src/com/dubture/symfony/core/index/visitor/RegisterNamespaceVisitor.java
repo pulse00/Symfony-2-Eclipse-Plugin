@@ -89,6 +89,10 @@ public class RegisterNamespaceVisitor extends PHPASTVisitor {
 			
 			try {
 
+				if (!(infix.getLeft() instanceof Scalar) || !(infix.getRight() instanceof Scalar)) {
+					return;
+				}
+				
 				Scalar left = (Scalar) infix.getLeft();				
 				Scalar right = (Scalar) infix.getRight();
 				
