@@ -1,4 +1,4 @@
-package com.dubture.symfony.core.parser.antlr.error;
+package com.dubture.symfony.annotation.parser.antlr.error;
 
 import org.antlr.runtime.RecognitionException;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
@@ -9,8 +9,7 @@ import org.eclipse.dltk.core.builder.IBuildContext;
 
 import com.dubture.symfony.annotation.parser.antlr.AnnotationLexer;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
-import com.dubture.symfony.annotation.parser.antlr.error.IAnnotationErrorReporter;
-import com.dubture.symfony.core.preferences.SymfonyCorePreferences;
+//import com.dubture.symfony.core.preferences.SymfonyCorePreferences;
 
 /**
  *
@@ -59,18 +58,18 @@ public class AnnotationErrorReporter implements IAnnotationErrorReporter {
 			}
 		}
 		
-		String filename = context.getFile().getName();
-		int start = sourceStart+e.token.getCharPositionInLine();
-		int end = start+e.token.getText().length();
-		
-		// retrieve severity from preferences
-		ProblemSeverity severity = SymfonyCorePreferences.getAnnotationSeverity();
-		
-		IProblem problem = new DefaultProblem(filename, message, IProblem.Syntax,
-				new String[0], severity, start+1, end+1, lineNo);
-		
-		
-		context.getProblemReporter().reportProblem(problem);
+//		String filename = context.getFile().getName();
+//		int start = sourceStart+e.token.getCharPositionInLine();
+//		int end = start+e.token.getText().length();
+//		
+//		// retrieve severity from preferences
+//		ProblemSeverity severity = SymfonyCorePreferences.getAnnotationSeverity();
+//		
+//		IProblem problem = new DefaultProblem(filename, message, IProblem.Syntax,
+//				new String[0], severity, start+1, end+1, lineNo);
+//		
+//		
+//		context.getProblemReporter().reportProblem(problem);
 
 	}
 

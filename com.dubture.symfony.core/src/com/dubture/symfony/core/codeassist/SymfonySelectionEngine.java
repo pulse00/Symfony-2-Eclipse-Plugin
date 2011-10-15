@@ -22,15 +22,15 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 
+import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTree;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTreeAdaptor;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationLexer;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationNodeVisitor;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.ViewPath;
-import com.dubture.symfony.core.parser.antlr.AnnotationCommonTree;
-import com.dubture.symfony.core.parser.antlr.AnnotationCommonTreeAdaptor;
-import com.dubture.symfony.core.parser.antlr.AnnotationLexer;
-import com.dubture.symfony.core.parser.antlr.AnnotationNodeVisitor;
-import com.dubture.symfony.core.parser.antlr.AnnotationParser;
 import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
 import com.dubture.symfony.index.dao.Route;
 

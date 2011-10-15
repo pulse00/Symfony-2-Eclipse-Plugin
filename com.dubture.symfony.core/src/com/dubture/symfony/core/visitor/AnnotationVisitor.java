@@ -34,15 +34,15 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
+import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTree;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTreeAdaptor;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationLexer;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationNodeVisitor;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
 import com.dubture.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
 import com.dubture.symfony.core.compiler.ISymfonyProblem;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.Annotation;
-import com.dubture.symfony.core.parser.antlr.AnnotationCommonTree;
-import com.dubture.symfony.core.parser.antlr.AnnotationCommonTreeAdaptor;
-import com.dubture.symfony.core.parser.antlr.AnnotationLexer;
-import com.dubture.symfony.core.parser.antlr.AnnotationNodeVisitor;
-import com.dubture.symfony.core.parser.antlr.AnnotationParser;
 import com.dubture.symfony.core.parser.antlr.error.AnnotationErrorReporter;
 import com.dubture.symfony.core.preferences.SymfonyCorePreferences;
 

@@ -12,12 +12,12 @@ import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.swt.graphics.RGB;
 
+import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTree;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTreeAdaptor;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationLexer;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
+import com.dubture.symfony.annotation.parser.antlr.IAnnotationNodeVisitor;
 import com.dubture.symfony.core.log.Logger;
-import com.dubture.symfony.core.parser.antlr.AnnotationCommonTree;
-import com.dubture.symfony.core.parser.antlr.AnnotationCommonTreeAdaptor;
-import com.dubture.symfony.core.parser.antlr.AnnotationLexer;
-import com.dubture.symfony.core.parser.antlr.AnnotationParser;
-import com.dubture.symfony.core.parser.antlr.IAnnotationNodeVisitor;
 
 /**
  * 

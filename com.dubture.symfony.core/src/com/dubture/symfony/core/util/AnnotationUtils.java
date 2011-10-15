@@ -8,12 +8,12 @@ import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 
+import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTree;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTreeAdaptor;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationLexer;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationNodeVisitor;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
 import com.dubture.symfony.core.log.Logger;
-import com.dubture.symfony.core.parser.antlr.AnnotationCommonTree;
-import com.dubture.symfony.core.parser.antlr.AnnotationCommonTreeAdaptor;
-import com.dubture.symfony.core.parser.antlr.AnnotationLexer;
-import com.dubture.symfony.core.parser.antlr.AnnotationNodeVisitor;
-import com.dubture.symfony.core.parser.antlr.AnnotationParser;
 import com.dubture.symfony.index.dao.Route;
 
 public class AnnotationUtils {
