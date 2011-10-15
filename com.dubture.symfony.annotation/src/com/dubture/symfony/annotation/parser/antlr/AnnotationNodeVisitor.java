@@ -40,7 +40,6 @@ public class AnnotationNodeVisitor implements IAnnotationNodeVisitor {
 
 		int kind = node.getType();
 		
-		System.err.println(node.toString());
 		switch(kind) {
 		
 		
