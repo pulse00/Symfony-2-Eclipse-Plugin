@@ -1,5 +1,6 @@
 package com.dubture.symfony.test;
 
+
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -7,17 +8,15 @@ import junit.framework.TestCase;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.dubture.symfony.core.parser.antlr.AnnotationCommonTree;
-import com.dubture.symfony.core.parser.antlr.AnnotationCommonTreeAdaptor;
-import com.dubture.symfony.core.parser.antlr.AnnotationLexer;
-import com.dubture.symfony.core.parser.antlr.AnnotationNodeVisitor;
-import com.dubture.symfony.core.parser.antlr.AnnotationParser;
-import com.dubture.symfony.test.reporter.DebugErrorReporter;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTree;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTreeAdaptor;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationLexer;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationNodeVisitor;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
 
 
 /**
@@ -126,6 +125,21 @@ public class AnnotationParserTest extends TestCase {
 		
 	}
 	
+	
+	@Test
+	public void testDoctrineParameters() {
+		
+		root = getRootNode("* @ORM\\Entity(repositoryClass=\"Acme\\DemoBundle\\Entity\\DoctorRepository\")", false);
+
+		assertNotNull(root);
+		assertEquals("Entity",root.getClassName());		
+		assertFalse(reporter.hasErrors());		
+		assertEquals("\"Acme\\DemoBundle\\Entity\\DoctorRepository\"", root.getArgument("repositoryClass"));
+		
+		
+		
+	}
+	
 	@Test
 	public void testRouteVariable() {
 		
@@ -190,7 +204,10 @@ public class AnnotationParserTest extends TestCase {
 			int start = line.indexOf('@');
 			int end = line.length()-1;
 			
+			
 			String annotation = line.substring(start, end+1);
+			
+			
 			CharStream content = new ANTLRStringStream(annotation);
 			
 			AnnotationLexer lexer = new AnnotationLexer(content, reporter);

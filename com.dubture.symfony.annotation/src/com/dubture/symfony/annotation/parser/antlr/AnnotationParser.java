@@ -1,4 +1,4 @@
-// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-10-15 10:51:28
+// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-10-15 13:47:14
 
 package com.dubture.symfony.annotation.parser.antlr;
 

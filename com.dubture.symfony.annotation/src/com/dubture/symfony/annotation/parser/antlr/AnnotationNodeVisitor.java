@@ -150,7 +150,7 @@ public class AnnotationNodeVisitor implements IAnnotationNodeVisitor {
 	public String getArgument(String name) {
 		
 		if (arguments.containsKey(name))
-			return arguments.get(name);
+			return arguments.get(name).replaceAll("\"", "").replaceAll("'", "");
 		
 		
 		return null;
