@@ -151,7 +151,11 @@ public class SymfonyTextSequenceUtilities {
 	 */
 	public static boolean isInViewPathFunctionParameter(TextSequence statement, IScriptProject project) {
 
-		String method = getMethodName(statement);		
+		String method = getMethodName(statement);
+		
+		if (method == null)
+			return false;
+		
 		return SymfonyModelAccess.getDefault().hasViewMethod(method, project);
 
 	}
@@ -169,6 +173,10 @@ public class SymfonyTextSequenceUtilities {
 			IScriptProject project) {
 		
 		String method = getMethodName(statement);
+		if (method == null)
+			return false;
+		
+		
 		return SymfonyModelAccess.getDefault().hasRouteMethod(method, project);
 
 	}

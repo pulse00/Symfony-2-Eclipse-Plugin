@@ -268,6 +268,9 @@ PhpIndexingVisitorExtension {
 
 		PHPDocBlock block = clazz.getPHPDoc();
 
+		if (block == null)
+			return;
+		
 		boolean isAnnotation = false;
 
 		if (block.getCommentType() == Comment.TYPE_PHPDOC) {
