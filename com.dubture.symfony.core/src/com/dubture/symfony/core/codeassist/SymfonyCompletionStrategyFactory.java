@@ -8,12 +8,14 @@ import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.core.codeassist.ICompletionStrategyFactory;
 
 import com.dubture.symfony.core.codeassist.contexts.AnnotationCompletionContext;
+import com.dubture.symfony.core.codeassist.contexts.EntityCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.RouteCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.ServiceContainerContext;
 import com.dubture.symfony.core.codeassist.contexts.ServiceReturnTypeContext;
 import com.dubture.symfony.core.codeassist.contexts.TemplateVariableContext;
 import com.dubture.symfony.core.codeassist.contexts.ViewPathArgumentContext;
 import com.dubture.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
+import com.dubture.symfony.core.codeassist.strategies.EntityCompletionStrategy;
 import com.dubture.symfony.core.codeassist.strategies.RouteCompletionStrategy;
 import com.dubture.symfony.core.codeassist.strategies.ServiceContainerCompletionStrategy;
 import com.dubture.symfony.core.codeassist.strategies.ServiceReturnTypeCompletionStrategy;
@@ -65,6 +67,9 @@ public class SymfonyCompletionStrategyFactory implements ICompletionStrategyFact
 				
 				result.add(new ViewPathCompletionStrategy(context));
 				
+			} else if (contextClass == EntityCompletionContext.class) {
+				
+				result.add(new EntityCompletionStrategy(context));
 			}
 		}
 		

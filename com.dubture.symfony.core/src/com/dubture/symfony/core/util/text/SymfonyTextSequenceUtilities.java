@@ -36,6 +36,8 @@ import com.dubture.symfony.core.model.SymfonyModelAccess;
 public class SymfonyTextSequenceUtilities {
 
 	private static final Pattern SERVICE_PATTERN = Pattern.compile("(\\$this->get\\(|\\$this->container->get\\()");
+	
+	private static final Pattern REPOSITORY_PATTERN = Pattern.compile("\\->getRepository\\(");	
 
 	private SymfonyTextSequenceUtilities() {
 
@@ -79,6 +81,36 @@ public class SymfonyTextSequenceUtilities {
 		}
 		return -1;		
 
+	}
+	
+	
+	/**
+	 * Check if the sequence is a method call for a doctrine repository ie
+	 * 
+	 *   $this->getDoctrine()->getRepository(|
+	 *   
+	 * @param sequence
+	 * @return
+	 */
+	public static int isInEntityFunctionParameter(CharSequence sequence) {
+		
+		Matcher matcher = REPOSITORY_PATTERN.matcher(sequence);
+
+		while (matcher.find()) {	
+
+			int pos = matcher.end();
+
+			int lastMethodCall = sequence.toString().lastIndexOf("(");
+
+			if (lastMethodCall > pos)
+				return -1;
+
+			return pos;
+		}
+		return -1;		
+		
+		
+		
 	}
 
 	public static String removeQuotes(String source) {

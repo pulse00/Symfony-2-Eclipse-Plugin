@@ -5,6 +5,7 @@ import org.eclipse.php.core.codeassist.ICompletionContextResolver;
 import org.eclipse.php.internal.core.codeassist.contexts.CompletionContextResolver;
 
 import com.dubture.symfony.core.codeassist.contexts.AnnotationCompletionContext;
+import com.dubture.symfony.core.codeassist.contexts.EntityCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.RouteCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.ServiceContainerContext;
 import com.dubture.symfony.core.codeassist.contexts.ServiceReturnTypeContext;
@@ -33,6 +34,7 @@ public class SymfonyCompletionContextResolver extends CompletionContextResolver
 				new TemplateVariableContext(),
 				new RouteCompletionContext(),
 				new ViewPathArgumentContext(),
+				new EntityCompletionContext(),
 		};		
 	}
 }
