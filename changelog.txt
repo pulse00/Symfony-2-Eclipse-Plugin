@@ -1,3 +1,9 @@
+1.0.37
+
+* added doctrine support
+* improved annotation assist
+* refactored annotation logic to separate plugin
+
 1.0.36
 
 * Updated to symfony 2.0.4
