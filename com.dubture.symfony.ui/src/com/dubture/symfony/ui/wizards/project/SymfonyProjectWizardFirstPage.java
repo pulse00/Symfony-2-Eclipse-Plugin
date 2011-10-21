@@ -167,7 +167,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
 		public SymfonySupportGroup(Composite composite,
 				WizardPage projectWizardFirstPage) {
-			final int numColumns = 3;
+			final int numColumns = 1;
 			fGroup = new Group(composite, SWT.NONE);
 			fGroup.setFont(composite.getFont());
 

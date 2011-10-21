@@ -21,7 +21,7 @@ public class TwigProjectWizardExtension implements
 	public void addElements(Group fGroup) {
 
 		enableTwigSupport = new Button(fGroup, SWT.CHECK | SWT.RIGHT);
-		enableTwigSupport.setText("Enable Twig support for this project");
+		enableTwigSupport.setText("Enable Twig support");
 		enableTwigSupport.setLayoutData(new GridData(SWT.BEGINNING,SWT.CENTER, false, false));
 		enableTwigSupport.setSelection(true);
 		

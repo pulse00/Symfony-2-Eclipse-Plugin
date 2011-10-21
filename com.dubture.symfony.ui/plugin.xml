@@ -310,6 +310,12 @@
           label="Symfony">
     </consoleFactory>
  </extension>
+ <extension
+       point="com.dubture.symfony.ui.projectWizardExtension">
+    <wizardextension
+          class="com.dubture.symfony.ui.wizards.project.DoctrineProjectWizardExtension">
+    </wizardextension>
+ </extension>
  
  <!-- TODO: finish implementation -->
  
