@@ -118,6 +118,12 @@
             priority="100">
       </selectionEngine>
    </extension>
+   <extension
+         point="com.dubture.doctrine.core.entityResolvers">
+      <resolver
+            class="com.dubture.symfony.core.goals.SymfonyEntityResolver">
+      </resolver>
+   </extension>
    <!-- End code assist -->
 
 </plugin>

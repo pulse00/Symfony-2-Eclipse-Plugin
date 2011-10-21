@@ -93,13 +93,18 @@ public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
 			
 		} else {
 						
-			List<String> entities = doctrineModel.getEntities(project);
+			List<Entity> entities = doctrineModel.getEntities(project);
+			
 			
 			//TODO: cache the entities
-			for (String entity : entities) {
+			for (Entity entity : entities) {
 			
-				EntityAlias newAliase = new EntityAlias(alias.getBundleAlias(), entity);
+				EntityAlias newAliase = new EntityAlias(alias.getBundleAlias(), entity.getElementName());
+				
+				
 				IType type = model.findEntity(newAliase, project);
+				
+				
 				
 				if (type != null) {
 					Entity e = new Entity((ModelElement) type, type.getElementName());

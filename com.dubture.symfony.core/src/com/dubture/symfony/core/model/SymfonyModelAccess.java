@@ -1032,7 +1032,8 @@ public class SymfonyModelAccess extends PhpModelAccess {
 			sb.append(entityNS[i]);
 		}			
 			    
-		IType[] types = PhpModelAccess.getDefault().findTypes(sb.toString(), alias.getEntity(), MatchRule.EXACT, 0, 0, scope, null);
+		
+		IType[] types = findTypes(sb.toString(), alias.getEntity(), MatchRule.EXACT, 0, 0, scope, null);
 
 		if (types.length == 1) {			
 			entityCache.put(alias, types[0]);
