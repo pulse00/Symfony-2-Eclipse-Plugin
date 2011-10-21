@@ -19,17 +19,35 @@ import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposalCollector;
 
 import com.dubture.doctrine.core.model.DoctrineModelAccess;
+import com.dubture.doctrine.core.model.Entity;
 import com.dubture.symfony.core.codeassist.contexts.EntityCompletionContext;
 import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.EntityAlias;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 
+/**
+ * 
+ * Completes the parts of doctrine entity aliases, ie 
+ * 
+ * <pre>
+ * 	$this->getDoctrine->getRepository('| <-- completes the bundleAlias
+ * </pre>
+ * 
+ * <pre>
+ * 
+ * $this->getDoctrine->getRepository('AcmeDemoBundle:| <-- completes the available entity classes
+ * </pre>
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 @SuppressWarnings({ "restriction", "deprecation" })
 public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
 
 	public EntityCompletionStrategy(ICompletionContext context) {
 		super(context);
-		// TODO Auto-generated constructor stub
+
 	}
 
 
@@ -75,16 +93,17 @@ public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
 			
 		} else {
 						
-			List<String> entities = doctrineModel.getEntities(project);			
-			PhpModelAccess phpModel = PhpModelAccess.getDefault();			
-
+			List<String> entities = doctrineModel.getEntities(project);
+			
 			//TODO: cache the entities
 			for (String entity : entities) {
+			
+				EntityAlias newAliase = new EntityAlias(alias.getBundleAlias(), entity);
+				IType type = model.findEntity(newAliase, project);
 				
-				IType[] types = phpModel.findTypes(entity, MatchRule.EXACT, 0, 0, projectScope, null);
-				
-				for ( IType type : types) {
-					reporter.reportType(type, "", range);
+				if (type != null) {
+					Entity e = new Entity((ModelElement) type, type.getElementName());
+					reporter.reportType(e, "", range);					
 				}
 			}
 		}

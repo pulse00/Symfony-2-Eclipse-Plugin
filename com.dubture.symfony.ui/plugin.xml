@@ -86,7 +86,14 @@
           id="com.dubture.symfony.ui.viewpathDetector"
           name="%viewpathDetector.name"
           targetId="org.eclipse.php.core.phpsource">
-    </hyperlinkDetector>            
+    </hyperlinkDetector>
+    <hyperlinkDetector
+          activate="true"
+          class="com.dubture.symfony.ui.editor.hyperlink.EntityHyperlinkDetector"
+          id="com.dubture.symfony.ui.entityDetector"
+          name="%entityDetector.name"
+          targetId="org.eclipse.php.core.phpsource">
+    </hyperlinkDetector>                            
     <hyperlinkDetector
           activate="true"
           class="com.dubture.symfony.ui.editor.hyperlink.AssetHyperlinkDetector"

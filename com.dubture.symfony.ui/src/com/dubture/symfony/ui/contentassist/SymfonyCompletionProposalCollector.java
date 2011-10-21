@@ -5,11 +5,13 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
+import org.eclipse.dltk.ui.text.completion.MemberProposalInfo;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposalCollector;
 import org.eclipse.swt.graphics.Image;
 
+import com.dubture.doctrine.core.model.Entity;
 import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.Controller;
@@ -71,6 +73,8 @@ public class SymfonyCompletionProposalCollector extends
 			return createControllerProposal(proposal);
 		} else if (element.getClass() == Template.class) {			
 			return createTemplateProposal(proposal);			
+		} else if (element.getClass() == Entity.class) {
+			return createEntityProposal(proposal);
 		}
 		
 		// don't complete anything else or we'll get duplicate entries
@@ -87,6 +91,16 @@ public class SymfonyCompletionProposalCollector extends
 
 	}
 
+	private IScriptCompletionProposal createEntityProposal(
+			CompletionProposal proposal) {
+		
+		ScriptCompletionProposal scriptProposal = generateSymfonyProposal(proposal);
+		scriptProposal.setRelevance(computeRelevance(proposal));
+		
+		scriptProposal.setProposalInfo(new EntityProposalInfo(getSourceModule().getScriptProject(), proposal));
+		return scriptProposal;								
+		
+	}
 
 	private IScriptCompletionProposal createControllerProposal(
 			CompletionProposal proposal) {
