@@ -45,8 +45,10 @@ import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.util.JsonUtils;
 import com.dubture.symfony.core.util.PathUtils;
 import com.dubture.symfony.index.IServiceHandler;
+import com.dubture.symfony.index.ITranslationHandler;
 import com.dubture.symfony.index.SymfonyIndexer;
 import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.dao.TransUnit;
 
 /**
  * 
@@ -1041,5 +1043,31 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		}
 				
 		return null;
+	}
+
+	public List<TransUnit> findTranslations(IPath path) {
+
+
+		final List<TransUnit> translations = new ArrayList<TransUnit>();
+
+		if (index == null) {
+			Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
+			return null;			
+		}
+
+		index.findTranslations(path.toString(), new ITranslationHandler() {
+			
+			@Override
+			public void handle(String name, String value, String language, String path) {
+
+				System.err.println("found translation");
+				TransUnit trans = new TransUnit(name, value, language);
+				translations.add(trans);
+				
+			}
+		});
+
+		return translations;
+		
 	}	
 }

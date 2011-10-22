@@ -3,8 +3,11 @@
  */
 package com.dubture.symfony.core.builder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.eclipse.core.resources.IFile;
@@ -21,9 +24,12 @@ import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.core.parser.XMLConfigParser;
 import com.dubture.symfony.core.parser.YamlConfigParser;
 import com.dubture.symfony.core.parser.YamlRoutingParser;
+import com.dubture.symfony.core.parser.YamlTranslationParser;
 import com.dubture.symfony.core.preferences.ProjectOptions;
+import com.dubture.symfony.core.util.TranslationUtils;
 import com.dubture.symfony.index.SymfonyIndexer;
 import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.dao.TransUnit;
 
 
 /**
@@ -74,6 +80,14 @@ public abstract class AbstractSymfonyVisitor {
 					} else if ("routing".equals(resource.getName())) {
 						loadYamlRouting();
 						built = true;
+					} else {
+						
+						if (resource.getFullPath().toString().contains("translations")) {
+	
+							
+							loadYamlTranslation();
+						}
+						
 					}
 				}
 			}
@@ -85,6 +99,41 @@ public abstract class AbstractSymfonyVisitor {
 
 		return built;
 
+	}
+	
+	
+	@SuppressWarnings("rawtypes")
+	protected void loadYamlTranslation() {
+		
+		
+		try {
+			
+			YamlTranslationParser parser = new YamlTranslationParser(file.getContents());
+			parser.parse();
+			
+			String lang = TranslationUtils.getLanguageFromFilename(file.getName());
+			
+			Map<String, String> transUnits = parser.getTranslations();			
+			Iterator it = transUnits.keySet().iterator();
+			
+			List<TransUnit> translations = new ArrayList<TransUnit>();
+			
+			while(it.hasNext()) {
+				
+				String key = (String) it.next();				
+				String value = transUnits.get(key);								
+				TransUnit unit = new TransUnit(key, value, lang);				
+				translations.add(unit);				
+
+			}
+			
+			indexTranslations(translations);
+			
+		} catch (Exception e) {			
+			e.printStackTrace();
+			Logger.logException(e);
+		}
+		
 	}
 
 
@@ -112,6 +161,20 @@ public abstract class AbstractSymfonyVisitor {
 		} catch (Exception e) {		
 			Logger.logException(e);
 		}
+	}
+	
+	
+	
+	protected void indexTranslations(List<TransUnit> translations) {
+		
+		
+		for (TransUnit unit: translations) {
+			indexer.addTranslation(unit, file.getFullPath().toString(), timestamp);
+			Logger.debugMSG(String.format("indexing translational: %s", unit.toString()));
+		}
+		
+		indexer.exitTranslations();
+		
 	}
 
 

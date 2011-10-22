@@ -3,8 +3,6 @@ package com.dubture.symfony.index.dao;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.eclipse.core.runtime.IPath;
-
 import com.dubture.symfony.index.IServiceHandler;
 
 

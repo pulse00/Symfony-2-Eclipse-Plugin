@@ -30,7 +30,7 @@ import com.dubture.symfony.index.preferences.SymfonyIndexPreferences;
 public class Schema {
 
 
-	public static final String VERSION = "0.3"; //$NON-NLS-1$
+	public static final String VERSION = "0.5"; //$NON-NLS-1$
 
 	/**
 	 * Creates the database schema using given connection.
@@ -45,6 +45,7 @@ public class Schema {
 			try {
 				statement.executeUpdate(readSqlFile("Resources/index/basic.sql")); //$NON-NLS-1$
 				statement.executeUpdate(readSqlFile("Resources/index/routes/basic.sql")); //$NON-NLS-1$
+				statement.executeUpdate(readSqlFile("Resources/index/translations/basic.sql")); //$NON-NLS-1$
 			} finally {
 				statement.close();
 			}
@@ -77,7 +78,7 @@ public class Schema {
 	}
 
 	private void storeSchemaVersion(String newVersion) {
-		IEclipsePreferences node = new InstanceScope()
+		IEclipsePreferences node = InstanceScope.INSTANCE
 		.getNode(SymfonyIndex.PLUGIN_ID);
 		node.put(SymfonyIndexPreferences.SCHEMA_VERSION, newVersion);
 		try {

@@ -8,7 +8,9 @@ import org.eclipse.core.runtime.IPath;
 
 import com.dubture.symfony.index.dao.IRouteDao;
 import com.dubture.symfony.index.dao.IServiceDao;
+import com.dubture.symfony.index.dao.ITransUnitDao;
 import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.dao.TransUnit;
 import com.dubture.symfony.index.log.Logger;
 
 
@@ -30,6 +32,7 @@ public class SymfonyIndexer {
 	private Connection connection;
 	private IServiceDao serviceDao;
 	private IRouteDao routeDao;
+	private ITransUnitDao transDao;
 	
 	private SymfonyIndexer() throws Exception {
 
@@ -37,6 +40,7 @@ public class SymfonyIndexer {
 		connection = factory.createConnection();
 		serviceDao = factory.getServiceDao();
 		routeDao = factory.getRouteDao();
+		transDao = factory.getTransDao();
 		
 	}
 	
@@ -148,6 +152,37 @@ public class SymfonyIndexer {
 			Logger.logException(e);
 			return null;
 		}
+	}
+
+
+	public void addTranslation(TransUnit unit, String path, int timestamp) {
+
+
+		try {
+			transDao.insert(connection, path, unit.name, unit.value, unit.language, timestamp);
+		} catch (SQLException e) {
+			Logger.logException(e);
+		}
+		
+	}
+
+
+	public void exitTranslations() {
+
+		try {
+			transDao.commitInsertions();
+		} catch (Exception e) {
+			Logger.logException(e);
+		}		
+		
+		
+	}
+
+
+	public void findTranslations(String path, ITranslationHandler iTranslationHandler) {
+
+		transDao.findTranslations(connection, path, iTranslationHandler);
+		
 	}
 
 

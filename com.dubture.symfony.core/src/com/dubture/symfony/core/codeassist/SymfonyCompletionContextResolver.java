@@ -10,6 +10,7 @@ import com.dubture.symfony.core.codeassist.contexts.RouteCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.ServiceContainerContext;
 import com.dubture.symfony.core.codeassist.contexts.ServiceReturnTypeContext;
 import com.dubture.symfony.core.codeassist.contexts.TemplateVariableContext;
+import com.dubture.symfony.core.codeassist.contexts.TransUnitCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.ViewPathArgumentContext;
 
 /**
@@ -35,6 +36,7 @@ public class SymfonyCompletionContextResolver extends CompletionContextResolver
 				new RouteCompletionContext(),
 				new ViewPathArgumentContext(),
 				new EntityCompletionContext(),
+				new TransUnitCompletionContext(),
 		};		
 	}
 }

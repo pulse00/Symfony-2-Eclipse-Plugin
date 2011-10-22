@@ -18,6 +18,7 @@ import com.dubture.symfony.core.model.Controller;
 import com.dubture.symfony.core.model.RouteSource;
 import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.core.model.Template;
+import com.dubture.symfony.core.model.Translation;
 
 /**
  * The {@link SymfonyCompletionProposalCollector} is 
@@ -75,12 +76,24 @@ public class SymfonyCompletionProposalCollector extends
 			return createTemplateProposal(proposal);			
 		} else if (element.getClass() == Entity.class) {
 			return createEntityProposal(proposal);
+		} else if (element.getClass() == Translation.class) {
+			return createTranslationProposal(proposal);
 		}
 		
 		// don't complete anything else or we'll get duplicate entries
 		return null;
 	}
 	
+	private IScriptCompletionProposal createTranslationProposal(CompletionProposal proposal) {
+
+		ScriptCompletionProposal scriptProposal = generateSymfonyProposal(proposal);
+		scriptProposal.setRelevance(computeRelevance(proposal));
+		
+		scriptProposal.setProposalInfo(new TranslationProposalInfo(getSourceModule().getScriptProject(), proposal));
+		return scriptProposal;								
+	}
+
+
 	private IScriptCompletionProposal createTemplateProposal(
 			CompletionProposal proposal) {
 

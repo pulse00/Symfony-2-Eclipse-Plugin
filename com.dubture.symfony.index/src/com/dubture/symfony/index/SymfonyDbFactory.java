@@ -14,8 +14,10 @@ import org.h2.tools.DeleteDbFiles;
 
 import com.dubture.symfony.index.dao.IRouteDao;
 import com.dubture.symfony.index.dao.IServiceDao;
+import com.dubture.symfony.index.dao.ITransUnitDao;
 import com.dubture.symfony.index.dao.RouteDao;
 import com.dubture.symfony.index.dao.ServiceDao;
+import com.dubture.symfony.index.dao.TransUnitDao;
 import com.dubture.symfony.index.log.Logger;
 import com.dubture.symfony.index.preferences.SymfonyIndexPreferences;
 
@@ -195,6 +197,12 @@ public class SymfonyDbFactory  {
 
 	public IRouteDao getRouteDao() {
 		return new RouteDao();
+	}
+	
+	public ITransUnitDao getTransDao() {
+		
+		return new TransUnitDao();
+		
 	}
 
 }

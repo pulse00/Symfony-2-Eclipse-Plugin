@@ -13,6 +13,7 @@ import com.dubture.symfony.core.codeassist.contexts.RouteCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.ServiceContainerContext;
 import com.dubture.symfony.core.codeassist.contexts.ServiceReturnTypeContext;
 import com.dubture.symfony.core.codeassist.contexts.TemplateVariableContext;
+import com.dubture.symfony.core.codeassist.contexts.TransUnitCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.ViewPathArgumentContext;
 import com.dubture.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
 import com.dubture.symfony.core.codeassist.strategies.EntityCompletionStrategy;
@@ -20,6 +21,7 @@ import com.dubture.symfony.core.codeassist.strategies.RouteCompletionStrategy;
 import com.dubture.symfony.core.codeassist.strategies.ServiceContainerCompletionStrategy;
 import com.dubture.symfony.core.codeassist.strategies.ServiceReturnTypeCompletionStrategy;
 import com.dubture.symfony.core.codeassist.strategies.TemplateVariableStrategy;
+import com.dubture.symfony.core.codeassist.strategies.TransUnitCompletionStrategy;
 import com.dubture.symfony.core.codeassist.strategies.ViewPathCompletionStrategy;
 
 /**
@@ -70,6 +72,9 @@ public class SymfonyCompletionStrategyFactory implements ICompletionStrategyFact
 			} else if (contextClass == EntityCompletionContext.class) {
 				
 				result.add(new EntityCompletionStrategy(context));
+			} else if (contextClass == TransUnitCompletionContext.class) {
+				
+				result.add(new TransUnitCompletionStrategy(context));
 			}
 		}
 		

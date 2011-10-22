@@ -38,6 +38,8 @@ public class SymfonyTextSequenceUtilities {
 	private static final Pattern SERVICE_PATTERN = Pattern.compile("(\\$this->get\\(|\\$this->container->get\\()");
 	
 	private static final Pattern REPOSITORY_PATTERN = Pattern.compile("\\->getRepository\\(");	
+	
+	private static final Pattern TRANSLATION_PATTERN = Pattern.compile("\\->translate\\(");		
 
 	private SymfonyTextSequenceUtilities() {
 
@@ -110,6 +112,26 @@ public class SymfonyTextSequenceUtilities {
 		return -1;		
 		
 		
+		
+	}
+	
+	
+	public static int isInTranslationFunctionParameter(CharSequence sequence) {
+		
+		Matcher matcher = TRANSLATION_PATTERN.matcher(sequence);
+
+		while (matcher.find()) {	
+
+			int pos = matcher.end();
+
+			int lastMethodCall = sequence.toString().lastIndexOf("(");
+
+			if (lastMethodCall > pos)
+				return -1;
+
+			return pos;
+		}
+		return -1;				
 		
 	}
 
