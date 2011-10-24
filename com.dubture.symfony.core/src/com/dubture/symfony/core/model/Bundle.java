@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.INamespace;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -25,10 +26,11 @@ public class Bundle extends SourceType {
 	
 	private String _path = null;
 	
+	private IScriptProject _project;
+	
 	
 	public Bundle(ModelElement parent, String name) {
 		super(parent, name);
-		
 		
 	}
 	
@@ -124,4 +126,27 @@ public class Bundle extends SourceType {
 		return _namespace;
 		
 	}	
+	
+	public String getTranslationPath() {
+		
+		return _path + "/Resources/translations";
+		
+	}
+	
+	@Override
+	public IScriptProject getScriptProject() {
+
+		if (_project != null)
+			return _project;
+
+		return super.getScriptProject();
+	}
+
+	public void setProject(IScriptProject project) {
+		
+		_project = project;
+		
+	}
+	
+	
 }

@@ -1,7 +1,7 @@
 package com.dubture.symfony.core.model;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceType;
@@ -55,5 +55,20 @@ public class Translation extends SourceType {
 		
 		return super.getElementName();
 		
+	}
+	
+	
+	@Override
+	public IScriptProject getScriptProject() {
+	
+		IScriptProject project = super.getScriptProject();
+		
+		if (project == null) {
+			
+			return parent.getScriptProject();
+
+		}
+		
+		return project;
 	}
 }

@@ -50,5 +50,12 @@ public class EntityAlias {
 		return bundleAlias != null;
 		
 	}
+	
+	@Override
+	public String toString() {
+
+		return String.format("%s:%s", bundleAlias, entity);
+		
+	}
 
 }

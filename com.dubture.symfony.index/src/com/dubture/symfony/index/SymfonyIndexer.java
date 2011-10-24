@@ -159,6 +159,7 @@ public class SymfonyIndexer {
 
 
 		try {
+			transDao.deleteRoutesByPath(connection, unit.name, unit.language, path);
 			transDao.insert(connection, path, unit.name, unit.value, unit.language, timestamp);
 		} catch (SQLException e) {
 			Logger.logException(e);

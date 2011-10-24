@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.osgi.util.NLS;
 
 import com.dubture.symfony.index.ITranslationHandler;
@@ -121,5 +122,24 @@ public class TransUnitDao implements ITransUnitDao {
 		} catch(Exception e) {
 			Logger.logException(e);
 		}
+	}
+
+	@Override
+	public void deleteRoutesByPath(Connection connection, String name, String language, String path) {
+
+		
+		try {
+			Statement statement = connection.createStatement();
+			statement.execute("DELETE FROM TRANSUNIT WHERE NAME = '"
+					+ name + "' AND PATH = '"  + path + "' AND LANGUAGE = '" + language + "'");
+			connection.commit();
+			
+		} catch (SQLException e) {
+
+			Logger.logException(e);
+		}
+		
+		
+		
 	}
 }

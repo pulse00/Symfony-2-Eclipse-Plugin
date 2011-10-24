@@ -8,6 +8,19 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
 
+/**
+ * 
+ * Checks if we're in a translation context, ie:
+ * 
+ * <pre>
+ * 
+ * 	$this->get('translator')->translate('| <--- completes translational units
+ * 
+ * </pre>
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 @SuppressWarnings("restriction")
 public class TransUnitCompletionContext extends QuotesContext {
 	
@@ -22,8 +35,8 @@ public class TransUnitCompletionContext extends QuotesContext {
 			try {
 				
 				 TextSequence statement = getStatementText();				 
-				 
-				 if (SymfonyTextSequenceUtilities.isInTranslationFunctionParameter(statement) >= -1) {
+				  
+				 if (SymfonyTextSequenceUtilities.isInTranslationFunctionParameter(statement) > -1) {
 					 return true;
 				 }
 				 

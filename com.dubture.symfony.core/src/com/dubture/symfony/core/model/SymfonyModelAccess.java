@@ -74,6 +74,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	private LRUCache controllerCache = new LRUCache();
 	private LRUCache serviceCache2 = new LRUCache();
 	private LRUCache entityCache = new LRUCache();
+	private LRUCache bundleCache = new LRUCache();
 
 	private SymfonyModelAccess() {
 
@@ -964,6 +965,11 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	 */
 	public Bundle findBundle(String bundleAlias, IScriptProject scriptProject) {
 
+		String key = bundleAlias + scriptProject.getElementName();
+		
+		if (bundleCache.get(key) != null) {
+			return (Bundle) bundleCache.get(key);
+		}
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);			 		 
 		ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());		 
@@ -983,7 +989,10 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		}, null);
 
 		if (bundles.size() == 1) {
-			return bundles.get(0);
+			
+			Bundle b = bundles.get(0);
+			bundleCache.put(key, b);
+			return b;
 		}
 		
 		return null;
@@ -1000,9 +1009,12 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	 */
 	public IType findEntity(EntityAlias alias, IScriptProject scriptProject) {
 		
-		if (entityCache.get(alias) != null)
-			return (IType) entityCache.get(alias);
-					
+		String key = alias + scriptProject.getElementName();
+		
+		if (entityCache.get(key) != null) {
+			return (IType) entityCache.get(key);
+		}
+		
 		Bundle bundle = findBundle(alias.getBundleAlias(), scriptProject);
 		
 		if (bundle == null) {
@@ -1037,9 +1049,10 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		
 		IType[] types = findTypes(sb.toString(), alias.getEntity(), MatchRule.EXACT, 0, 0, scope, null);
 
-		if (types.length == 1) {			
-			entityCache.put(alias, types[0]);
-			return types[0];
+		if (types.length == 1) {
+			IType t = types[0];
+			entityCache.put(key, t);
+			return t;
 		}
 				
 		return null;
@@ -1060,8 +1073,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 			@Override
 			public void handle(String name, String value, String language, String path) {
 
-				System.err.println("found translation");
-				TransUnit trans = new TransUnit(name, value, language);
+				TransUnit trans = new TransUnit(name, value, language, path);
 				translations.add(trans);
 				
 			}
