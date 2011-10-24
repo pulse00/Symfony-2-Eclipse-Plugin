@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<!--  twig templates -->
+<template	name="translate"	description="%CodeTemplates.translate"	id="com.dubture.symfony.twig.ui.editor.templates.function.translate"	context="twig"	enabled="true"	autoinsert="false">%template.translate</template><template	name="form"	description="%CodeTemplates.form"	id="com.dubture.symfony.twig.ui.editor.templates.function.form"	context="twig"	enabled="true"	autoinsert="false">%template.form</template></templates>

@@ -8,6 +8,13 @@
       </resolver>
    </extension>
    <extension
+         point="org.eclipse.ui.editors.templates">
+      <include
+            file="templates/twigdefault-templates.xml"
+            translations="templates/twigdefault-templates.properties">
+      </include>
+   </extension>
+   <extension
          point="com.dubture.twig.core.completionContextResolvers">
       <resolver
             class="com.dubture.symfony.twig.codeassist.TwigCompletionContextResolver">

@@ -79,6 +79,6 @@ fragment LOWER	: 'a'..'z';
 fragment UPPER	: 'A'..'Z';
 fragment DIGIT	: '0'..'9';
 fragment UNDER : '_';
-fragment SYMBOL: UNDER | '-' | '/' | ':' | '.' | '{' | '}' | '|'| '\\';
+fragment SYMBOL: UNDER | '-' | ' ' | '/' | ':' | '.' | ',' | '{' | '}' | '|'| '\\';
 
 WHITESPACE : ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+ { $channel = HIDDEN; };

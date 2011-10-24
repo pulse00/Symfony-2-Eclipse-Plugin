@@ -127,6 +127,18 @@ public class AnnotationParserTest extends TestCase {
 	
 	
 	@Test
+	public void testRoles() {
+		
+		root = getRootNode("* @Secure(roles=\"ROLE_ADMIN, ROLE_USER\")", false);
+
+		assertNotNull(root);
+		assertEquals("Secure",root.getClassName());		
+		assertFalse(reporter.hasErrors());		
+		
+	}
+	
+	
+	@Test
 	public void testDoctrineParameters() {
 		
 		root = getRootNode("* @ORM\\Entity(repositoryClass=\"Acme\\DemoBundle\\Entity\\DoctorRepository\")", false);
@@ -134,7 +146,8 @@ public class AnnotationParserTest extends TestCase {
 		assertNotNull(root);
 		assertEquals("Entity",root.getClassName());		
 		assertFalse(reporter.hasErrors());		
-		assertEquals("\"Acme\\DemoBundle\\Entity\\DoctorRepository\"", root.getArgument("repositoryClass"));
+		
+		assertEquals("Acme\\DemoBundle\\Entity\\DoctorRepository", root.getArgument("repositoryClass"));
 		
 		
 		
