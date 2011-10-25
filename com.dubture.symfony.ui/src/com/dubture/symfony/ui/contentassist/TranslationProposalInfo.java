@@ -1,11 +1,16 @@
 package com.dubture.symfony.ui.contentassist;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.ui.text.completion.MemberProposalInfo;
 
+import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.Translation;
+import com.dubture.symfony.index.dao.TransUnit;
+import com.dubture.symfony.ui.utils.HTMLUtils;
 
 public class TranslationProposalInfo extends MemberProposalInfo {
 
@@ -21,6 +26,15 @@ public class TranslationProposalInfo extends MemberProposalInfo {
 		try {
 			
 			Translation translation = (Translation) getModelElement();			
+			
+			SymfonyModelAccess model = SymfonyModelAccess.getDefault();
+			List<TransUnit> units = model.findTranslations(translation);
+			
+			String html = HTMLUtils.translation2Html(translation, units);
+			
+			if (html != null && html.length() > 0)
+				return html;
+			
 			return translation.getElementName();
 			
 			

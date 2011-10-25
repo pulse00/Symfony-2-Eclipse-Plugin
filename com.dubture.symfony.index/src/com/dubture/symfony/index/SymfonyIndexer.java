@@ -185,7 +185,12 @@ public class SymfonyIndexer {
 		transDao.findTranslations(connection, path, iTranslationHandler);
 		
 	}
+	
+	
+	public void findTranslations(String name, String path, ITranslationHandler handler) {
 
-
-
+		transDao.findTranslations(connection, name, path, handler);
+		
+	}
+	
 }

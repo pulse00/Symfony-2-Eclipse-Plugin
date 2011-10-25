@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.osgi.util.NLS;
 
 import com.dubture.symfony.index.ITranslationHandler;
@@ -122,6 +121,34 @@ public class TransUnitDao implements ITransUnitDao {
 		} catch(Exception e) {
 			Logger.logException(e);
 		}
+	}
+	
+	
+	public void findTranslations(Connection connection , String name, String path, ITranslationHandler handler) {
+		
+		try {
+			
+			Statement statement = connection.createStatement();
+			String query = "SELECT NAME, VALUE, LANGUAGE, PATH FROM TRANSUNIT WHERE NAME = '" + name + "' AND PATH LIKE '" + path + "%'";
+			
+			ResultSet result = statement.executeQuery(query.toString());
+			
+			while (result.next()) {
+				
+				int columnIndex = 0;
+				String _name = result.getString(++columnIndex);
+				String value = result.getString(++columnIndex);
+				String language = result.getString(++columnIndex);
+				String _path = result.getString(++columnIndex);
+				
+				handler.handle(_name, value, language, _path);
+
+			}
+		} catch(Exception e) {
+			Logger.logException(e);
+		}
+		
+		
 	}
 
 	@Override

@@ -82,7 +82,6 @@ public class TransUnitCompletionStrategy extends MethodParameterKeywordStrategy 
 			}
 			
 			if (targetBundle != null && CodeAssistUtils.startsWithIgnoreCase(unit.name, prefix)) {
-				System.err.println("report translation");
 				Translation trans = new Translation(targetBundle,unit);				
 				reporter.reportType(trans, "", range);	
 			}

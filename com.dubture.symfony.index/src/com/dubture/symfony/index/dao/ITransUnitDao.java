@@ -16,6 +16,8 @@ public interface ITransUnitDao {
 
 	void findTranslations(Connection connection, String path, ITranslationHandler iTranslationHandler);
 	
+	void findTranslations(Connection connection , String name, String path, ITranslationHandler handler);
+	
 	void deleteRoutesByPath(Connection connection, String name, String language, String path);
 	
 }

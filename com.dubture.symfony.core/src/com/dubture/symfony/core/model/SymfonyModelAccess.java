@@ -1081,5 +1081,23 @@ public class SymfonyModelAccess extends PhpModelAccess {
 
 		return translations;
 		
+	}
+
+	public List<TransUnit> findTranslations(Translation translation) {
+
+		final List<TransUnit> units = new ArrayList<TransUnit>();
+		
+		index.findTranslations(translation.getElementName(), translation.getPath().toString(), new ITranslationHandler() {
+			
+			@Override
+			public void handle(String name, String value, String language, String path) {
+
+				TransUnit unit = new TransUnit(name, value, language);				
+				units.add(unit);
+				
+			}
+		});
+		
+		return units;
 	}	
 }
