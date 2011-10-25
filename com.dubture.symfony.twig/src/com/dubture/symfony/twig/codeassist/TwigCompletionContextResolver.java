@@ -5,6 +5,7 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import com.dubture.symfony.twig.codeassist.context.RouteCompletionContext;
 import com.dubture.symfony.twig.codeassist.context.TemplateVariableCompletionContext;
 import com.dubture.symfony.twig.codeassist.context.TemplateVariableFieldCompletionContext;
+import com.dubture.symfony.twig.codeassist.context.TranslationCompletionContext;
 import com.dubture.symfony.twig.codeassist.context.ViewPathArgumentContext;
 import com.dubture.twig.core.codeassist.ITwigCompletionContextResolver;
 
@@ -33,6 +34,7 @@ public class TwigCompletionContextResolver implements
 				new TemplateVariableFieldCompletionContext(),
 				new RouteCompletionContext(),
 				new ViewPathArgumentContext(),
+				new TranslationCompletionContext(),
 				
 		};
 	}

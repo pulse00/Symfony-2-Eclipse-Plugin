@@ -10,10 +10,12 @@ import org.eclipse.php.internal.core.codeassist.strategies.AbstractCompletionStr
 import com.dubture.symfony.twig.codeassist.context.RouteCompletionContext;
 import com.dubture.symfony.twig.codeassist.context.TemplateVariableCompletionContext;
 import com.dubture.symfony.twig.codeassist.context.TemplateVariableFieldCompletionContext;
+import com.dubture.symfony.twig.codeassist.context.TranslationCompletionContext;
 import com.dubture.symfony.twig.codeassist.context.ViewPathArgumentContext;
 import com.dubture.symfony.twig.codeassist.strategies.RouteCompletionStrategy;
 import com.dubture.symfony.twig.codeassist.strategies.TemplateVariableCompletionStrategy;
 import com.dubture.symfony.twig.codeassist.strategies.TemplateVariableFieldCompletionStrategy;
+import com.dubture.symfony.twig.codeassist.strategies.TranslationCompletionStrategy;
 import com.dubture.symfony.twig.codeassist.strategies.ViewPathCompletionStrategy;
 import com.dubture.twig.core.codeassist.ITwigCompletionStrategyFactory;
 
@@ -57,6 +59,11 @@ public class TwigCompletionStrategyFactory implements
 			} else if (context.getClass() == ViewPathArgumentContext.class) {
 				
 				result.add(new ViewPathCompletionStrategy(context));
+				
+			} else if (context.getClass() == TranslationCompletionContext.class) {
+				
+				result.add(new TranslationCompletionStrategy(context));
+				
 			}
 		}
 		
