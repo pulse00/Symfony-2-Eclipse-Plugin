@@ -11,6 +11,20 @@ import org.eclipse.wst.xml.core.internal.text.XMLStructuredDocumentRegion;
 
 import com.dubture.twig.core.documentModel.parser.TwigRegionContext;
 
+/**
+ * 
+ * Translation context for twig templates.
+ * 
+ * <pre>
+ * 
+ *   {% trans %} | <--- completes translations  
+ * 
+ * </pre>
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 @SuppressWarnings("restriction")
 public class TranslationCompletionContext extends AbstractCompletionContext {
 	
@@ -37,13 +51,6 @@ public class TranslationCompletionContext extends AbstractCompletionContext {
 				
 				textRegion = (XMLStructuredDocumentRegion) region;
 				this.offset = offset;
-				TextSequence seq = getStatementText();
-				
-				
-				
-				if (seq == null) {
-					System.err.println("is null");
-				}
 				XMLStructuredDocumentRegion xmlRegion = (XMLStructuredDocumentRegion) previous;
 				
 				if (xmlRegion.getText().contains("trans")) {
@@ -66,10 +73,7 @@ public class TranslationCompletionContext extends AbstractCompletionContext {
 		TextSequence textSequence = TextSequenceUtilities
 				.createTextSequence(textRegion, offset, textRegion.getFullText().length());
 
-		System.err.println(textSequence);
 		return textSequence;
 		
-	}
-	
-	
+	}	
 }

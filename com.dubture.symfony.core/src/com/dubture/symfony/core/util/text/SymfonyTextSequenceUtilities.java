@@ -39,7 +39,7 @@ public class SymfonyTextSequenceUtilities {
 	
 	private static final Pattern REPOSITORY_PATTERN = Pattern.compile("\\->getRepository\\(");	
 	
-	private static final Pattern TRANSLATION_PATTERN = Pattern.compile("\\->translate\\(");		
+	private static final Pattern TRANSLATION_PATTERN = Pattern.compile("(\\->transChoice\\(|\\->trans\\()");	
 
 	private SymfonyTextSequenceUtilities() {
 
