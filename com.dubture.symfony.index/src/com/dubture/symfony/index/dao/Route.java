@@ -1,15 +1,18 @@
 package com.dubture.symfony.index.dao;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.dubture.symfony.index.log.Logger;
 
 /**
- * 
- * 
- * 
- * @author "Robert Gruendler <r.gruendler@gmail.com>"
  *
+ * Represents a Symfony route.
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
  */
 public class Route {
 
@@ -19,7 +22,8 @@ public class Route {
 	public String controller;
 	public String action;
 	public String bundle;
-
+	
+	private Map<String, RouteParameter> parameters = null;
 	
 	public Route(String bundle, String controller, String action, String name, String pattern) {
 		
@@ -27,7 +31,7 @@ public class Route {
 		this.controller = controller;
 		this.action = action;
 		this.name = name;
-		this.pattern = pattern;
+		this.pattern = pattern.replace("\"", "").replace("'", "");
 		
 		
 	}
@@ -86,9 +90,62 @@ public class Route {
 	
 
 	public String getName() {
-		
-		
+				
 		return name;
 	}
+	
+	public String getController() {
+		
+		return controller;
+		
+	}
+	
+	public String getURL() {
+		
+		return pattern;
+				
+	}
+	
+	public boolean hasParameters() {
+		
+		return pattern.contains(RouteParameter.LEFT_DELIM);		
+		
+	}
 
+	public Map<String, RouteParameter> getParameters() {
+
+		if(parameters != null)
+			return parameters;
+		
+		parameters = new HashMap<String, RouteParameter>();
+		
+		String route = pattern;
+		String[] parts = route.split("\\/");
+		
+		for (String part : parts) {			
+			if (part.startsWith(RouteParameter.LEFT_DELIM)) {
+				
+				RouteParameter param = new RouteParameter(part);				
+				parameters.put(param.getName(), param);
+			}
+		}		
+		
+		return parameters;
+		
+	}
+
+	
+	public String getURL(Collection<RouteParameter> collection) {
+
+		String url = pattern;
+		
+		for (RouteParameter param : collection) {
+			String regex = String.format("{%s}", param.getName());			
+			url = url.replace(regex, param.getValue());
+		}
+		
+		return url;
+
+	}
+	
 }

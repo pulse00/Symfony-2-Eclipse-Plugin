@@ -192,5 +192,18 @@ public class SymfonyIndexer {
 		transDao.findTranslations(connection, name, path, handler);
 		
 	}
+
+
+	public List<Route> findRoutesByBundle(String bundleAlias, IPath path) {
+
+		return routeDao.findRoutesByBundle(connection, bundleAlias, path);
+		
+	}
+	
+	public List<Route> findRoutesByController(String bundleAlias, String controller, IPath path) {
+		
+		return routeDao.findRoutesByController(connection, bundleAlias, controller, path);
+		
+	}
 	
 }

@@ -128,14 +128,38 @@ public class RouteDao implements IRouteDao {
 	@Override
 	public List<Route> findRoutes(Connection connection, IPath path) {
 
+		String sql = "SELECT NAME, PATTERN, CONTROLLER, BUNDLE, ACTION FROM ROUTES WHERE PATH LIKE '" + path + "%'";
+		return searchRoutes(connection, sql);
+
+	}
+	
+	public List<Route> findRoutesByBundle(Connection connection, String bundle, IPath path) {
+		
+		String sql = "SELECT NAME, PATTERN, CONTROLLER, BUNDLE, ACTION FROM ROUTES WHERE BUNDLE = '" + bundle + "' AND PATH LIKE '" + path + "%'";
+		return searchRoutes(connection, sql);
+		
+		
+	}
+	
+
+	@Override
+	public List<Route> findRoutesByController(Connection connection,
+			String bundleAlias, String controller, IPath path) {
+
+		String sql = "SELECT NAME, PATTERN, CONTROLLER, BUNDLE, ACTION FROM ROUTES WHERE BUNDLE = '" + bundleAlias + "' AND CONTROLLER = '" + controller + "' AND PATH LIKE '" + path + "%'";
+		return searchRoutes(connection, sql);
+		
+	}	
+	
+	
+	private List<Route> searchRoutes(Connection connection, String sql) {
+		
 		final List<Route> routes = new ArrayList<Route>();
 		
 		try {
 			
 			Statement statement = connection.createStatement();
-			String query = "SELECT NAME, PATTERN, CONTROLLER, BUNDLE, ACTION FROM ROUTES WHERE PATH LIKE '" + path + "%'";
-
-			ResultSet result = statement.executeQuery(query.toString());
+			ResultSet result = statement.executeQuery(sql);
 			
 			while (result.next()) {
 				
@@ -154,8 +178,8 @@ public class RouteDao implements IRouteDao {
 			Logger.logException(e);
 		}
 		
-		return routes;
-
+		return routes;		
+		
 	}
 
 	@Override
@@ -171,8 +195,6 @@ public class RouteDao implements IRouteDao {
 			ResultSet result = statement.executeQuery(query.toString());
 			
 			while (result.next()) {
-				
-				
 				int columnIndex = 0;
 				String name = result.getString(++columnIndex);
 				String pattern = result.getString(++columnIndex);
@@ -195,5 +217,5 @@ public class RouteDao implements IRouteDao {
 			
 		
 		
-	}	
+	}
 }

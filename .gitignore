@@ -4,3 +4,4 @@ com.dubture.symfony.ui/bin/*
 com.dubture.symfony.twig/bin/*
 com.dubture.symfony.test/bin/*
 com.dubture.symfony.index/bin/*
+com.dubture.symfony.debug/bin/*

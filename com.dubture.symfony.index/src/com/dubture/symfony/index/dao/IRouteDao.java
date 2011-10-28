@@ -28,7 +28,12 @@ public interface IRouteDao {
 	void deleteRoutesByPath(Connection connection, String name, IPath path);
 
 	List<Route> findRoutes(Connection connection, IPath path);
+	
+	List<Route> findRoutesByBundle(Connection connection, String bundle, IPath path);
 
 	Route findRoute(Connection connection, String route, IPath path);
+
+	List<Route> findRoutesByController(Connection connection,
+			String bundleAlias, String controller, IPath path);
 
 }

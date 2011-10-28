@@ -42,7 +42,9 @@ import org.eclipse.php.internal.core.model.PhpModelAccess;
 import com.dubture.symfony.core.SymfonyLanguageToolkit;
 import com.dubture.symfony.core.index.SymfonyElementResolver.TemplateField;
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.core.util.JsonUtils;
+import com.dubture.symfony.core.util.ModelUtils;
 import com.dubture.symfony.core.util.PathUtils;
 import com.dubture.symfony.index.IServiceHandler;
 import com.dubture.symfony.index.ITranslationHandler;
@@ -1099,5 +1101,28 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		});
 		
 		return units;
+	}
+
+	public Route getRoute(IType type, IMethod method) {
+
+		IScriptProject project = type.getScriptProject();
+		
+		String bundleAlias = ModelUtils.extractBundleName(type.getFullyQualifiedName("\\"));		
+		Bundle bundle = findBundle(bundleAlias, project);
+
+		String controller = ModelUtils.getControllerName(type);
+		
+		List<Route> routes = index.findRoutesByController(bundleAlias, controller, project.getPath());
+
+		String action = method.getElementName().endsWith(SymfonyCoreConstants.ACTION_SUFFIX) ? 
+				method.getElementName().replace(SymfonyCoreConstants.ACTION_SUFFIX, "") : method.getElementName();
+				
+		for (Route route : routes) {			
+			if (route.getAction().equals(action)) {
+				return route;
+			}
+		}
+		
+		return null;
 	}	
 }
