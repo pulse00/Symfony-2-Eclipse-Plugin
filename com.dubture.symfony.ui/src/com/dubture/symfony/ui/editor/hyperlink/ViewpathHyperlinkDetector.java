@@ -63,7 +63,13 @@ public class ViewpathHyperlinkDetector extends StringHyperlinkDetector {
 	
 	private IHyperlink getTemplateLink(ViewPath viewPath, IRegion wordRegion) {
 						
-		IScriptFolder folder = SymfonyModelAccess.getDefault().findBundleFolder(viewPath.getBundle(), input.getScriptProject());		
+		IScriptFolder folder = SymfonyModelAccess.getDefault().findBundleFolder(viewPath.getBundle(), input.getScriptProject());
+		
+		if (folder == null) {
+			Logger.debugMSG("Unable to resolve template link: " + viewPath);
+			return null;
+		}
+		
 		String path = "Resources/views/";
 		
 		if (viewPath.getController() != null) {			

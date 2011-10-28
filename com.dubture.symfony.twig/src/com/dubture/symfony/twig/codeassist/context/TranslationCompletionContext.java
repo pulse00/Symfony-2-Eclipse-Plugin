@@ -70,6 +70,9 @@ public class TranslationCompletionContext extends AbstractCompletionContext {
 	@Override
 	public TextSequence getStatementText() {
 
+		if (textRegion == null)
+			return null;
+		
 		TextSequence textSequence = TextSequenceUtilities
 				.createTextSequence(textRegion, offset, textRegion.getFullText().length());
 

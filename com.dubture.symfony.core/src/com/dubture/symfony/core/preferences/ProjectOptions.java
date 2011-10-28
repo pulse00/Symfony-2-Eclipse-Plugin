@@ -39,8 +39,10 @@ public class ProjectOptions {
 		JSONArray defaultSynthetics = null;
 		
 		try {
-			String synths = CorePreferencesSupport.getInstance()
-			.getPreferencesValue(Keys.SYNTHETIC_SERVICES, null, project);		
+			
+			CorePreferencesSupport prefs = CorePreferencesSupport.getInstance();
+			
+			String synths = prefs.getPreferencesValue(Keys.SYNTHETIC_SERVICES, null, project);		
 			
 			Logger.debugMSG("LOADED DEFAULTS: " + synths);
 			

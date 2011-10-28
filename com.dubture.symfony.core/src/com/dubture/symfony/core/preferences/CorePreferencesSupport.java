@@ -1,5 +1,6 @@
 package com.dubture.symfony.core.preferences;
 
+import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 
 import com.dubture.symfony.core.SymfonyCorePlugin;
@@ -20,7 +21,7 @@ public class CorePreferencesSupport extends PreferencesSupport {
 	public CorePreferencesSupport() {
 
 		super(SymfonyCorePlugin.ID, SymfonyCorePlugin.getDefault() == null ? null
-				: InstanceScope.INSTANCE.getNode(SymfonyCorePlugin.ID));		
+				: DefaultScope.INSTANCE.getNode(SymfonyCorePlugin.ID));		
 
 
 	}
