@@ -7,11 +7,13 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.references.VariableReference;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 
+import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
@@ -144,5 +146,26 @@ public class ModelUtils {
 		
 		return type.getElementName().replace(SymfonyCoreConstants.CONTROLLER_CLASS, "");
 		
+	}
+
+	public static String resolveControllerShortcut(String path, IScriptProject project) {
+
+		if (path.startsWith("@")) {
+			
+			String[] parts = path.split("\\/");
+			
+			if (parts.length > 0) {
+				String bundle = parts[0];
+				
+				if (bundle.startsWith("@")) {					
+					Bundle b = SymfonyModelAccess.getDefault().findBundle(bundle.replace("@", ""), project);					
+					if (b != null) {						
+						return b.getPath().toString() + path.replace(bundle, "");
+					}
+				}				
+			}
+		}
+		
+		return null;
 	}
 }

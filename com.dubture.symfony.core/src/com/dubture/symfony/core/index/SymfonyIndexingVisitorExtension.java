@@ -23,6 +23,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
 import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Comment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ExpressionStatement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
@@ -167,12 +168,12 @@ PhpIndexingVisitorExtension {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean visit(Expression s) throws Exception {
 
 		if(!isSymfonyResource)
 			return false;
-
 
 		if (s.getClass() == Block.class) {
 
@@ -185,7 +186,28 @@ PhpIndexingVisitorExtension {
 				}
 			});
 		}
+		
+		if (s instanceof ClassInstanceCreation) {
+			
+			ClassInstanceCreation instance = (ClassInstanceCreation) s;
 
+			if (SymfonyCoreConstants.APP_KERNEL.equals(instance.getClassName().toString())) {
+				
+				List args = instance.getCtorParams().getChilds();
+				
+				if (args.get(0) instanceof Scalar) {
+					Scalar environment = (Scalar) args.get(0);
+					
+					String value = environment.getValue().replace("\"", "").replace("'", "");
+					String path = sourceModule.getPath().toString();					
+					Logger.debugMSG("indexing environment: " + value + " => " + path);
+					
+					ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.ENVIRONMENT, instance.sourceStart(), instance.sourceEnd()-instance.sourceStart(), value, null, path);
+					requestor.addReference(info);
+					
+				}
+			}
+		}
 		return super.visit(s);
 	}
 
@@ -461,4 +483,6 @@ PhpIndexingVisitorExtension {
 
 		return true;
 	}
+	
+
 }

@@ -8,17 +8,24 @@ Bundle-Vendor: DUBTURE
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.ui,
  org.eclipse.ui,
+ org.eclipse.jface.text,
  org.eclipse.dltk.core,
  org.eclipse.dltk.ui,
  org.eclipse.php.core,
  org.eclipse.php.ui,
  org.eclipse.php.debug.core,
  org.eclipse.php.debug.ui,
+ org.eclipse.php.debug.daemon,
+ org.eclipse.php.server.core,
  org.eclipse.debug.core,
  org.eclipse.wst.sse.core,
  org.eclipse.wst.sse.ui,
- org.eclipse.jface.text,
  com.dubture.symfony.core,
- com.dubture.symfony.index
+ com.dubture.symfony.index,
+ com.dubture.symfony.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Export-Package: com.dubture.symfony.debug,
+ com.dubture.symfony.debug.launch
+Bundle-ClassPath: .
+Eclipse-RegisterBuddy: org.eclipse.php.debug.core

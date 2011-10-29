@@ -1124,5 +1124,35 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		}
 		
 		return null;
+	}
+
+	/**
+	 * Get the installed Kernels for a specific projects.
+	 * 
+	 * @param project
+	 * @return
+	 */
+	public List<AppKernel> getKernels(IScriptProject project) {
+
+		final List<AppKernel> kernels = new ArrayList<AppKernel>();
+
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
+		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());		
+
+		engine.search(ISymfonyModelElement.ENVIRONMENT, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+
+			@Override
+			public void match(int elementType, int flags, int offset, int length,
+					int nameOffset, int nameLength, String elementName,
+					String metadata, String doc, String qualifier, String parent,
+					ISourceModule sourceModule, boolean isReference) {
+
+				AppKernel kernel = new AppKernel(elementName, sourceModule);				
+				kernels.add(kernel);
+
+			}
+		}, null);
+				
+		return kernels;
 	}	
 }

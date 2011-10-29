@@ -31,6 +31,7 @@ public class SymfonyCoreConstants {
 	// Symfony Class and Method names	
 	public static final String CONTROLLER_CLASS 	= "Controller";
 	public static final String ACTION_SUFFIX 		= "Action";
+	public static final String APP_KERNEL			= "AppKernel";
 
 	
 	

@@ -21,10 +21,9 @@ public interface ISymfonyModelElement {
 	int VIEW_METHOD = 300;
 	int ROUTE_METHOD = 301;
 	
-	// class metadata
-	int ANNOTATION = 400;
-	
-		
+	// misc
+	int ANNOTATION = 400;	
+	int ENVIRONMENT = 401;
 	
 
 
