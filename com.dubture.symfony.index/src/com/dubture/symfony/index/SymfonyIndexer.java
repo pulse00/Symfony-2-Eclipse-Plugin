@@ -6,10 +6,12 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 
+import com.dubture.symfony.index.dao.IResourceDao;
 import com.dubture.symfony.index.dao.IRouteDao;
 import com.dubture.symfony.index.dao.IServiceDao;
 import com.dubture.symfony.index.dao.ITransUnitDao;
 import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.dao.RoutingResource;
 import com.dubture.symfony.index.dao.TransUnit;
 import com.dubture.symfony.index.log.Logger;
 
@@ -32,6 +34,7 @@ public class SymfonyIndexer {
 	private Connection connection;
 	private IServiceDao serviceDao;
 	private IRouteDao routeDao;
+	private IResourceDao resourceDao;
 	private ITransUnitDao transDao;
 	
 	private SymfonyIndexer() throws Exception {
@@ -41,6 +44,7 @@ public class SymfonyIndexer {
 		serviceDao = factory.getServiceDao();
 		routeDao = factory.getRouteDao();
 		transDao = factory.getTransDao();
+		resourceDao = factory.getResourceDao();		
 		
 	}
 	
@@ -203,6 +207,39 @@ public class SymfonyIndexer {
 	public List<Route> findRoutesByController(String bundleAlias, String controller, IPath path) {
 		
 		return routeDao.findRoutesByController(connection, bundleAlias, controller, path);
+		
+	}
+
+
+	public void addResource(RoutingResource resource, IPath fullPath) {
+
+		try {
+			
+//			routeDao.deleteRoutesByPath(connection, name, path);
+			resourceDao.insert(connection, resource.getPath(), resource.getType(), resource.getPrefix(), fullPath);
+			
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		
+	}
+
+
+	public void exitResources() {
+
+		try {
+			resourceDao.commitInsertions();
+		} catch (SQLException e) {
+			Logger.logException(e);
+		}		
+		
+		
+	}
+
+
+	public void findResources(IPath path, IResourceHandler iResourceHandler) {
+
+		resourceDao.findResource(connection, path, iResourceHandler);
 		
 	}
 	

@@ -12,9 +12,11 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.h2.tools.DeleteDbFiles;
 
+import com.dubture.symfony.index.dao.IResourceDao;
 import com.dubture.symfony.index.dao.IRouteDao;
 import com.dubture.symfony.index.dao.IServiceDao;
 import com.dubture.symfony.index.dao.ITransUnitDao;
+import com.dubture.symfony.index.dao.ResourceDao;
 import com.dubture.symfony.index.dao.RouteDao;
 import com.dubture.symfony.index.dao.ServiceDao;
 import com.dubture.symfony.index.dao.TransUnitDao;
@@ -202,6 +204,13 @@ public class SymfonyDbFactory  {
 	public ITransUnitDao getTransDao() {
 		
 		return new TransUnitDao();
+		
+	}
+
+
+	public IResourceDao getResourceDao() {
+
+		return new ResourceDao();
 		
 	}
 

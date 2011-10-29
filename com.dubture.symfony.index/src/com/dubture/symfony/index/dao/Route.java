@@ -33,6 +33,8 @@ public class Route {
 		this.name = name;
 		this.pattern = pattern.replace("\"", "").replace("'", "");
 		
+
+		
 		
 	}
 	
@@ -100,12 +102,6 @@ public class Route {
 		
 	}
 	
-	public String getURL() {
-		
-		return pattern;
-				
-	}
-	
 	public boolean hasParameters() {
 		
 		return pattern.contains(RouteParameter.LEFT_DELIM);		
@@ -135,7 +131,7 @@ public class Route {
 	}
 
 	
-	public String getURL(Collection<RouteParameter> collection) {
+	public String getURL(Collection<RouteParameter> collection, String prefix) {
 
 		String url = pattern;
 		
@@ -143,9 +139,22 @@ public class Route {
 			String regex = String.format("{%s}", param.getName());			
 			url = url.replace(regex, param.getValue());
 		}
+	
+		if (prefix != null)
+			url = prefix + url;
 		
 		return url;
 
 	}
+	
+	public String getURL(String prefix) {
+
+		if (prefix != null)
+			return prefix + pattern;
+		
+		return pattern;
+				
+	}	
+	
 	
 }

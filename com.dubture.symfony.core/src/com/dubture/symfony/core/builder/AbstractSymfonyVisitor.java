@@ -29,6 +29,7 @@ import com.dubture.symfony.core.preferences.ProjectOptions;
 import com.dubture.symfony.core.util.TranslationUtils;
 import com.dubture.symfony.index.SymfonyIndexer;
 import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.dao.RoutingResource;
 import com.dubture.symfony.index.dao.TransUnit;
 
 
@@ -73,11 +74,11 @@ public abstract class AbstractSymfonyVisitor {
 					built = true;
 
 				} else if ("yml".equals(resource.getFileExtension())) {
-
+					
 					if ("services.yml".equals(resource.getName())) {					
 						loadYaml();
 						built = true;
-					} else if ("routing".equals(resource.getName())) {
+					} else if (resource.getName().contains("routing")) {
 						loadYamlRouting();
 						built = true;
 					} else {
@@ -154,7 +155,8 @@ public abstract class AbstractSymfonyVisitor {
 			YamlRoutingParser parser = new YamlRoutingParser(file.getContents());
 			parser.parse();
 
-			indexRoutes(parser.getRoutes());		
+			indexRoutes(parser.getRoutes());
+			indexResources(parser.getResources());
 
 		} catch (ScannerException se) {
 			Logger.logException(se);
@@ -186,6 +188,17 @@ public abstract class AbstractSymfonyVisitor {
 		}
 		indexer.exitRoutes();		
 
+	}
+	
+	protected void indexResources(Stack<RoutingResource> resources) {
+
+		for (RoutingResource resource : resources) {
+			
+			Logger.debugMSG("indexing resource: " + resource.toString());
+			indexer.addResource(resource, file.getProject().getFullPath());
+		}
+		indexer.exitResources();
+				
 	}
 
 

@@ -5,8 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -26,7 +24,7 @@ import com.dubture.symfony.index.log.Logger;
  * @author "Robert Gruendler <r.gruendler@gmail.com>"
  *
  */
-public class ServiceDao implements IServiceDao {
+public class ServiceDao extends BaseDao implements IServiceDao {
 
 	private static final String TABLENAME = "SERVICES";
 
@@ -34,16 +32,6 @@ public class ServiceDao implements IServiceDao {
 	private static final String Q_INSERT_DECL = Schema
 			.readSqlFile("Resources/index/insert_decl.sql"); //$NON-NLS-1$
 
-	/** Cache for insert element reference queries */
-	private static final Map<String, String> D_INSERT_QUERY_CACHE = new HashMap<String, String>();
-
-	private final Map<String, PreparedStatement> batchStatements;
-
-
-	public ServiceDao() {
-
-		this.batchStatements = new HashMap<String, PreparedStatement>();		
-	}
 
 	public void insert(Connection connection, String path, String name, String phpclass, int timestamp)
 			throws SQLException {
@@ -128,24 +116,6 @@ public class ServiceDao implements IServiceDao {
 			}
 		} catch(Exception e) {
 			Logger.logException(e);
-		}
-	}
-
-	@Override
-	public void commitInsertions() throws SQLException {
-
-		synchronized (batchStatements) {
-			try {
-				for (PreparedStatement statement : batchStatements.values()) {
-					try {
-						statement.executeBatch();
-					} finally {
-						statement.close();
-					}
-				}
-			} finally {
-				batchStatements.clear();
-			}
 		}
 	}
 

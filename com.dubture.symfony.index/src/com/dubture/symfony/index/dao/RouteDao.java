@@ -6,9 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.osgi.util.NLS;
@@ -25,23 +23,13 @@ import com.dubture.symfony.index.log.Logger;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-public class RouteDao implements IRouteDao {
+public class RouteDao extends BaseDao implements IRouteDao {
 	
 	private static final String TABLENAME = "ROUTES";
 
 	private static final String Q_INSERT_DECL = Schema
 			.readSqlFile("Resources/index/routes/insert_decl.sql"); //$NON-NLS-1$
 
-	/** Cache for insert element reference queries */
-	private static final Map<String, String> D_INSERT_QUERY_CACHE = new HashMap<String, String>();
-
-	private final Map<String, PreparedStatement> batchStatements;
-
-
-	public RouteDao() {
-
-		this.batchStatements = new HashMap<String, PreparedStatement>();		
-	}
 	
 	public void insert(Connection connection, String name, String pattern, 
 			String controller, String bundle, String action, IPath path)
@@ -92,24 +80,6 @@ public class RouteDao implements IRouteDao {
 		//		}
 	}
 	
-	@Override
-	public void commitInsertions() throws SQLException {
-
-		synchronized (batchStatements) {
-			try {
-				for (PreparedStatement statement : batchStatements.values()) {
-					try {
-						statement.executeBatch();
-					} finally {
-						statement.close();
-					}
-				}
-			} finally {
-				batchStatements.clear();
-			}
-		}
-	}
-
 	@Override
 	public void deleteRoutesByPath(Connection connection, String name, IPath path) {
 
@@ -215,6 +185,14 @@ public class RouteDao implements IRouteDao {
 		
 		return routes.get(0);
 			
+		
+		
+	}
+
+	@Override
+	public void insertResource(Connection connection, String path, String type,
+			String prefix, IPath fullPath) {
+
 		
 		
 	}

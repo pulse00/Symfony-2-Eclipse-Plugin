@@ -13,15 +13,13 @@ import com.dubture.symfony.index.IServiceHandler;
  * @author "Robert Gruendler <r.gruendler@gmail.com>"
  *
  */
-public interface IServiceDao {
+public interface IServiceDao extends IDao {
 	
 	void insert(Connection connection, String path, String name, String phpclass, int timestamp) throws SQLException;
 
 	void truncate(Connection connection);
 	
 	void findAll(Connection connection, IServiceHandler handler);
-	
-	void commitInsertions() throws SQLException;
 
 	Service find(Connection connection, String string);
 

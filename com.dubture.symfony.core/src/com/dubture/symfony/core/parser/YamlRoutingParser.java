@@ -13,6 +13,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.dao.RoutingResource;
 
 
 /**
@@ -28,9 +29,17 @@ public class YamlRoutingParser {
 	private InputStream input;
 
 	private Stack<Route> routes = new Stack<Route>();
+	private Stack<RoutingResource> resources = new Stack<RoutingResource>();
+	
 
 	public Stack<Route> getRoutes() {
 		return routes;
+	}
+	
+	public Stack<RoutingResource> getResources() {
+		
+		return resources;
+		
 	}
 
 	public YamlRoutingParser(InputStream input) {
@@ -80,13 +89,25 @@ public class YamlRoutingParser {
 					LinkedHashMap params = (LinkedHashMap) value;
 
 					String pattern = (String) params.get("pattern");
-					LinkedHashMap defaults = (LinkedHashMap) params.get("defaults");		
 					
-					if(defaults == null)
-						continue;
-					
-					String viewPath = (String) defaults.get("_controller");
-					routes.push(new Route(name, pattern, viewPath));
+					if (params.containsKey("resource")) {
+
+						String resource = (String) params.get("resource");
+						String type = (String) params.get("type");
+						String prefix = (String) params.get("prefix");
+						resources.add(new RoutingResource(type, resource, prefix));
+						
+					} else {
+						
+						LinkedHashMap defaults = (LinkedHashMap) params.get("defaults");		
+						
+						if(defaults == null)
+							continue;
+						
+						String viewPath = (String) defaults.get("_controller");
+						routes.push(new Route(name, pattern, viewPath));
+						
+					}
 
 				} catch (Exception e) {
 					Logger.logException(e);

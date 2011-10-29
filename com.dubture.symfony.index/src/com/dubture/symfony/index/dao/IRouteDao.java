@@ -36,4 +36,7 @@ public interface IRouteDao {
 	List<Route> findRoutesByController(Connection connection,
 			String bundleAlias, String controller, IPath path);
 
+	void insertResource(Connection connection, String path, String type,
+			String prefix, IPath fullPath);
+
 }

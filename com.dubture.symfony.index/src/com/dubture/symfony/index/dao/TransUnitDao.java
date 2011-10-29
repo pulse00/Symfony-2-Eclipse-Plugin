@@ -5,8 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -14,23 +12,13 @@ import com.dubture.symfony.index.ITranslationHandler;
 import com.dubture.symfony.index.Schema;
 import com.dubture.symfony.index.log.Logger;
 
-public class TransUnitDao implements ITransUnitDao {
+public class TransUnitDao extends BaseDao implements ITransUnitDao {
 
 	private static final String TABLENAME = "TRANSUNIT";
 
 	private static final String Q_INSERT_DECL = Schema
 			.readSqlFile("Resources/index/translations/insert_decl.sql"); //$NON-NLS-1$
 
-	/** Cache for insert element reference queries */
-	private static final Map<String, String> D_INSERT_QUERY_CACHE = new HashMap<String, String>();
-
-	private final Map<String, PreparedStatement> batchStatements;
-
-
-	public TransUnitDao() {
-
-		this.batchStatements = new HashMap<String, PreparedStatement>();		
-	}
 
 	public void insert(Connection connection, String path, String name, String value, String language, int timestamp)
 			throws SQLException {
@@ -79,24 +67,6 @@ public class TransUnitDao implements ITransUnitDao {
 	}
 
 	
-	@Override
-	public void commitInsertions() throws SQLException {
-
-		synchronized (batchStatements) {
-			try {
-				for (PreparedStatement statement : batchStatements.values()) {
-					try {
-						statement.executeBatch();
-					} finally {
-						statement.close();
-					}
-				}
-			} finally {
-				batchStatements.clear();
-			}
-		}
-	}
-
 	@Override
 	public void findTranslations(Connection connection, String path, ITranslationHandler iTranslationHandler) {
 
