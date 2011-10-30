@@ -85,6 +85,7 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 			boolean showDebugDialog, IResource res, Route route, IScriptProject scriptProject) {
 		ILaunchConfiguration config = null;
 
+		Logger.debugMSG("trying to find launc configuration");
 		try {
 			ILaunchConfiguration[] configs = DebugPlugin.getDefault()
 					.getLaunchManager().getLaunchConfigurations(configType);
@@ -98,11 +99,13 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 				if (configuredRouteName != null)					
 					if (configuredRouteName.equals(route.getName())) {
 						config = configs[i].getWorkingCopy();
+						Logger.debugMSG("found existing: " + configuredRouteName);
 						break;
 					}
 			}
 
 			if (config == null) {
+				Logger.debugMSG("no launch config found; create new one");
 				config = createConfiguration(project, fileName, selectedURL,
 						server, configType, mode, breakAtFirstLine,
 						showDebugDialog, res, route, scriptProject);
@@ -232,10 +235,10 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 		
 		ILaunchConfiguration config = null;
 		if (!FileUtils.resourceExists(fileName)) {
+			Logger.debugMSG("file not existing: " + fileName);
 			return null;
 		}
 
-		
 		
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null,
 				getNewConfigurationName(route));
@@ -266,14 +269,22 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 		
 		config = wc.doSave();		
 		String URL = null;
+		Logger.debugMSG("getting dev kernel from " + scriptProject.getElementName());
 		AppKernel kernel = SymfonyKernelAccess.getDefault().getDevelopmentKernel(scriptProject);
-		
-		if (selectedURL != null) {
+
+		if (kernel == null) {
+			Logger.debugMSG("No kernel found");
+			return null;
+		}
+		Logger.debugMSG("kernel found: " + kernel.getScript());
+		if (selectedURL != null) {			
+			Logger.debugMSG("found exisiting url: " + selectedURL);
 			URL = selectedURL;
 		} else {
 			try {												
 								
-				URL = ServerUtils.constructURL(config, scriptProject, route, kernel);
+				URL = ServerUtils.constructURL(config, scriptProject, route, kernel);				
+				Logger.debugMSG("Generated launch configuration url: " + URL);
 				if (URL == null)
 					URL = "";
 			} catch (Exception e) {
@@ -285,8 +296,7 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 		}
 		
 		wc.setAttribute(Server.BASE_URL, URL);
-		
-		
+		wc.setAttribute(SymfonyServer.URL, URL);
 		
 		// Display a dialog for selecting the route parameters.
 		if (route.hasParameters()) {
