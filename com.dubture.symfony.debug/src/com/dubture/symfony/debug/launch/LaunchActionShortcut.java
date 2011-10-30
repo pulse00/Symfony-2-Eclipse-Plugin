@@ -43,6 +43,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
+import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.core.model.AppKernel;
+import com.dubture.symfony.core.model.SymfonyKernelAccess;
+import com.dubture.symfony.debug.server.SymfonyServer;
 import com.dubture.symfony.debug.util.ServerUtils;
 import com.dubture.symfony.index.dao.Route;
 import com.dubture.symfony.ui.editor.EditorUtility;
@@ -78,7 +82,7 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 	static ILaunchConfiguration findLaunchConfiguration(IProject project,
 			String fileName, String selectedURL, Server server, String mode,
 			ILaunchConfigurationType configType, boolean breakAtFirstLine,
-			boolean showDebugDialog, IResource res) {
+			boolean showDebugDialog, IResource res, Route route, IScriptProject scriptProject) {
 		ILaunchConfiguration config = null;
 
 		try {
@@ -87,14 +91,12 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 
 			int numConfigs = configs == null ? 0 : configs.length;
 			for (int i = 0; i < numConfigs; i++) {
-				String configuredServerName = configs[i].getAttribute(
-						Server.NAME, (String) null);
-				String configuredFileName = configs[i].getAttribute(
-						Server.FILE_NAME, (String) null);
+				
+				String configuredRouteName = configs[i].getAttribute(
+						SymfonyServer.ROUTE, (String) null);				
 
-				if (configuredFileName != null)
-					if (configuredFileName.equals(fileName)
-							&& server.getName().equals(configuredServerName)) {
+				if (configuredRouteName != null)					
+					if (configuredRouteName.equals(route.getName())) {
 						config = configs[i].getWorkingCopy();
 						break;
 					}
@@ -103,7 +105,7 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 			if (config == null) {
 				config = createConfiguration(project, fileName, selectedURL,
 						server, configType, mode, breakAtFirstLine,
-						showDebugDialog, res);
+						showDebugDialog, res, route, scriptProject);
 			}
 		} catch (CoreException ce) {
 			ce.printStackTrace();
@@ -116,6 +118,10 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 	public static void searchAndLaunch(Object[] search, String mode,
 			ILaunchConfigurationType configType) {
 		int entries = search == null ? 0 : search.length;
+		
+		EditorUtility utility = new EditorUtility();
+		Route route = utility.getRouteAtCursor();
+		
 		for (int i = 0; i < entries; i++) {
 			try {
 				String phpPathString = null;
@@ -193,7 +199,7 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 				// Launch the app
 				ILaunchConfiguration config = findLaunchConfiguration(project,
 						phpPathString, selectedURL, defaultServer, mode,
-						configType, breakAtFirstLine, showDebugDialog, res);
+						configType, breakAtFirstLine, showDebugDialog, res, route, utility.getProject());
 				if (config != null) {
 					DebugUITools.launch(config, mode);
 				} else {
@@ -221,7 +227,7 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 	static ILaunchConfiguration createConfiguration(IProject project,
 			String fileName, String selectedURL, Server server,
 			ILaunchConfigurationType configType, String mode,
-			boolean breakAtFirstLine, boolean showDebugDialog, IResource res)
+			boolean breakAtFirstLine, boolean showDebugDialog, IResource res, Route route, IScriptProject scriptProject)
 			throws CoreException {
 		
 		ILaunchConfiguration config = null;
@@ -230,11 +236,9 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 		}
 
 		
-		EditorUtility utility = new EditorUtility();
-		Route route = utility.getRouteAtCursor();
 		
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null,
-				getNewConfigurationName(utility.getMethod(), route));
+				getNewConfigurationName(route));
 
 		// Set the debugger ID and the configuration delegate for this launch
 		// configuration
@@ -262,12 +266,14 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 		
 		config = wc.doSave();		
 		String URL = null;
+		AppKernel kernel = SymfonyKernelAccess.getDefault().getDevelopmentKernel(scriptProject);
 		
 		if (selectedURL != null) {
 			URL = selectedURL;
 		} else {
-			try {								
-				URL = ServerUtils.constructURL(config, utility.getProject(), route);				
+			try {												
+								
+				URL = ServerUtils.constructURL(config, scriptProject, route, kernel);
 				if (URL == null)
 					URL = "";
 			} catch (Exception e) {
@@ -277,6 +283,8 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 					URL = "";
 			}
 		}
+		
+		wc.setAttribute(Server.BASE_URL, URL);
 		
 		// Display a dialog for selecting the URL.
 		if (showDebugDialog && URL.length() == 0) {
@@ -290,26 +298,24 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 				return null;
 			}
 		}
+		
+		
+		wc.setAttribute(SymfonyServer.ROUTE, route.getName());
+		wc.setAttribute(SymfonyServer.ENVIRONMENT, kernel.getEnvironment());
 		config = wc.doSave();
 		return config;
 	}
 	
 	
-	protected static String getNewConfigurationName(SourceMethod sourceMethod, Route route) {
+	protected static String getNewConfigurationName(Route route) {
 		
 		String configurationName = Messages.PHPWebPageLaunchShortcut_4;
 		
-		try {
-			
-			if (route.getName() != null) {
-				configurationName = route.getName();
-			} else {
-				configurationName = sourceMethod.getParent().getElementName() + 
-						"::" + sourceMethod.getElementName() + "";				
-			}
+		try {			
+			configurationName = route.getName();
 
 		} catch (Exception e) {
-
+			Logger.logException(e);
 		}
 		return DebugPlugin.getDefault().getLaunchManager()
 				.generateLaunchConfigurationName(configurationName);

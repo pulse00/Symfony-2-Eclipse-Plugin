@@ -11,6 +11,11 @@ import org.eclipse.dltk.core.ISourceModule;
  */
 public class AppKernel {
 	
+	
+	public static final String DEV = "dev";
+	public static final String PROD = "prod";
+	
+	
 	private String environment;
 	private String path;
 	private ISourceModule source;

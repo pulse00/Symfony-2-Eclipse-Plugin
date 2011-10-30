@@ -1,11 +1,19 @@
 package com.dubture.symfony.debug.launch;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.debug.core.debugger.launching.ILaunchDelegateListener;
 
+import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.core.model.AppKernel;
+import com.dubture.symfony.core.model.SymfonyKernelAccess;
+import com.dubture.symfony.debug.server.SymfonyServer;
 import com.dubture.symfony.debug.util.ServerUtils;
+import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.ui.editor.EditorUtility;
 
 /**
  * 
@@ -22,7 +30,26 @@ public class LaunchDelegateListener implements ILaunchDelegateListener {
 	public int preLaunch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) {
 		
-		ServerUtils.injectRoutingURL(configuration);
+		EditorUtility utility = new EditorUtility();		
+		Route route = utility.getRouteAtCursor();
+		IScriptProject project = utility.getProject();
+		
+		String env = "";
+		try {
+			env = configuration.getAttribute(SymfonyServer.ENVIRONMENT, "");
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+		
+		AppKernel kernel = null;
+		
+		if (env.length() != 0) {
+			kernel = SymfonyKernelAccess.getDefault().getKernel(project, env);
+		} else {
+			kernel = SymfonyKernelAccess.getDefault().getDevelopmentKernel(project);
+		}
+		
+		ServerUtils.injectRoutingURL(configuration, kernel, project, route);
 		return 0;
 	}
 }
