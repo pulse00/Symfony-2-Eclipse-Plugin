@@ -286,15 +286,16 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 		
 		wc.setAttribute(Server.BASE_URL, URL);
 		
-		// Display a dialog for selecting the URL.
-		if (showDebugDialog && URL.length() == 0) {
-			String title = (ILaunchManager.DEBUG_MODE.equals(mode) ? Messages.PHPWebPageLaunchShortcut_1
-					: (ILaunchManager.PROFILE_MODE.equals(mode) ? Messages.PHPWebPageLaunchShortcut_2
-							: Messages.PHPWebPageLaunchShortcut_3));
-			PHPWebPageURLLaunchDialog launchDialog = new PHPWebPageURLLaunchDialog(
-					wc, server, title);
+		
+		
+		// Display a dialog for selecting the route parameters.
+		if (route.hasParameters()) {
+			
+			String title = "Please insert the required route parameters";			
+			SymfonyURLLaunchDialog launchDialog = new SymfonyURLLaunchDialog(wc, title, route);
 			launchDialog.setBlockOnOpen(true);
 			if (launchDialog.open() != PHPWebPageURLLaunchDialog.OK) {
+				deleteLaunchconfig(config);
 				return null;
 			}
 		}
@@ -304,6 +305,26 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 		wc.setAttribute(SymfonyServer.ENVIRONMENT, kernel.getEnvironment());
 		config = wc.doSave();
 		return config;
+	}
+	
+	private static void deleteLaunchconfig(final ILaunchConfiguration launchConfig) {
+		
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				ILaunchConfiguration config = launchConfig;
+				try {
+					if (config instanceof ILaunchConfigurationWorkingCopy) {
+						config = ((ILaunchConfigurationWorkingCopy) config)
+								.getOriginal();
+					}
+					if (config != null) {
+						config.delete();
+					}
+				} catch (CoreException ce) {
+					// Ignore
+				}
+			}
+		});				
 	}
 	
 	
