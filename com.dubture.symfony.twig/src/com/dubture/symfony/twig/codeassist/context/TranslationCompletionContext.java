@@ -2,6 +2,7 @@ package com.dubture.symfony.twig.codeassist.context;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.core.util.text.TextSequenceUtilities;
@@ -9,6 +10,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.text.XMLStructuredDocumentRegion;
 
+import com.dubture.symfony.twig.log.Logger;
 import com.dubture.twig.core.documentModel.parser.TwigRegionContext;
 
 /**
@@ -36,6 +38,14 @@ public class TranslationCompletionContext extends AbstractCompletionContext {
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
 
+		try {
+			if (sourceModule.getUnderlyingResource().getFileExtension().equals("php"))
+				return false;
+		} catch (ModelException e) {
+			Logger.logException(e);
+			return false;
+		}
+		
 		super.isValid(sourceModule, offset, requestor);
 		
 		IStructuredDocument doc = getDocument();		

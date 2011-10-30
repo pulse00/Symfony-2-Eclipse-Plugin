@@ -2,6 +2,7 @@ package com.dubture.symfony.test;
 
 import junit.framework.TestCase;
 
+import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,6 +70,19 @@ public class TextSequenceUtilityTest extends TestCase {
 		assertTrue(contains == -1);
 		
 
+	}
+	
+	
+	@Test
+	public void testMethodExtract() {
+		
+
+		sequence = "$this->get('translator')->trans(";
+		String method = SymfonyTextSequenceUtilities.getMethodName(sequence);
+		
+		assertEquals("trans", method);
+		
+		
 	}
 
 }

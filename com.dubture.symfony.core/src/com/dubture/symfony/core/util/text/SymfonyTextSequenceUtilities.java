@@ -174,22 +174,23 @@ public class SymfonyTextSequenceUtilities {
 	 * @param statement
 	 * @return
 	 */
-	public static String getMethodName(TextSequence statement) {
+	public static String getMethodName(CharSequence statement) {
 		
 		String text = statement.toString();
 		
 		int start = text.indexOf("->");
+		int end = text.lastIndexOf("(");
 		
-		if (start == -1)
-			return null;
+		int current = end;
 		
-		int end = text.indexOf("(");
+		while( current > 0 && current > start) {
+			char c = text.charAt(current--);			
+			if (c == '>') {
+				return text.substring(current+2, end);						
+			}
+		}
 		
-		if (end == -1)
-			return null;
-		
-		String method = text.substring(start+2, end);
-		return method;
+		return null;
 		
 		
 	}
