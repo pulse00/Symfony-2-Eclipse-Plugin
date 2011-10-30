@@ -300,6 +300,10 @@ public class LaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 			
 		config = configuration;
 		initializeProject(configuration);
+		
+		if (project == null)
+			return;
+		
 		initializeEnvironment(configuration);
 		initializeRoute(configuration);
 		initializeURL(configuration);
@@ -426,6 +430,9 @@ public class LaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		
 		try {
+			
+			if (isSymfonyDebugger == false)
+				return;
 			
 			int index = kernelCombo.getSelectionIndex();
 			if (kernelCombo.getItemCount() > 0 && index >= 0 && index < kernelCombo.getItemCount()) {
