@@ -1,3 +1,7 @@
+1.0.38
+
+* added debugger support
+
 1.0.37
 
 * added doctrine support
