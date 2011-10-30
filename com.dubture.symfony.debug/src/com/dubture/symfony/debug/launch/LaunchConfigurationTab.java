@@ -1,5 +1,7 @@
 package com.dubture.symfony.debug.launch;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
@@ -144,6 +146,13 @@ public class LaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 			return false;
 		}
 		
+		try {
+			new URL(url.getText());
+		} catch (MalformedURLException e) {
+			setMessage("Malformed URL : " + url.getText());
+			return false;
+		}
+		
 		return true;
 		
 	}
@@ -240,7 +249,20 @@ public class LaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 		
 		Label urlLabel = new Label(group, SWT.NONE);
 		urlLabel.setText("Generated URL");
-		url = new Text(group, SWT.READ_ONLY | SWT.BORDER | SWT.SINGLE);
+		url = new Text(group,  SWT.BORDER | SWT.SINGLE);
+		url.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				setDirty(true);
+				updateLaunchConfigurationDialog();				
+			}
+		});
 		data = new GridData(GridData.FILL, GridData.VERTICAL_ALIGN_BEGINNING, true, false);
 		url.setLayoutData(data);
 		
@@ -280,9 +302,25 @@ public class LaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 		initializeProject(configuration);
 		initializeEnvironment(configuration);
 		initializeRoute(configuration);
-		updateURL();				
+		initializeURL(configuration);
 		isValid(configuration);
 		
+	}
+	
+	private void initializeURL(ILaunchConfiguration configuration) {
+		
+		try {
+			
+			String _url = configuration.getAttribute(SymfonyServer.URL, "");
+			
+			if (_url.length() == 0) {
+				updateURL();
+			} else {
+				url.setText(_url);
+			}
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}		
 	}
 	
 	private void updateURL() {
@@ -396,6 +434,7 @@ public class LaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 			}
 			
 			configuration.setAttribute(Server.BASE_URL, url.getText());
+			configuration.setAttribute(SymfonyServer.URL, url.getText());
 			
 			String routeName = route.getText();
 			configuration.setAttribute(SymfonyServer.ROUTE, routeName);
