@@ -41,14 +41,36 @@ public class ServerUtils {
 		if (kernel == null)
 			return null;
 		
+		
 		String env = kernel.getEnvironment();
 		wc.setAttribute(SymfonyServer.ENVIRONMENT, env);
 		wc.doSave();
 		
-		String base = String.format("%s/%s/%s", server.getBaseURL(), 
-				project.getElementName(), kernel.getPath());
+		boolean isVhost = isVirtualHost(server, kernel);
 
+		String base = "";
+		
+		if (isVhost) {
+			base = String.format("%s/%s", server.getBaseURL(), kernel.getScript());
+		} else {
+			base = String.format("%s/%s/%s", server.getBaseURL(), project.getElementName(), kernel.getPath());			
+		}
+		
 		return base;
+		
+	}
+	
+	/**
+	 * Tries to evaluate if the Server is a virtual host.
+	 * 
+	 * 
+	 * @param server
+	 * @param kernel
+	 * @return
+	 */
+	public static boolean isVirtualHost(Server server, AppKernel kernel) {
+		
+		return server.getDocumentRoot().endsWith(kernel.getRawPath().removeLastSegments(1).toString());		
 		
 	}
 	
