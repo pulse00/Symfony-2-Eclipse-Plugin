@@ -196,4 +196,14 @@ public class RouteDao extends BaseDao implements IRouteDao {
 		
 		
 	}
+
+	@Override
+	public List<Route> findRoutes(Connection connection, String prefix,
+			IPath path) {
+
+		String sql = "SELECT NAME, PATTERN, CONTROLLER, BUNDLE, ACTION FROM ROUTES WHERE NAME LIKE '" + prefix + "%' AND PATH LIKE '" + path + "%'";
+		return searchRoutes(connection, sql);
+		
+
+	}
 }

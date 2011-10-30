@@ -138,7 +138,6 @@ public class SymfonyIndexer {
 
 	public List<Route> findRoutes(IPath path) {
 
-		
 		try {
 			return routeDao.findRoutes(connection, path);
 		} catch (Exception e) {
@@ -146,6 +145,17 @@ public class SymfonyIndexer {
 			return null;			
 		}
 	}
+	
+	public List<Route> findRoutes(IPath path, String prefix) {
+
+		try {
+			return routeDao.findRoutes(connection, prefix, path);
+		} catch (Exception e) {
+			Logger.logException(e);
+			return null;			
+		}
+	}
+	
 
 
 	public Route findRoute(String route, IPath path) {

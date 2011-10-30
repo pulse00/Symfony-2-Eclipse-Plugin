@@ -14,6 +14,8 @@ import com.dubture.symfony.debug.launch.SymfonyWebLaunchConfigurationDelegate;
 @SuppressWarnings("restriction")
 public class DebuggerConfiguration extends XDebugDebuggerConfiguration {
 	
+	public static final String ID = "com.dubture.symfony.debug.xdebugger";
+	
 	public String getWebLaunchDelegateClass() {
 		return SymfonyWebLaunchConfigurationDelegate.class.getName();
 	}

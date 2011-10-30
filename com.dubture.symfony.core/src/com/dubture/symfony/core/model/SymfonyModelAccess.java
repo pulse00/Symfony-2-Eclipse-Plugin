@@ -333,6 +333,26 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		return index.findRoutes(project.getPath());
 
 	}
+	
+	/**
+	 * Find routes by prefix.
+	 * 
+	 * @param project
+	 * @param prefix
+	 * @return
+	 */
+	public List<Route> findRoutes(IScriptProject project, String prefix) {
+		
+		
+		if (index == null) {
+			Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
+			return new ArrayList<Route>();
+		}
+
+
+		return index.findRoutes(project.getPath(), prefix);
+		
+	}
 
 
 	public Map<String, String> findAnnotationClasses(IScriptProject project) {
