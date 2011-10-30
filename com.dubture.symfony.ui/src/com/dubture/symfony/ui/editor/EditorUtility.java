@@ -32,6 +32,8 @@ public class EditorUtility {
 	private Route route = null;
 	private IScriptProject project;
 	
+	private SourceMethod sourceMethod;
+	
 	public EditorUtility() {
 		
 		
@@ -68,7 +70,7 @@ public class EditorUtility {
 							IModelElement element = source.getElementAt(offset);
 							
 							if (element != null) {															
-								SourceMethod sourceMethod = getMethod(element);								
+								sourceMethod = getMethod(element);								
 								
 								if (sourceMethod != null && sourceMethod.getParent() != null) {
 									
@@ -118,4 +120,10 @@ public class EditorUtility {
 		return project;
 	}
 
+	
+	public SourceMethod getMethod() {
+				
+		return sourceMethod;
+		
+	}
 }

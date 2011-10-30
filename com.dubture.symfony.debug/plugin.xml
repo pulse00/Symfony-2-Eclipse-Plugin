@@ -15,5 +15,38 @@
             name="XDebug (Symfony)">
       </phpDebugger>
    </extension>
+   
+ <extension
+       point="org.eclipse.debug.ui.launchShortcuts">
+    <shortcut
+          class="com.dubture.symfony.debug.launch.LaunchActionShortcut"
+          description="%launchAction.description&#x0A;"
+          icon="ico/full/obj16/server_run.gif"
+          id="com.dubture.symfony.ui.server.launchSymfonyAction"
+          label="%launchActionShortcut.label"
+          modes="run, debug">
+			<contextualLaunch>
+				<contextLabel mode="run" label="%symfonyServerShortcut.label" />
+				<contextLabel mode="debug" label="%symfonyServerShortcut.label" />
+				<enablement>
+					<count value="1" />
+	 				<!-- Pass a 'webPage' argument for the enablement test -->
+					<test args="webPage" property="org.eclipse.php.debug.ui.launchablePHP" value="true" />
+				</enablement>
+			</contextualLaunch>
+			<configurationType
+				id="org.eclipse.php.debug.core.launching.webPageLaunch">
+			</configurationType>          
+    </shortcut>
+ </extension>
+ <extension
+       point="org.eclipse.php.debug.ui.launchConfigurationTabs">
+    <launchConfigurationTab
+          class="com.dubture.symfony.debug.launch.LaunchConfigurationTab"
+          id="com.dubture.symfony.debug.launchConfigurationTab2"
+          launchConfigurationTabGroupId="org.eclipse.php.server.ui.launchConfigurationTabGroup"
+          placeAfter="org.eclipse.php.debug.ui.launching.PHPServerAdvancedTab">
+    </launchConfigurationTab>
+ </extension>
 
 </plugin>

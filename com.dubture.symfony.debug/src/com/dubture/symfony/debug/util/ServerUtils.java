@@ -1,6 +1,8 @@
 package com.dubture.symfony.debug.util;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -13,6 +15,7 @@ import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.AppKernel;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.util.RoutingUtil;
+import com.dubture.symfony.debug.server.SymfonyServer;
 import com.dubture.symfony.index.dao.Route;
 import com.dubture.symfony.ui.editor.EditorUtility;
 
@@ -34,28 +37,50 @@ public class ServerUtils {
 	 * @return
 	 * @throws CoreException
 	 */
+	@SuppressWarnings("unchecked")
 	public static String getBaseUrl(ILaunchConfiguration configuration, IScriptProject project) 
 			throws CoreException {
+		
+		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 		
 		Server server = ServersManager.getServer(configuration.getAttribute(
 				Server.NAME, ""));
 		
-		SymfonyModelAccess model = SymfonyModelAccess.getDefault();				
-		List<AppKernel> kernels = model.getKernels(project);
+		Set<String> ks = configuration.getAttribute(SymfonyServer.KERNELS, new HashSet<String>());
 		
-		AppKernel appKernel = null;
-		for (AppKernel kernel : kernels) {					
-			if (kernel.getEnvironment().contains("dev")) {
-				appKernel = kernel;
-				break;
+		String environment = configuration.getAttribute(SymfonyServer.ENVIRONMENT, "");
+		
+		AppKernel appKernel = null;		
+		Set<String> kernelConfig;
+		
+		if (ks.size() == 0) {
+
+			SymfonyModelAccess model = SymfonyModelAccess.getDefault();				
+			List<AppKernel> kernels = model.getKernels(project);
+			kernelConfig = new HashSet<String>();
+			
+			for (AppKernel kernel : kernels) {				
+				kernelConfig.add(kernel.getEnvironment());
+				
+				if (environment.length() > 0 && kernel.getEnvironment().equals(environment)) {
+					appKernel = kernel;
+				} else if (environment.length() == 0) {
+					if (kernel.getEnvironment().contains("dev")) {
+						appKernel = kernel;				
+					}					
+				}
+				
 			}
+			
+		} else {
+			kernelConfig = ks;
 		}
-		
-		if (appKernel == null && kernels.size() > 0)
-			appKernel = kernels.get(0);
 		
 		if (appKernel == null)
 			return null;
+		
+		wc.setAttribute(SymfonyServer.KERNELS, kernelConfig);
+		wc.doSave();
 		
 		String base = String.format("%s/%s/%s", server.getBaseURL(), 
 				project.getElementName(), appKernel.getPath());
@@ -75,24 +100,39 @@ public class ServerUtils {
 		
 		try {
 			
+			ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
+			
 			EditorUtility utility = new EditorUtility();		
 			Route route = utility.getRouteAtCursor();
 			IScriptProject project = utility.getProject();
 			
-			String base = ServerUtils.getBaseUrl(configuration, project);
-			
-			if (base == null)
-				return;
-			
-			String url = RoutingUtil.getURL(base, route, project);
+			String url = constructURL(configuration, project, route);
 			
 			if (url != null) {
-				ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
+				
 				wc.setAttribute(Server.BASE_URL, url);
 				wc.doSave();					
 			}
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
+	}
+	
+	
+	public static String constructURL(ILaunchConfiguration configuration, IScriptProject project, Route route) {
+		
+
+		String base = null;
+		try {
+			base = ServerUtils.getBaseUrl(configuration, project);
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+		
+		if (base == null)
+			return null;
+		
+		return RoutingUtil.getURL(base, route, project);		
+		
 	}
 }
