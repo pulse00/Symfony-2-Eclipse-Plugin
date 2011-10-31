@@ -51,7 +51,7 @@ public class TemplateGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 					 
 					 if (element != null) {
 						 						
-						 String viewName = PathUtils.createViewPathFromTemplate(context.getSourceModule());
+						 String viewName = PathUtils.createViewPathFromTemplate(context.getSourceModule(), false);
 						 
 						 if (viewName != null && element.getViewPath().equals(viewName))
 							 return new TemplateVariableGoalEvaluator(goal, element);

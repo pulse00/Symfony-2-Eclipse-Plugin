@@ -6,6 +6,14 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.php.internal.ui.editor.hyperlink.PHPHyperlinkDetector;
 
+/**
+ * 
+ * Abstract Baseclass for string hyperlink detectors.
+ * 
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 @SuppressWarnings("restriction")
 public abstract class StringHyperlinkDetector extends PHPHyperlinkDetector {
 	
@@ -27,7 +35,7 @@ public abstract class StringHyperlinkDetector extends PHPHyperlinkDetector {
 			while (pos >= 0) {
 				c = document.getChar(pos);
 
-				if (c == '\'' || c == '"') {
+				if (c == '\'' || c == '"' || c == ' ') {
 					separator = c;
 					break;
 				}

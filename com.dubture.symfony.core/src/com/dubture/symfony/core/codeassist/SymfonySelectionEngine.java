@@ -2,6 +2,7 @@ package com.dubture.symfony.core.codeassist;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.List;
 
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CharStream;
@@ -14,6 +15,9 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.internal.core.codeassist.PHPSelectionEngine;
 import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
@@ -27,6 +31,7 @@ import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTreeAdaptor;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationLexer;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationNodeVisitor;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
+import com.dubture.symfony.core.index.SymfonyElementResolver.TemplateField;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
@@ -118,6 +123,7 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
 					return new IModelElement[] { serviceType };
 
 			}			
+			
 		}
 
 		try {
@@ -127,7 +133,7 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
 
 			AnnotationPathVisitor visitor = new AnnotationPathVisitor(offset, project);
 			parsedUnit.traverse(visitor);
-			
+						
 			if (visitor.getTemplate() != null) {
 				return new IModelElement[] { visitor.getTemplate() };
 			}
@@ -140,6 +146,14 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
 		return NONE;
 	}
 
+	/**
+	 * 
+	 * Parses @Template annotations in controllers to link to the corresponding template.
+	 * 
+	 * 
+	 * @author Robert Gruendler <r.gruendler@gmail.com>
+	 *
+	 */
 	private class AnnotationPathVisitor extends PHPASTVisitor {
 
 		private int offset;

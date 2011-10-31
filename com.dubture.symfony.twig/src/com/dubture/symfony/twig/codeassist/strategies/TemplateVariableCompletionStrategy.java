@@ -71,7 +71,7 @@ public class TemplateVariableCompletionStrategy extends AbstractTwigCompletionSt
 			ISourceModule module = ctxt.getSourceModule();
 			IType controller = model.findControllerByTemplate(module);
 			List<TemplateField>variables = model.findTemplateVariables(controller);
-			String viewPath = PathUtils.createViewPathFromTemplate(ctxt.getSourceModule());
+			String viewPath = PathUtils.createViewPathFromTemplate(ctxt.getSourceModule(), false);
 			
 			SourceRange range = getReplacementRange(ctxt);
 			

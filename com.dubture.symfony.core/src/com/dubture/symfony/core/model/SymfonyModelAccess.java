@@ -206,7 +206,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());		
 		final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
 
-		engine.search(IModelElement.USER_ELEMENT, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+		engine.search(ISymfonyModelElement.TEMPLATE_VARIABLE, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
 
 			@Override
 			public void match(int elementType, int flags, int offset, int length,
@@ -289,7 +289,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());		
 		final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
 
-		engine.search(IModelElement.USER_ELEMENT, null, variableName, 0, 0, 100, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
+		engine.search(ISymfonyModelElement.TEMPLATE_VARIABLE, null, variableName, 0, 0, 100, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
 
 			@Override
 			public void match(int elementType, int flags, int offset, int length,
@@ -306,8 +306,6 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		}, null);
 
 
-		// TODO: ensure unique constraint for IModelElement.USER_ELEMENT + Path
-		// during indexing
 		if (variables.size() > 0)
 			return variables.get(0);
 
@@ -1146,5 +1144,52 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		return null;
 	}
 
+	/**
+	 * Retrieve all templateVariables for the given sourceModule, given the sourceModule is
+	 * a template (php or twig).
+	 * 
+	 * @param sourceModule
+	 */
+	public List<TemplateField> findTemplateVariables(ISourceModule sourceModule, String varName) {
+
+		String viewPath = PathUtils.createViewPathFromTemplate(sourceModule, true);
+		
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
+
+		if(scope == null) {
+			return null;
+		}
+
+
+		// handle twig variables
+		if (!varName.startsWith("$"))
+			varName = "$" + varName;
+		
+		final List<TemplateField> variables = new ArrayList<TemplateField>();
+		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());		
+		final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
+
+		engine.search(ISymfonyModelElement.TEMPLATE_VARIABLE, viewPath, varName, 0, 0, 100, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
+
+			@Override
+			public void match(int elementType, int flags, int offset, int length,
+					int nameOffset, int nameLength, String elementName,
+					String metadata, String doc, String qualifier, String parent,
+					ISourceModule sourceModule, boolean isReference) {
+
+
+				IModelElement element = resolver.resolve(elementType, flags, offset, length, nameOffset, nameLength, elementName, metadata, doc, qualifier, parent, sourceModule);
+
+				if (element != null) {
+					if (element instanceof TemplateField)
+						variables.add((TemplateField) element);
+				}
+			}
+		}, null);
+
+		
+		return variables;
+		
+	}
 
 }

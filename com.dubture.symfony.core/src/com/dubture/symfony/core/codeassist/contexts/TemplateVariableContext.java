@@ -64,7 +64,7 @@ public class TemplateVariableContext extends GlobalStatementContext {
 				ISourceModule module = getSourceModule();
 				IType controller = model.findControllerByTemplate(module);
 				variables = model.findTemplateVariables(controller);
-				viewPath = PathUtils.createViewPathFromTemplate(getSourceModule());
+				viewPath = PathUtils.createViewPathFromTemplate(getSourceModule(), false);
 				
 				return true;
 				

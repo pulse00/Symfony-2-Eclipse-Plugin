@@ -65,21 +65,14 @@
  
  
  <extension
-       point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+       point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">       
     <hyperlinkDetector
           activate="true"
-          class="com.dubture.symfony.ui.editor.hyperlink.ServiceHyperlinkDetector"
-          id="com.dubture.symfony.ui.hyperlinkDetector"
-          name="%hyperlinkDetector.name"
+          class="com.dubture.symfony.ui.editor.hyperlink.TemplateVariableHyperlinkDetector"
+          id="com.dubture.symfony.ui.templatevariablehyperlinkdetector"
+          name="%templatevariableDetector.name"
           targetId="org.eclipse.php.core.phpsource">
-    </hyperlinkDetector>
-    <hyperlinkDetector
-          activate="true"
-          class="com.dubture.symfony.ui.editor.hyperlink.RouteHyperlinkDetector"
-          id="com.dubture.symfony.ui.routeDetector"
-          name="%routeDetector.name"
-          targetId="org.eclipse.php.core.phpsource">
-    </hyperlinkDetector>
+    </hyperlinkDetector>       
     <hyperlinkDetector
           activate="true"
           class="com.dubture.symfony.ui.editor.hyperlink.ViewpathHyperlinkDetector"

@@ -32,5 +32,10 @@ public class PathUtilsTest extends TestCase {
 		
 		assertEquals("DemoController", controller);
 		
+		
+		IPath templatePath = new Path("/Symfony2/src/Acme/DemoBundle/Resources/views/layout.html.twig");		
+		String viewPath = PathUtils.getViewFromTemplatePath(templatePath);
+		assertEquals("layout", viewPath);
+		
 	}
 }

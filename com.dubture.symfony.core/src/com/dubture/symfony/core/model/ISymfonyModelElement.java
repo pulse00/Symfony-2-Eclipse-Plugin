@@ -24,6 +24,7 @@ public interface ISymfonyModelElement {
 	// misc
 	int ANNOTATION = 400;	
 	int ENVIRONMENT = 401;
+	int TEMPLATE_VARIABLE = 402;
 	
 
 

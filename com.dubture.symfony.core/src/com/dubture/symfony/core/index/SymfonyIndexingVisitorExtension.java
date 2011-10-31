@@ -363,26 +363,31 @@ PhpIndexingVisitorExtension {
 
 					name = variable.getName();
 
+
 					String phpClass = variable.getClassName();
-					String namespace = variable.getNamespace();					
-					String metadata = JsonUtils.createReference(phpClass, namespace, viewPath);
+					String namespace = variable.getNamespace();
+					String method = variable.getMethod().getName();
+					String metadata = JsonUtils.createReference(phpClass, namespace, viewPath, method);
 
 					Logger.debugMSG("add reference info: " + name +  " " + metadata + " " + namespace);
 
-					ReferenceInfo info = new ReferenceInfo(IModelElement.USER_ELEMENT, start, length, name, metadata, namespace);
+					ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.TEMPLATE_VARIABLE, start, length, name, metadata, viewPath);
 					requestor.addReference(info);
 
 				} else if (variable.isScalar()) {
 
 					name = variable.getName();
+					String method = variable.getMethod().getName();
+					String metadata = JsonUtils.createScalar(name, viewPath, method);
 
-					String metadata = JsonUtils.createScalar(name, viewPath);
+					Logger.debugMSG("add scalar info: " + name +  " " + metadata );
 
-					Logger.debugMSG("add scalar info: " + name +  " " + metadata + " " + namespace);
-
-					ReferenceInfo info = new ReferenceInfo(IModelElement.USER_ELEMENT, start, length, name, metadata, null);
+					ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.TEMPLATE_VARIABLE, start, length, name, metadata, viewPath);
 					requestor.addReference(info);
 
+				} else {
+					
+					Logger.debugMSG("Unable to resolve template variable: " + variable.getClass().toString());
 				}
 
 

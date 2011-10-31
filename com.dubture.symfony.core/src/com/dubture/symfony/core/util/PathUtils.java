@@ -133,11 +133,14 @@ public class PathUtils {
 	}
 
 
-	public static String createViewPathFromTemplate(ISourceModule sourceModule) {
+	public static String createViewPathFromTemplate(ISourceModule sourceModule, boolean keepFileExtension) {
 
 		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
 		
-		String viewName = PathUtils.getViewFromTemplatePath(sourceModule.getPath());
+		String viewName = sourceModule.getPath().lastSegment();
+		
+		if (keepFileExtension == false)
+			viewName = PathUtils.getViewFromTemplatePath(sourceModule.getPath());
 		
 		IType controller = model.findControllerByTemplate(sourceModule);		
 		

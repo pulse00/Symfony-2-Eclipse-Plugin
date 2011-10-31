@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.eclipse.dltk.ast.ASTListNode;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
@@ -14,6 +15,7 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayVariableReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
@@ -26,6 +28,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.Service;
@@ -183,7 +186,37 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 		inAction = false;
 		return true;
 	}
+	
+	
+	public boolean endvisit(PHPCallExpression s) throws Exception {
+		
+		if (!s.getName().equals("render"))
+			return false;
+		
+		CallArgumentsList list = s.getArgs();
 
+		if (list.getChilds().size() > 1) {
+			
+			if (list.getChilds().get(0) instanceof Scalar && list.getChilds().get(1) instanceof ArrayCreation) {
+				
+				Scalar scalar = (Scalar) list.getChilds().get(0);
+				String viewPath = StringUtils.stripQuotes(scalar.getValue());				
+				ArrayCreation params = (ArrayCreation) list.getChilds().get(1);				
+				parseVariablesFromArray(params, viewPath);				
+				
+			}
+		}
+		
+		return true;
+	}
+
+	@Override
+	public boolean visit(PHPCallExpression s) throws Exception {
+
+		
+		return true;
+
+	}
 
 	/**
 	 * Parse {@link ReturnStatement}s and try to evaluate
@@ -260,7 +293,6 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 
 		for (ArrayElement element : array.getElements()) {
 
-			
 			Expression key = element.getKey();
 			Expression value = element.getValue();
 

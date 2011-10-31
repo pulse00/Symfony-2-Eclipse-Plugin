@@ -1,6 +1,7 @@
 package com.dubture.symfony.core.index;
 
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
@@ -14,13 +15,14 @@ import org.eclipse.php.internal.core.index.PhpElementResolver;
 import org.json.simple.JSONObject;
 
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.core.model.ISymfonyModelElement;
 import com.dubture.symfony.core.util.JsonUtils;
 
 
 /**
  * 
  * {@link SymfonyElementResolver} resolves {@link IModelElement} 
- * types from the H2 index with the Type {@link IModelElement.USER_ELEMENT}
+ * types from the H2 index with the Type {@link ISymfonyModelElement.TEMPLATE_VARIABLE}
  *  
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
@@ -38,7 +40,7 @@ public class SymfonyElementResolver extends PhpElementResolver {
 
 
 		// this is a Symfony2 element, try to resolve it
-		if (elementType == IModelElement.USER_ELEMENT) {
+		if (elementType == ISymfonyModelElement.TEMPLATE_VARIABLE) {
 
 			try {				
 				
@@ -55,6 +57,7 @@ public class SymfonyElementResolver extends PhpElementResolver {
 					String className = (String) data.get("elementName");
 					String q = (String) data.get("qualifier");
 					String viewPath = (String) data.get("viewPath");
+					String method = (String) data.get("method");
 					
 					ModelElement parentElement = (ModelElement) sourceModule;
 
@@ -62,7 +65,7 @@ public class SymfonyElementResolver extends PhpElementResolver {
 						parentElement = new ControllerType(parentElement, qualifier,
 								Modifiers.AccNameSpace, 0, 0, 0, 0, null, doc);
 
-						return new TemplateField(parentElement, elementName, q, className, viewPath);
+						return new TemplateField(parentElement, elementName, q, className, viewPath, method);
 
 					}			
 				} else if (type.equals("scalar")) {
@@ -71,9 +74,10 @@ public class SymfonyElementResolver extends PhpElementResolver {
 
 					String className = (String) data.get("elementName");
 					String viewPath = (String) data.get("viewPath");
+					String method = (String) data.get("method");
 					
 					ModelElement parentElement = (ModelElement) sourceModule;
-					return new TemplateField(parentElement, elementName, null, className, viewPath);			
+					return new TemplateField(parentElement, elementName, null, className, viewPath, method);			
 
 				}
 			} catch (Exception e) {
@@ -91,25 +95,32 @@ public class SymfonyElementResolver extends PhpElementResolver {
 		private String qualifier;
 		private String className;
 		private String viewPath;
+		private String method;
 		
-		public TemplateField(ModelElement parent, String name, String qualifier, String className, String method) {
+		public TemplateField(ModelElement parent, String name, String qualifier, String className, String viewPath, String method) {
 			super(parent, name);
 
 			this.qualifier = qualifier;
 			this.className = className;
-			this.viewPath = method;
+			this.viewPath = viewPath;
+			this.method = method;
 
 		}
 		
 		public String getQualifier() {
 			return qualifier;
 		}
-
 		public String getClassName() {
 			return className;
 		}
 		public String getViewPath() {
 			return viewPath;
+		}		
+		public IMethod getMethod() {			
+			return getSourceModule().getMethod(method);
+		}
+		public String getMethodName() {			
+			return method;
 		}
 	}
 

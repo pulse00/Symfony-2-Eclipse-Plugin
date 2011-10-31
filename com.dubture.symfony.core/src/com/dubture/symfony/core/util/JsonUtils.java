@@ -25,13 +25,14 @@ public class JsonUtils {
 	private static JSONParser parser = new JSONParser();
 	
 	@SuppressWarnings("unchecked")
-	public static String createReference(String elementName, String qualifier, String viewPath) {
+	public static String createReference(String elementName, String qualifier, String viewPath, String method) {
 		
 		
 		JSONObject data = new JSONObject();
 		data.put("elementName", elementName);
 		data.put("qualifier", qualifier);
 		data.put("viewPath", viewPath);
+		data.put("method", method);
 		
 		JSONObject header = new JSONObject();
 		header.put("type", "reference");
@@ -136,11 +137,12 @@ public class JsonUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static String createScalar(String elementName, String viewPath) {
+	public static String createScalar(String elementName, String viewPath, String method) {
 
 		JSONObject data = new JSONObject();
 		data.put("elementName", elementName);
 		data.put("viewPath", viewPath);
+		data.put("method", method);
 		
 		JSONObject header = new JSONObject();
 		header.put("type", "scalar");
