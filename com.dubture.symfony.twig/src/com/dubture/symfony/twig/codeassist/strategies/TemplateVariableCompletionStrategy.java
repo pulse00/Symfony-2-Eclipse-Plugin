@@ -71,7 +71,7 @@ public class TemplateVariableCompletionStrategy extends AbstractTwigCompletionSt
 			ISourceModule module = ctxt.getSourceModule();
 			IType controller = model.findControllerByTemplate(module);
 			List<TemplateField>variables = model.findTemplateVariables(controller);
-			String viewPath = PathUtils.createViewPathFromTemplate(ctxt.getSourceModule(), false);
+			String viewPath = PathUtils.createViewPathFromTemplate(ctxt.getSourceModule(), true);
 			
 			SourceRange range = getReplacementRange(ctxt);
 			
@@ -79,7 +79,6 @@ public class TemplateVariableCompletionStrategy extends AbstractTwigCompletionSt
 			String prefix = "$" +ctxt.getPrefix();
 			
 			for(TemplateField element : variables) {
-
 
 				if (viewPath.equals(element.getViewPath()) && CodeAssistUtils.startsWithIgnoreCase(element.getElementName(), prefix)) {
 					reporter.reportField(new FakeField(element, element.getElementName(), Modifiers.AccPublic), "", range, true);

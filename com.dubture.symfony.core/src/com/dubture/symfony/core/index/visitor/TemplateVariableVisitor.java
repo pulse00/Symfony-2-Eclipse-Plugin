@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.eclipse.dltk.ast.ASTListNode;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
@@ -15,7 +14,6 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayVariableReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
@@ -190,7 +188,7 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 	
 	public boolean endvisit(PHPCallExpression s) throws Exception {
 		
-		if (!s.getName().equals("render"))
+		if (!s.getName().startsWith("render"))
 			return false;
 		
 		CallArgumentsList list = s.getArgs();
