@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Annotation
 Bundle-SymbolicName: com.dubture.symfony.annotation;singleton:=true
-Bundle-Version: 1.0.38.qualifier
+Bundle-Version: 1.0.39.qualifier
 Bundle-Activator: com.dubture.symfony.annotation.SymfonyAnnotationPlugin
 Bundle-Vendor: DUBTURE
 Require-Bundle: org.junit,

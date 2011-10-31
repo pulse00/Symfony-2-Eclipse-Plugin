@@ -1,3 +1,7 @@
+1.0.39
+
+* Added template variable linking
+
 1.0.38
 
 * added debugger support
