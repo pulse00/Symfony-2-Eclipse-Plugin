@@ -16,6 +16,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FormalParameter;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
@@ -132,6 +133,28 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 				} catch (Exception e) {
 					Logger.logException(e);
 				}
+			}
+			
+			
+			for (Object o : method.getArguments()) {
+				/* public function (Form $form) { } */
+				if (o instanceof FormalParameter) {				
+					FormalParameter param = (FormalParameter) o;
+					
+					if (param.getParameterType() instanceof FullyQualifiedReference) {
+						
+						FullyQualifiedReference ref = (FullyQualifiedReference) param.getParameterType();
+						NamespaceReference nsRef = createFromFQCN(ref);
+						
+						TemplateVariable tempVar= new TemplateVariable(currentMethod, param.getName(), param.sourceStart(), param.sourceEnd(), nsRef.namespace, nsRef.className);							
+						deferredVariables.push(tempVar);						
+						
+					/* public function ($somevar) { } */						
+					} else {
+						TemplateVariable tempVar= new TemplateVariable(currentMethod, param.getName(), param.sourceStart(), param.sourceEnd(), null, null);							
+						deferredVariables.push(tempVar);						
+					}
+				} 
 			}
 		}
 
@@ -306,7 +329,7 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 
 					for (TemplateVariable variable : deferredVariables) {
 
-						// we got the variable, add it the the templateVariables
+						// we got the variable, add it the the templateVariables						
 						if (ref.getName().equals(variable.getName())) {								
 							// alter the variable name
 														

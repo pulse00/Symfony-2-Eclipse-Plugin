@@ -18,7 +18,6 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
 import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
@@ -363,14 +362,16 @@ PhpIndexingVisitorExtension {
 
 					name = variable.getName();
 
-
 					String phpClass = variable.getClassName();
 					String namespace = variable.getNamespace();
 					String method = variable.getMethod().getName();
 					String metadata = JsonUtils.createReference(phpClass, namespace, viewPath, method);
-
-					Logger.debugMSG("add reference info: " + name +  " " + metadata + " " + namespace);
-
+					
+					if (viewPath.contains(".")) {						
+						viewPath = viewPath.substring(0, viewPath.indexOf("."));
+					}
+					
+					Logger.debugMSG("add reference info: " + name +  " =>  " + viewPath + " with metadata " + metadata);
 					ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.TEMPLATE_VARIABLE, start, length, name, metadata, viewPath);
 					requestor.addReference(info);
 
@@ -379,9 +380,12 @@ PhpIndexingVisitorExtension {
 					name = variable.getName();
 					String method = variable.getMethod().getName();
 					String metadata = JsonUtils.createScalar(name, viewPath, method);
-
-					Logger.debugMSG("add scalar info: " + name +  " " + metadata );
-
+					
+					if (viewPath.contains(".")) {						
+						viewPath = viewPath.substring(0, viewPath.indexOf("."));
+					}
+					
+					Logger.debugMSG("add scalar info: " + name +  " => " + viewPath + " with metadata: "  + metadata );
 					ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.TEMPLATE_VARIABLE, start, length, name, metadata, viewPath);
 					requestor.addReference(info);
 

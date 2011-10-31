@@ -1152,7 +1152,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 	 */
 	public List<TemplateField> findTemplateVariables(ISourceModule sourceModule, String varName) {
 
-		String viewPath = PathUtils.createViewPathFromTemplate(sourceModule, true);
+		String viewPath = PathUtils.createViewPathFromTemplate(sourceModule, false);
 		
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
 
