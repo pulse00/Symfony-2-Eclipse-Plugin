@@ -97,12 +97,9 @@
  </extension>
  
 	<extension point="org.eclipse.ui.perspectiveExtensions">
-		<perspectiveExtension targetID="org.eclipse.php.perspective">
-			<newWizardShortcut id="com.dubture.symfony.ui.wizards.ControllerCreationWizard" />
-			<newWizardShortcut id="com.dubture.symfony.ui.wizards.ClassCreationWizard" />			
+		<perspectiveExtension targetID="org.eclipse.php.perspective">			
 			<newWizardShortcut id="com.dubture.symfony.ui.wizards.ProjectCreationWizard" />
-		</perspectiveExtension>
-		
+		</perspectiveExtension>		
 	</extension>	
 	
 	
@@ -129,18 +126,6 @@
         	project="false">
         </wizard>
         -->
-        
-		<wizard
-        	category="com.dubture.symfony.project.ui"
-        	class="com.dubture.symfony.ui.wizards.classes.ClassCreationWizard"
-        	icon="ico/full/obj16/add_php_file.gif"
-        	id="com.dubture.symfony.ui.wizards.ClassCreationWizard"
-        	name="%wizard.new.class"
-        	project="false">
-        </wizard>
-        
-
-        
 	</extension>
  
  <extension
@@ -286,6 +271,12 @@
     <wizardextension
           class="com.dubture.symfony.ui.wizards.project.DoctrineProjectWizardExtension">
     </wizardextension>
+ </extension>
+ <extension
+       point="com.dubture.pdt.ui.namespaceresolver">
+    <resolver
+          class="com.dubture.symfony.ui.wizards.SymfonyNamespaceResolver">
+    </resolver>
  </extension>
  
  <!-- TODO: finish implementation -->
