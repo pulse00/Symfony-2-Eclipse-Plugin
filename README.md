@@ -4,7 +4,7 @@
 
 The PDT development plugin is integrated in the updatesite of the symfony plugin:
 
-### http://pulse00.github.com/updatesite/
+### http://pulse00.github.com/Symfony-2-Eclipse-Plugin/
 
 To install the plugin, add the above updatesite to your eclipse installation:
 
