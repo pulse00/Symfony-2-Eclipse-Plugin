@@ -51,7 +51,7 @@ implements IWorkbenchPreferencePage {
 
 		options = new String[][] 
 				{ 
-				{ SymfonyVersion.Symfony2_0_4.getAlias(), SymfonyVersion.Symfony2_0_4.getAlias() } 				
+				{ SymfonyVersion.Symfony2_0_5.getAlias(), SymfonyVersion.Symfony2_0_5.getAlias() } 				
 				};			
 
 

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public enum SymfonyVersion {
 
-	Symfony2_0_4("Symfony 2.0.4");
+	Symfony2_0_5("Symfony 2.0.5");
 	
 //	Symfony2("Symfony2.0.1"), //$NON-NLS-1$
 //	Symfony2_1("Symfony2.1"); //$NON-NLS-1$
