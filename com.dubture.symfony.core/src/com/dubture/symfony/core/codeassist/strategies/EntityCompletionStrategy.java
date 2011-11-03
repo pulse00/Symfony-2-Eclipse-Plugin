@@ -57,9 +57,9 @@ public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
 		EntityCompletionContext context = (EntityCompletionContext) getContext();		
 		CompletionRequestor req = context.getCompletionRequestor();
 
-		if (req.getClass() == PHPCompletionProposalCollector.class) {
-			return;			
-		}
+//		if (req.getClass() == PHPCompletionProposalCollector.class) {
+//			return;			
+//		}
 
 		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
 		IScriptProject project = context.getSourceModule().getScriptProject();

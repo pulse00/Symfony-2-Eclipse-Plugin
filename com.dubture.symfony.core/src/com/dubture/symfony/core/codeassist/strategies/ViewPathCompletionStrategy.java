@@ -61,9 +61,9 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 		ViewPathArgumentContext context = (ViewPathArgumentContext) getContext();		
 		CompletionRequestor req = context.getCompletionRequestor();
 		
-		if (req.getClass() == PHPCompletionProposalCollector.class) {
-			return;			
-		}
+//		if (req.getClass() == PHPCompletionProposalCollector.class) {
+//			return;			
+//		}
 
 //		if (workaroundCount == 0) {
 //			workaroundCount++;

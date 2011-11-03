@@ -1,12 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Annotation
+Bundle-Name: Symfony Annotation Plugin
 Bundle-SymbolicName: com.dubture.symfony.annotation;singleton:=true
 Bundle-Version: 1.0.39.qualifier
 Bundle-Activator: com.dubture.symfony.annotation.SymfonyAnnotationPlugin
-Bundle-Vendor: DUBTURE
-Require-Bundle: org.junit,
- org.eclipse.core.runtime,
+Bundle-Vendor: https://github.com/pulse00
+Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.dltk.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dubture.symfony.annotation,

@@ -4,22 +4,18 @@ Bundle-Name: Symfony Core Plugin
 Bundle-SymbolicName: com.dubture.symfony.core;singleton:=true
 Bundle-Version: 1.0.39.qualifier
 Bundle-Activator: com.dubture.symfony.core.SymfonyCorePlugin
-Bundle-Vendor: Symfony
+Bundle-Vendor: https://github.com/pulse00
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.jface.text,
  org.eclipse.wst.sse.core,
  org.eclipse.dltk.core,
  org.eclipse.php.core,
+ org.eclipse.php.ui,
  org.apache.commons.lang,
  com.dubture.symfony.index,
  com.dubture.symfony.annotation,
- com.dubture.doctrine.core,
- org.eclipse.dltk.core.index,
- org.eclipse.dltk.core.index.sql,
- org.eclipse.dltk.core.index.sql.h2,
- org.eclipse.php.ui,
- org.eclipse.dltk.ui
+ com.dubture.doctrine.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.dubture.symfony.core,

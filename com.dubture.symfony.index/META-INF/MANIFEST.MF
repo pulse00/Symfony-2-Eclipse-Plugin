@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Symfony Index
+Bundle-Name: Symfony Index Plugin
 Bundle-SymbolicName: com.dubture.symfony.index;singleton:=true
 Bundle-Version: 1.0.39.qualifier
 Bundle-Activator: com.dubture.symfony.index.SymfonyIndex
@@ -10,4 +10,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dubture.symfony.index,
  com.dubture.symfony.index.dao
-Bundle-Vendor: Symfony
+Bundle-Vendor: https://github.com/pulse00

@@ -6,7 +6,6 @@ Bundle-Version: 1.0.39.qualifier
 Bundle-Activator: com.dubture.symfony.ui.SymfonyUiPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.core.resources,
  org.eclipse.ui.console,
  org.eclipse.debug.ui,
  org.eclipse.ui.workbench.texteditor,
@@ -14,17 +13,16 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.dltk.ui,
  org.eclipse.php.core,
  org.eclipse.php.ui,
- org.eclipse.php.server.ui,
- com.dubture.symfony.core,
  com.dubture.symfony.annotation,
+ com.dubture.symfony.core,
+ com.dubture.symfony.index,
+ com.dubture.doctrine.core,
+ com.dubture.pdt.ui,
  org.eclipse.jface.text,
  org.eclipse.wst.sse.core,
  org.eclipse.wst.sse.ui,
  org.eclipse.ui.ide,
- com.dubture.symfony.index,
- com.dubture.doctrine.core,
- org.eclipse.wst.jsdt.core,
- com.dubture.pdt.ui
+ org.eclipse.wst.jsdt.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dubture.symfony.ui,
@@ -38,3 +36,4 @@ Export-Package: com.dubture.symfony.ui,
  com.dubture.symfony.ui.wizards
 Bundle-ClassPath: .,
  lib/snakeyaml-1.8.jar
+Bundle-Vendor: https://github.com/pulse00
