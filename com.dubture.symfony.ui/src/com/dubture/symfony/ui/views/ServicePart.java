@@ -1,11 +1,15 @@
 package com.dubture.symfony.ui.views;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -13,6 +17,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -29,10 +34,24 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ViewPart;
 
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.Service;
 
+@SuppressWarnings("restriction")
 public class ServicePart extends ViewPart {
 
+	private TreeViewer viewer;
+	private List<ViewerFilter> filters = new ArrayList<ViewerFilter>();
+	
+	private PublicFilter publicFilter = new PublicFilter();
+	private TagFilter tagFilter = new TagFilter();
+	
+	
+	private Sorter sorter = new Sorter();
+	
+	private Combo tags;
+	private ServicesViewerActionGroup actionGroup;
+	
 	private IResourceChangeListener changeListener = new IResourceChangeListener() {
 		
 		@Override
@@ -44,10 +63,7 @@ public class ServicePart extends ViewPart {
 			}
 		}
 	};
-	private TreeViewer viewer;
 	
-	private Combo tags;
-	private ServicesViewerActionGroup actionGroup;
 	
 	public ServicePart() {
 
@@ -74,22 +90,7 @@ public class ServicePart extends ViewPart {
 		
 		viewer.setContentProvider(new ServiceContentProviderFlatView());
 		viewer.setLabelProvider(new ServiceLabelProvider());
-		viewer.setSorter(new ViewerSorter() {
-			
-			@SuppressWarnings("unchecked")
-			@Override
-			public int compare(Viewer viewer, Object e1, Object e2)
-			{
-				if (e1 instanceof Service && e2 instanceof Service) {
-					Service left = (Service) e1;
-					Service right = (Service) e2;					
-					return getComparator().compare(left.getElementName(), right.getElementName());
-					
-					
-				}
-				return super.compare(viewer, e1, e2);
-			}			
-		});
+		viewer.setSorter(sorter);
 		
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {			
 			@Override
@@ -197,12 +198,9 @@ public class ServicePart extends ViewPart {
 	}
 
 	public void switchFlatView()
-	{
-		
+	{		
 		viewer.setContentProvider(new ServiceContentProviderFlatView());
-		updateViewer();
-
-		
+		updateViewer();		
 	}
 
 	public void switchBundleView()
@@ -211,6 +209,129 @@ public class ServicePart extends ViewPart {
 		viewer.setContentProvider(new ServiceContentProviderBundleView());
 		updateViewer();
 		
-	} 
+	}
+	
+	public void setPublicFilter(boolean doFilter) {
+		
+		if (doFilter) {			
+			if (!filters.contains(publicFilter)) {
+				filters.add(publicFilter);
+			}			
+		} else {
+			filters.remove(publicFilter);
+		}
 
+		viewer.setFilters((ViewerFilter[]) filters.toArray(new ViewerFilter[filters.size()]));
+		viewer.refresh();
+		
+	}
+	
+	/**
+	 * true = ascending, false = descending
+	 * @param order
+	 */
+	public void setSort(boolean order)
+	{
+	
+		sorter.setOrder(order);		
+		viewer.setSorter(sorter);
+		viewer.refresh();
+		
+	}	
+	
+	private class PublicFilter extends ViewerFilter {
+
+		@Override
+		public boolean select(Viewer viewer, Object parentElement,
+				Object element)
+		{
+			if (element instanceof Service) {			
+				Service service = (Service) element;				
+				return service.isPublic();				
+			}
+			
+			return true;
+		}
+	}
+	
+	private class TagFilter extends ViewerFilter {
+
+		private String tag = "";
+		
+		
+		@Override
+		public boolean select(Viewer viewer, Object parentElement,
+				Object element)
+		{
+
+			if (element instanceof Service) {				
+				Service service = (Service) element;				
+				return service.getStringTags().contains(tag);
+			}
+			
+			return true;
+		}
+		
+		public void setTag(String tag) {
+			
+			this.tag = tag;
+		}
+	}
+	
+	private class Sorter extends ViewerSorter {
+		
+		private boolean ascending = true;
+		
+		@SuppressWarnings("unchecked")
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2)
+		{
+			ModelElement left = null;
+			ModelElement right = null;
+			if (e1 instanceof Service && e2 instanceof Service) {
+				left = (Service) e1;
+				right = (Service) e2;					
+			} else if (e1 instanceof Bundle && e2 instanceof Bundle) {				
+				left = (Bundle) e1;
+				right = (Bundle) e2;				
+			}
+			
+			if (left != null && right != null) {				
+				int result = getComparator().compare(left.getElementName(), right.getElementName());
+
+				if (!ascending) {
+					result *= -1;
+				}
+				return result;
+			}
+						
+			return super.compare(viewer, e1, e2);
+		}
+		
+		public void setOrder(boolean order) {
+			
+			ascending = order;
+		}				
+	}
+
+	public void filterByTag(String text)
+	{
+
+		if (text != null && text.length() > 0) {
+			
+			if (filters.contains(tagFilter))
+				filters.remove(tagFilter);
+			
+			tagFilter.setTag(text);			
+			filters.add(tagFilter);
+			
+		} else {
+			filters.remove(tagFilter);			
+		}
+		
+		viewer.setFilters((ViewerFilter[]) filters.toArray(new ViewerFilter[filters.size()]));
+		viewer.refresh();
+		
+		
+	}
 }

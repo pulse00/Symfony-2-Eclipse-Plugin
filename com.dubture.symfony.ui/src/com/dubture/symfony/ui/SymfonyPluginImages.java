@@ -32,7 +32,8 @@ public class SymfonyPluginImages {
 	public static final String IMG_OBJS_BUNDLE = NAME_PREFIX + "bundle-icon.gif";
 	public static final String IMG_OBJS_BUNDLE2 = NAME_PREFIX + "brick.png";
 	public static final String IMG_OBJS_CONTROLLER = NAME_PREFIX + "controller-icon.gif";	
-	public static final String IMG_OBJS_TEMPLATE = NAME_PREFIX + "template-icon.gif";	
+	public static final String IMG_OBJS_TEMPLATE = NAME_PREFIX + "template-icon.gif";
+	public static final String IMG_OBJS_TAG = NAME_PREFIX + "tag.png";	
 	
 	
 	public static final ImageDescriptor DESC_OBJS_ROUTE = createManagedFromKey(T_OBJ, IMG_OBJS_ROUTE);	
@@ -43,6 +44,7 @@ public class SymfonyPluginImages {
 	public static final ImageDescriptor DESC_OBJS_BUNDLE2 = createManagedFromKey(T_OBJ, IMG_OBJS_BUNDLE2);
 	public static final ImageDescriptor DESC_OBJS_CONTROLLER = createManagedFromKey(T_OBJ, IMG_OBJS_CONTROLLER);	
 	public static final ImageDescriptor DESC_OBJS_TEMPLATE = createManagedFromKey(T_OBJ, IMG_OBJS_TEMPLATE);
+	public static final ImageDescriptor DESC_OBJS_TAG = createManagedFromKey(T_OBJ, IMG_OBJS_TAG);
 
 	private static final String T_WIZBAN = "wizban"; //$NON-NLS-1$
 	
