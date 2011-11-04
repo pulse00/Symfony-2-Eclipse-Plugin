@@ -263,6 +263,22 @@ public class Service extends SourceType {
 		
 		return _isPublic ? "true" : "false";
 	}
+
+
+	public void setPublic(String _public)
+	{
+
+		_isPublic = true;
+		
+		if (_public != null && _public.equals("false"))
+			_isPublic = false;
+		
+	}
+	
+	public boolean isPublic() {
+		
+		return _isPublic;
+	}
 	
 
 }

@@ -11,5 +11,5 @@ package com.dubture.symfony.index;
  */
 public interface IServiceHandler {
 	
-	void handle(String id, String phpClass, String path);
+	void handle(String id, String phpClass, String path, String _public, String tags);
 }

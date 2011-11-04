@@ -57,7 +57,7 @@
     <view
           category="com.dubture.symfony.ui"
           class="com.dubture.symfony.ui.views.ServicePart"
-          icon="ico/full/obj16/service-icon.gif"
+          icon="ico/full/obj16/cog.png"
           id="com.dubture.symfony.ui.servicesview"
           name="Services"
           restorable="true">

@@ -1,17 +1,13 @@
 package com.dubture.symfony.ui.views;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -19,10 +15,10 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -34,7 +30,6 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.Service;
-import com.dubture.symfony.core.model.SymfonyModelAccess;
 
 public class ServicePart extends ViewPart {
 
@@ -44,16 +39,15 @@ public class ServicePart extends ViewPart {
 		public void resourceChanged(IResourceChangeEvent event)
 		{			
 			if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
-								
-				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();				
-				viewer.setInput(projects);
-				viewer.refresh();
+
+				updateViewer();
 			}
 		}
 	};
 	private TreeViewer viewer;
-	private ServiceDetailView detail;
+	
 	private Combo tags;
+	private ServicesViewerActionGroup actionGroup;
 	
 	public ServicePart() {
 
@@ -71,15 +65,14 @@ public class ServicePart extends ViewPart {
 		
 		Composite cp = tree.getFilterControl().getParent();
 		
-		tags = new Combo(cp, SWT.READ_ONLY);
-		tags.setData(SymfonyModelAccess.getDefault().findServiceTags(new Path("/")));
-		GridData gd = new GridData();
-		gd.widthHint = 200;
-		tags.setText("Filter by tag");
-		tags.setLayoutData(gd);
+//		tags = new Combo(cp, SWT.READ_ONLY);
+//		tags.setData(SymfonyModelAccess.getDefault().findServiceTags(new Path("/")));
+//		GridData gd = new GridData();
+//		gd.widthHint = 200;
+//		tags.setText("Filter by tag");
+//		tags.setLayoutData(gd);
 		
-		
-		viewer.setContentProvider(new ServiceContentProvider());
+		viewer.setContentProvider(new ServiceContentProviderFlatView());
 		viewer.setLabelProvider(new ServiceLabelProvider());
 		viewer.setSorter(new ViewerSorter() {
 			
@@ -98,22 +91,17 @@ public class ServicePart extends ViewPart {
 			}			
 		});
 		
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event)
 			{
-
-				if (event.getSelection() instanceof IStructuredSelection) {
-					
+				if (event.getSelection() instanceof IStructuredSelection) {					
 					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 					
 					if (selection.getFirstElement() instanceof Service) {
-						detail.updateService((Service) (selection.getFirstElement()));
+//						detail.updateService((Service) (selection.getFirstElement()));
 					}
-				}
-				ISelection selection = event.getSelection();
-				
+				}				
 			}
 		});
 		
@@ -123,18 +111,11 @@ public class ServicePart extends ViewPart {
 			@Override
 			public void doubleClick(DoubleClickEvent event)
 			{
-
-				if (event.getSelection() instanceof IStructuredSelection) {
-					
-					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-					
-					if (selection.getFirstElement() instanceof Service) {
-						
+				if (event.getSelection() instanceof IStructuredSelection) {					
+					IStructuredSelection selection = (IStructuredSelection) event.getSelection();					
+					if (selection.getFirstElement() instanceof Service) {						
 						Service service = (Service) selection.getFirstElement();
-						
-						
-						if (service.getSourceModule() != null) {
-							
+						if (service.getSourceModule() != null) {							
 							try {
 								IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 								IFile file = (IFile) service.getSourceModule().getUnderlyingResource();
@@ -153,9 +134,13 @@ public class ServicePart extends ViewPart {
 			}
 		});
 		
-		detail = new ServiceDetailView(parent, SWT.NONE);		
+//		detail = new ServiceDetailView(parent, SWT.NONE);
+		update();
 		
-		updateTags();
+		actionGroup = new ServicesViewerActionGroup(this);
+		IActionBars actionBar = getViewSite().getActionBars();		
+		actionGroup.fillActionBars(actionBar);
+		actionBar.updateActionBars();
 		
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(changeListener);
 
@@ -164,14 +149,28 @@ public class ServicePart extends ViewPart {
 	
 	protected void updateTags() {
 				
-		List<String> tags = SymfonyModelAccess.getDefault().findServiceTags(new Path("/"));
-		ServicePart.this.tags.removeAll();
-		for (String tag : tags) {
-			ServicePart.this.tags.add(tag);
-		}
+//		List<String> tags = SymfonyModelAccess.getDefault().findServiceTags(new Path("/"));
+//		ServicePart.this.tags.removeAll();
+//		for (String tag : tags) {
+//			ServicePart.this.tags.add(tag);
+//		}
+//		
+//		ServicePart.this.tags.redraw();		
 		
-		ServicePart.this.tags.redraw();		
+	}
+	
+	protected void updateViewer() {
 		
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();				
+		viewer.setInput(projects);
+		viewer.refresh();
+
+	}
+	
+	protected void update() {
+		
+		updateTags();
+		updateViewer();
 	}
 	
 	
@@ -194,6 +193,23 @@ public class ServicePart extends ViewPart {
 		
 		if (changeListener != null)
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(changeListener);
+		
+	}
+
+	public void switchFlatView()
+	{
+		
+		viewer.setContentProvider(new ServiceContentProviderFlatView());
+		updateViewer();
+
+		
+	}
+
+	public void switchBundleView()
+	{
+
+		viewer.setContentProvider(new ServiceContentProviderBundleView());
+		updateViewer();
 		
 	} 
 

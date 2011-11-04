@@ -2,12 +2,14 @@ package com.dubture.symfony.ui;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 
 public class SymfonyPluginImages {
@@ -25,14 +27,20 @@ public class SymfonyPluginImages {
 	
 	public static final String IMG_OBJS_ROUTE = NAME_PREFIX + "route-icon.gif"; 				
 	public static final String IMG_OBJS_SERVICE = NAME_PREFIX + "service-icon.gif";
+	public static final String IMG_OBJS_SERVICE_PUBLIC = NAME_PREFIX + "cog_add.png";
+	public static final String IMG_OBJS_SERVICE_PRIVATE = NAME_PREFIX + "cog_delete.png";
 	public static final String IMG_OBJS_BUNDLE = NAME_PREFIX + "bundle-icon.gif";
+	public static final String IMG_OBJS_BUNDLE2 = NAME_PREFIX + "brick.png";
 	public static final String IMG_OBJS_CONTROLLER = NAME_PREFIX + "controller-icon.gif";	
 	public static final String IMG_OBJS_TEMPLATE = NAME_PREFIX + "template-icon.gif";	
 	
 	
 	public static final ImageDescriptor DESC_OBJS_ROUTE = createManagedFromKey(T_OBJ, IMG_OBJS_ROUTE);	
 	public static final ImageDescriptor DESC_OBJS_SERVICE = createManagedFromKey(T_OBJ, IMG_OBJS_SERVICE);
+	public static final ImageDescriptor DESC_OBJS_SERVICE_PUBLIC = createManagedFromKey(T_OBJ, IMG_OBJS_SERVICE_PUBLIC);
+	public static final ImageDescriptor DESC_OBJS_SERVICE_PRIVATE = createManagedFromKey(T_OBJ, IMG_OBJS_SERVICE_PRIVATE);
 	public static final ImageDescriptor DESC_OBJS_BUNDLE = createManagedFromKey(T_OBJ, IMG_OBJS_BUNDLE);	
+	public static final ImageDescriptor DESC_OBJS_BUNDLE2 = createManagedFromKey(T_OBJ, IMG_OBJS_BUNDLE2);
 	public static final ImageDescriptor DESC_OBJS_CONTROLLER = createManagedFromKey(T_OBJ, IMG_OBJS_CONTROLLER);	
 	public static final ImageDescriptor DESC_OBJS_TEMPLATE = createManagedFromKey(T_OBJ, IMG_OBJS_TEMPLATE);
 
@@ -102,5 +110,25 @@ public class SymfonyPluginImages {
 		}
 		return null;
 	}	
+	
+	public static Image get(String key) {
+		return getImageRegistry().get(key);
+	}
+	
+	static ImageRegistry getImageRegistry() {
+		if (fgImageRegistry == null) {
+			fgImageRegistry = new ImageRegistry();
+			for (Iterator iter = fgAvoidSWTErrorMap.keySet().iterator(); iter
+					.hasNext();) {
+				String key = (String) iter.next();
+				fgImageRegistry.put(key, (ImageDescriptor) fgAvoidSWTErrorMap
+						.get(key));
+			}
+			fgAvoidSWTErrorMap = null;
+		}
+		return fgImageRegistry;
+	}
+	
+	
 
 }

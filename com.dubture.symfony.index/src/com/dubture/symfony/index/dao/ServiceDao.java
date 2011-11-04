@@ -116,7 +116,7 @@ public class ServiceDao extends BaseDao implements IServiceDao {
 		try {
 			
 			Statement statement = connection.createStatement();
-			String query = "SELECT PATH, NAME, PHPCLASS FROM SERVICES";
+			String query = "SELECT PATH, NAME, PHPCLASS, _PUBLIC, TAGS  FROM SERVICES";
 
 			ResultSet result = statement.executeQuery(query.toString());
 			
@@ -125,8 +125,10 @@ public class ServiceDao extends BaseDao implements IServiceDao {
 				int columnIndex = 0;
 				String path = result.getString(++columnIndex);
 				String name = result.getString(++columnIndex);
-				String phpClass = result.getString(++columnIndex);				
-				handler.handle(name, path, phpClass);
+				String phpClass = result.getString(++columnIndex);
+				String _public = result.getString(++columnIndex);
+				String tags = result.getString(++columnIndex);								
+				handler.handle(name, path, phpClass, _public, tags);
 
 			}
 		} catch(Exception e) {
@@ -187,7 +189,7 @@ public class ServiceDao extends BaseDao implements IServiceDao {
 		try {
 			
 			Statement statement = connection.createStatement();
-			String query = "SELECT NAME, PHPCLASS, PATH FROM SERVICES WHERE PATH LIKE '" + path + "%'";
+			String query = "SELECT NAME, PHPCLASS, PATH, _PUBLIC, TAGS FROM SERVICES WHERE PATH LIKE '" + path + "%'";
 
 			ResultSet result = statement.executeQuery(query.toString());
 			
@@ -197,7 +199,9 @@ public class ServiceDao extends BaseDao implements IServiceDao {
 				String id= result.getString(++columnIndex);
 				String phpClass = result.getString(++columnIndex);
 				String _path = result.getString(++columnIndex);
-				handler.handle(id, phpClass, _path);
+				String _public = result.getString(++columnIndex);
+				String tags = result.getString(++columnIndex);
+				handler.handle(id, phpClass, _path, _public, tags);
 
 			}
 		} catch(Exception e) {
@@ -212,7 +216,7 @@ public class ServiceDao extends BaseDao implements IServiceDao {
 		try {
 			
 			Statement statement = connection.createStatement();
-			StringBuilder builder = new StringBuilder("SELECT NAME, PHPCLASS, PATH FROM SERVICES WHERE PATH LIKE '");
+			StringBuilder builder = new StringBuilder("SELECT NAME, PHPCLASS, PATH, _PUBLIC, TAGS FROM SERVICES WHERE PATH LIKE '");
 			builder.append(path);
 			builder.append("%' AND NAME = '");
 			builder.append(id.replaceAll("['\"]", ""));
@@ -229,8 +233,11 @@ public class ServiceDao extends BaseDao implements IServiceDao {
 			String _id= result.getString(1);
 			String _phpClass = result.getString(2);
 			String _path = result.getString(3);
+			String _public = result.getString(4);
+			String _tags = result.getString(5);
 			
-			handler.handle(_id, _phpClass, _path);			
+			
+			handler.handle(_id, _phpClass, _path, _public, _tags);			
 			
 		} catch(Exception e) {
 			Logger.logException(e);

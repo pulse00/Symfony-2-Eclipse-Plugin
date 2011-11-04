@@ -70,4 +70,15 @@ public class Service {
 		
 	}
 
+	public void setTags(String tags2)
+	{
+
+		String[] _tags  = tags2.split(",");
+		
+		for (String tag : _tags) {			
+			this.tags.add(tag);
+		}		
+		
+	}
+
 }
