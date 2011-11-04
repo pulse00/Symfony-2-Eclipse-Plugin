@@ -1,3 +1,7 @@
+1.0.41
+
+* Added Service view (Window -> Show View -> Other -> Symfony -> Services)
+
 1.0.40
 
 * Added Symfony 2.0.5
