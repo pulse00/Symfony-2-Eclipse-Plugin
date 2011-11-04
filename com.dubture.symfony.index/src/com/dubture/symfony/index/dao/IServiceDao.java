@@ -2,6 +2,9 @@ package com.dubture.symfony.index.dao;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
+
+import org.eclipse.core.runtime.IPath;
 
 import com.dubture.symfony.index.IServiceHandler;
 
@@ -15,7 +18,7 @@ import com.dubture.symfony.index.IServiceHandler;
  */
 public interface IServiceDao extends IDao {
 	
-	void insert(Connection connection, String path, String name, String phpclass, int timestamp) throws SQLException;
+	void insert(Connection connection, String id, String phpClass, String _public, List<String> tags, String path, int timestamp) throws SQLException;
 
 	void truncate(Connection connection);
 	
@@ -29,6 +32,9 @@ public interface IServiceDao extends IDao {
 
 	void findService(Connection connection, String id, String path,
 			IServiceHandler iServiceHandler);
+
+	
+	List<String> findTags(Connection connection, IPath path);
 
 
 }

@@ -30,7 +30,7 @@ import com.dubture.symfony.index.preferences.SymfonyIndexPreferences;
 public class Schema {
 
 
-	public static final String VERSION = "0.6"; //$NON-NLS-1$
+	public static final String VERSION = "0.7"; //$NON-NLS-1$
 
 	/**
 	 * Creates the database schema using given connection.

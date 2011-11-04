@@ -5,7 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.osgi.util.NLS;
 
 import com.dubture.symfony.index.IServiceHandler;
@@ -32,8 +35,8 @@ public class ServiceDao extends BaseDao implements IServiceDao {
 	private static final String Q_INSERT_DECL = Schema
 			.readSqlFile("Resources/index/insert_decl.sql"); //$NON-NLS-1$
 
-
-	public void insert(Connection connection, String path, String name, String phpclass, int timestamp)
+	
+	public void insert(Connection connection, String name, String phpclass, String _public, List<String> tags, String path, int timestamp)
 			throws SQLException {
 
 
@@ -53,19 +56,31 @@ public class ServiceDao extends BaseDao implements IServiceDao {
 				statement = connection.prepareStatement(query);
 				batchStatements.put(query, statement);
 			}
-			insertBatch(connection, statement, path, name, phpclass, timestamp);
+			insertBatch(connection, statement, path, name, phpclass, _public, tags, timestamp);
 		}
 	}
 
 
-	private void insertBatch(Connection connection, PreparedStatement statement, String path, String name, String phpclass, int timestamp)
+	private void insertBatch(Connection connection, PreparedStatement statement, String path, String name, String phpclass, String _public, List<String> tags, int timestamp)
 			throws SQLException {
 
 		int param = 0;
 
+		String tagString = "";		
+		
+		if (tags != null) {
+			int i=0;
+			for (String tag : tags) {
+				tagString += tag;
+				if (i++ < tags.size())
+					tagString += ",";
+			}
+		}
 		statement.setString(++param, path);
 		statement.setString(++param, name);
 		statement.setString(++param, phpclass);
+		statement.setString(++param, _public);
+		statement.setString(++param, tagString);
 		statement.setInt(++param, timestamp);
 		statement.addBatch();
 		
@@ -220,6 +235,39 @@ public class ServiceDao extends BaseDao implements IServiceDao {
 		} catch(Exception e) {
 			Logger.logException(e);
 		}
+	}
+
+
+	@Override
+	public List<String> findTags(Connection connection, IPath path)
+	{
+		List<String> tags = new ArrayList<String>();
+
+		try {
+			
+		
+			Statement statement = connection.createStatement();
+			String query = "SELECT TAGS FROM SERVICES WHERE PATH LIKE '" + path + "%'";
+
+			ResultSet result = statement.executeQuery(query.toString());
+			
+			while (result.next()) {
+				
+				int columnIndex = 0;
+				String _tags = result.getString(++columnIndex);
+				
+				String[] t = _tags.split(",");
+				
+				for (String tag : t) {					
+					if (!tags.contains(tag))
+						tags.add(tag);
+				}
+			}
+		} catch(Exception e) {
+			Logger.logException(e);
+		}
+
+		return tags;
 	}
 
 

@@ -1,15 +1,27 @@
 package com.dubture.symfony.core.model;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceType;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.omg.CORBA._PolicyStub;
 
 
 /**
@@ -25,10 +37,10 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 public class Service extends SourceType {
 	
 	
-	public static final String NAME = "name";
-	public static final String CLASS = "class";
-	public static final Object SYNTHETIC = "synthetic";
-	
+	// just for bc purposec
+	public static final String NAME = com.dubture.symfony.index.dao.Service.NAME;
+	public static final String CLASS = com.dubture.symfony.index.dao.Service.CLASS;
+	public static final Object SYNTHETIC = com.dubture.symfony.index.dao.Service.SYNTHETIC;
 	
 	
 	private IFile file;
@@ -54,9 +66,14 @@ public class Service extends SourceType {
 
 	private String id;
 	
-
+	private boolean _isPublic = true;
+	private List<String> tags = new ArrayList<String>();
+	private List<String> aliases = new ArrayList<String>();	
 
 	private IPath path;
+	
+	private String _stringTags;
+	private String _stringAliases;
 	
 	public Service(ModelElement parent, String name) {
 		super(parent, name);
@@ -185,6 +202,66 @@ public class Service extends SourceType {
 		
 		return namespace;
 		
+	}
+	
+	
+	@Override
+	public ISourceModule getSourceModule()
+	{
+
+		if (className != null && namespace != null) {			
+			IScriptProject project = getScriptProject();
+			IDLTKSearchScope scope = project != null ? SearchEngine.createSearchScope(project) : SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());			
+			IType[] types = PhpModelAccess.getDefault().findTypes(namespace, className, MatchRule.EXACT, 0, 0, scope, null);			
+			if (types.length >= 1) {
+				return types[0].getSourceModule();
+			}
+		}
+
+		return null;
+
+	}
+	
+	public void setTags(String tags) {
+
+		_stringTags = tags;
+		String[] _tags  = tags.split(",");
+		
+		for (String tag : _tags) {			
+			this.tags.add(tag);
+		}
+		
+	}
+	
+	public void setAliases(String aliases) {
+		
+		_stringAliases = aliases;
+		String[] _aliases  = aliases.split(",");
+		
+		for (String alias : _aliases) {			
+			this.aliases.add(alias);
+		}		
+	}
+	
+	
+	public List<String> getTags() {
+		
+		return tags;
+	}
+	
+	public String getStringAliases() {
+		
+		return _stringAliases;
+	}
+	
+	public String getStringTags() {
+		
+		return _stringTags;
+	}
+	
+	public String getPublicString() {
+		
+		return _isPublic ? "true" : "false";
 	}
 	
 

@@ -7,6 +7,8 @@ INSERT INTO {0}(
 	PATH,
 	NAME,
 	PHPCLASS,
+	_PUBLIC,
+	TAGS,	
 	TIMESTAMP)
 
-VALUES(?,?,?,?);
+VALUES(?,?,?,?,?,?);

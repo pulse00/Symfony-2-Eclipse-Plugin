@@ -35,6 +35,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.json.simple.JSONObject;
 
 import com.dubture.symfony.core.builder.SymfonyNature;
@@ -42,12 +43,14 @@ import com.dubture.symfony.core.index.visitor.RegisterNamespaceVisitor;
 import com.dubture.symfony.core.index.visitor.TemplateVariableVisitor;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.ISymfonyModelElement;
+import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.TemplateVariable;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.core.util.JsonUtils;
 import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
 import com.dubture.symfony.index.SymfonyIndexer;
 import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.dao.Service;
 
 
 /**
@@ -148,10 +151,17 @@ PhpIndexingVisitorExtension {
 
 									String id = SymfonyTextSequenceUtilities.removeQuotes(alias.getValue());
 									String ref = "alias_" + SymfonyTextSequenceUtilities.removeQuotes(reference.getValue());
+									
+									System.err.println(reference.getValue());
+									
+									com.dubture.symfony.core.model.Service _service = SymfonyModelAccess.getDefault().findService(StringUtils.stripQuotes(reference.getValue()), sourceModule.getScriptProject().getPath());
+									
+									if (_service != null) {
+										
+										indexer.addService(id, _service.getClassName(), _service.getPublicString(), _service.getTags(), sourceModule.getScriptProject().getPath().toString(), 0);								
+										indexer.exitServices();
 
-									indexer.addService(id, ref, sourceModule.getScriptProject().getPath().toString(), 0);								
-									indexer.exitServices();
-
+									}
 								}
 
 							} catch (ClassCastException e) {

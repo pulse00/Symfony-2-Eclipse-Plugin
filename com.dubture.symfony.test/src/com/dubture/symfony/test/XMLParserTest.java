@@ -4,6 +4,7 @@ package com.dubture.symfony.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
 
 import junit.framework.TestCase;
@@ -14,6 +15,7 @@ import org.junit.Test;
 
 import com.dubture.symfony.core.parser.XMLConfigParser;
 import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.dao.Service;
 
 
 /**
@@ -81,30 +83,55 @@ public class XMLParserTest extends TestCase {
 			XMLConfigParser parser = new XMLConfigParser(input);
 			parser.parse();
 			
-			HashMap<String, String>services = parser.getServices();
+			HashMap<String, Service>services = parser.getServices();
 			
-			assertTrue(services.size() == 4);
+			assertTrue(services.size() == 5);
 			
 			String tplAnnotation = "view.template_annotation";
 			String tplSomething = "view.template_something";
 			String serviceAlias= "view.some_alias";
+			String cacheReader = "annotations.file_cache_reader";
 			
 			String listenerClass = "Sensio\\Bundle\\FrameworkExtraBundle\\View\\AnnotationTemplateListener";
 			String somethingClass = "Sensio\\Bundle\\FrameworkExtraBundle\\View\\Something";
+			String cacheClass = "Doctrine\\Common\\Annotations\\FileCacheReader";
 			
 			assertTrue(services.containsKey(tplAnnotation));
-			assertEquals(listenerClass, services.get(tplAnnotation));
 			
-			assertTrue(services.containsKey(tplSomething));
-			assertEquals(somethingClass, services.get(tplSomething));
-
-			assertTrue(services.containsKey(serviceAlias));
-			assertEquals(listenerClass, services.get(serviceAlias));
+			assertTrue(services.get(tplAnnotation) instanceof Service);			
+			Service service = services.get(tplAnnotation);			
+			assertEquals(tplAnnotation, service.id);
+			assertEquals(listenerClass, service.phpClass);
+			
+			List<String> tags = service.getTags();
+			
+			assertEquals(2, tags.size());
+			assertEquals("kernel.listener", tags.get(0));
+			assertEquals("kernel.listener", tags.get(1));
+			
+			assertTrue(services.get(tplSomething) instanceof Service);	
+			service = services.get(tplSomething);			
+			assertEquals(tplSomething, service.id);
+			assertEquals(somethingClass, service.phpClass);
+			
+			tags = service.getTags();
+			assertEquals(1, tags.size());
+			assertEquals("template", tags.get(0));
+			
+					
+			assertTrue(services.get(serviceAlias) instanceof Service);
+			service = services.get(serviceAlias);			
+			assertEquals(tplAnnotation, service.id);
+			assertEquals(listenerClass, service.phpClass);
 			
 			
 			assertTrue(services.containsKey("request"));
-			assertEquals("synthetic", services.get("request"));
 			
+			
+			service = services.get(cacheReader);
+			assertTrue(service instanceof Service);
+			assertEquals(service.id, cacheReader);
+			assertEquals(service.phpClass, cacheClass);
 			
 			
 		} catch (Exception e) {
@@ -120,12 +147,14 @@ public class XMLParserTest extends TestCase {
 		
 		try {
 			
+			Service service = null;
+			
 			String dir = System.getProperty("user.dir") + "/Resources/config/orm.xml";
 			FileInputStream input = new FileInputStream(new File(dir));
 			XMLConfigParser parser = new XMLConfigParser(input);
 			parser.parse();
 			
-			HashMap<String, String>services = parser.getServices();			
+			HashMap<String, Service>services = parser.getServices();			
 			HashMap<String, String> parameters = parser.getParameters();
 			
 			
@@ -140,14 +169,24 @@ public class XMLParserTest extends TestCase {
 			String formClass = "Symfony\\Bridge\\Doctrine\\Form\\Type\\EntityType";
 			String readerClass = "Symfony\\Bundle\\DoctrineBundle\\Annotations\\IndexedReader";
 			
-			assertTrue(services.containsKey(managerID));
-			assertEquals(managerClass, services.get(managerID));
-			
-			assertTrue(services.containsKey(formID));
-			assertEquals(formClass, services.get(formID));
+			assertTrue(services.containsKey(managerID));			
+			service = services.get(managerID);			
+			assertTrue(service instanceof Service);			
+			assertEquals(service.id, managerID);
+			assertEquals(service.phpClass, managerClass);
 
-			assertTrue(services.containsKey(readerID));
-			assertEquals(readerClass, services.get(readerID));
+			assertTrue(services.containsKey(formID));			
+			service = services.get(formID);			
+			assertTrue(service instanceof Service);			
+			assertEquals(service.id, formID);
+			assertEquals(service.phpClass, formClass);
+			
+			assertTrue(services.containsKey(readerID));			
+			service = services.get(readerID);			
+			assertTrue(service instanceof Service);			
+			assertEquals(service.id, readerID);
+			assertEquals(service.phpClass, readerClass);
+			
 			
 			
 			

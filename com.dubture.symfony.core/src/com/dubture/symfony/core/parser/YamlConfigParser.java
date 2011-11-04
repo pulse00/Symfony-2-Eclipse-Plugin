@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 import org.yaml.snakeyaml.Yaml;
 
+import com.dubture.symfony.index.dao.Service;
+
 /**
  * 
  * The {@link YamlConfigParser} is responsible for parsing
@@ -26,7 +28,7 @@ public class YamlConfigParser implements IConfigParser {
 	
 	private InputStream input;
 	
-	private HashMap<String, String> services = new HashMap<String, String>();
+	private HashMap<String, Service> services = new HashMap<String, Service>();
 	private HashMap<String, String> parameters = new HashMap<String, String>();
 	
 	
@@ -147,12 +149,14 @@ public class YamlConfigParser implements IConfigParser {
 				
 			}
 			
-			this.services.put(id, clazz);
+			Service s = new Service(id, clazz, null);
+			
+			this.services.put(id, s);
 			
 		}
 	}
 
-	public HashMap<String, String> getServices() {
+	public HashMap<String, Service> getServices() {
 		return services;
 	}
 }

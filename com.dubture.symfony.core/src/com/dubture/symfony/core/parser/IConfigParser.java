@@ -2,6 +2,8 @@ package com.dubture.symfony.core.parser;
 
 import java.util.HashMap;
 
+import com.dubture.symfony.index.dao.Service;
+
 
 /**
  * 
@@ -27,6 +29,6 @@ public interface IConfigParser {
 	 * 
 	 * @return {@link HashMap}
 	 */
-	HashMap<String, String> getServices();
+	HashMap<String, Service> getServices();
 
 }

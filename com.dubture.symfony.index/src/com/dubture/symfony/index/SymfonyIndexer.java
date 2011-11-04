@@ -79,10 +79,10 @@ public class SymfonyIndexer {
 	}
 	
 	
-	public void addService(String id, String phpClass, String path, int timestamp) {
+	public void addService(String id, String phpClass, String _public, List<String> tags, String path, int timestamp) {
 		
 		try {			
-			serviceDao.insert(connection, path, id, phpClass, timestamp);
+			serviceDao.insert(connection, id, phpClass, _public, tags, path, timestamp);
 		} catch (Exception e) {
 			Logger.logException(e);
 		}		
@@ -122,6 +122,12 @@ public class SymfonyIndexer {
 		
 		serviceDao.findService(connection, id, path, iServiceHandler);
 		
+	}
+	
+	
+	public List<String> findTags(IPath path) {
+		
+		return serviceDao.findTags(connection, path);
 	}
 
 

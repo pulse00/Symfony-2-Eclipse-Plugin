@@ -4,6 +4,7 @@
 package com.dubture.symfony.core.builder;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,7 +21,6 @@ import org.json.simple.JSONObject;
 import org.yaml.snakeyaml.scanner.ScannerException;
 
 import com.dubture.symfony.core.log.Logger;
-import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.core.parser.XMLConfigParser;
 import com.dubture.symfony.core.parser.YamlConfigParser;
 import com.dubture.symfony.core.parser.YamlRoutingParser;
@@ -30,6 +30,7 @@ import com.dubture.symfony.core.util.TranslationUtils;
 import com.dubture.symfony.index.SymfonyIndexer;
 import com.dubture.symfony.index.dao.Route;
 import com.dubture.symfony.index.dao.RoutingResource;
+import com.dubture.symfony.index.dao.Service;
 import com.dubture.symfony.index.dao.TransUnit;
 
 
@@ -243,7 +244,7 @@ public abstract class AbstractSymfonyVisitor {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	protected void indexServices(HashMap<String, String> services) {
+	protected void indexServices(HashMap<String, Service> services) {
 
 		try {
 
@@ -255,19 +256,20 @@ public abstract class AbstractSymfonyVisitor {
 			while(it.hasNext()) {
 
 				String id = (String) it.next();
-				String phpClass = services.get(id);				
+				Service service = services.get(id);				
 
-				if(phpClass.equals(Service.SYNTHETIC)) {
+				if(service.phpClass.equals(Service.SYNTHETIC)) {
 					for (Object o : synths) {
-						JSONObject service = (JSONObject) o;
-						if (service.get(Service.NAME).equals(id)) {							
-							phpClass = (String) service.get(Service.CLASS);
+						JSONObject _s = (JSONObject) o;
+						if (_s.get(Service.NAME).equals(id)) {							
+							service.phpClass = (String) _s.get(Service.CLASS);
 							break;
 						}
 					}
 				}
 
-				indexer.addService(id, phpClass, path.toString(), timestamp);
+				String _pub = service.isPublic() ? "true" : "false";
+				indexer.addService(id, service.phpClass, _pub, service.getTags(), path.toString(), timestamp);
 			}
 
 			indexer.exitServices();			

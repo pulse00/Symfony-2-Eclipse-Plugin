@@ -657,6 +657,17 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		return services;
 
 	}
+	
+	
+	public List<String> findServiceTags(IPath path) {
+		
+		try {
+			return index.findTags(path);	
+		} catch (Exception e) {
+			return null;
+		}
+		
+	}
 
 	public boolean hasRouteMethod(String method, IScriptProject project) {
 

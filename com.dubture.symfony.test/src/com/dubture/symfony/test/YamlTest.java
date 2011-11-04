@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.dubture.symfony.core.parser.YamlConfigParser;
+import com.dubture.symfony.index.dao.Service;
 
 /**
  * 
@@ -44,6 +45,7 @@ public class YamlTest extends TestCase {
 
 		try {
 			
+			Service service = null;
 			String dir = System.getProperty("user.dir") + "/Resources/config/config.yml";
 			FileInputStream input;
 
@@ -52,13 +54,21 @@ public class YamlTest extends TestCase {
 			YamlConfigParser parser = new YamlConfigParser(input);
 			parser.parse();
 			
-			HashMap<String, String> services = parser.getServices();
+			HashMap<String, Service> services = parser.getServices();
 			
 			assertNotNull(services);
 			assertTrue(services.size() == 2);
 			
-			assertEquals(services.get("my_mailer"), "Acme\\HelloBundle\\Mailer");
-			assertEquals(services.get("my_service"), "Acme\\DemoBundle\\MyService");			
+			service = services.get("my_mailer");			
+			assertTrue(service instanceof Service);
+			assertEquals("my_mailer", service.id);
+			assertEquals("Acme\\HelloBundle\\Mailer", service.phpClass);
+			
+			service = services.get("my_service");			
+			assertTrue(service instanceof Service);
+			assertEquals("my_service", service.id);
+			assertEquals("Acme\\DemoBundle\\MyService", service.phpClass);
+			
 			
 			
 		} catch (Exception e) {

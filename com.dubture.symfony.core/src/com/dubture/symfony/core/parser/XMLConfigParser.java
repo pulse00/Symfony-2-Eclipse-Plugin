@@ -20,6 +20,7 @@ import org.w3c.dom.NodeList;
 
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.dao.Service;
 
 /**
  * 
@@ -36,7 +37,7 @@ public class XMLConfigParser implements IConfigParser {
 	private Document doc;
 
 	private HashMap<String, String> parameters;
-	private HashMap<String, String> services;
+	private HashMap<String, Service> services;
 	private Stack<Route> routes = new Stack<Route>();
 
 
@@ -45,7 +46,7 @@ public class XMLConfigParser implements IConfigParser {
 		xPath = XPathFactory.newInstance().newXPath();
 		doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
 		parameters = new HashMap<String, String>();
-		services = new HashMap<String, String>();
+		services = new HashMap<String, Service>();
 
 	}
 
@@ -153,35 +154,58 @@ public class XMLConfigParser implements IConfigParser {
 
 		String servicePath = "/container/services/service[@class]";
 		NodeList serviceNodes = getNodes(servicePath);
-
+		
 		for (int i = 0; i < serviceNodes.getLength(); i++) {
 
 			Element service = (Element) serviceNodes.item(i);
-
+			
 			//TODO: Check the services visibility and if it's abstract
 			String id = service.getAttribute("id");
-			String phpClass = service.getAttribute("class");
-
+			String phpClass = service.getAttribute("class");			
+			String _public = service.getAttribute("public");
+			
+			NodeList tags = service.getElementsByTagName("tag");			
+			
+			if (_public == null || _public.equals(""))
+				_public = "true";			
+			
 			if (phpClass != null && id != null) {
 
+				Service _service = null;
 				if (phpClass.startsWith("%") && phpClass.endsWith("%")) {
 
 					String placeHolder = phpClass.replace("%", "");
 					Iterator it = getParameters().keySet().iterator();
 
 					while (it.hasNext()) {
-
 						String key = (String) it.next();						
 						String val = (String) getParameters().get(key);
 
-						if (placeHolder.equals(key)) {							
-							services.put(id, val);							
+						if (placeHolder.equals(key)) {					
+							_service = new Service(id, val, null);								
 						}
-
-					}
+					}						
 				} else {
-					services.put(id, phpClass);
-				}			
+					_service = new Service(id, phpClass, null);					
+				}
+				
+				for(int k=0; k < tags.getLength(); k++) {
+					
+					Node tag = tags.item(k);
+					NamedNodeMap map = tag.getAttributes();									
+					Node tagName = map.getNamedItem("name");
+
+					if (tagName != null && tagName.getNodeValue() != null)
+						_service.addTag(tagName.getNodeValue());
+					
+				}
+				
+				if (_service != null)
+					_service.setPublic(_public);
+				
+				synchronized (services) {
+					services.put(id, _service);	
+				}
 			}
 		}
 	}
@@ -201,16 +225,19 @@ public class XMLConfigParser implements IConfigParser {
 
 			if (alias != null && id != null) {
 
-				Iterator it = services.keySet().iterator();
+				synchronized (services) {
+					Iterator it = services.keySet().iterator();
 
-				while (it.hasNext()) {
+					while (it.hasNext()) {
 
-					String aliasID = (String) it.next();						
-					String phpClass = (String) services.get(aliasID);
+						String aliasID = (String) it.next();						
+						Service _s=  services.get(aliasID);
+						_s.addAlias(aliasID);
 
-					if (alias.equals(aliasID)) {
-						services.put(id, phpClass);
-					}
+						if (alias.equals(aliasID)) {
+							services.put(id, _s);
+						}
+					}					
 				}
 			}
 		}
@@ -229,8 +256,9 @@ public class XMLConfigParser implements IConfigParser {
 			String id = service.getAttribute("id");
 			String isSynthetic = service.getAttribute("synthetic");
 
-			if (isSynthetic != null && id != null) {				
-				services.put(id, "synthetic");
+			if (isSynthetic != null && id != null) {
+				
+				services.put(id, new Service(id, "synthetic", null));
 			} 		
 		}		
 	}
@@ -256,7 +284,7 @@ public class XMLConfigParser implements IConfigParser {
 	 * 
 	 * @return
 	 */
-	public HashMap<String, String> getServices() {
+	public HashMap<String, Service> getServices() {
 		return services;
 	}
 

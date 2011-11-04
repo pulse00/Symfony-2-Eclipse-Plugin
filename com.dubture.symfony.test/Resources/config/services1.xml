@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="view.template_annotation.class">Sensio\Bundle\FrameworkExtraBundle\View\AnnotationTemplateListener</parameter>
+        <parameter key="annotations.file_cache_reader.class">Doctrine\Common\Annotations\FileCacheReader</parameter>
     </parameters>
 
     <services>
@@ -16,11 +17,17 @@
         </service>
         
         <service id="view.template_something" class="Sensio\Bundle\FrameworkExtraBundle\View\Something">
+        	<tag name="template"></tag>
         </service>
         
         <service id="view.some_alias" alias="view.template_annotation">
         </service>        
         
         <service id="request" scope="request" synthetic="true" />
+        
+        <service id="annotations.file_cache_reader" class="%annotations.file_cache_reader.class%" public="false">
+            <argument type="service" id="annotations.reader" />
+        </service>
+        
     </services>
 </container>
