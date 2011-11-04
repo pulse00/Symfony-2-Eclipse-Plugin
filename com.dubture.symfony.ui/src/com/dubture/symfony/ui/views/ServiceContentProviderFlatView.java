@@ -1,6 +1,5 @@
 package com.dubture.symfony.ui.views;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -11,7 +10,7 @@ import org.eclipse.jface.viewers.Viewer;
 import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 
-public class ServiceContentProvider implements ITreeContentProvider {
+public class ServiceContentProviderFlatView implements ITreeContentProvider {
 
 	private SymfonyModelAccess model = SymfonyModelAccess.getDefault();
 	
@@ -20,7 +19,6 @@ public class ServiceContentProvider implements ITreeContentProvider {
 	@Override
 	public void dispose()
 	{
-
 		model = null;
 
 	}
