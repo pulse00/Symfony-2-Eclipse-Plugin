@@ -12,16 +12,13 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorDescriptor;
@@ -46,10 +43,8 @@ public class ServicePart extends ViewPart {
 	private PublicFilter publicFilter = new PublicFilter();
 	private TagFilter tagFilter = new TagFilter();
 	
-	
 	private Sorter sorter = new Sorter();
 	
-	private Combo tags;
 	private ServicesViewerActionGroup actionGroup;
 	
 	private IResourceChangeListener changeListener = new IResourceChangeListener() {
@@ -57,7 +52,8 @@ public class ServicePart extends ViewPart {
 		@Override
 		public void resourceChanged(IResourceChangeEvent event)
 		{			
-			if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
+			if (event.getType() == IResourceChangeEvent.POST_CHANGE || 
+					event.getType() == IResourceChangeEvent.PRE_DELETE) {
 
 				updateViewer();
 			}
@@ -79,32 +75,23 @@ public class ServicePart extends ViewPart {
 		
 		viewer = tree.getViewer();
 		
-		Composite cp = tree.getFilterControl().getParent();
-		
-//		tags = new Combo(cp, SWT.READ_ONLY);
-//		tags.setData(SymfonyModelAccess.getDefault().findServiceTags(new Path("/")));
-//		GridData gd = new GridData();
-//		gd.widthHint = 200;
-//		tags.setText("Filter by tag");
-//		tags.setLayoutData(gd);
-		
 		viewer.setContentProvider(new ServiceContentProviderFlatView());
 		viewer.setLabelProvider(new ServiceLabelProvider());
 		viewer.setSorter(sorter);
 		
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {			
-			@Override
-			public void selectionChanged(SelectionChangedEvent event)
-			{
-				if (event.getSelection() instanceof IStructuredSelection) {					
-					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-					
-					if (selection.getFirstElement() instanceof Service) {
-//						detail.updateService((Service) (selection.getFirstElement()));
-					}
-				}				
-			}
-		});
+//		viewer.addSelectionChangedListener(new ISelectionChangedListener() {			
+//			@Override
+//			public void selectionChanged(SelectionChangedEvent event)
+//			{
+//				if (event.getSelection() instanceof IStructuredSelection) {					
+//					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+//					
+//					if (selection.getFirstElement() instanceof Service) {
+////						detail.updateService((Service) (selection.getFirstElement()));
+//					}
+//				}				
+//			}
+//		});
 		
 		
 		viewer.addDoubleClickListener(new IDoubleClickListener() {

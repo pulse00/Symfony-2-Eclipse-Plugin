@@ -111,7 +111,7 @@
          id="com.dubture.symfony.ui.servicesview"
          minimized="false"
          ratio="0.5"
-         relationship="right"
+         relationship="stack"
          relative="org.eclipse.php.ui.projectOutline">
    </view>
 		</perspectiveExtension>		
