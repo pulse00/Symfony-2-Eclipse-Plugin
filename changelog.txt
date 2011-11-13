@@ -1,3 +1,8 @@
+1.0.42
+
+* fixed project initialization bug (generator/skeleton exclude folder not set properly in buildpath)
+* fixed non-symfony projects in services view
+
 1.0.41
 
 * Added Service view (Window -> Show View -> Other -> Symfony -> Services)
