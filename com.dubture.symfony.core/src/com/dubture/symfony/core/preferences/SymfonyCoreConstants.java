@@ -57,7 +57,7 @@ public class SymfonyCoreConstants {
 	public static final String VENDOR_PATH			= "vendor";
 	public static final String CACHE_PATH			= APP_PATH + "/cache";
 	public static final String LOG_PATH				= APP_PATH + "/logs";
-	public static final String SKELETON_PATH		= "bundles/Sensio/Bundle/GeneratorBundle/Resources/skeleton";
+	public static final String SKELETON_PATH		= "bundles/Sensio/Bundle/GeneratorBundle/Resources/skeleton/";
 	
 	public static final String BUILTIN_SYMFONY		= "/Resources/symfony2/";
 	public static final String BUILTIN_VENDOR		= "vendors";
