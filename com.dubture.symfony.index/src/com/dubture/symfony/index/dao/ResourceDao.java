@@ -60,7 +60,6 @@ public class ResourceDao extends BaseDao implements IResourceDao {
 
 		int param = 0;
 
-		System.err.println("insert " + path.toString());
 		statement.setString(++param, resourcePath);
 		statement.setString(++param, type);
 		statement.setString(++param, prefix);		

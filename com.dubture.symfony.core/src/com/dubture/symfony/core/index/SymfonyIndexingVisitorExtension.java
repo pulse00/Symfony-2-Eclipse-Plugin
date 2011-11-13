@@ -152,8 +152,6 @@ PhpIndexingVisitorExtension {
 									String id = SymfonyTextSequenceUtilities.removeQuotes(alias.getValue());
 									String ref = "alias_" + SymfonyTextSequenceUtilities.removeQuotes(reference.getValue());
 									
-									System.err.println(reference.getValue());
-									
 									com.dubture.symfony.core.model.Service _service = SymfonyModelAccess.getDefault().findService(StringUtils.stripQuotes(reference.getValue()), sourceModule.getScriptProject().getPath());
 									
 									if (_service != null) {
