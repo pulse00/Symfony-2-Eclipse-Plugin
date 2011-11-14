@@ -217,8 +217,8 @@ public class Service extends SourceType {
 				return types[0].getSourceModule();
 			}
 		}
-
-		return null;
+		
+		return super.getSourceModule();
 
 	}
 	
@@ -280,5 +280,25 @@ public class Service extends SourceType {
 		return _isPublic;
 	}
 	
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		
+		if (!(o instanceof Service))
+			return false;
+
+		Service other = (Service) o;
+		
+		return id.equals(other.getId());
+
+	}
+	
+	
+	@Override
+	public int hashCode()
+	{
+		return id.hashCode();
+	}	
 
 }

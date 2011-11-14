@@ -35,7 +35,7 @@ import com.dubture.symfony.core.model.SymfonyModelAccess;
 @SuppressWarnings("restriction")
 public class SymfonyTextSequenceUtilities {
 
-	private static final Pattern SERVICE_PATTERN = Pattern.compile("(\\$this->get\\(|\\$this->container->get\\()");
+	private static final Pattern SERVICE_PATTERN = Pattern.compile("(\\$this->get\\(|\\$this->container->get\\(|->getContainer\\(\\)->get\\()");
 	
 	private static final Pattern REPOSITORY_PATTERN = Pattern.compile("\\->getRepository\\(");	
 	
