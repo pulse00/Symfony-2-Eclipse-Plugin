@@ -1,3 +1,8 @@
+1.0.43
+
+* fixed service completion inside commands
+* improved service completion performance
+
 1.0.42
 
 * fixed project initialization bug (generator/skeleton exclude folder not set properly in buildpath)
