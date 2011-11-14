@@ -18,6 +18,7 @@ import com.dubture.symfony.core.codeassist.contexts.RouteCompletionContext;
 import com.dubture.symfony.core.model.RouteSource;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.twig.log.Logger;
 
 
 /**
@@ -44,6 +45,7 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		
+		Logger.debugMSG("apply twig route completion");
 		AbstractCompletionContext context = (AbstractCompletionContext) getContext();
 		CompletionRequestor req = context.getCompletionRequestor();
 		
@@ -55,6 +57,7 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 		// unfortunately there's no other way using the DLTK mechanism at the moment
 		
 		if (!req.getClass().getName().contains("Symfony")) {
+			Logger.debugMSG("no valid symfony completion context");
 			return;			
 		}
 		
@@ -63,6 +66,7 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 			
 		} else {
 			workaroundCount = 0;
+			Logger.debugMSG("dirty workaround hack return");
 			return;
 		}
 
@@ -77,18 +81,22 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 		
 		String prefix = context.getPrefix();
 		
+		Logger.debugMSG("twig route completion strategy found " +  routes.size() + " routes to complete");
+		
 		for (Route route : routes) {
 
 			IType controller = model.findController(route.bundle, route.controller, context.getSourceModule().getScriptProject());
 			
-			if (controller == null)
+			if (controller == null) {
+				Logger.debugMSG("unable to find route controller, continue");
 				continue;
+			}
 			
 			if (CodeAssistUtils.startsWithIgnoreCase(route.name, prefix)) {
+				Logger.debugMSG("reporting route " + route.name);
 				RouteSource rs = new RouteSource((ModelElement) controller, route.name, route);
 				reporter.reportType(rs, "", range);
 			}
-
 		}	
 	}
 }
