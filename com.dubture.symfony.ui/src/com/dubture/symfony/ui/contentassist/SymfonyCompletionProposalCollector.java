@@ -160,8 +160,8 @@ public class SymfonyCompletionProposalCollector extends
 			CompletionProposal typeProposal) {
 
 		ScriptCompletionProposal scriptProposal = generateSymfonyProposal(typeProposal);
-
-		scriptProposal.setRelevance(computeRelevance(typeProposal));
+		// rank services higher so they appear over the routes if both contexts match
+		scriptProposal.setRelevance(Integer.MAX_VALUE);
 		scriptProposal.setProposalInfo(new ServiceProposalInfo(getSourceModule().getScriptProject(), typeProposal));
 		return scriptProposal;		
 	}

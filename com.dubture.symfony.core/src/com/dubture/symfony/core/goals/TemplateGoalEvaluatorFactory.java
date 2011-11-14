@@ -6,7 +6,6 @@ import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 
 import com.dubture.symfony.core.goals.evaluator.TemplateVariableGoalEvaluator;
