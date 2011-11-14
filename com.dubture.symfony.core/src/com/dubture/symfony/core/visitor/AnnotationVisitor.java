@@ -2,26 +2,17 @@ package com.dubture.symfony.core.visitor;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Stack;
 
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.eclipse.dltk.ast.references.SimpleReference;
-import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverity;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.builder.IBuildContext;
-import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
@@ -32,7 +23,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTree;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTreeAdaptor;
@@ -40,7 +30,6 @@ import com.dubture.symfony.annotation.parser.antlr.AnnotationLexer;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationNodeVisitor;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
 import com.dubture.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
-import com.dubture.symfony.core.compiler.ISymfonyProblem;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.Annotation;
 import com.dubture.symfony.core.parser.antlr.error.AnnotationErrorReporter;
@@ -137,64 +126,9 @@ public class AnnotationVisitor extends PHPASTVisitor {
 
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean endvisit(ClassDeclaration s) throws Exception {
 
-		Collection<TypeReference> interfaces = s.getInterfaceList();		
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(context.getSourceModule().getScriptProject());
-		
-		PhpModelAccess model = PhpModelAccess.getDefault();
-		IDLTKSearchScope classScope = SearchEngine.createSearchScope(context.getSourceModule());		
-		
-		for (TypeReference interf : interfaces) {
-			
-			if (interf instanceof FullyQualifiedReference) {
-				
-				
-				FullyQualifiedReference fqr = (FullyQualifiedReference) interf;				
-				IType[] types = PhpModelAccess.getDefault().findTypes(fqr.getName(), MatchRule.EXACT, 0, 0, scope, null);
-				
-				for (IType type : types) {
-					
-					List<IMethod> unimplemented = new ArrayList<IMethod>();
-					
-					for (IMethod method : type.getMethods()) {
-						
-						IMethod[] ms = model.findMethods(method.getElementName(), MatchRule.EXACT, 0, 0, classScope, null);
-						
-						if (ms.length == 0) {					
-							unimplemented.add(method);
-						}
-					}
-					
-					if (unimplemented.size() > 0) {
-						
-						ProblemSeverity severity = SymfonyCorePreferences.getAnnotationSeverity();
-						int lineNo = context.getLineTracker().getLineInformationOfOffset(fqr.sourceStart()).getOffset();
-						
-						
-						String message = "Missing method implementations: ";
-						
-						for (IMethod m : unimplemented) {
-							
-							message += m.getElementName() + ", ";
-							
-						}
-						
-						
-						
-						IProblem problem = new DefaultProblem(context.getFileName(), message, ISymfonyProblem.InterfaceRelated,
-								new String[0], severity, fqr.sourceStart(), fqr.sourceEnd(),lineNo);
-						
-						context.getProblemReporter().reportProblem(problem);
-						
-					}					
-				}
-				
-			}
-		}
-		
 		currentClass = null;
 		return true;
 	}
