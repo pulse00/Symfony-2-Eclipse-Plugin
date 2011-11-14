@@ -2,6 +2,10 @@
 
 [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=pulse00&url=https://github.com/pulse00/Symfony-2-Eclipse-Plugin&title=Symfony Eclipse Plugin&language=en_GB&tags=github&category=software)
 
+### Requirements
+
+- Eclipse >= 3.7 aka Indigo
+
 ### The Plugin is still beta and requires a development build of the PHP Development Tools at the moment. It will not work with the current PDT Version available via the eclipse update site.
 
 The PDT development plugin is integrated in the updatesite of the symfony plugin:
