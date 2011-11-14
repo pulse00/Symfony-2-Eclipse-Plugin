@@ -28,22 +28,18 @@ public class RouteCompletionContext extends QuotesContext {
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
 
-		Logger.debugMSG("checking for valid twig route completion context");
 		if (super.isValid(sourceModule, offset, requestor)) {
 	
 			TextSequence statement = getStatementText();
 			
 			 if (!TwigTextSequenceUtilities.isInFunction(statement)) {
-				 Logger.debugMSG("no valid twig route context");
 				 return false;
 			 }			
 			 
-			Logger.debugMSG("twig route context is valid");
 			return true;
 			
 		}
 		
-		Logger.debugMSG("super class detected invalid twig route context");
 		return false;
 		
 	}
