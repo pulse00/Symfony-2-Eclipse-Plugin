@@ -2,7 +2,7 @@
 <feature
       id="com.dubture.symfony.allinone"
       label="Symfony All-In-One Feature"
-      version="1.0.43.qualifier"
+      version="1.0.44.qualifier"
       provider-name="https://github.com/pulse00">
 
    <description url="https://github.com/pulse00/Symfony-2-Eclipse-Plugin">

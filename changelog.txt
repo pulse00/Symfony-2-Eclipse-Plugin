@@ -1,3 +1,8 @@
+1.0.44
+
+* added type-inference for `getContainer` service calls
+* added higher ranking for service proposals in case of route/service ambiguity
+
 1.0.43
 
 * fixed service completion inside commands
