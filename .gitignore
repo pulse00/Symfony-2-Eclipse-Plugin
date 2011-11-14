@@ -1,4 +1,5 @@
 .DS_Store
+com.dubture.symfony.annotation/bin/*
 com.dubture.symfony.core/bin/*
 com.dubture.symfony.ui/bin/*
 com.dubture.symfony.twig/bin/*

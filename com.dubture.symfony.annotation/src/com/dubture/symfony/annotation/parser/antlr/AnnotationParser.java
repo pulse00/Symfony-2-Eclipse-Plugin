@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * This file is part of the Symfony eclipse plugin.
+ * 
+ * (c) Robert Gruendler <r.gruendler@gmail.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ ******************************************************************************/
 // $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-10-25 00:39:56
 
 package com.dubture.symfony.annotation.parser.antlr;
