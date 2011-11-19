@@ -101,6 +101,20 @@
           id="com.dubture.symfony.ui.javascriptDetector"
           name="%javascriptDetector.name"
           targetId="org.eclipse.php.core.phpsource">
+    </hyperlinkDetector>
+    <hyperlinkDetector
+          activate="true"
+          class="com.dubture.symfony.ui.editor.hyperlink.YamlHyperlinkDetector"
+          id="com.dubture.symfony.ui.yamlHyperlinkDetector"
+          name="%yamlHyperLinkDetector.name%"
+          targetId="org.dadacoalition.yedit.yamlsource">
+    </hyperlinkDetector>
+    <hyperlinkDetector
+          activate="true"
+          class="com.dubture.symfony.ui.editor.hyperlink.XmlHyperlinkDetector"
+          id="com.dubture.symfony.ui.xmlhyperlinkDetector"
+          name="%xmlHyperLinkDetector.name%"
+          targetId="org.eclipse.core.runtime.xml">
     </hyperlinkDetector>                
  </extension>
  
@@ -292,6 +306,12 @@
     <resolver
           class="com.dubture.symfony.ui.wizards.SymfonyNamespaceResolver">
     </resolver>
+ </extension>
+ <extension
+       point="org.dadacoalition.yedit.sourceViewerConfigurationContribution">
+    <sourceViewerConfiguration
+          class="com.dubture.symfony.ui.YEditSourceViewerConfiguration:1">
+    </sourceViewerConfiguration>
  </extension>
  
  <!-- TODO: finish implementation -->
