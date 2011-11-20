@@ -16,11 +16,11 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard;
 
 import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.ui.SymfonyPluginImages;
 import com.dubture.symfony.ui.wizards.ISymfonyProjectWizardExtension;
 
 /**
@@ -39,7 +39,7 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 
 	public SymfonyProjectCreationWizard() {
 
-		setDefaultPageImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_PROJECT);
+		setDefaultPageImageDescriptor(SymfonyPluginImages.DESC_WIZBAN_ADD_SYMFONY_FILE);
 		setDialogSettings(DLTKUIPlugin.getDefault().getDialogSettings());
 		setWindowTitle("New Symfony Project");
 

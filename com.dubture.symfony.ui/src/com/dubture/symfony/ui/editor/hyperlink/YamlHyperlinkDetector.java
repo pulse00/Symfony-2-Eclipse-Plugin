@@ -18,21 +18,24 @@ public class YamlHyperlinkDetector extends AbstractHyperlinkDetector {
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
 			IRegion region, boolean canShowMultipleHyperlinks) {
 
-		IDocument document = textViewer.getDocument();
-		int offset = region.getOffset();
-
-		IRegion wordRegion = findWord(document, offset, false);
 		
-
-		try {
-			String text = document.get(wordRegion.getOffset(),
-					wordRegion.getLength());
-			
-			System.err.println(text);
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
+		// TODO: implement me
+		
+//		IDocument document = textViewer.getDocument();
+//		int offset = region.getOffset();
+//
+//		IRegion wordRegion = findWord(document, offset, false);
+//		
+//
+//		try {
+//			String text = document.get(wordRegion.getOffset(),
+//					wordRegion.getLength());
+//			
+//			System.err.println(text);
+//		} catch (Exception e) {
+//
+//			e.printStackTrace();
+//		}
 		
 
 		return null;

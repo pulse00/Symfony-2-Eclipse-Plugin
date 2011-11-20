@@ -15,7 +15,7 @@ public class XmlHyperlinkDetector extends AbstractHyperlinkDetector {
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
 			IRegion region, boolean canShowMultipleHyperlinks) {
 
-		System.err.println("detect in xml");
+		//TODO: implement me
 		return null;
 	}
 

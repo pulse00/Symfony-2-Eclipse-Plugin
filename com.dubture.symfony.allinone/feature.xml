@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="com.dubture.symfony.allinone"
-      label="Symfony All-In-One Feature"
-      version="1.0.44.qualifier"
+      id="com.dubture.symfony.feature"
+      label="Symfony Feature"
+      version="1.0.45.qualifier"
       provider-name="https://github.com/pulse00">
 
    <description url="https://github.com/pulse00/Symfony-2-Eclipse-Plugin">
@@ -32,20 +32,6 @@ THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRES
 
    <plugin
          id="com.dubture.doctrine.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dubture.pdt.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dubture.pdt.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

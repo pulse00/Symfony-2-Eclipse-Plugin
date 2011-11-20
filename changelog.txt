@@ -1,3 +1,9 @@
+1.0.45
+
+* refactored class + getter/setter generation to PDT Extensions plugin
+* refactored updatesite to host Symfony + Yedit + PDT Extensions features
+* Prepared Yaml/XML Hyperlink targets
+
 1.0.44
 
 * added type-inference for `getContainer` service calls
