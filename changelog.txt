@@ -3,6 +3,7 @@
 * refactored class + getter/setter generation to PDT Extensions plugin
 * refactored updatesite to host Symfony + Yedit + PDT Extensions features
 * Prepared Yaml/XML Hyperlink targets
+* updated built-in symfony to 2.0.6
 
 1.0.44
 
