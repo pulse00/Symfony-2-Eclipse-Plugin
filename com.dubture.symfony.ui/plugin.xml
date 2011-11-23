@@ -253,12 +253,20 @@
 
 		<contextType name="%templates.symfony.contextType.name" class="com.dubture.symfony.ui.editor.template.SymfonyTemplateContextType" id="symfony" />
 			
-		<include file="templates/symfonydefault-templates.xml"
-			translations="$nl$/templates/symfonydefault-templates.properties" />
-			
   		<resolver class="com.dubture.symfony.ui.editor.template.NamespaceVariableResolver"
         	contextTypeId="symfony" type="src">
   		</resolver>
+			
+		<include file="templates/symfonydefault-templates.xml"
+			translations="$nl$/templates/symfonydefault-templates.properties" />
+    <include
+          file="templates/yaml_default-templates.xml"
+          translations="$nl$/templates/yaml_default-templates.properties">
+    </include>
+    <include
+          file="templates/xml_default-templates.xml"
+          translations="$nl$/templates/xml_default-templates.properties">
+    </include>
 
 	</extension>
  

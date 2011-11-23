@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<templates>
+    <template autoinsert="true" context="xml_tag" deleted="false" description="A Symfony route" enabled="true" id="com.dubture.symfony.xml.route" name="route">&lt;route id=&quot;${id}&quot; pattern=&quot;${pattern}&quot;&gt;
+    &lt;default key=&quot;${key}&quot;&gt;${controller}&lt;/default&gt;
+&lt;/route&gt;
+    </template>
+    <template autoinsert="true" context="xml_tag" deleted="false" description="A Symfony service" enabled="true" id="com.dubture.symfony.xml.service" name="service">&lt;service id=&quot;${id}&quot; class=&quot;${class}&quot;&gt;
+    &lt;tag name=&quot;${tag}&quot; /&gt;
+    &lt;argument type=&quot;service&quot; id=&quot;${arg}&quot; /&gt;
+&lt;/service&gt;
+    </template>            
+</templates>
