@@ -321,6 +321,11 @@
           class="com.dubture.symfony.ui.YEditSourceViewerConfiguration:1">
     </sourceViewerConfiguration>
  </extension>
+ <extension
+       point="com.dubture.pdt.formatter.profileContributor">
+    <contributor
+          class="com.dubture.symfony.ui.formatter.FormatterProfileContributor"></contributor>
+ </extension>
  
  <!-- TODO: finish implementation -->
  
