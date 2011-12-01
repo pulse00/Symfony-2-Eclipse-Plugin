@@ -10,7 +10,6 @@ package com.dubture.symfony.core.codeassist.strategies;
 
 import java.util.List;
 
-import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -53,19 +52,6 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		
 		AbstractCompletionContext context = (AbstractCompletionContext) getContext();
-		CompletionRequestor req = context.getCompletionRequestor();
-		
-		
-		// FIXME: this is a VERY dirty hack to report the route completions
-		// only to the SymfonyCompletionProposalCollector which
-		// shows the correct popup information.
-		// otherwise each route will shown twice.
-		//
-		// unfortunately there's no other way using the DLTK mechanism at the moment
-				
-		if (!req.getClass().getName().contains("Symfony")) {
-			return;			
-		}
 		
 		ISourceModule module = context.getSourceModule();		
 		List<Route> routes = SymfonyModelAccess.getDefault().findRoutes(module.getScriptProject());		

@@ -52,7 +52,9 @@ public class ServiceContainerContext extends
 				if(!(nature instanceof SymfonyNature)) {
 					return false;	
 				}
-				
+
+				if (requestor == null || !requestor.getClass().toString().contains("Symfony"))
+				    return false;
 				
 				TextSequence statementText = getStatementText();
 				if (SymfonyTextSequenceUtilities.isInServiceContainerFunction(statementText) > -1) {

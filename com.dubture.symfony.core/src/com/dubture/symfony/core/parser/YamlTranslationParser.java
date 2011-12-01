@@ -52,7 +52,12 @@ public class YamlTranslationParser {
 		String tokenString = m.replaceAll("_");
 
 		Yaml yaml = new Yaml();
-		Map map = (Map) yaml.load(tokenString);		
+		Map map = (Map) yaml.load(tokenString);
+		
+		if (map == null) {
+		    return;
+		}
+		
 		Iterator it = map.keySet().iterator();
 		
 		while(it.hasNext()) {

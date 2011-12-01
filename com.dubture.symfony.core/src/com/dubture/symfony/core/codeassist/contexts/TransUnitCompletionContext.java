@@ -31,31 +31,36 @@ import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
  */
 @SuppressWarnings("restriction")
 public class TransUnitCompletionContext extends QuotesContext {
-	
-	
-	@Override
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
 
-		
-		if (super.isValid(sourceModule, offset, requestor)) {
-			
-			try {
-				
-				 TextSequence statement = getStatementText();				 
-				  
-				 if (SymfonyTextSequenceUtilities.isInTranslationFunctionParameter(statement) > -1) {
-					 return true;
-				 }
-				 
-				 return false;
-				 
-			} catch (Exception e) {
-				Logger.logException(e);
-			}
-		}
-		
-		return false;
-	}	
+
+    @Override
+    public boolean isValid(ISourceModule sourceModule, int offset,
+            CompletionRequestor requestor) {
+
+
+        if (super.isValid(sourceModule, offset, requestor)) {
+
+            try {
+
+                if (requestor == null || !requestor.getClass().toString().contains("Symfony")) {
+                    return false;
+                }               
+
+                TextSequence statement = getStatementText();				 
+
+
+                if (SymfonyTextSequenceUtilities.isInTranslationFunctionParameter(statement) > -1) {
+                    return true;
+                }
+
+                return false;
+
+            } catch (Exception e) {
+                Logger.logException(e);
+            }
+        }
+
+        return false;
+    }	
 
 }

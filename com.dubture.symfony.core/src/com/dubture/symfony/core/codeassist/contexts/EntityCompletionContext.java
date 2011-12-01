@@ -40,7 +40,9 @@ public class EntityCompletionContext extends QuotesContext {
 				if(!(nature instanceof SymfonyNature)) {
 					return false;	
 				}
-				
+
+				if ( requestor == null || !requestor.getClass().toString().contains("Symfony"))
+				    return false;
 				
 				TextSequence statementText = getStatementText();
 				if (SymfonyTextSequenceUtilities.isInEntityFunctionParameter(statementText) > -1) {
