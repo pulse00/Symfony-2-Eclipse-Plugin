@@ -255,10 +255,12 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 				}
 
 				// create the project file
-			} else if (file.isFile()) {				
-				FileInputStream fis = new FileInputStream(file);				
-				IFile iFile = project.getFile(path);				
-				iFile.create(fis, true, null);
+			} else if (file.isFile() && ".gitkeep".equals(file.getName()) == false) {				
+			    
+			    FileInputStream fis = new FileInputStream(file);                
+			    IFile iFile = project.getFile(path);
+			    iFile.create(fis, true, null);
+			    			        
 			}
 
 			level--;
