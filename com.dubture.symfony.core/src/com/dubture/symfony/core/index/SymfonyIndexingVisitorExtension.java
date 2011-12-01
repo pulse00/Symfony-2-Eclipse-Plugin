@@ -130,10 +130,13 @@ PhpIndexingVisitorExtension {
 				if (("registerNamespaces".equals(call.getName()) || "registerNamespaceFallbacks".equals(call.getName()))
 						&& call.getReceiver() instanceof VariableReference) {
 
+					if (sourceModule.getElementName().equals("bootstrap.php"))
+						return false;
+					
 					RegisterNamespaceVisitor registrar = new RegisterNamespaceVisitor(sourceModule);
 					registrar.visit(call);
 
-					for (IPath namespace : registrar.getNamespaces()) {						
+					for (IPath namespace : registrar.getNamespaces()) {
 						ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.NAMESPACE, 0, 0, namespace.toString(), null, null);
 						requestor.addReference(info);						
 					}

@@ -65,28 +65,20 @@ public class RegisterNamespaceVisitor extends PHPASTVisitor {
 			ArrayCreation array = (ArrayCreation) nodes.get(0);			
 			List<ASTNode> args = array.getChilds();
 			
-			for (ASTNode node : args) {
-				
-				if (node instanceof ArrayCreation) {
-					
+			for (ASTNode node : args) {				
+				if (node instanceof ArrayCreation) {					
 					for (Object subNode : ((ArrayCreation) node).getChilds()) {
 						
 						if (subNode instanceof ArrayElement) {
 							resolveNamespace((ArrayElement) subNode);
-						}
-						
-					}
-					
-				} else if (node instanceof ArrayElement) {
-					
+						}						
+					}					
+				} else if (node instanceof ArrayElement) {					
 					resolveNamespace((ArrayElement) node);
-
 				}
 			}						
-		}					
-		
-		return true;
-	
+		}							
+		return true;	
 	}
 	
 	private void resolveNamespace(ArrayElement element) {

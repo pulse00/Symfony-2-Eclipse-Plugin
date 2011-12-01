@@ -937,7 +937,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(iScriptProject);
 		ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
 		final List<String> namespaces = new ArrayList<String>();
-
+		
 		engine.search(ISymfonyModelElement.NAMESPACE, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
 
 			@Override
@@ -946,6 +946,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 					String metadata, String doc, String qualifier, String parent,
 					ISourceModule sourceModule, boolean isReference) {
 
+				
 				if (path.toString().startsWith(elementName)) {					
 					namespaces.add(path.toString().replace(elementName, ""));
 				}
@@ -953,12 +954,14 @@ public class SymfonyModelAccess extends PhpModelAccess {
 			}
 		}, null);
 
-
-		if (namespaces.size() == 1) {			
-			return namespaces.get(0).replaceFirst("/", "").replace("/", "\\");
+		if (namespaces.size() > 0) {						
+			String namespace = namespaces.get(0);			
+			if (namespace.startsWith("/")) {
+				namespace = namespace.replaceFirst("/", "");
+			}
+			return namespace.replace("/", "\\");
 		}
 		return null;
-
 	}
 
 
