@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Symfony Core Plugin
 Bundle-SymbolicName: com.dubture.symfony.core;singleton:=true
-Bundle-Version: 1.0.46.qualifier
+Bundle-Version: 1.0.47.qualifier
 Bundle-Activator: com.dubture.symfony.core.SymfonyCorePlugin
 Bundle-Vendor: https://github.com/pulse00
 Require-Bundle: org.eclipse.core.runtime,

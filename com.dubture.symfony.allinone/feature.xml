@@ -2,7 +2,7 @@
 <feature
       id="com.dubture.symfony.feature"
       label="Symfony Feature"
-      version="1.0.46.qualifier"
+      version="1.0.47.qualifier"
       provider-name="https://github.com/pulse00">
 
    <description url="https://github.com/pulse00/Symfony-2-Eclipse-Plugin">
