@@ -50,6 +50,9 @@ public class ViewPathArgumentContext extends QuotesContext {
 
 			try {
 
+				if (requestor == null || !requestor.getClass().toString().contains("Symfony"))
+				    return false;
+				
 				TextSequence statement = getStatementText();
 				IScriptProject project = getSourceModule().getScriptProject();
 
@@ -57,7 +60,6 @@ public class ViewPathArgumentContext extends QuotesContext {
 					return false;
 
 				int startOffset = SymfonyTextSequenceUtilities.readViewPathStartIndex(statement);
-
 
 				String path = null;
 
