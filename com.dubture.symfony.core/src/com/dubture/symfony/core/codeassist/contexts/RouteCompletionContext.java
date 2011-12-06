@@ -41,25 +41,28 @@ public class RouteCompletionContext extends QuotesContext {
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
 
-		
+
 		if (super.isValid(sourceModule, offset, requestor)) {
-			
+
 			try {
-				
-				 TextSequence statement = getStatementText();
-				 IScriptProject project = getSourceModule().getScriptProject();
-				 
-				 if (SymfonyTextSequenceUtilities.isInRouteFunctionParameter(statement, project) == false) {
-					 return false;
-				 }
-				 
-				 return true;
-				 
+
+				if (requestor == null || !requestor.getClass().toString().contains("Symfony")) {
+					return false;
+				}
+				TextSequence statement = getStatementText();
+				IScriptProject project = getSourceModule().getScriptProject();
+
+				if (SymfonyTextSequenceUtilities.isInRouteFunctionParameter(statement, project) == false) {
+					return false;
+				}
+
+				return true;
+
 			} catch (Exception e) {
 				Logger.logException(e);
 			}
 		}
-		
+
 		return false;
 	}
 }
