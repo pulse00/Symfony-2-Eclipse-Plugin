@@ -2,7 +2,7 @@
 <templates>
     <template autoinsert="true" id="com.dubture.symfony.yaml.route" context="org.dadacoalition.yedit.template.yaml" deleted="false" description="a Symfony route" enabled="true" name="route">${name}:
   pattern: ${pattern}
-  controller: ${controller}
+  defaults: { _controller: ${controller} }
     </template>
     <template autoinsert="true" context="org.dadacoalition.yedit.template.yaml" id="com.dubture.symfony.yaml.service" deleted="false" description="a Symfony service" enabled="true" name="service">${id}:
   class: ${class}
