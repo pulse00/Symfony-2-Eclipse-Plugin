@@ -1,3 +1,7 @@
+1.0.48
+
+* updated to p2 repository
+
 1.0.47
 
 * fixed cache folder for project wizard (#63)
