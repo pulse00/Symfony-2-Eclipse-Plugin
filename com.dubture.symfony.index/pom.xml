@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.dubture.symfony</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0.48.qualifier</version>
+  </parent>
+
+  <artifactId>com.dubture.symfony.index</artifactId>
+  <packaging>eclipse-plugin</packaging>
+
+</project>
