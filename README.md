@@ -1,5 +1,7 @@
 #Symfony Eclipse Plugin
 
+[![Build Status](https://secure.travis-ci.org/pulse00/Symfony-2-Eclipse-Plugin.png)](http://travis-ci.org/pulse00/Symfony-2-Eclipse-Plugin)
+
 [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=pulse00&url=https://github.com/pulse00/Symfony-2-Eclipse-Plugin&title=Symfony Eclipse Plugin&language=en_GB&tags=github&category=software)
 
 ### Requirements
