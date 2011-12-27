@@ -14,4 +14,5 @@
 
 [http://pulse00.github.com/p2/](http://pulse00.github.com/p2/)
 
-For more info visit [http://pulse00.github.com/Symfony-2-Eclipse-Plugin/.](http://pulse00.github.com/Symfony-2-Eclipse-Plugin/.)
+For more info visit [http://symfony.dubture.com/](http://symfony.dubture.com/)
+
