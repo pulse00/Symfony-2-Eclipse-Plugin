@@ -7,7 +7,7 @@ Bundle-Activator: com.dubture.symfony.index.SymfonyIndex
 Require-Bundle: org.eclipse.core.runtime,
  org.h2
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: com.dubture.symfony.index,
  com.dubture.symfony.index.dao
 Bundle-Vendor: https://github.com/pulse00
