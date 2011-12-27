@@ -9,14 +9,14 @@
  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 <link rel="shortcut icon" href="images/favicon.gif" type="image/x-icon"/> 
-<link rel="stylesheet" type="text/css" href="/css/styles.css"/>
-<link rel="stylesheet" type="text/css" href="/css/Aristo/Aristo.css"/>
-<link rel="stylesheet" type="text/css" href="/css/jquery.lightbox-0.5.css"/>
+<link rel="stylesheet" type="text/css" href="css/styles.css"/>
+<link rel="stylesheet" type="text/css" href="css/Aristo/Aristo.css"/>
+<link rel="stylesheet" type="text/css" href="css/jquery.lightbox-0.5.css"/>
 <link rel="stylesheet" href="https://gist.github.com/stylesheets/gist/embed.css" type="text/css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js" type="text/javascript"></script>
-<script src="/js/jquery.lightbox-0.5.min.js"></script>
-<script src="/js/main.js"></script>
+<script src="js/jquery.lightbox-0.5.min.js"></script>
+<script src="js/main.js"></script>
 <script type="text/javascript">
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-24226605-1']);
@@ -48,10 +48,16 @@
     <div id="container">
     <header>
       <h1 id="logo">
-		<div class="title">{% raw %}{{ <a href="http://symfony.com" target="_blank"> Symfony </a> | <a href="http://www.eclipse.org" target="_blank"> Eclipse </a> | <a href="http://www.eclipse.org/pde" target="_blank"> Plugin </a> }}{% endraw %}</div>		
+		<div class="title">{ { <a href="http://symfony.com" target="_blank"> Symfony </a> | <a href="http://www.eclipse.org" target="_blank"> Eclipse </a> | <a href="http://www.eclipse.org/pde" target="_blank"> Plugin </a> } }</div>		
 	  </h1>
   	   <nav>
          <ul>
+         {% for link in site.navigation %}
+            {% assign current = nil %}
+            <li class="{% if forloop.first %}first{% endif %} {{ current }} {% if forloop.last %}last{% endif %}">
+              <a class="{{ current }}" href="{{ link.url }}">{{ link.text }}</a>
+            </li>
+          {% endfor %}         
          </ul>
       </nav>
 	</header>
