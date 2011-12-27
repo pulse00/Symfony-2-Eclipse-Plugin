@@ -1,0 +1,31 @@
+---
+layout: default
+title: Symfony2 Eclipse Plugin - Installation
+---
+
+<div id="tabs-2" class="tabdiv">
+	<h2 class="first">Installation via Updatesite</h2>
+	<p>The plugin can be installed via the <a href="http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Ftasks%2Ftasks-124.htm">Update Manager</a> using the following updatesite:</p>
+	<div id="p2wrapper">
+		<span id="updatelink"><a href="http://pulse00.github.com/p2/">http://pulse00.github.com/p2/</a></span>
+	</div>
+	
+	<h3 class="warning">Important</h3>
+	<p class="warning">At the moment you'll need to install the PHP Development Tools from this updatesite (development build), not the one built-in with eclipse. The Symfony plugin will NOT work with the current stable PHP Development tools.</p>
+     
+		<h2>Usage</h2>
+
+		<p>For new Symfony projects you can simply use the "New Symfony Project" wizard which sets up the project correctly.</p>
+		
+		<p>To make your existing PHP projects Symfony aware, add the SymfonyNature by right-clicking on the project in the <span class="eclipsehint">PHP explorer -> Symfony -> Add/Remove Symfony Nature.</span> This will add the Symfony 
+			<a href="http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fextension-points%2Forg_eclipse_core_resources_natures.html">project nature</a> and trigger the indexing mechanism of DLTK/PDT/Symfony (see the status bar at the bottom). <br/></p>
+							
+		<p>The plugin indexes all PHP, XML and YML files which are on the PHP buildpath. To ensure it can find all relevant sources, your buildpath should look like this ( screenshot from the Symfony Standard Edition):</p>
+		
+		<div class="centered">
+			<a class="lightbox" href="/images/screenshots/buildpath.png"><img src="/images/screenshots/buildpath_thumb.png"></img></a>
+		</div>
+		<p>Note that the <span class="code">app/cache</span> and <span class="code">vendor/...GeneratorBundle.../skeleton</span> folders are excluded to avoid build errors(skeleton) and duplicate codeassist entries (cache)</p>
+		
+</div>
+			

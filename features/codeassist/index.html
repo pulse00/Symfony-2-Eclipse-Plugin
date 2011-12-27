@@ -1,0 +1,102 @@
+<div id="codeassistf" class="featurediv">
+
+	<h3 id="topfeature">Routes</h3>
+
+	<p>Methods which accept routes will display a list of available routes, including additional information like the viewpath, bundle, controller etc:</p>
+	<div class="centered">
+	  <a class="lightbox" href="/images/screenshots/route_proposal.gif"><img src="/images/screenshots/route_proposal_thumb.gif"></img></a>
+	</div>
+	
+	<h3>Dependency Injection Services</h3>
+
+	<p>If the current class implements the <a href="http://api.symfony.com/2.0/Symfony/Component/DependencyInjection/ContainerAwareInterface.html">ContainerAwareInterface</a>, you will see a list of available services when staying in a parameter of service-retrieval methods (click thumb to enlarge). The proposals will show additional info like the name and the PHPDocs of the serviceclass:</p>
+
+       <div class="centered">
+	  <a class="lightbox" href="/images/screenshots/service_proposal.gif"><img src="/images/screenshots/service_proposal_thumb.gif"></img></a>  
+	</div>
+
+	<br/>
+
+	<p>The plugin can also help out PDT to infer the type of a service:</p>
+
+       <div class="centered">
+	  <a class="lightbox" href="/images/screenshots/servicetypeinference.png"><img src="/images/screenshots/servicetypeinference_thumb.png"></img></a>
+	</div>
+
+	<h3>Template paths</h3>
+
+	<p>In methods that accept a view parameter ie. <span class="code">Controller::render($view)</span>, you'll get assistance:</p>
+
+	<div class="multiShot centered">				
+		<a href="/images/screenshots/viewpath1.png"><img src="/images/screenshots/viewpath1_thumb.png"></img></a>
+		<a href="/images/screenshots/viewpath2.png"><img src="/images/screenshots/viewpath2_thumb.png"></img></a>
+		<a href="/images/screenshots/viewpath3.png"><img src="/images/screenshots/viewpath3_thumb.png"></img></a>				
+	</div>
+
+	<h3>Annotations</h3>
+
+	<p>You will get codeassist for PHPDoc Annotations and automatic injection of the corresponding UseStatement:</p>
+
+	<div class="multiShot centered">				
+		<a href="/images/screenshots/annotationcompletion.png"><img src="/images/screenshots/annotationcompletion_thumb.png"></img></a>
+		<a href="/images/screenshots/annotationinjection.png"><img src="/images/screenshots/annotationinjection_thumb.png"></img></a>
+	</div>
+	
+	
+	<h3 id="topfeature">Doctrine Entities/Repository classes</h3>
+							
+	<p>Repository retrieval will aid with some hints for Bundles and Entities:</p>
+
+	<div class="multiShot centered">				
+		<a href="/images/screenshots/repo_bundle_assist.png"><img src="/images/screenshots/repo_bundle_assist_thumb.png"></img></a>
+		<a href="/images/screenshots/repo_entity_assist.png"><img src="/images/screenshots/repo_entity_assist_thumb.png"></img></a>
+	</div>
+	
+	<p>Repository classes can be fully resolved by the type inference engine:</p>
+	
+	<div class="centered">				
+		<a class ="lightbox" href="/images/screenshots/repo_type_inference.png"><img src="/images/screenshots/repo_type_inference_thumb.png"></img></a>
+	</div>						
+	
+	<h3 id="topfeature">Translations</h3>						
+	
+	<p>If you're inside a translation context, you'll get a list of available translation units including the translation for every available language:</p>
+
+	<div class="multiShot centered">				
+		<a class ="lightbox" href="/images/screenshots/translations.png"><img src="/images/screenshots/translations_thumb.png"></img></a>
+		<a class ="lightbox" href="/images/screenshots/translations_twig.png"><img src="/images/screenshots/translations_twig_thumb.png"></img></a>
+	</div>
+
+	<h3>Template variables</h3>
+
+	<p>When passing variables from a controller to a view, PDT can't help you out in your template</p>			
+		<div class="centered">
+			<a class="lightbox" href="/images/screenshots/var_declaration.png">
+				<img src="/images/screenshots/var_declaration_thumb.png"></img>
+			</a>			
+		</div>
+	<p>The symfony plugin assists PDT in resolving variables and their types inside templates. This is implemented for PHP and Twig templates:</p>
+
+	<div class="multiShotContainer centered" id="tempvars">				
+			<ul>
+				<li class="twigvsphp"><a href="#var-twig">Twig</a></li>
+				<li class="twigvsphp"><a href="#var-php">PHP</a></li>
+			</ul>					
+		<div id="var-twig">					
+			<div class="multiShot">				
+				<a href="/images/screenshots/resolved_var_twig.png"><img src="/images/screenshots/resolved_var_twig_thumb.png"></img></a>
+				<a href="/images/screenshots/infered_var_twig.png"><img src="/images/screenshots/infered_var_twig_thumb.png"></img></a>
+			</div>
+		</div>				
+		<div id="var-php">
+			<div class="multiShot">				
+				<a href="/images/screenshots/resolved_var_php.png"><img src="/images/screenshots/resolved_var_php_thumb.png"></img></a>
+				<a href="/images/screenshots/infered_var_php.png"><img src="/images/screenshots/infered_var_php_thumb.png"></img></a>
+			</div>
+		</div>
+	</div>						
+</div>
+<script type="text/javascript" charset="utf-8">
+	initLightbox();
+	$('div.multiShotContainer').tabs();	
+</script>

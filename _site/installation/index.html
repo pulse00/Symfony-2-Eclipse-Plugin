@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Symfony. Eclipse. Plugin. - Home</title>
+<meta name="name" content="A Symfony2 Eclipse plugin extending the Eclipse PHP Development tools (PDT)"/>
+<link rel="icon" href="images/favicon.gif" type="image/x-icon"/>
+ <!--[if lt IE 9]>
+ <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+<link rel="shortcut icon" href="images/favicon.gif" type="image/x-icon"/> 
+<link rel="stylesheet" type="text/css" href="/css/styles.css"/>
+<link rel="stylesheet" type="text/css" href="/css/Aristo/Aristo.css"/>
+<link rel="stylesheet" type="text/css" href="/css/jquery.lightbox-0.5.css"/>
+<link rel="stylesheet" href="https://gist.github.com/stylesheets/gist/embed.css" type="text/css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js" type="text/javascript"></script>
+<script src="/js/jquery.lightbox-0.5.min.js"></script>
+<script src="/js/main.js"></script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-24226605-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+	<div id="sidepanel">		
+		<ul>
+			<li>
+				<a href="https://twitter.com/pulse00" class="twitter-follow-button" title="Follow @pulse00" target="_blank"><img src="/images/twitter_logo.png"/></a>
+			</li>
+			<li>
+				<a href="http://github.com/pulse00" target="_blank" title="Follow @pulse00"><img src=/images/github-icon.jpg/></a>				
+			</li>			
+		</ul>		
+	</div>
+    <p style="margin: 0;">
+    	<a href="https://github.com/pulse00/Symfony-2-Eclipse-Plugin" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+    </p>
+   <div class="bg">
+       <div id="top"></div>
+    <div id="container">
+    <header>
+      <h1 id="logo">
+		<div class="title">{{ <a href="http://symfony.com" target="_blank"> Symfony </a> | <a href="http://www.eclipse.org" target="_blank"> Eclipse </a> | <a href="http://www.eclipse.org/pde" target="_blank"> Plugin </a> }}</div>		
+	  </h1>
+  	   <nav>
+         <ul>
+         
+            
+		      
+            <li class="first  ">
+              <a class="" href="/">About</a>
+            </li>
+          
+            
+		      
+            <li class="  ">
+              <a class="" href="/installation">Installation</a>
+            </li>
+          
+            
+		      
+            <li class="  ">
+              <a class="" href="/features">Features</a>
+            </li>
+          
+            
+		      
+            <li class="  last">
+              <a class="" href="/faq">FAQ</a>
+            </li>
+                   
+         </ul>
+      </nav>
+	</header>
+	<div class="">
+	    <div id="tabs-2" class="tabdiv">
+	<h2 class="first">Installation via Updatesite</h2>
+	<p>The plugin can be installed via the <a href="http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Ftasks%2Ftasks-124.htm">Update Manager</a> using the following updatesite:</p>
+	<div id="p2wrapper">
+		<span id="updatelink"><a href="http://pulse00.github.com/p2/">http://pulse00.github.com/p2/</a></span>
+	</div>
+	
+	<h3 class="warning">Important</h3>
+	<p class="warning">At the moment you'll need to install the PHP Development Tools from this updatesite (development build), not the one built-in with eclipse. The Symfony plugin will NOT work with the current stable PHP Development tools.</p>
+     
+		<h2>Usage</h2>
+
+		<p>For new Symfony projects you can simply use the "New Symfony Project" wizard which sets up the project correctly.</p>
+		
+		<p>To make your existing PHP projects Symfony aware, add the SymfonyNature by right-clicking on the project in the <span class="eclipsehint">PHP explorer -> Symfony -> Add/Remove Symfony Nature.</span> This will add the Symfony 
+			<a href="http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fextension-points%2Forg_eclipse_core_resources_natures.html">project nature</a> and trigger the indexing mechanism of DLTK/PDT/Symfony (see the status bar at the bottom). <br/></p>
+							
+		<p>The plugin indexes all PHP, XML and YML files which are on the PHP buildpath. To ensure it can find all relevant sources, your buildpath should look like this ( screenshot from the Symfony Standard Edition):</p>
+		
+		<div class="centered">
+			<a class="lightbox" href="/images/screenshots/buildpath.png"><img src="/images/screenshots/buildpath_thumb.png"></img></a>
+		</div>
+		<p>Note that the <span class="code">app/cache</span> and <span class="code">vendor/...GeneratorBundle.../skeleton</span> folders are excluded to avoid build errors(skeleton) and duplicate codeassist entries (cache)</p>
+		
+</div>
+					
+	</div>
+   </div>   
+   <div class="push"></div>
+   </div>   
+   <footer>       
+      <div class="container">            
+         <div id="FooterTwo"><a href="http://dubture.com"> © 2011 dubture.com </a></div>
+      </div>
+   </footer>
+  </body>
+</html>

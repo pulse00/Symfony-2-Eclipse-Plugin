@@ -48,24 +48,55 @@
     <div id="container">
     <header>
       <h1 id="logo">
-		<div class="title">{% raw %}{{ <a href="http://symfony.com" target="_blank"> Symfony </a> | <a href="http://www.eclipse.org" target="_blank"> Eclipse </a> | <a href="http://www.eclipse.org/pde" target="_blank"> Plugin </a> }}{% endraw %}</div>		
+		<div class="title">{{ <a href="http://symfony.com" target="_blank"> Symfony </a> | <a href="http://www.eclipse.org" target="_blank"> Eclipse </a> | <a href="http://www.eclipse.org/pde" target="_blank"> Plugin </a> }}</div>		
 	  </h1>
   	   <nav>
          <ul>
-         {% for link in site.navigation %}
-            {% assign current = nil %}
-		      {% if page.url == link.url or page.layout == link.layout %}
-		        {% assign current = 'current' %}
-		      {% endif %}
-            <li class="{% if forloop.first %}first{% endif %} {{ current }} {% if forloop.last %}last{% endif %}">
-              <a class="{{ current }}" href="{{ link.url }}">{{ link.text }}</a>
+         
+            
+		      
+            <li class="first  ">
+              <a class="" href="/">About</a>
             </li>
-          {% endfor %}         
+          
+            
+		      
+            <li class="  ">
+              <a class="" href="/installation">Installation</a>
+            </li>
+          
+            
+		      
+            <li class="  ">
+              <a class="" href="/features">Features</a>
+            </li>
+          
+            
+		      
+            <li class="  last">
+              <a class="" href="/faq">FAQ</a>
+            </li>
+                   
          </ul>
       </nav>
 	</header>
 	<div class="">
-	    {{ content }}		
+	    <div id="tabs-3" class="tabdiv">
+	<div id="featurestab">
+		<ul id="featureul">
+			<li class="ftli"><a href="codeassist">Codeassist</a></li>
+			<li class="ftli"><a href="hyperlinks">Hyperlinks</a></li>
+			<li class="ftli"><a href="tooltips">Tooltips</a></li>						
+			<li class="ftli"><a href="highlight">Highlighting</a></li>
+			<li class="ftli"><a href="validation">Validation</a></li>
+			<li class="ftli"><a href="formatting">Formatting</a></li>						
+			<li class="ftli"><a href="wizards">Wizards</a></li>						
+			<li class="ftli"><a href="views">Views</a></li>						
+			<li class="ftli"><a href="debug">Debug</a></li>
+			<li class="ftli"><a href="experimental">Experimental</a></li>
+		</ul>		
+	</div>
+</div>		
 	</div>
    </div>   
    <div class="push"></div>

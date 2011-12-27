@@ -1,0 +1,13 @@
+navigation:
+- text: About
+  url: /
+  permalink: /
+- text: Installation
+  url: /installation
+  permalink: /installation
+- text: Features
+  url: /features
+  permalink: /features
+- text: FAQ
+  url: /faq
+  permalink: /faq

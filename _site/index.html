@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Symfony. Eclipse. Plugin. - Home</title>
+<meta name="name" content="A Symfony2 Eclipse plugin extending the Eclipse PHP Development tools (PDT)"/>
+<link rel="icon" href="images/favicon.gif" type="image/x-icon"/>
+ <!--[if lt IE 9]>
+ <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+<link rel="shortcut icon" href="images/favicon.gif" type="image/x-icon"/> 
+<link rel="stylesheet" type="text/css" href="/css/styles.css"/>
+<link rel="stylesheet" type="text/css" href="/css/Aristo/Aristo.css"/>
+<link rel="stylesheet" type="text/css" href="/css/jquery.lightbox-0.5.css"/>
+<link rel="stylesheet" href="https://gist.github.com/stylesheets/gist/embed.css" type="text/css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js" type="text/javascript"></script>
+<script src="/js/jquery.lightbox-0.5.min.js"></script>
+<script src="/js/main.js"></script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-24226605-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+	<div id="sidepanel">		
+		<ul>
+			<li>
+				<a href="https://twitter.com/pulse00" class="twitter-follow-button" title="Follow @pulse00" target="_blank"><img src="/images/twitter_logo.png"/></a>
+			</li>
+			<li>
+				<a href="http://github.com/pulse00" target="_blank" title="Follow @pulse00"><img src=/images/github-icon.jpg/></a>				
+			</li>			
+		</ul>		
+	</div>
+    <p style="margin: 0;">
+    	<a href="https://github.com/pulse00/Symfony-2-Eclipse-Plugin" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+    </p>
+   <div class="bg">
+       <div id="top"></div>
+    <div id="container">
+    <header>
+      <h1 id="logo">
+		<div class="title">{{ <a href="http://symfony.com" target="_blank"> Symfony </a> | <a href="http://www.eclipse.org" target="_blank"> Eclipse </a> | <a href="http://www.eclipse.org/pde" target="_blank"> Plugin </a> }}</div>		
+	  </h1>
+  	   <nav>
+         <ul>
+         
+            
+		      
+            <li class="first  ">
+              <a class="" href="/">About</a>
+            </li>
+          
+            
+		      
+            <li class="  ">
+              <a class="" href="/installation">Installation</a>
+            </li>
+          
+            
+		      
+            <li class="  ">
+              <a class="" href="/features">Features</a>
+            </li>
+          
+            
+		      
+            <li class="  last">
+              <a class="" href="/faq">FAQ</a>
+            </li>
+                   
+         </ul>
+      </nav>
+	</header>
+	<div class="">
+	    <div id="tabs-1" class="tabdiv">
+	
+	<h2 class="first">What's this?</h2>
+	<p>An <a target="_blank" href="http://eclipse.org">Eclipse</a> plugin for <a target="_blank" href="http://symfony.com">Symfony</a> and the <a target="_blank" href="http://symfony.com/components">Symfony components </a>. Features include:				
+		<ul class="indent-1">
+			<li> - Codeassist for Symfony specific elements, like 
+				<a target="_blank" href="http://symfony.com/doc/current/book/service_container.html">services</a>, 
+				<a target="_blank" href="http://symfony.com/doc/current/book/routing.html">routes</a>,
+				<a target="_blank" href="http://symfony.com/doc/current/book/templating.html">template paths</a>, 
+				<a target="_blank" href="http://symfony.com/doc/current/book/doctrine.html#creating-an-entity-class">entities</a> and 
+				<a target="_blank" href="http://symfony.com/doc/current/book/translation.html">translations</a>.
+			</li>					
+			<li> - Navigation: Hyperlinking of routes, templates and services</li>
+			<li> - <a target="_blank" href="http://symfony.com/doc/2.0/bundles/SensioFrameworkExtraBundle/index.html">Annotation</a> support</li>
+			<li> - <a target="_blank" href="http://twig.sensiolabs.org//">Twig</a> support</li>
+		</ul>
+	</p>		
+	
+	<h2>Twig</h2>	
+	<p><a target="_blank" href="http://twig.sensiolabs.org/">Twig</a> is a templating language for PHP. Symfony has built in support for Twig, and so does the Symfony Eclipse Plugin.</p>	
+	<h2>Doctrine</h2>	
+	<p><a target="_blank" href="http://www.doctrine-project.org/">Doctrine</a>  is a set of PHP libraries primarily focused on providing persistence services and related functionality. It comes bundled with the Symfony Standard-Edition as the default <a target="_blank" href="http://en.wikipedia.org/wiki/Object-Relational_Mapping">ORM</a>. The Symfony Eclipse Plugin also provides Doctrine support.</p>
+	
+	<h2>Yaml</h2>	
+	<p><a target="_blank" href="http://www.yaml.org/">Yaml</a> is a data serialization standard which is supported by Symfony. If you're using yaml, you can use the optional Yedit feature. The plugin is maintained by <a target="_blank" href="https://github.com/oyse/yedit">oyse</a>. Too keep things simple, the Symfony Plugin updatesite makes the Yedit feature available too.</p>	
+	
+	<h2>PDT Extensions</h2>	
+	<p>The <a target="_blank" href="http://pulse00.github.com/PDT-Extensions/">PDT Extensions feature</a> is optional. It adds some additional features for the PHP Development Tools like a class generation wizard, getter/setter generation and an advanced code formatter. For a complete list of features, refer to the plugins <a target="_blank" href="http://pulse00.github.com/PDT-Extensions/">website</a>.</p>				
+	
+	<h2>Disclaimer</h2>
+	<p>
+		The plugin is still beta. Please report problems and feature requests via <a target="_blank" href="https://github.com/pulse00/Symfony-2-Eclipse-Plugin/issues?sort=created&amp;direction=asc&amp;state=open">github issues</a>.
+	</p>
+	
+</div>
+		
+	</div>
+   </div>   
+   <div class="push"></div>
+   </div>   
+   <footer>       
+      <div class="container">            
+         <div id="FooterTwo"><a href="http://dubture.com"> © 2011 dubture.com </a></div>
+      </div>
+   </footer>
+  </body>
+</html>
