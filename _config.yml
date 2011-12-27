@@ -1,13 +1,13 @@
 navigation:
 - text: About
-  url: /
+  url: 
   permalink: /
 - text: Installation
-  url: /installation
+  url: installation
   permalink: /installation
 - text: Features
-  url: /features
+  url: features
   permalink: /features
 - text: FAQ
-  url: /faq
+  url: faq
   permalink: /faq
