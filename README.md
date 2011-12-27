@@ -7,6 +7,7 @@
 ### Requirements
 
 - Eclipse >= 3.7 (aka Indigo)
+- Java >= 6
 - PHP Development Tools - Development build (available in the updatesite)
 
 ### Updatesite
