@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.dubture.symfony.ui;singleton:=true
-Bundle-Version: 1.0.49.qualifier
+Bundle-Version: 1.0.50.qualifier
 Bundle-Activator: com.dubture.symfony.ui.SymfonyUiPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -27,7 +27,8 @@ Require-Bundle: org.eclipse.ui,
  org.dadacoalition.yedit,
  com.dubture.pdt.formatter
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
+ J2SE-1.5
 Export-Package: com.dubture.symfony.ui,
  com.dubture.symfony.ui.contentassist,
  com.dubture.symfony.ui.editor,
