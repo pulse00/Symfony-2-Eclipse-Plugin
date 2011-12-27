@@ -2,9 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-SymbolicName: com.dubture.symfony.test
-Bundle-Version: 1.0.49.qualifier
+Bundle-Version: 1.0.50.qualifier
 Fragment-Host: com.dubture.symfony.core;bundle-version="1.0.0.qualifier"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
- J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit,
  com.dubture.symfony.core;bundle-version="1.0.0"

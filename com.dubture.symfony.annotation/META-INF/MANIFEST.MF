@@ -7,8 +7,7 @@ Bundle-Activator: com.dubture.symfony.annotation.SymfonyAnnotationPlugin
 Bundle-Vendor: https://github.com/pulse00
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.dltk.core
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
- J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dubture.symfony.annotation,
  com.dubture.symfony.annotation.parser.antlr,
  com.dubture.symfony.annotation.parser.antlr.error,

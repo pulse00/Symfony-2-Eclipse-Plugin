@@ -24,8 +24,7 @@ Require-Bundle: org.eclipse.core.runtime,
  com.dubture.symfony.core,
  com.dubture.symfony.index,
  com.dubture.symfony.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
- J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.dubture.symfony.debug,
  com.dubture.symfony.debug.launch
