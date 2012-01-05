@@ -6,6 +6,32 @@ title: Symfony2 Eclipse Plugin - FAQ
 			
 <div id="tabs-4" class="tabdiv">
   
+  	<div class="faq">  		
+		<h2 class="question">I'm getting a lot of errors/warnings after installation. What's up with that?</h2>
+		<p class="answer">
+			
+			There are a couple of different sources for errors and warnings which can show up in a fresh project. Some of them are outside of the scope of the plugin though. To determine the
+			plugin which issues the error, open the "Problems" view and check the "Type" column. 
+		
+		    This is a list of possible error types:</p><br />
+			<h3>XML Problem</h3>
+			<p>The XML Problem indicates that the XML validator (<span class="warning">NOT</span> part of this plugin!!) found a problem in an XML file or an XSD schema. Some of the schemas in Symfony core contain invalid complex types for example, 
+			which is a known issue and will not be resolved (see <a href="https://github.com/symfony/symfony/issues/2122">this thread</a> for more info). To hide those errors, you need to disable XML/XSD validation from the 
+			Eclipse preferences` "validation" tab. If you don't see this tab, you need to install the "Eclipse Web Development Tools" plugin from the standard updatesite.</p>
+			<div class="centered">
+				<a class="lightbox" href="/images/screenshots/validation.png"><img src="/images/screenshots/validation_thumb.png"></img></a>
+			</div>
+			
+			<h3>DLTK Problem</h3>
+			
+			<p>DLTK Problems are issued by the "Dynamic Languages Toolkit", which is used by the Twig engine. If you get these errors in twig files, it's possible a false positive validation error by the Twig plugin. I'm currently in the process
+			of completely rewriting the parser, which should get rid of these bugs in the future. To remove these warnings, set the "Validation errors" Twig preferences to "Ignore":</p>
+			
+			<div class="centered">
+				<a class="lightbox" href="/images/screenshots/twig.png"><img src="/images/screenshots/twig_thumb.png"></img></a>
+			</div>			
+			
+  	</div>
 	<div class="faq">					
 		<h2 class="question"><a href="#pdt">When will the plugin work with the stable PDT version?</a></h2>
 		<p class="answer">According to the <a href="http://dev.eclipse.org/mhonarc/lists/pdt-dev/msg02006.html">PDT developers mailing-list</a> the next PDT maintenance release will be shipped in March 2012. This release will contain the commits required by the Symfony plugin. Until then you need to use the build provided by this updatesite.</p>				
