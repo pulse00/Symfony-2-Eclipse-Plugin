@@ -22,14 +22,17 @@ title: Symfony2 Eclipse Plugin - FAQ
 				<a class="lightbox" href="/images/screenshots/validation.png"><img src="/images/screenshots/validation_thumb.png"></img></a>
 			</div>
 			
-			<h3>DLTK Problem</h3>
+			<h3>DLTK Problem (1)</h3>
 			
 			<p>DLTK Problems are issued by the "Dynamic Languages Toolkit", which is used by the Twig engine. If you get these errors in twig files, it's possible a false positive validation error by the Twig plugin. I'm currently in the process
 			of completely rewriting the parser, which should get rid of these bugs in the future. To remove these warnings, set the "Validation errors" Twig preferences to "Ignore":</p>
 			
 			<div class="centered">
 				<a class="lightbox" href="/images/screenshots/twig.png"><img src="/images/screenshots/twig_thumb.png"></img></a>
-			</div>			
+			</div>
+			
+			<h3>DLTK Problem (2)</h3>
+			<p>Some vendor bundles/libraries contain skeleton php files or tests for syntax errors. When these files end with .php Eclipse will try to parse them and throw syntax errors obviously, because it cannot know that these are skeleton/test files. To remove those errors, right-click the parent folder and select Build-Path -> Exclude from build path. This will exclude the folder and all its contents from the build. Clean your project after doing this ( Project -> Clean).</p>
 			
   	</div>
 	<div class="faq">					
