@@ -23,6 +23,7 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 import com.dubture.symfony.core.SymfonyLanguageToolkit;
+import com.dubture.symfony.core.log.Logger;
 
 @SuppressWarnings("restriction")
 public class SymfonyKernelAccess extends PhpModelAccess {
@@ -89,7 +90,12 @@ public class SymfonyKernelAccess extends PhpModelAccess {
 		final List<AppKernel> kernels = new ArrayList<AppKernel>();
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
-		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());		
+		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());
+		
+		if (project == null || name == null || scope == null) {
+		    Logger.log(Logger.WARNING, "unable to retrieve kernel");
+		    return null;
+		}
 
 		engine.search(ISymfonyModelElement.ENVIRONMENT, null, name, 0, 0, 100, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
 

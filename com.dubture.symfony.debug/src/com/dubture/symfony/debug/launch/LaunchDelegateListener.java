@@ -57,7 +57,10 @@ public class LaunchDelegateListener implements ILaunchDelegateListener {
 			kernel = SymfonyKernelAccess.getDefault().getDevelopmentKernel(project);
 		}
 		
-		ServerUtils.injectRoutingURL(configuration, kernel, project, route);
+		if (kernel != null) {
+		    ServerUtils.injectRoutingURL(configuration, kernel, project, route);
+		}		
+		
 		return 0;
 	}
 }
