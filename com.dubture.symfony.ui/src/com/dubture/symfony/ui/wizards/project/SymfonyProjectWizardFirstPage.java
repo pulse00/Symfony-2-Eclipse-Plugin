@@ -252,11 +252,11 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 			
 			
 			available.put(layouts[0], new String[]
-					{SymfonyVersion.Symfony2_0_8.getAlias()}
+					{SymfonyVersion.Symfony2_0_9.getAlias()}
 					);
 
 			available.put(layouts[1], new String[]
-					{SymfonyVersion.Symfony2_0_8.getAlias()}
+					{SymfonyVersion.Symfony2_0_9.getAlias()}
 					);
 
 			IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
@@ -366,7 +366,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 		public SymfonyVersion getSymfonyVersion() {
 
 			if (versionSelector.getSelectionIndex() == 0) {
-				return SymfonyVersion.Symfony2_0_8;
+				return SymfonyVersion.Symfony2_0_9;
 			}
 			
 			return null;

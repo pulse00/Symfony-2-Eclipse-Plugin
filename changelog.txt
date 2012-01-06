@@ -1,3 +1,7 @@
+1.0.52
+
+* updated to 2.0.9
+
 1.0.51
 
 * improved feature to fully include dependencies
