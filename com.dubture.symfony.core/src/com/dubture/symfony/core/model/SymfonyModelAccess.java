@@ -486,7 +486,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 			IPath path = bundleFolder.getPath().append(relative);
 			IScriptFolder sfolder = project.findScriptFolder(path);
 
-			if (sfolder.exists() && sfolder.hasChildren()) {				
+			if (sfolder != null && sfolder.exists() && sfolder.hasChildren()) {				
 				return sfolder.getChildren();
 			}			
 
@@ -802,7 +802,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 			IPath viewPath = bundleFolder.getPath().append(path);			
 			IScriptFolder sfolder = project.findScriptFolder(viewPath);
 
-			if (sfolder.exists() && sfolder.hasChildren()) {				
+			if (sfolder != null && sfolder.exists() && sfolder.hasChildren()) {				
 				return sfolder.getChildren();
 			}			
 

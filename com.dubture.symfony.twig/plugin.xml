@@ -38,5 +38,11 @@
             class="com.dubture.symfony.twig.ui.TwigProjectWizardExtension">
       </wizardextension>
    </extension>
+   <extension
+         point="com.dubture.twig.ui.templateProvider">
+      <templateProvider
+            class="com.dubture.symfony.twig.ui.TemplateProvider">
+      </templateProvider>
+   </extension>
 
 </plugin>

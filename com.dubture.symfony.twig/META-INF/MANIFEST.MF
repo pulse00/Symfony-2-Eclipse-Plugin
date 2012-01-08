@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.core.runtime,
  com.dubture.symfony.ui,
  org.eclipse.ui.ide,
  org.eclipse.ui.editors,
- org.eclipse.wst.xml.core
+ org.eclipse.wst.xml.core,
+ com.dubture.twig.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: https://github.com/pulse00
