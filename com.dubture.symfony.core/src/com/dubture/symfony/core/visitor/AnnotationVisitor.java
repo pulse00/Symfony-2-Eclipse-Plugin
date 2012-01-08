@@ -227,6 +227,9 @@ public class AnnotationVisitor extends PHPASTVisitor {
 				boolean isTag = false;				
 				String aTag = line.substring(start +1);
 
+				if ("inheritdoc".equals(aTag))
+					continue;
+				
 				// check for built-int phpdoc tags and don't parse them
 				// as annotations
 				for(String tag : PHPDocTagStrategy.PHPDOC_TAGS) {					

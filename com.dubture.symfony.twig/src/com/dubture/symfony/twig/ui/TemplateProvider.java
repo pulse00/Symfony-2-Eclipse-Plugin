@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
@@ -12,6 +13,9 @@ import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
@@ -20,11 +24,14 @@ import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.ViewPath;
@@ -47,23 +54,26 @@ public class TemplateProvider implements ITemplateProvider
 {
 
     private SymfonyModelAccess model = SymfonyModelAccess.getDefault();
-    private Text text;
-    private IScriptProject scriptProject;    
+    private Text parentTemplate;
+    private IScriptProject scriptProject;
     private CheckboxTableViewer blockTable;    
     private List<String> blocks = new ArrayList<String>();    
     private List<String> checkedBlocks = new LinkedList<String>();
     private String parent = "";
     
+    // make sure to inject the dialog only in Symfony projects
+    private boolean isValid = true;
+    
     
     @Override
     public void createContentControls(IScriptFolder folder, Composite container)
     {
-        if (folder == null) {
+        
+        initialize(folder);
+        
+        if (!isValid) {
             return;
         }
-
-        scriptProject = folder.getScriptProject();
-
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 3;
         gd.heightHint = 20;
@@ -77,8 +87,16 @@ public class TemplateProvider implements ITemplateProvider
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.widthHint = 200;
 
-        text = new Text(container, SWT.BORDER | SWT.SINGLE);
-        text.setLayoutData(gd);
+        parentTemplate = new Text(container, SWT.BORDER | SWT.SINGLE);
+        parentTemplate.setLayoutData(gd);
+        
+        ControlDecoration dec = new ControlDecoration(parentTemplate, SWT.TOP | SWT.LEFT);        
+        FieldDecoration indicator = FieldDecorationRegistry.getDefault().
+                getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
+                
+        dec.setImage(indicator.getImage());
+        dec.setDescriptionText(indicator.getDescription() + "(Ctrl+Space)"); 
+        dec.setShowOnlyOnFocus(true);
         
         Label filler = new Label(container, SWT.NONE);        
         filler.setVisible(false);
@@ -97,10 +115,8 @@ public class TemplateProvider implements ITemplateProvider
         gridData.horizontalAlignment = GridData.FILL;       
         
         blockTable = CheckboxTableViewer.newCheckList(container, SWT.H_SCROLL | SWT.V_SCROLL  | SWT.BORDER);
-
         blockTable.addCheckStateListener(new ICheckStateListener()
-        {
-            
+        {            
             @Override
             public void checkStateChanged(CheckStateChangedEvent event)
             {
@@ -120,6 +136,27 @@ public class TemplateProvider implements ITemplateProvider
         
         setupAutocomplete();
 
+    }
+    
+    private void initialize(IScriptFolder folder)
+    {
+        try {            
+            isValid = true;            
+            
+            if (folder == null) {
+                isValid = false;
+            }
+            
+            scriptProject = folder.getScriptProject();            
+            
+            if (!scriptProject.getProject().hasNature(SymfonyNature.NATURE_ID)) {
+                isValid = false;
+            }
+            
+        } catch (CoreException e) {
+            Logger.logException(e);
+            isValid = false;
+        }
     }
 
     private void setupAutocomplete()
@@ -168,7 +205,7 @@ public class TemplateProvider implements ITemplateProvider
             SimpleContentProposalProvider provider = new SimpleContentProposalProvider(
                     (String[]) proposals.toArray(new String[proposals.size()]));
 
-            ContentProposalAdapter contentProposalAdapter = new ContentProposalAdapter(text, new ViewpathProposalAdapter(),
+            ContentProposalAdapter contentProposalAdapter = new ContentProposalAdapter(parentTemplate, new ViewpathProposalAdapter(),
                     provider, keyStroke, autoActivationCharacters);
             
             contentProposalAdapter.addContentProposalListener(new IContentProposalListener()
@@ -213,9 +250,8 @@ public class TemplateProvider implements ITemplateProvider
 
     @Override
     public String getContents()
-    {
-        
-        if (parent == null || parent.length() == 0) {
+    {        
+        if (!isValid || parent == null || parent.length() == 0) {
             return "";
         }
         
