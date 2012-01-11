@@ -80,6 +80,7 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 
 		try {			
 
+		    System.err.println("perform finish symfony");
 			IProject project = fFirstPage.getProjectHandle();
 			SymfonyProjectWizardFirstPage firstPage = (SymfonyProjectWizardFirstPage) fFirstPage;
 

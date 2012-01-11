@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.dubture.symfony</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.52.qualifier</version>
+    <version>1.0.53.qualifier</version>
   </parent>
 
   <artifactId>com.dubture.symfony.twig</artifactId>

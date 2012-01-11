@@ -1,3 +1,8 @@
+1.0.53
+
+* implemented twig extension point to auto-generate twig blocks from parent template
+* moved "Add symfony nature" menu to "Configure..." submenu
+
 1.0.52
 
 * updated to 2.0.9

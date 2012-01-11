@@ -64,7 +64,18 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 		super(mainPage);
 	}
 	
-	
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.ui.wizards.PHPProjectWizardSecondPage#performFinish(org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public void performFinish(IProgressMonitor monitor) throws CoreException,
+	        InterruptedException
+	{
+	 
+	    super.performFinish(monitor);
+	    System.err.println("perform finish 2");
+	}
 	@Override
 	protected void updateProject(IProgressMonitor monitor)
 			throws CoreException, InterruptedException {
@@ -277,6 +288,7 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 
 	public void installSymfony(IProgressMonitor monitor) {
 
+	    System.err.println("install symfony");
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
 		
