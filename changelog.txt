@@ -1,3 +1,7 @@
+1.0.54
+
+* updated to Symfony 2.0.10
+
 1.0.53
 
 * implemented twig extension point to auto-generate twig blocks from parent template

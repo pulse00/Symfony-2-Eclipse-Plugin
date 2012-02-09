@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * This file is part of the Symfony eclipse plugin.
+ * 
+ * (c) Robert Gruendler <r.gruendler@gmail.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ ******************************************************************************/
 package com.dubture.symfony.ui.editor.hyperlink;
 
 import org.eclipse.jface.text.BadLocationException;
@@ -10,34 +18,24 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 
 public class YamlHyperlinkDetector extends AbstractHyperlinkDetector {
 
-	public YamlHyperlinkDetector() {
-
-	}
-
 	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
 			IRegion region, boolean canShowMultipleHyperlinks) {
 
-		
-		// TODO: implement me
-		
-//		IDocument document = textViewer.getDocument();
-//		int offset = region.getOffset();
-//
-//		IRegion wordRegion = findWord(document, offset, false);
-//		
-//
-//		try {
-//			String text = document.get(wordRegion.getOffset(),
-//					wordRegion.getLength());
-//			
-//			System.err.println(text);
-//		} catch (Exception e) {
-//
-//			e.printStackTrace();
-//		}
-		
+	    System.err.println("finding");
+		IDocument document = textViewer.getDocument();
+		int offset = region.getOffset();
+		IRegion wordRegion = findWord(document, offset, false);
 
+		try {
+			String text = document.get(wordRegion.getOffset(),
+					wordRegion.getLength());
+			
+			System.err.println(text);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return null;
 	}
 	
