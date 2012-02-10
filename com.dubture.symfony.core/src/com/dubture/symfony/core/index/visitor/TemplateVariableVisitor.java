@@ -154,8 +154,10 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 						FullyQualifiedReference ref = (FullyQualifiedReference) param.getParameterType();
 						NamespaceReference nsRef = createFromFQCN(ref);
 						
-						TemplateVariable tempVar= new TemplateVariable(currentMethod, param.getName(), param.sourceStart(), param.sourceEnd(), nsRef.namespace, nsRef.className);							
-						deferredVariables.push(tempVar);						
+						if (nsRef != null) {
+	                        TemplateVariable tempVar= new TemplateVariable(currentMethod, param.getName(), param.sourceStart(), param.sourceEnd(), nsRef.namespace, nsRef.className);                           
+	                        deferredVariables.push(tempVar);                        						    
+						}
 						
 					/* public function ($somevar) { } */						
 					} else {
