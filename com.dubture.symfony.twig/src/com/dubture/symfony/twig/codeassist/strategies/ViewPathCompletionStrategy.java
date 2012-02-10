@@ -10,7 +10,6 @@ package com.dubture.symfony.twig.codeassist.strategies;
 
 import java.util.List;
 
-import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
@@ -25,7 +24,6 @@ import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
-import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposalCollector;
 
 import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.Controller;
@@ -51,17 +49,8 @@ import com.dubture.symfony.twig.codeassist.context.ViewPathArgumentContext;
 @SuppressWarnings({ "restriction", "deprecation" })
 public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 
-	
-	/**
-	 * 
-	 * @see FIXME in com.dubture.symfony.core.codeassist.strategies.RouteCompletionStrategy
-	 */
-	private static int workaroundCount = 0;
-
-
 	public ViewPathCompletionStrategy(ICompletionContext context) {
 		super(context);
-
 	}
 	
 	
@@ -69,21 +58,6 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 	
 		ViewPathArgumentContext context = (ViewPathArgumentContext) getContext();
-		CompletionRequestor req = context.getCompletionRequestor();
-		
-		if (req.getClass() == PHPCompletionProposalCollector.class) {
-			return;			
-		}
-
-		if (workaroundCount == 0) {
-			workaroundCount++;
-			
-		} else {
-			workaroundCount = 0;
-			return;
-		}
-		
-		
 		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
 		ISourceModule module = context.getSourceModule();
 		ViewPath viewPath = context.getViewPath();

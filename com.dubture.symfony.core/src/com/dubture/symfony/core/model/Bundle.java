@@ -109,9 +109,9 @@ public class Bundle extends SourceType {
 		if (_namespace != null)
 			return _namespace;
 		
-		String path = _path.toString();
+		String path = getPath().toString();
 		
-		if (_path == null)
+		if (path == null)
 			return super.getNamespace();
 		
 		String[] parts = StringUtils.splitByCharacterTypeCamelCase(getElementName());
@@ -154,6 +154,15 @@ public class Bundle extends SourceType {
 		
 		_project = project;
 		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dltk.internal.core.SourceType#getElementType()
+	 */
+	@Override
+	public int getElementType()
+	{
+	    return ISymfonyModelElement.BUNDLE;
 	}
 	
 	

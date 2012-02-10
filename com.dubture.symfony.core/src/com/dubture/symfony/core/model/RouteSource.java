@@ -65,6 +65,12 @@ public class RouteSource extends SourceType {
 		return route;
 	}
 	
-
-
+	/* (non-Javadoc)
+	 * @see org.eclipse.dltk.internal.core.SourceType#getElementType()
+	 */
+	@Override
+	public int getElementType()
+	{
+	    return ISymfonyModelElement.ROUTE;
+	}
 }

@@ -22,7 +22,6 @@ public class YamlHyperlinkDetector extends AbstractHyperlinkDetector {
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
 			IRegion region, boolean canShowMultipleHyperlinks) {
 
-	    System.err.println("finding");
 		IDocument document = textViewer.getDocument();
 		int offset = region.getOffset();
 		IRegion wordRegion = findWord(document, offset, false);

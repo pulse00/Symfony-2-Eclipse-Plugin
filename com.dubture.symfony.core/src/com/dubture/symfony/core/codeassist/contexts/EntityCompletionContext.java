@@ -45,16 +45,19 @@ public class EntityCompletionContext extends QuotesContext {
 				    return false;
 				
 				TextSequence statementText = getStatementText();
+				
+				if (getNextChar() != ' ' && getNextChar() != '\n' && getNextChar() != '\'' && getNextChar() != '"') {
+				    return false;
+				}
+				
 				if (SymfonyTextSequenceUtilities.isInEntityFunctionParameter(statementText) > -1) {
 					
-					
 					int startOffset = SymfonyTextSequenceUtilities.readViewPathStartIndex(statementText);
-
 					String path = null;
 
 					if (startOffset == -1) {
 						path = "";
-					} else {					 
+					} else {
 
 						int original = statementText.getOriginalOffset(startOffset);
 						int end = offset;

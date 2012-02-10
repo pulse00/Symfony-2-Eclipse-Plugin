@@ -31,7 +31,11 @@ public class TemplateVariableCompletionContext extends
 			CompletionRequestor requestor) {
 	
 		if (super.isValid(sourceModule, offset, requestor)) {
-			
+	
+            if (!requestor.getClass().getName().contains("Twig")) {
+                return false;
+            }
+		    
 			return true;
 			
 		}

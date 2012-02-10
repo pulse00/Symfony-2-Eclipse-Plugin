@@ -38,6 +38,10 @@ public class RouteCompletionContext extends QuotesContext {
 
 		if (super.isValid(sourceModule, offset, requestor)) {
 	
+            if (!requestor.getClass().getName().contains("Twig")) {
+                return false;
+            }
+		    
 			TextSequence statement = getStatementText();
 			
 			 if (!TwigTextSequenceUtilities.isInFunction(statement)) {

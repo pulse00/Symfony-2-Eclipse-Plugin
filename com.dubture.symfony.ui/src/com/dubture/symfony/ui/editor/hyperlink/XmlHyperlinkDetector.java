@@ -47,9 +47,17 @@ public class XmlHyperlinkDetector extends AbstractHyperlinkDetector {
 
             String path = document.get(wordRegion.getOffset(), wordRegion.getLength());
             PhpModelAccess model = PhpModelAccess.getDefault();
+            
+            if (path == null || path.length() == 0) {
+                return null;
+            }
             IType[] types = model.findTypes(path, MatchRule.EXACT, 0, 0, SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault()), new NullProgressMonitor());
             IWorkbenchPartSite site = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getSite();
 
+            if (types.length > 10) {
+                Logger.debugMSG("Found more than ten (" + types.length +") types during xml hyperlink detection...");
+                return null;
+            }
             if (types != null && types.length > 0) {
                 
                 IHyperlink[] links = new IHyperlink[types.length];

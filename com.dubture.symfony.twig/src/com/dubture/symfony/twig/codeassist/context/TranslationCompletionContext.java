@@ -56,6 +56,11 @@ public class TranslationCompletionContext extends AbstractCompletionContext {
 		
 		super.isValid(sourceModule, offset, requestor);
 		
+        if (!requestor.getClass().getName().contains("Twig")) {
+            return false;
+        }
+		
+		
 		IStructuredDocument doc = getDocument();		
 		ITextRegion region = doc.getRegionAtCharacterOffset(offset);
 		

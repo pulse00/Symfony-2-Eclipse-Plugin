@@ -58,8 +58,14 @@ public class Controller extends SourceType {
 		// popup row, ie:
 		// AcmeDemoBundle - AcmeDemoBundle
 		return new FakeType(parent, "");		
-		
 	}
-		
-
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dltk.internal.core.SourceType#getElementType()
+	 */
+	@Override
+	public int getElementType()
+	{
+	    return ISymfonyModelElement.CONTROLLER;
+	}
 }

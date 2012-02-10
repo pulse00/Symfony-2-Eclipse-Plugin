@@ -63,59 +63,40 @@ public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
 		EntityCompletionContext context = (EntityCompletionContext) getContext();		
-		CompletionRequestor req = context.getCompletionRequestor();
-
-//		if (req.getClass() == PHPCompletionProposalCollector.class) {
-//			return;			
-//		}
-
 		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
 		IScriptProject project = context.getSourceModule().getScriptProject();
-
 		SourceRange range = getReplacementRange(context);
 		IDLTKSearchScope projectScope = SearchEngine.createSearchScope(context.getSourceModule().getScriptProject());
-
 		DoctrineModelAccess doctrineModel =  DoctrineModelAccess.getDefault();
 		
 		EntityAlias alias = context.getAlias();
 		String prefix = context.getPrefix();
 		
 		if (alias.hasBundle() == false) {
-			
 			List<Bundle> bundles = model.findBundles(project);
-
 			for (Bundle b : bundles) {				
-
 				IType[] bundleTypes = PhpModelAccess.getDefault().findTypes(b.getElementName(), MatchRule.EXACT, 0, 0, projectScope, null);
-
 				if (bundleTypes.length == 1) {
-
 					ModelElement bType = (ModelElement) bundleTypes[0];
-
 					if (CodeAssistUtils.startsWithIgnoreCase(bType.getElementName(), prefix)) {
 						Bundle bundleType = new Bundle(bType, b.getElementName());
 						reporter.reportType(bundleType, ":", range);						
 					}
 				}
 			}			
-			
 		} else {
 						
 			List<Entity> entities = doctrineModel.getEntities(project);
-			
 			
 			//TODO: cache the entities
 			for (Entity entity : entities) {
 			
 				EntityAlias newAliase = new EntityAlias(alias.getBundleAlias(), entity.getElementName());
-				
-				
 				IType type = model.findEntity(newAliase, project);
-				
-				
 				
 				if (type != null) {
 					Entity e = new Entity((ModelElement) type, type.getElementName());
+					
 					reporter.reportType(e, "", range);					
 				}
 			}

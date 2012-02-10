@@ -24,6 +24,7 @@ public interface ISymfonyModelElement {
 	// containers
 	int BUNDLE = 200;	
 	int NAMESPACE = 201;
+	int CONTROLLER = 202;
 	
 	// method types
 	int VIEW_METHOD = 300;
@@ -33,6 +34,7 @@ public interface ISymfonyModelElement {
 	int ANNOTATION = 400;	
 	int ENVIRONMENT = 401;
 	int TEMPLATE_VARIABLE = 402;
+	int ROUTE = 403;
 	
 
 

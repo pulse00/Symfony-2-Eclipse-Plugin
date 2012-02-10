@@ -38,7 +38,12 @@ public class TemplateVariableFieldCompletionContext extends
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
 
-		if (super.isValid(sourceModule, offset, requestor)) {						
+		if (super.isValid(sourceModule, offset, requestor)) {
+		    
+            if (!requestor.getClass().getName().contains("Twig")) {
+                return false;
+            }
+		    
 			return true;			
 		}
 		

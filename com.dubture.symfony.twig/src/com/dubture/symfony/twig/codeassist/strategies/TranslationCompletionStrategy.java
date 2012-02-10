@@ -8,7 +8,6 @@
  ******************************************************************************/
 package com.dubture.symfony.twig.codeassist.strategies;
 
-import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
@@ -33,18 +32,10 @@ public class TranslationCompletionStrategy extends AbstractCompletionStrategy {
 	public void apply(ICompletionReporter reporter) throws Exception {
 
 		tContext = (TranslationCompletionContext) getContext();
-		CompletionRequestor req = tContext.getCompletionRequestor();
-		
-		if (!req.getClass().getName().contains("Symfony")) {
-			return;			
-		}
-		
 		IScriptProject project = tContext.getSourceModule().getScriptProject();
 		SourceRange range = getReplacementRange(tContext);		
 		String prefix = tContext.getPrefix();
-		
 		CodeassistUtils.reportTranslations(reporter, prefix, range, project );		
-		
 
 	}
 	
