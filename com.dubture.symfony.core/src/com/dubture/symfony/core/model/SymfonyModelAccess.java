@@ -1081,6 +1081,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 		if (ns == null)
 			return null;
 		
+		
 		String[] entityNS = new String[ns.getStrings().length + 1];
 		
 		System.arraycopy(ns.getStrings(), 0, entityNS, 0, ns.getStrings().length);		
@@ -1094,9 +1095,24 @@ public class SymfonyModelAccess extends PhpModelAccess {
 			sb.append("\\");
 			sb.append(entityNS[i]);
 		}			
-			    
 		
-		IType[] types = findTypes(sb.toString(), alias.getEntity(), MatchRule.EXACT, 0, 0, scope, null);
+		String entity = alias.getEntity();
+		
+		if (entity.contains("\\")) {
+		    String[] strings = entity.split("\\\\");
+		    for(int i=0; i < strings.length; i++) {
+		        
+		        if (i < strings.length-1) {
+		            sb.append("\\");
+		            sb.append(strings[i]);
+		        } else {
+		            entity = strings[i];
+		        }
+		    }
+		    
+		}
+
+		IType[] types = findTypes(sb.toString(), entity, MatchRule.EXACT, 0, 0, scope, null);
 
 		if (types.length == 1) {
 			IType t = types[0];
