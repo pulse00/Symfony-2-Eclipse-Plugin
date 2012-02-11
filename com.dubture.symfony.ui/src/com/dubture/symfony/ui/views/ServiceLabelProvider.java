@@ -11,18 +11,20 @@ package com.dubture.symfony.ui.views;
 import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
+import org.eclipse.swt.graphics.Image;
 
 import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.ui.SymfonyPluginImages;
 
 @SuppressWarnings("restriction")
-public class ServiceLabelProvider extends StyledCellLabelProvider {
+public class ServiceLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
 	
 	
 	@Override
@@ -70,5 +72,28 @@ public class ServiceLabelProvider extends StyledCellLabelProvider {
 			
 			
 		}
-	}	
+	}
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
+     */
+    @Override
+    public Image getImage(Object element)
+    {
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
+     */
+    @Override
+    public String getText(Object element)
+    {
+        if (element instanceof Service) {
+            Service service = (Service) element;
+            return service.getElementName();
+        }
+        
+        return "";
+    }	
 }
