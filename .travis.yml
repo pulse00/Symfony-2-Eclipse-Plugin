@@ -1,1 +1,1 @@
-script: mvn install
+language: java
