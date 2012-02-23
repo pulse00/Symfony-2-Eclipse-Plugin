@@ -1,22 +1,28 @@
 parser grammar AnnotationParser;
 
 options {
-output = AST;
-TokenLabelType=CommonToken;
-ASTLabelType=AnnotationCommonTree;
-tokenVocab=AnnotationLexer;
+  language = Java;
+  output = AST;
+  ASTLabelType=AnnotationCommonTree;
+  tokenVocab = AnnotationLexer;
 }
 
 tokens {
-ANNOTATION;
-ARGUMENT_LIST;
-ARGS;
-NAMED_ARG;
-LITERAL_ARG;
-NSPART;
-CLASSNAME;
-FQCN;
-RHTYPE;
+  ANNOTATION;
+  ARGUMENT;
+  ARGUMENT_NAME;
+  ARGUMENT_VALUE;
+  BOOLEAN_VALUE;
+  CLASS;
+  DECLARATION;
+  LITERAL;
+  NAMESPACE;
+  NAMESPACE_DEFAULT;
+  NAMESPACE_SEGMENT;
+  NULL_VALUE;
+  OBJECT_VALUE;
+  PAIR;
+  STRING_VALUE;
 }
 
 @header {
@@ -25,111 +31,126 @@ package com.dubture.symfony.annotation.parser.antlr;
 import com.dubture.symfony.annotation.parser.antlr.error.IAnnotationErrorReporter;
 }
 
-
 @members {
 
     private IAnnotationErrorReporter errorReporter = null;
-    
+
     public AnnotationParser(TokenStream input, IAnnotationErrorReporter errorReporter) {
         this(input, new RecognizerSharedState());
         this.errorReporter = errorReporter;
     }
 
-	public void displayRecognitionError(String[] tokenNames,
-                                        RecognitionException e) {
-        
-    		if(errorReporter != null) {
-        		String hdr = getErrorHeader(e);
-                String msg = getErrorMessage(e, tokenNames);        
-                errorReporter.reportError(hdr,msg,e);
-    		}
+    public void displayRecognitionError(String[] tokenNames, RecognitionException e) {
+        if (errorReporter != null) {
+            String hdr = getErrorHeader(e);
+            String msg = getErrorMessage(e, tokenNames);
+            errorReporter.reportError(hdr,msg,e);
+        }
+    }
 
-        
-    }    
-    
     public void setErrorReporter(IAnnotationErrorReporter errorReporter) {
         this.errorReporter = errorReporter;
     }
-    
-	protected Object recoverFromMismatchedToken(IntStream input,
-				int ttype, BitSet follow) throws RecognitionException
-	{   
-	    throw new MismatchedTokenException(ttype, input);
-	}       
-	
+
+    protected Object recoverFromMismatchedToken(IntStream input,
+                                                int ttype, BitSet follow) throws RecognitionException
+    {
+        throw new MismatchedTokenException(ttype, input);
+    }
+
     public Object recoverFromMismatchedSet(IntStream input,
-    			RecognitionException e, BitSet follow) throws RecognitionException 
-    { 
-		throw new MismatchedSetException(follow, input);
-   	}
-	
+                                           RecognitionException e, BitSet follow) throws RecognitionException
+    {
+        throw new MismatchedSetException(follow, input);
+    }
+
 }
 
-
-// an annotation starts with @ followed by 
-// the name of the annotation optionally followed 
-// by argument list in parentheses
 annotation
-  : AT ann_class argument_list
-    ->^(ANNOTATION ann_class argument_list)
+  :
+     AT class_name declaration?
+      -> ^(ANNOTATION class_name declaration?)
   ;
 
-
-argument_list
-  : (PARAM_START arguments? PARAM_END)?
-    -> ^(ARGUMENT_LIST arguments?)
+class_name
+  : (namespace name=IDENTIFIER)
+      -> ^(CLASS namespace $name)
   ;
 
-ann_class
-  : namespace* classname
-  ;
-  
 namespace
-  : ns=STRING BSLASH
-  	->^(NSPART $ns)
-  ;
-  
-classname
-  : cn=STRING
-    ->^(CLASSNAME $cn)
+  : start=BSLASH? (segments+=IDENTIFIER BSLASH)*
+      -> ^(NAMESPACE ^(NAMESPACE_DEFAULT $start)? $segments*)
   ;
 
-arguments
-  : argument  (COMMA arguments)?
-    -> argument arguments?
+declaration
+  : PARAM_START statements+=statement? (COMMA statements+=statement)* PARAM_END
+      -> ^(DECLARATION $statements*)
+  ;
+
+statement
+  : literal | argument
+  ;
+
+literal
+  : literal_value=STRING_LITERAL
+      -> ^(LITERAL $literal_value)
   ;
 
 argument
-: literal_argument | named_argument | json
-;
-
-
-literal_argument
-  : param=STRING_LITERAL
-    -> ^(LITERAL_ARG $param)
+  : name=argumentName EQUAL argument_value=argumentValue
+      -> ^(ARGUMENT $name $argument_value)
   ;
 
-named_argument
-  : param=STRING ASIG rhtype
-    -> ^(NAMED_ARG $param rhtype)
+argumentName
+  : name=IDENTIFIER
+      -> ^(ARGUMENT_NAME $name)
   ;
 
-json
-  : JSON_START json_arguments? JSON_END
-  ;
-  
-json_arguments
-  : json_argument (COMMA (json_argument))*
-  ;
-  
-json_argument
-  : STRING_LITERAL ASIG (STRING_LITERAL | STRING)
+argumentValue
+  : value
+      -> ^(ARGUMENT_VALUE value)
+  | CURLY_START annotations=subAnnotation (COMMA annotations=subAnnotation)* CURLY_END
+      -> ^(ARGUMENT_VALUE $annotations+)
   ;
 
-rhtype
-  : param=STRING
-    -> ^(RHTYPE $param)
-  | param=STRING_LITERAL
-    -> ^(RHTYPE $param)
-  | json
+subAnnotation
+  :
+     AT class_name declaration?
+       -> ^(ANNOTATION class_name declaration?)
   ;
+
+value
+  : objectValue
+  | stringValue
+  | booleanValue
+  | nullValue
+  ;
+
+objectValue
+  : CURLY_START pairs+=pair (COMMA pairs+=pair)* CURLY_END
+      -> ^(OBJECT_VALUE $pairs+)
+  ;
+
+stringValue
+  : string_value=STRING_LITERAL
+      -> ^(STRING_VALUE $string_value)
+  ;
+
+booleanValue
+  : TRUE
+      -> ^(BOOLEAN_VALUE TRUE)
+  | FALSE
+      -> ^(BOOLEAN_VALUE FALSE)
+  ;
+
+nullValue
+  : NULL
+      -> ^(NULL_VALUE NULL)
+  ;
+
+pair
+  : name=stringValue EQUAL value
+      -> ^(PAIR $name value)
+  ;
+
+

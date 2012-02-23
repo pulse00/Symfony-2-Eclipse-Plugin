@@ -46,7 +46,6 @@ public class AnnotationErrorReporter implements IAnnotationErrorReporter {
 
 
 	@Override
-	@SuppressWarnings("deprecation")	
 	public void reportError(String header, String message, RecognitionException e) {
 
 		if (context == null || e.token == null)  {

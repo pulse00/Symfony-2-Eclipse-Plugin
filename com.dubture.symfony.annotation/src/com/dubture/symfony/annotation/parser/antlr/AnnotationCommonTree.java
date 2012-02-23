@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of the Symfony eclipse plugin.
- * 
+ *
  * (c) Robert Gruendler <r.gruendler@gmail.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
@@ -18,63 +18,60 @@ import org.antlr.runtime.tree.CommonTree;
 
 
 /**
- * 
+ *
  * The {@link AnnotationCommonTree} is used to traverse
  * the Tree created by the {@link SymfonyAnnotationParser}.
- * 
+ *
  * @see AnnotationVisitor
- * 
+ *
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
 public class AnnotationCommonTree extends CommonTree {
 
-	
+
     public AnnotationCommonTree(Token payload) {
-    	super(payload);
-	}
+        super(payload);
+    }
 
-	public AnnotationCommonTree(TokenStream input, Token start, Token stop) {
+    public AnnotationCommonTree(TokenStream input, Token start, Token stop) {
 
-	}
+    }
 
-	@Override
+    @Override
     public AnnotationCommonTree getChild(int i) {
-    	
         if (children == null || i >= children.size()) {
             return null;
         }
+
         return (AnnotationCommonTree)children.get(i);
     }
-    
+
     @Override
     public CommonToken getToken() {
         return (CommonToken)token;
     }
-    
+
     @SuppressWarnings("unchecked")
-	public List<AnnotationCommonTree> getChildTrees() {
-    	    	
-    	return (List<AnnotationCommonTree>) getChildren();
-    	
+    public List<AnnotationCommonTree> getChildTrees() {
+        return (List<AnnotationCommonTree>) getChildren();
     }
 
     /**
      * Traverse the annotation tree.
-     * 
+     *
      * @param visitor
      */
-	public void accept(IAnnotationNodeVisitor visitor) {
+    public void accept(IAnnotationNodeVisitor visitor) {
 
-		visitor.beginVisit(this);
-		
-		for (int i = 0; i < getChildCount(); i++) {
-			AnnotationCommonTree child = (AnnotationCommonTree) getChild(i);
-			child.accept(visitor);
-			
-		}
-		
-		visitor.endVisit(this);
-		
-	}
+        visitor.beginVisit(this);
+
+        for (int i = 0; i < getChildCount(); i++) {
+            AnnotationCommonTree child = (AnnotationCommonTree) getChild(i);
+            child.accept(visitor);
+
+        }
+
+        visitor.endVisit(this);
+    }
 }
