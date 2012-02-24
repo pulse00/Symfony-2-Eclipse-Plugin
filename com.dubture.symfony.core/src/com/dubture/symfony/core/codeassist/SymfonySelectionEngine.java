@@ -34,11 +34,11 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 
-import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTree;
-import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTreeAdaptor;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationLexer;
-import com.dubture.symfony.annotation.parser.antlr.AnnotationNodeVisitor;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
+import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
+import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTreeAdaptor;
+import com.dubture.symfony.annotation.parser.tree.visitor.AnnotationNodeVisitor;
 import com.dubture.symfony.core.index.SymfonyElementResolver.TemplateField;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.Service;

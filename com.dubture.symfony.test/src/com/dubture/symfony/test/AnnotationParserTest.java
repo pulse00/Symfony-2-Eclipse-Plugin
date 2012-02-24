@@ -21,13 +21,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.dubture.symfony.annotation.model.Annotation;
-import com.dubture.symfony.annotation.model.ArgumentValueTypes;
+import com.dubture.symfony.annotation.model.AnnotationValue;
+import com.dubture.symfony.annotation.model.ArgumentValueType;
+import com.dubture.symfony.annotation.model.ArrayValue;
 import com.dubture.symfony.annotation.model.ObjectValue;
-import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTree;
-import com.dubture.symfony.annotation.parser.antlr.AnnotationCommonTreeAdaptor;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationLexer;
-import com.dubture.symfony.annotation.parser.antlr.AnnotationNodeVisitor;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
+import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
+import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTreeAdaptor;
+import com.dubture.symfony.annotation.parser.tree.visitor.AnnotationNodeVisitor;
 
 
 /**
@@ -86,13 +88,30 @@ public class AnnotationParserTest extends TestCase {
     }
 
     @Test
-    public void testRoute2() {
-        root = getRootNode("@Route(\"/.{_format}\", name=\"post\", defaults={\"_format\" = \"html\"}, requirements={\"format\" = \"html|rss\"})\"", false);
-    }
+    public void testRequirementsAdvanced() {
+        root = getRootNode("@Route(\"/.{_format}\", " +
+                "                  name=\"post\", " +
+                "                  double=-10.0," +
+                "                  int = 100," +
+                "                  defaults={\"_format\" = \"\\s+\"}, " +
+                "                  requirements={\"one\", \"two\"})\"", false);
 
-    @Test
-    public void testRequirementsRegex() {
-        root = getRootNode("@Route(\"/.{_format}\", name=\"post\", defaults={\"_format\" = \"html\"}, requirements={\"format\" = \"\\s+\"})\"", false);
+        Annotation annotation = root.getAnnotation();
+
+        assertEquals("post", annotation.getArgumentValue("name").getValue());
+        assertEquals(-10.0, annotation.getArgumentValue("double").getValue());
+        assertEquals(100.0, annotation.getArgumentValue("int").getValue());
+
+        assertEquals(ArgumentValueType.OBJECT, annotation.getArgumentValue("defaults").getType());
+        ObjectValue objectValue = (ObjectValue) annotation.getArgumentValue("defaults");
+
+        assertEquals("\\s+", objectValue.getArgumentValue("_format").getValue());
+
+        assertEquals(ArgumentValueType.ARRAY, annotation.getArgumentValue("requirements").getType());
+        ArrayValue arrayValue = (ArrayValue) annotation.getArgumentValue("requirements");
+
+        assertEquals("one", arrayValue.getArgumentValue(0).getValue());
+        assertEquals("two", arrayValue.getArgumentValue(1).getValue());
     }
 
     @Test
@@ -105,7 +124,31 @@ public class AnnotationParserTest extends TestCase {
     }
 
     @Test
-    public void testNSEmpty() {
+    public void testNoDeclaration() {
+        root = getRootNode("* @ORM\\Foo", false);
+
+        assertEquals("Foo", root.getClassName());
+        assertEquals("ORM\\", root.getNamespace());
+        assertEquals("ORM\\Foo", root.getFullyQualifiedName());
+    }
+
+    @Test
+    public void testPhpDoc() {
+        root = getRootNode("@param Value", false);
+        assertEquals("param", root.getClassName());
+
+        root = getRootNode("@inheritdoc Value", false);
+        assertEquals("inheritdoc", root.getClassName());
+
+        root = getRootNode("{@inheritdoc}", false);
+        assertNull(root.getAnnotation());
+
+        root = getRootNode("@inheritdoc}", false);
+        assertEquals("inheritdoc", root.getClassName());
+    }
+
+    @Test
+    public void testNamespace() {
         root = getRootNode("* @ORM\\Foo()", false);
 
         assertEquals("Foo", root.getClassName());
@@ -115,7 +158,7 @@ public class AnnotationParserTest extends TestCase {
 
     @Test
     public void testObjectValue() {
-        root = getRootNode("* @Route(\"/hello\", " +
+        root = getRootNode("* @Sensio\\Route(\"/hello\", " +
                         "        defaults={\"name\"=\"*World*\" " +
                         " *       ,\"isFalse\"=    true,     \"false\"    =    false,  " +
                         "        \"null\" = null})", false);
@@ -124,7 +167,7 @@ public class AnnotationParserTest extends TestCase {
         assertEquals("Route",root.getClassName());
         assertFalse(reporter.hasErrors());
 
-        assertEquals(ArgumentValueTypes.OBJECT, root.getArgumentValue("defaults").getType());
+        assertEquals(ArgumentValueType.OBJECT, root.getArgumentValue("defaults").getType());
 
         ObjectValue objectValue = (ObjectValue) root.getArgumentValue("defaults");
         assertEquals("*World*", objectValue.get("name"));
@@ -166,42 +209,73 @@ public class AnnotationParserTest extends TestCase {
 
         assertNotNull(root.getLiteralArguments().contains("\"literal\""));
         assertEquals("join_table_name", root.getArgument("name"));
-        assertEquals(ArgumentValueTypes.ANNOTATION, root.getArgumentValue("joinColumns").getType());
-        assertEquals(ArgumentValueTypes.ANNOTATION, root.getArgumentValue("inverseJoinColumns").getType());
+        assertEquals(ArgumentValueType.ARRAY, root.getArgumentValue("joinColumns").getType());
+        assertEquals(ArgumentValueType.ARRAY, root.getArgumentValue("inverseJoinColumns").getType());
 
-        Annotation joinColumnAnnotation = (Annotation) root.getArgumentValue("joinColumns");
+        ArrayValue joinColumn = (ArrayValue) root.getArgumentValue("joinColumns");
+        AnnotationValue joinColumnAnnotation = (AnnotationValue) joinColumn.getArgumentValue(0);
         assertEquals("JoinColumn", joinColumnAnnotation.getClassName());
         assertEquals("Orm\\", joinColumnAnnotation.getNamespace());
         assertEquals("join_id", joinColumnAnnotation.getArgument("name"));
         assertEquals("id_first", joinColumnAnnotation.getArgument("referencedColumnName"));
 
-        Annotation inverseJoinColumnAnnotation = (Annotation) root.getArgumentValue("inverseJoinColumns");
+        ArrayValue inverseJoinColumn = (ArrayValue) root.getArgumentValue("inverseJoinColumns");
+        AnnotationValue inverseJoinColumnAnnotation = (AnnotationValue) inverseJoinColumn.getArgumentValue(0);
         assertEquals("JoinColumn", inverseJoinColumnAnnotation.getClassName());
         assertEquals("Orm\\", inverseJoinColumnAnnotation.getNamespace());
         assertEquals("inverse_id", inverseJoinColumnAnnotation.getArgument("name"));
         assertEquals("id_second", inverseJoinColumnAnnotation.getArgument("referencedColumnName"));
     }
 
-    // TODO: This case is not handled right now by the AnnotationParser
-//    public void testWithAttributes() {
-//        root = getRootNode(" * @Attributes({ " +
-//        " @Attribute(\"mixed\",                type = \"mixed\"), " +
-//        " @Attribute(\"boolean\",              type = \"boolean\"), " +
-//        " @Attribute(\"bool\",                 type = \"bool\"), " +
-//        " @Attribute(\"float\",                type = \"float\"), " +
-//        " @Attribute(\"string\",               type = \"string\"), " +
-//        " @Attribute(\"integer\",              type = \"integer\"), " +
-//        " @Attribute(\"array\",                type = \"array\"), " +
-//        " @Attribute(\"arrayOfIntegers\",      type = \"array<integer>\"), " +
-//        " @Attribute(\"annotation\",           type = \"Doctrine\\Tests\\Common\\Annotations\\Fixtures\\AnnotationTargetAll\"), " +
-//        " @Attribute(\"arrayOfAnnotations\",   type = \"array<Doctrine\\Tests\\Common\\Annotations\\Fixtures\\AnnotationTargetAll>\"), " +
-//        " })", false);
-//
-//        assertNotNull(root);
-//        assertEquals("Attributes", root.getClassName());
-//        System.out.println(reporter.getErrorsAsString());
-//        assertFalse(reporter.hasErrors());
+    @Test
+    public void testSimpleComment() {
+        root = getRootNode(
+                "\\** " +
+                "  * @Orm\\JoinColumn(" +
+                "        \"literal\", " +
+                "        name=\"join_table_name\"," +
+                "        joinColumns = {@Orm\\JoinColumn(name=\"join_id\", referencedColumnName=\"id_first\")}," +
+                "        inverseJoinColumns={@Orm\\JoinColumn(name=\"inverse_id\", referencedColumnName=\"id_second\")} " +
+                "    " +
+                "    ) " +
+                "  */", false);
+
+        Annotation annotation = root.getAnnotation();
+        assertEquals("JoinColumn", annotation.getClassName());
+        assertEquals("Orm\\", annotation.getNamespace());
+        assertEquals(4, annotation.getArguments().size());
+    }
+
+    // This is not possible right now, and may be not possible at all,
+//    @Test
+//    public void testFullComment() {
+//        root = getRootNode("\\* " +
+//                           "* This is a comment " +
+//                           "* @Orm\\JoinColumn(name=\"inverse_id\", referencedColumnName=\"id_second\") " +
+//                           "* " +
+//                           "* @param test array" +
+//                           "*/", false);
 //    }
+
+    public void testWithAttributes() {
+        root = getRootNode(" * @Attributes({ " +
+        " @Attribute(\"mixed\",                type = \"mixed\"), " +
+        " @Attribute(\"boolean\",              type = \"boolean\"), " +
+        " @Attribute(\"bool\",                 type = \"bool\"), " +
+        " @Attribute(\"float\",                type = \"float\"), " +
+        " @Attribute(\"string\",               type = \"string\"), " +
+        " @Attribute(\"integer\",              type = \"integer\"), " +
+        " @Attribute(\"array\",                type = \"array\"), " +
+        " @Attribute(\"arrayOfIntegers\",      type = \"array<integer>\"), " +
+        " @Attribute(\"annotation\",           type = \"Doctrine\\Tests\\Common\\Annotations\\Fixtures\\AnnotationTargetAll\"), " +
+        " @Attribute(\"arrayOfAnnotations\",   type = \"array<Doctrine\\Tests\\Common\\Annotations\\Fixtures\\AnnotationTargetAll>\")})",
+        false);
+
+        assertNotNull(root);
+        assertEquals("Attributes", root.getClassName());
+        System.out.println(reporter.getErrorsAsString());
+        assertFalse(reporter.hasErrors());
+    }
 
     @Test
     public void testRouteVariable() {
