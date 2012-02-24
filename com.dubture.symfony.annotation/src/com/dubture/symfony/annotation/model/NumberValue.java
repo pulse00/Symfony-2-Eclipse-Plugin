@@ -6,16 +6,20 @@ package com.dubture.symfony.annotation.model;
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public class StringValue implements ArgumentValue {
+public class NumberValue implements ArgumentValue {
 
-    private String value;
+    private Double value;
 
-    public StringValue() {
+    public NumberValue() {
         value = null;
     }
 
-    public StringValue(String value) {
+    public NumberValue(double value) {
         this.value = value;
+    }
+
+    public NumberValue(String value) {
+        this.value = Double.parseDouble(value);
     }
 
     @Override
@@ -30,6 +34,6 @@ public class StringValue implements ArgumentValue {
 
     @Override
     public String toString() {
-        return value;
+        return value.toString();
     }
 }

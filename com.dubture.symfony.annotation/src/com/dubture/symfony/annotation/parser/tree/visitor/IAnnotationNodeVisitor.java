@@ -6,7 +6,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
-package com.dubture.symfony.annotation.parser.antlr;
+package com.dubture.symfony.annotation.parser.tree.visitor;
+
+import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 
 
 
@@ -17,6 +19,5 @@ package com.dubture.symfony.annotation.parser.antlr;
  *
  */
 public interface IAnnotationNodeVisitor {
-    void beginVisit(AnnotationCommonTree node);
-    void endVisit(AnnotationCommonTree node);
+    void visit(AnnotationCommonTree node);
 }

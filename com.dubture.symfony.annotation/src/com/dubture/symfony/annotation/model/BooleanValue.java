@@ -1,12 +1,11 @@
 package com.dubture.symfony.annotation.model;
 
 /**
- * This object represents a boolean value. This object can
- * be assigned to annotation argument.
+ * This object represents a boolean value.
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public class BooleanValue implements ObjectArgumentValue {
+public class BooleanValue implements ArgumentValue {
 
     private Boolean value;
 
@@ -28,8 +27,8 @@ public class BooleanValue implements ObjectArgumentValue {
     }
 
     @Override
-    public ArgumentValueTypes getType() {
-        return ArgumentValueTypes.BOOLEAN;
+    public ArgumentValueType getType() {
+        return ArgumentValueType.BOOLEAN;
     }
 
     @Override

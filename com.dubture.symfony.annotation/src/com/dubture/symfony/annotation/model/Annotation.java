@@ -1,28 +1,27 @@
 package com.dubture.symfony.annotation.model;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
 /**
  * This object represents a Symfony2 annotation. It holds
  * information about the annotation like the class name,
- * the namespace and the arguments of it. The argument
- * valid values of an annotation are:
+ * the namespace and its argument.
  *
- *    - {@link Annotation}
- *    - {@link ObjectValue}
- *    - {@link StringValue}
- *    - {@link BooleanValue}
- *    - {@link NullValue}
+ * <p>
+ * There is two kind of argument: Argument and NamedArgument.
+ * </p>
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public class Annotation implements ArgumentValue {
-    private String className = "";
-    private Stack<String> namespace = new Stack<String>();
+public class Annotation {
+    protected String className = "";
+    protected Stack<String> namespace = new Stack<String>();
 
-    private Map<String, ArgumentValue> arguments = new HashMap<String, ArgumentValue>();
+    protected List<Argument> arguments = new LinkedList<Argument>();
 
     public Annotation() {
     }
@@ -80,25 +79,50 @@ public class Annotation implements ArgumentValue {
         return getNamespace() + getClassName();
     }
 
-    public Map<String, ArgumentValue> getArguments() {
+    public List<Argument> getArguments() {
         return arguments;
     }
 
-    public void putArgument(String name, ArgumentValue value) {
-        arguments.put(name, value);
+    public Map<String, NamedArgument> getNamedArguments() {
+        Map<String, NamedArgument> namedArguments = new HashMap<String, NamedArgument>();
+
+        for (Argument argument : arguments) {
+            if (argument instanceof NamedArgument) {
+                NamedArgument namedArgument = (NamedArgument) argument;
+                namedArguments.put(namedArgument.getName(), namedArgument);
+            }
+        }
+
+        return namedArguments;
+    }
+
+    public void addArgument(Argument argument) {
+        arguments.add(argument);
+    }
+
+    public void addArgument(String name, ArgumentValue value) {
+        arguments.add(new NamedArgument(name, value));
     }
 
     public String getArgument(String name) {
-        if (arguments.containsKey(name)) {
-            return arguments.get(name).toString();
+        ArgumentValue argumentValue = getArgumentValue(name);
+        if (argumentValue == null) {
+            return null;
         }
 
-        return null;
+        return argumentValue.toString();
     }
 
     public ArgumentValue getArgumentValue(String name) {
-        if (arguments.containsKey(name)) {
-            return arguments.get(name);
+        for (Argument argument : arguments) {
+            if (!(argument instanceof NamedArgument)) {
+                continue;
+            }
+
+            NamedArgument namedArgument = (NamedArgument) argument;
+            if (namedArgument.getName().equals(name)) {
+                return namedArgument.getValue();
+            }
         }
 
         return null;
@@ -110,16 +134,6 @@ public class Annotation implements ArgumentValue {
         }
 
         return null;
-    }
-
-    @Override
-    public Object getValue() {
-        return this;
-    }
-
-    @Override
-    public ArgumentValueTypes getType() {
-        return ArgumentValueTypes.ANNOTATION;
     }
 
     @Override

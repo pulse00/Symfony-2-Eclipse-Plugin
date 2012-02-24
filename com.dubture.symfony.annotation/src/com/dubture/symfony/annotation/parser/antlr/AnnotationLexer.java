@@ -1,4 +1,4 @@
-// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationLexer.g 2012-02-23 09:34:56
+// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationLexer.g 2012-02-24 15:23:12
 
 package com.dubture.symfony.annotation.parser.antlr;
 
@@ -15,28 +15,37 @@ public class AnnotationLexer extends Lexer {
     public static final int LOWER=4;
     public static final int UPPER=5;
     public static final int DIGIT=6;
-    public static final int UNDERSCORE=7;
-    public static final int QUOTE=8;
-    public static final int DOUBLE_QUOTE=9;
-    public static final int ESCAPE_QUOTE=10;
-    public static final int ESCAPE_DOUBLE_QUOTE=11;
-    public static final int LETTER=12;
-    public static final int ALPHANUM=13;
-    public static final int AT=14;
-    public static final int PARAM_START=15;
-    public static final int PARAM_END=16;
-    public static final int EQUAL=17;
-    public static final int COMMA=18;
-    public static final int BSLASH=19;
-    public static final int CURLY_START=20;
-    public static final int CURLY_END=21;
-    public static final int TRUE=22;
-    public static final int FALSE=23;
-    public static final int NULL=24;
-    public static final int IDENTIFIER=25;
-    public static final int STRING_LITERAL=26;
-    public static final int WHITESPACE=27;
-    public static final int COMMENT_CHAR=28;
+    public static final int DIGIT_NOZERO=7;
+    public static final int UNDERSCORE=8;
+    public static final int QUOTE=9;
+    public static final int DOUBLE_QUOTE=10;
+    public static final int ESCAPE_QUOTE=11;
+    public static final int ESCAPE_DOUBLE_QUOTE=12;
+    public static final int LETTER=13;
+    public static final int ALPHANUM=14;
+    public static final int POSITIVE=15;
+    public static final int NEGATIVE=16;
+    public static final int DOT=17;
+    public static final int WHITESPACE_CHAR=18;
+    public static final int AT=19;
+    public static final int PARAM_START=20;
+    public static final int PARAM_END=21;
+    public static final int EQUAL=22;
+    public static final int COMMA=23;
+    public static final int BSLASH=24;
+    public static final int CURLY_START=25;
+    public static final int CURLY_END=26;
+    public static final int TRUE=27;
+    public static final int FALSE=28;
+    public static final int NULL=29;
+    public static final int IDENTIFIER=30;
+    public static final int STRING_LITERAL=31;
+    public static final int INTEGER_LITERAL=32;
+    public static final int FLOAT_LITERAL=33;
+    public static final int WHITESPACE=34;
+    public static final int COMMENT_START=35;
+    public static final int COMMENT_END=36;
+    public static final int COMMENT_CHAR=37;
 
 
         private IAnnotationErrorReporter errorReporter = null;
@@ -133,11 +142,27 @@ public class AnnotationLexer extends Lexer {
     }
     // $ANTLR end "DIGIT"
 
+    // $ANTLR start "DIGIT_NOZERO"
+    public final void mDIGIT_NOZERO() throws RecognitionException {
+        try {
+            // AnnotationLexer.g:51:30: ( '1' .. '9' )
+            // AnnotationLexer.g:51:32: '1' .. '9'
+            {
+            matchRange('1','9'); 
+
+            }
+
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "DIGIT_NOZERO"
+
     // $ANTLR start "UNDERSCORE"
     public final void mUNDERSCORE() throws RecognitionException {
         try {
-            // AnnotationLexer.g:51:30: ( '_' )
-            // AnnotationLexer.g:51:32: '_'
+            // AnnotationLexer.g:52:30: ( '_' )
+            // AnnotationLexer.g:52:32: '_'
             {
             match('_'); 
 
@@ -152,8 +177,8 @@ public class AnnotationLexer extends Lexer {
     // $ANTLR start "QUOTE"
     public final void mQUOTE() throws RecognitionException {
         try {
-            // AnnotationLexer.g:52:30: ( '\\'' )
-            // AnnotationLexer.g:52:32: '\\''
+            // AnnotationLexer.g:53:30: ( '\\'' )
+            // AnnotationLexer.g:53:32: '\\''
             {
             match('\''); 
 
@@ -168,8 +193,8 @@ public class AnnotationLexer extends Lexer {
     // $ANTLR start "DOUBLE_QUOTE"
     public final void mDOUBLE_QUOTE() throws RecognitionException {
         try {
-            // AnnotationLexer.g:53:30: ( '\"' )
-            // AnnotationLexer.g:53:32: '\"'
+            // AnnotationLexer.g:54:30: ( '\"' )
+            // AnnotationLexer.g:54:32: '\"'
             {
             match('\"'); 
 
@@ -184,8 +209,8 @@ public class AnnotationLexer extends Lexer {
     // $ANTLR start "ESCAPE_QUOTE"
     public final void mESCAPE_QUOTE() throws RecognitionException {
         try {
-            // AnnotationLexer.g:54:30: ( '\\\\' '\\'' )
-            // AnnotationLexer.g:54:32: '\\\\' '\\''
+            // AnnotationLexer.g:55:30: ( '\\\\' '\\'' )
+            // AnnotationLexer.g:55:32: '\\\\' '\\''
             {
             match('\\'); 
             match('\''); 
@@ -201,8 +226,8 @@ public class AnnotationLexer extends Lexer {
     // $ANTLR start "ESCAPE_DOUBLE_QUOTE"
     public final void mESCAPE_DOUBLE_QUOTE() throws RecognitionException {
         try {
-            // AnnotationLexer.g:55:30: ( '\\\\' '\"' )
-            // AnnotationLexer.g:55:32: '\\\\' '\"'
+            // AnnotationLexer.g:56:30: ( '\\\\' '\"' )
+            // AnnotationLexer.g:56:32: '\\\\' '\"'
             {
             match('\\'); 
             match('\"'); 
@@ -218,7 +243,7 @@ public class AnnotationLexer extends Lexer {
     // $ANTLR start "LETTER"
     public final void mLETTER() throws RecognitionException {
         try {
-            // AnnotationLexer.g:57:30: ( LOWER | UPPER )
+            // AnnotationLexer.g:58:30: ( LOWER | UPPER )
             // AnnotationLexer.g:
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
@@ -242,7 +267,7 @@ public class AnnotationLexer extends Lexer {
     // $ANTLR start "ALPHANUM"
     public final void mALPHANUM() throws RecognitionException {
         try {
-            // AnnotationLexer.g:58:30: ( LETTER | DIGIT )
+            // AnnotationLexer.g:59:30: ( LETTER | DIGIT )
             // AnnotationLexer.g:
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
@@ -263,13 +288,85 @@ public class AnnotationLexer extends Lexer {
     }
     // $ANTLR end "ALPHANUM"
 
+    // $ANTLR start "POSITIVE"
+    public final void mPOSITIVE() throws RecognitionException {
+        try {
+            // AnnotationLexer.g:60:30: ( '+' )
+            // AnnotationLexer.g:60:32: '+'
+            {
+            match('+'); 
+
+            }
+
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "POSITIVE"
+
+    // $ANTLR start "NEGATIVE"
+    public final void mNEGATIVE() throws RecognitionException {
+        try {
+            // AnnotationLexer.g:61:30: ( '-' )
+            // AnnotationLexer.g:61:32: '-'
+            {
+            match('-'); 
+
+            }
+
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "NEGATIVE"
+
+    // $ANTLR start "DOT"
+    public final void mDOT() throws RecognitionException {
+        try {
+            // AnnotationLexer.g:62:30: ( '\\.' )
+            // AnnotationLexer.g:62:32: '\\.'
+            {
+            match('.'); 
+
+            }
+
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "DOT"
+
+    // $ANTLR start "WHITESPACE_CHAR"
+    public final void mWHITESPACE_CHAR() throws RecognitionException {
+        try {
+            // AnnotationLexer.g:63:30: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' ) )
+            // AnnotationLexer.g:63:32: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )
+            {
+            if ( (input.LA(1)>='\t' && input.LA(1)<='\n')||(input.LA(1)>='\f' && input.LA(1)<='\r')||input.LA(1)==' ' ) {
+                input.consume();
+
+            }
+            else {
+                MismatchedSetException mse = new MismatchedSetException(null,input);
+                recover(mse);
+                throw mse;}
+
+
+            }
+
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "WHITESPACE_CHAR"
+
     // $ANTLR start "AT"
     public final void mAT() throws RecognitionException {
         try {
             int _type = AT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // AnnotationLexer.g:61:13: ( '@' )
-            // AnnotationLexer.g:61:15: '@'
+            // AnnotationLexer.g:66:13: ( '@' )
+            // AnnotationLexer.g:66:15: '@'
             {
             match('@'); 
 
@@ -288,8 +385,8 @@ public class AnnotationLexer extends Lexer {
         try {
             int _type = PARAM_START;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // AnnotationLexer.g:62:13: ( '(' )
-            // AnnotationLexer.g:62:15: '('
+            // AnnotationLexer.g:67:13: ( '(' )
+            // AnnotationLexer.g:67:15: '('
             {
             match('('); 
 
@@ -308,8 +405,8 @@ public class AnnotationLexer extends Lexer {
         try {
             int _type = PARAM_END;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // AnnotationLexer.g:63:13: ( ')' )
-            // AnnotationLexer.g:63:15: ')'
+            // AnnotationLexer.g:68:13: ( ')' )
+            // AnnotationLexer.g:68:15: ')'
             {
             match(')'); 
 
@@ -328,8 +425,8 @@ public class AnnotationLexer extends Lexer {
         try {
             int _type = EQUAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // AnnotationLexer.g:64:13: ( '=' )
-            // AnnotationLexer.g:64:15: '='
+            // AnnotationLexer.g:69:13: ( '=' )
+            // AnnotationLexer.g:69:15: '='
             {
             match('='); 
 
@@ -348,8 +445,8 @@ public class AnnotationLexer extends Lexer {
         try {
             int _type = COMMA;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // AnnotationLexer.g:65:13: ( ',' )
-            // AnnotationLexer.g:65:15: ','
+            // AnnotationLexer.g:70:13: ( ',' )
+            // AnnotationLexer.g:70:15: ','
             {
             match(','); 
 
@@ -368,8 +465,8 @@ public class AnnotationLexer extends Lexer {
         try {
             int _type = BSLASH;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // AnnotationLexer.g:66:13: ( '\\\\' )
-            // AnnotationLexer.g:66:15: '\\\\'
+            // AnnotationLexer.g:71:13: ( '\\\\' )
+            // AnnotationLexer.g:71:15: '\\\\'
             {
             match('\\'); 
 
@@ -388,8 +485,8 @@ public class AnnotationLexer extends Lexer {
         try {
             int _type = CURLY_START;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // AnnotationLexer.g:67:13: ( '{' )
-            // AnnotationLexer.g:67:15: '{'
+            // AnnotationLexer.g:72:13: ( '{' )
+            // AnnotationLexer.g:72:15: '{'
             {
             match('{'); 
 
@@ -408,8 +505,8 @@ public class AnnotationLexer extends Lexer {
         try {
             int _type = CURLY_END;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // AnnotationLexer.g:68:13: ( '}' )
-            // AnnotationLexer.g:68:15: '}'
+            // AnnotationLexer.g:73:13: ( '}' )
+            // AnnotationLexer.g:73:15: '}'
             {
             match('}'); 
 
@@ -428,8 +525,8 @@ public class AnnotationLexer extends Lexer {
         try {
             int _type = TRUE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // AnnotationLexer.g:71:7: ( 'true' )
-            // AnnotationLexer.g:71:9: 'true'
+            // AnnotationLexer.g:76:7: ( 'true' )
+            // AnnotationLexer.g:76:9: 'true'
             {
             match("true"); 
 
@@ -449,8 +546,8 @@ public class AnnotationLexer extends Lexer {
         try {
             int _type = FALSE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // AnnotationLexer.g:72:7: ( 'false' )
-            // AnnotationLexer.g:72:9: 'false'
+            // AnnotationLexer.g:77:7: ( 'false' )
+            // AnnotationLexer.g:77:9: 'false'
             {
             match("false"); 
 
@@ -470,8 +567,8 @@ public class AnnotationLexer extends Lexer {
         try {
             int _type = NULL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // AnnotationLexer.g:73:7: ( 'null' )
-            // AnnotationLexer.g:73:9: 'null'
+            // AnnotationLexer.g:78:7: ( 'null' )
+            // AnnotationLexer.g:78:9: 'null'
             {
             match("null"); 
 
@@ -491,8 +588,8 @@ public class AnnotationLexer extends Lexer {
         try {
             int _type = IDENTIFIER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // AnnotationLexer.g:76:13: ( ( LETTER | UNDERSCORE ) ( ALPHANUM | UNDERSCORE )* )
-            // AnnotationLexer.g:76:15: ( LETTER | UNDERSCORE ) ( ALPHANUM | UNDERSCORE )*
+            // AnnotationLexer.g:81:13: ( ( LETTER | UNDERSCORE ) ( ALPHANUM | UNDERSCORE )* )
+            // AnnotationLexer.g:81:15: ( LETTER | UNDERSCORE ) ( ALPHANUM | UNDERSCORE )*
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
                 input.consume();
@@ -503,7 +600,7 @@ public class AnnotationLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // AnnotationLexer.g:76:37: ( ALPHANUM | UNDERSCORE )*
+            // AnnotationLexer.g:81:37: ( ALPHANUM | UNDERSCORE )*
             loop1:
             do {
                 int alt1=2;
@@ -554,7 +651,7 @@ public class AnnotationLexer extends Lexer {
             int _channel = DEFAULT_TOKEN_CHANNEL;
             int character;
 
-            // AnnotationLexer.g:80:3: ( QUOTE (character=~ ( QUOTE ) | ESCAPE_QUOTE )* QUOTE | DOUBLE_QUOTE (character=~ ( DOUBLE_QUOTE ) | ESCAPE_DOUBLE_QUOTE )* DOUBLE_QUOTE )
+            // AnnotationLexer.g:85:3: ( QUOTE (character=~ ( QUOTE ) | ESCAPE_QUOTE )* QUOTE | DOUBLE_QUOTE (character=~ ( DOUBLE_QUOTE ) | ESCAPE_DOUBLE_QUOTE )* DOUBLE_QUOTE )
             int alt4=2;
             int LA4_0 = input.LA(1);
 
@@ -572,11 +669,11 @@ public class AnnotationLexer extends Lexer {
             }
             switch (alt4) {
                 case 1 :
-                    // AnnotationLexer.g:80:5: QUOTE (character=~ ( QUOTE ) | ESCAPE_QUOTE )* QUOTE
+                    // AnnotationLexer.g:85:5: QUOTE (character=~ ( QUOTE ) | ESCAPE_QUOTE )* QUOTE
                     {
                     mQUOTE(); 
                      StringBuilder builder = new StringBuilder(); 
-                    // AnnotationLexer.g:82:5: (character=~ ( QUOTE ) | ESCAPE_QUOTE )*
+                    // AnnotationLexer.g:87:5: (character=~ ( QUOTE ) | ESCAPE_QUOTE )*
                     loop2:
                     do {
                         int alt2=3;
@@ -610,7 +707,7 @@ public class AnnotationLexer extends Lexer {
 
                         switch (alt2) {
                     	case 1 :
-                    	    // AnnotationLexer.g:83:7: character=~ ( QUOTE )
+                    	    // AnnotationLexer.g:88:7: character=~ ( QUOTE )
                     	    {
                     	    character= input.LA(1);
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='\uFFFF') ) {
@@ -627,7 +724,7 @@ public class AnnotationLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // AnnotationLexer.g:84:7: ESCAPE_QUOTE
+                    	    // AnnotationLexer.g:89:7: ESCAPE_QUOTE
                     	    {
                     	    mESCAPE_QUOTE(); 
                     	     builder.appendCodePoint('\''); 
@@ -646,11 +743,11 @@ public class AnnotationLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // AnnotationLexer.g:89:5: DOUBLE_QUOTE (character=~ ( DOUBLE_QUOTE ) | ESCAPE_DOUBLE_QUOTE )* DOUBLE_QUOTE
+                    // AnnotationLexer.g:94:5: DOUBLE_QUOTE (character=~ ( DOUBLE_QUOTE ) | ESCAPE_DOUBLE_QUOTE )* DOUBLE_QUOTE
                     {
                     mDOUBLE_QUOTE(); 
                      StringBuilder builder = new StringBuilder(); 
-                    // AnnotationLexer.g:91:5: (character=~ ( DOUBLE_QUOTE ) | ESCAPE_DOUBLE_QUOTE )*
+                    // AnnotationLexer.g:96:5: (character=~ ( DOUBLE_QUOTE ) | ESCAPE_DOUBLE_QUOTE )*
                     loop3:
                     do {
                         int alt3=3;
@@ -684,7 +781,7 @@ public class AnnotationLexer extends Lexer {
 
                         switch (alt3) {
                     	case 1 :
-                    	    // AnnotationLexer.g:92:7: character=~ ( DOUBLE_QUOTE )
+                    	    // AnnotationLexer.g:97:7: character=~ ( DOUBLE_QUOTE )
                     	    {
                     	    character= input.LA(1);
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='\uFFFF') ) {
@@ -701,7 +798,7 @@ public class AnnotationLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // AnnotationLexer.g:93:7: ESCAPE_DOUBLE_QUOTE
+                    	    // AnnotationLexer.g:98:7: ESCAPE_DOUBLE_QUOTE
                     	    {
                     	    mESCAPE_DOUBLE_QUOTE(); 
                     	     builder.appendCodePoint('"'); 
@@ -729,27 +826,187 @@ public class AnnotationLexer extends Lexer {
     }
     // $ANTLR end "STRING_LITERAL"
 
+    // $ANTLR start "INTEGER_LITERAL"
+    public final void mINTEGER_LITERAL() throws RecognitionException {
+        try {
+            int _type = INTEGER_LITERAL;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // AnnotationLexer.g:105:3: ( ( NEGATIVE )? ( DIGIT )+ )
+            // AnnotationLexer.g:105:5: ( NEGATIVE )? ( DIGIT )+
+            {
+            // AnnotationLexer.g:105:5: ( NEGATIVE )?
+            int alt5=2;
+            int LA5_0 = input.LA(1);
+
+            if ( (LA5_0=='-') ) {
+                alt5=1;
+            }
+            switch (alt5) {
+                case 1 :
+                    // AnnotationLexer.g:105:5: NEGATIVE
+                    {
+                    mNEGATIVE(); 
+
+                    }
+                    break;
+
+            }
+
+            // AnnotationLexer.g:105:15: ( DIGIT )+
+            int cnt6=0;
+            loop6:
+            do {
+                int alt6=2;
+                int LA6_0 = input.LA(1);
+
+                if ( ((LA6_0>='0' && LA6_0<='9')) ) {
+                    alt6=1;
+                }
+
+
+                switch (alt6) {
+            	case 1 :
+            	    // AnnotationLexer.g:105:15: DIGIT
+            	    {
+            	    mDIGIT(); 
+
+            	    }
+            	    break;
+
+            	default :
+            	    if ( cnt6 >= 1 ) break loop6;
+                        EarlyExitException eee =
+                            new EarlyExitException(6, input);
+                        throw eee;
+                }
+                cnt6++;
+            } while (true);
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "INTEGER_LITERAL"
+
+    // $ANTLR start "FLOAT_LITERAL"
+    public final void mFLOAT_LITERAL() throws RecognitionException {
+        try {
+            int _type = FLOAT_LITERAL;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // AnnotationLexer.g:109:3: ( ( NEGATIVE )? ( DIGIT )* DOT ( DIGIT )+ )
+            // AnnotationLexer.g:109:5: ( NEGATIVE )? ( DIGIT )* DOT ( DIGIT )+
+            {
+            // AnnotationLexer.g:109:5: ( NEGATIVE )?
+            int alt7=2;
+            int LA7_0 = input.LA(1);
+
+            if ( (LA7_0=='-') ) {
+                alt7=1;
+            }
+            switch (alt7) {
+                case 1 :
+                    // AnnotationLexer.g:109:5: NEGATIVE
+                    {
+                    mNEGATIVE(); 
+
+                    }
+                    break;
+
+            }
+
+            // AnnotationLexer.g:109:15: ( DIGIT )*
+            loop8:
+            do {
+                int alt8=2;
+                int LA8_0 = input.LA(1);
+
+                if ( ((LA8_0>='0' && LA8_0<='9')) ) {
+                    alt8=1;
+                }
+
+
+                switch (alt8) {
+            	case 1 :
+            	    // AnnotationLexer.g:109:15: DIGIT
+            	    {
+            	    mDIGIT(); 
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop8;
+                }
+            } while (true);
+
+            mDOT(); 
+            // AnnotationLexer.g:109:26: ( DIGIT )+
+            int cnt9=0;
+            loop9:
+            do {
+                int alt9=2;
+                int LA9_0 = input.LA(1);
+
+                if ( ((LA9_0>='0' && LA9_0<='9')) ) {
+                    alt9=1;
+                }
+
+
+                switch (alt9) {
+            	case 1 :
+            	    // AnnotationLexer.g:109:26: DIGIT
+            	    {
+            	    mDIGIT(); 
+
+            	    }
+            	    break;
+
+            	default :
+            	    if ( cnt9 >= 1 ) break loop9;
+                        EarlyExitException eee =
+                            new EarlyExitException(9, input);
+                        throw eee;
+                }
+                cnt9++;
+            } while (true);
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "FLOAT_LITERAL"
+
     // $ANTLR start "WHITESPACE"
     public final void mWHITESPACE() throws RecognitionException {
         try {
             int _type = WHITESPACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // AnnotationLexer.g:100:14: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
-            // AnnotationLexer.g:100:16: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+            // AnnotationLexer.g:113:15: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
+            // AnnotationLexer.g:113:17: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
             {
-            // AnnotationLexer.g:100:16: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
-            int cnt5=0;
-            loop5:
+            // AnnotationLexer.g:113:17: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+            int cnt10=0;
+            loop10:
             do {
-                int alt5=2;
-                int LA5_0 = input.LA(1);
+                int alt10=2;
+                int LA10_0 = input.LA(1);
 
-                if ( ((LA5_0>='\t' && LA5_0<='\n')||(LA5_0>='\f' && LA5_0<='\r')||LA5_0==' ') ) {
-                    alt5=1;
+                if ( ((LA10_0>='\t' && LA10_0<='\n')||(LA10_0>='\f' && LA10_0<='\r')||LA10_0==' ') ) {
+                    alt10=1;
                 }
 
 
-                switch (alt5) {
+                switch (alt10) {
             	case 1 :
             	    // AnnotationLexer.g:
             	    {
@@ -767,12 +1024,12 @@ public class AnnotationLexer extends Lexer {
             	    break;
 
             	default :
-            	    if ( cnt5 >= 1 ) break loop5;
+            	    if ( cnt10 >= 1 ) break loop10;
                         EarlyExitException eee =
-                            new EarlyExitException(5, input);
+                            new EarlyExitException(10, input);
                         throw eee;
                 }
-                cnt5++;
+                cnt10++;
             } while (true);
 
              _channel = HIDDEN; 
@@ -787,29 +1044,85 @@ public class AnnotationLexer extends Lexer {
     }
     // $ANTLR end "WHITESPACE"
 
+    // $ANTLR start "COMMENT_START"
+    public final void mCOMMENT_START() throws RecognitionException {
+        try {
+            int _type = COMMENT_START;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // AnnotationLexer.g:114:15: ( ( '\\\\' '*' ) )
+            // AnnotationLexer.g:114:17: ( '\\\\' '*' )
+            {
+            // AnnotationLexer.g:114:17: ( '\\\\' '*' )
+            // AnnotationLexer.g:114:18: '\\\\' '*'
+            {
+            match('\\'); 
+            match('*'); 
+
+            }
+
+             _channel = HIDDEN; 
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "COMMENT_START"
+
+    // $ANTLR start "COMMENT_END"
+    public final void mCOMMENT_END() throws RecognitionException {
+        try {
+            int _type = COMMENT_END;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // AnnotationLexer.g:115:15: ( ( '*' '/' ) )
+            // AnnotationLexer.g:115:17: ( '*' '/' )
+            {
+            // AnnotationLexer.g:115:17: ( '*' '/' )
+            // AnnotationLexer.g:115:18: '*' '/'
+            {
+            match('*'); 
+            match('/'); 
+
+            }
+
+             _channel = HIDDEN; 
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "COMMENT_END"
+
     // $ANTLR start "COMMENT_CHAR"
     public final void mCOMMENT_CHAR() throws RecognitionException {
         try {
             int _type = COMMENT_CHAR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // AnnotationLexer.g:101:14: ( ( '*' )+ )
-            // AnnotationLexer.g:101:16: ( '*' )+
+            // AnnotationLexer.g:116:15: ( ( '*' )+ )
+            // AnnotationLexer.g:116:17: ( '*' )+
             {
-            // AnnotationLexer.g:101:16: ( '*' )+
-            int cnt6=0;
-            loop6:
+            // AnnotationLexer.g:116:17: ( '*' )+
+            int cnt11=0;
+            loop11:
             do {
-                int alt6=2;
-                int LA6_0 = input.LA(1);
+                int alt11=2;
+                int LA11_0 = input.LA(1);
 
-                if ( (LA6_0=='*') ) {
-                    alt6=1;
+                if ( (LA11_0=='*') ) {
+                    alt11=1;
                 }
 
 
-                switch (alt6) {
+                switch (alt11) {
             	case 1 :
-            	    // AnnotationLexer.g:101:17: '*'
+            	    // AnnotationLexer.g:116:18: '*'
             	    {
             	    match('*'); 
 
@@ -817,12 +1130,12 @@ public class AnnotationLexer extends Lexer {
             	    break;
 
             	default :
-            	    if ( cnt6 >= 1 ) break loop6;
+            	    if ( cnt11 >= 1 ) break loop11;
                         EarlyExitException eee =
-                            new EarlyExitException(6, input);
+                            new EarlyExitException(11, input);
                         throw eee;
                 }
-                cnt6++;
+                cnt11++;
             } while (true);
 
              _channel = HIDDEN; 
@@ -838,10 +1151,10 @@ public class AnnotationLexer extends Lexer {
     // $ANTLR end "COMMENT_CHAR"
 
     public void mTokens() throws RecognitionException {
-        // AnnotationLexer.g:1:8: ( AT | PARAM_START | PARAM_END | EQUAL | COMMA | BSLASH | CURLY_START | CURLY_END | TRUE | FALSE | NULL | IDENTIFIER | STRING_LITERAL | WHITESPACE | COMMENT_CHAR )
-        int alt7=15;
-        alt7 = dfa7.predict(input);
-        switch (alt7) {
+        // AnnotationLexer.g:1:8: ( AT | PARAM_START | PARAM_END | EQUAL | COMMA | BSLASH | CURLY_START | CURLY_END | TRUE | FALSE | NULL | IDENTIFIER | STRING_LITERAL | INTEGER_LITERAL | FLOAT_LITERAL | WHITESPACE | COMMENT_START | COMMENT_END | COMMENT_CHAR )
+        int alt12=19;
+        alt12 = dfa12.predict(input);
+        switch (alt12) {
             case 1 :
                 // AnnotationLexer.g:1:10: AT
                 {
@@ -934,14 +1247,42 @@ public class AnnotationLexer extends Lexer {
                 }
                 break;
             case 14 :
-                // AnnotationLexer.g:1:118: WHITESPACE
+                // AnnotationLexer.g:1:118: INTEGER_LITERAL
+                {
+                mINTEGER_LITERAL(); 
+
+                }
+                break;
+            case 15 :
+                // AnnotationLexer.g:1:134: FLOAT_LITERAL
+                {
+                mFLOAT_LITERAL(); 
+
+                }
+                break;
+            case 16 :
+                // AnnotationLexer.g:1:148: WHITESPACE
                 {
                 mWHITESPACE(); 
 
                 }
                 break;
-            case 15 :
-                // AnnotationLexer.g:1:129: COMMENT_CHAR
+            case 17 :
+                // AnnotationLexer.g:1:159: COMMENT_START
+                {
+                mCOMMENT_START(); 
+
+                }
+                break;
+            case 18 :
+                // AnnotationLexer.g:1:173: COMMENT_END
+                {
+                mCOMMENT_END(); 
+
+                }
+                break;
+            case 19 :
+                // AnnotationLexer.g:1:185: COMMENT_CHAR
                 {
                 mCOMMENT_CHAR(); 
 
@@ -953,50 +1294,62 @@ public class AnnotationLexer extends Lexer {
     }
 
 
-    protected DFA7 dfa7 = new DFA7(this);
-    static final String DFA7_eotS =
-        "\11\uffff\3\14\4\uffff\6\14\1\31\1\14\1\33\1\uffff\1\34\2\uffff";
-    static final String DFA7_eofS =
-        "\35\uffff";
-    static final String DFA7_minS =
-        "\1\11\10\uffff\1\162\1\141\1\165\4\uffff\1\165\2\154\1\145\1\163"+
-        "\1\154\1\60\1\145\1\60\1\uffff\1\60\2\uffff";
-    static final String DFA7_maxS =
-        "\1\175\10\uffff\1\162\1\141\1\165\4\uffff\1\165\2\154\1\145\1\163"+
-        "\1\154\1\172\1\145\1\172\1\uffff\1\172\2\uffff";
-    static final String DFA7_acceptS =
-        "\1\uffff\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\3\uffff\1\14\1\15\1\16"+
-        "\1\17\11\uffff\1\11\1\uffff\1\13\1\12";
-    static final String DFA7_specialS =
-        "\35\uffff}>";
-    static final String[] DFA7_transitionS = {
-            "\2\16\1\uffff\2\16\22\uffff\1\16\1\uffff\1\15\4\uffff\1\15"+
-            "\1\2\1\3\1\17\1\uffff\1\5\20\uffff\1\4\2\uffff\1\1\32\14\1\uffff"+
-            "\1\6\2\uffff\1\14\1\uffff\5\14\1\12\7\14\1\13\5\14\1\11\6\14"+
-            "\1\7\1\uffff\1\10",
+    protected DFA12 dfa12 = new DFA12(this);
+    static final String DFA12_eotS =
+        "\6\uffff\1\24\2\uffff\3\14\3\uffff\1\30\2\uffff\1\32\2\uffff\3"+
+        "\14\3\uffff\3\14\1\41\1\14\1\43\1\uffff\1\44\2\uffff";
+    static final String DFA12_eofS =
+        "\45\uffff";
+    static final String DFA12_minS =
+        "\1\11\5\uffff\1\52\2\uffff\1\162\1\141\1\165\2\uffff\2\56\2\uffff"+
+        "\1\57\2\uffff\1\165\2\154\3\uffff\1\145\1\163\1\154\1\60\1\145\1"+
+        "\60\1\uffff\1\60\2\uffff";
+    static final String DFA12_maxS =
+        "\1\175\5\uffff\1\52\2\uffff\1\162\1\141\1\165\2\uffff\2\71\2\uffff"+
+        "\1\57\2\uffff\1\165\2\154\3\uffff\1\145\1\163\1\154\1\172\1\145"+
+        "\1\172\1\uffff\1\172\2\uffff";
+    static final String DFA12_acceptS =
+        "\1\uffff\1\1\1\2\1\3\1\4\1\5\1\uffff\1\7\1\10\3\uffff\1\14\1\15"+
+        "\2\uffff\1\17\1\20\1\uffff\1\21\1\6\3\uffff\1\16\1\22\1\23\6\uffff"+
+        "\1\11\1\uffff\1\13\1\12";
+    static final String DFA12_specialS =
+        "\45\uffff}>";
+    static final String[] DFA12_transitionS = {
+            "\2\21\1\uffff\2\21\22\uffff\1\21\1\uffff\1\15\4\uffff\1\15"+
+            "\1\2\1\3\1\22\1\uffff\1\5\1\16\1\20\1\uffff\12\17\3\uffff\1"+
+            "\4\2\uffff\1\1\32\14\1\uffff\1\6\2\uffff\1\14\1\uffff\5\14\1"+
+            "\12\7\14\1\13\5\14\1\11\6\14\1\7\1\uffff\1\10",
             "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "\1\20",
-            "\1\21",
-            "\1\22",
             "",
             "",
             "",
             "",
             "\1\23",
-            "\1\24",
+            "",
+            "",
             "\1\25",
             "\1\26",
             "\1\27",
-            "\1\30",
+            "",
+            "",
+            "\1\20\1\uffff\12\17",
+            "\1\20\1\uffff\12\17",
+            "",
+            "",
+            "\1\31",
+            "",
+            "",
+            "\1\33",
+            "\1\34",
+            "\1\35",
+            "",
+            "",
+            "",
+            "\1\36",
+            "\1\37",
+            "\1\40",
             "\12\14\7\uffff\32\14\4\uffff\1\14\1\uffff\32\14",
-            "\1\32",
+            "\1\42",
             "\12\14\7\uffff\32\14\4\uffff\1\14\1\uffff\32\14",
             "",
             "\12\14\7\uffff\32\14\4\uffff\1\14\1\uffff\32\14",
@@ -1004,37 +1357,37 @@ public class AnnotationLexer extends Lexer {
             ""
     };
 
-    static final short[] DFA7_eot = DFA.unpackEncodedString(DFA7_eotS);
-    static final short[] DFA7_eof = DFA.unpackEncodedString(DFA7_eofS);
-    static final char[] DFA7_min = DFA.unpackEncodedStringToUnsignedChars(DFA7_minS);
-    static final char[] DFA7_max = DFA.unpackEncodedStringToUnsignedChars(DFA7_maxS);
-    static final short[] DFA7_accept = DFA.unpackEncodedString(DFA7_acceptS);
-    static final short[] DFA7_special = DFA.unpackEncodedString(DFA7_specialS);
-    static final short[][] DFA7_transition;
+    static final short[] DFA12_eot = DFA.unpackEncodedString(DFA12_eotS);
+    static final short[] DFA12_eof = DFA.unpackEncodedString(DFA12_eofS);
+    static final char[] DFA12_min = DFA.unpackEncodedStringToUnsignedChars(DFA12_minS);
+    static final char[] DFA12_max = DFA.unpackEncodedStringToUnsignedChars(DFA12_maxS);
+    static final short[] DFA12_accept = DFA.unpackEncodedString(DFA12_acceptS);
+    static final short[] DFA12_special = DFA.unpackEncodedString(DFA12_specialS);
+    static final short[][] DFA12_transition;
 
     static {
-        int numStates = DFA7_transitionS.length;
-        DFA7_transition = new short[numStates][];
+        int numStates = DFA12_transitionS.length;
+        DFA12_transition = new short[numStates][];
         for (int i=0; i<numStates; i++) {
-            DFA7_transition[i] = DFA.unpackEncodedString(DFA7_transitionS[i]);
+            DFA12_transition[i] = DFA.unpackEncodedString(DFA12_transitionS[i]);
         }
     }
 
-    class DFA7 extends DFA {
+    class DFA12 extends DFA {
 
-        public DFA7(BaseRecognizer recognizer) {
+        public DFA12(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
-            this.decisionNumber = 7;
-            this.eot = DFA7_eot;
-            this.eof = DFA7_eof;
-            this.min = DFA7_min;
-            this.max = DFA7_max;
-            this.accept = DFA7_accept;
-            this.special = DFA7_special;
-            this.transition = DFA7_transition;
+            this.decisionNumber = 12;
+            this.eot = DFA12_eot;
+            this.eof = DFA12_eof;
+            this.min = DFA12_min;
+            this.max = DFA12_max;
+            this.accept = DFA12_accept;
+            this.special = DFA12_special;
+            this.transition = DFA12_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( AT | PARAM_START | PARAM_END | EQUAL | COMMA | BSLASH | CURLY_START | CURLY_END | TRUE | FALSE | NULL | IDENTIFIER | STRING_LITERAL | WHITESPACE | COMMENT_CHAR );";
+            return "1:1: Tokens : ( AT | PARAM_START | PARAM_END | EQUAL | COMMA | BSLASH | CURLY_START | CURLY_END | TRUE | FALSE | NULL | IDENTIFIER | STRING_LITERAL | INTEGER_LITERAL | FLOAT_LITERAL | WHITESPACE | COMMENT_START | COMMENT_END | COMMENT_CHAR );";
         }
     }
  

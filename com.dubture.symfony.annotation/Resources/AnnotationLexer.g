@@ -48,6 +48,7 @@ import com.dubture.symfony.annotation.parser.antlr.error.IAnnotationErrorReporte
 fragment LOWER               : 'a'..'z';
 fragment UPPER               : 'A'..'Z';
 fragment DIGIT               : '0'..'9';
+fragment DIGIT_NOZERO        : '1'..'9';
 fragment UNDERSCORE          : '_';
 fragment QUOTE               : '\'';
 fragment DOUBLE_QUOTE        : '"';
@@ -56,6 +57,10 @@ fragment ESCAPE_DOUBLE_QUOTE : '\\' '"';
 //fragment ACCENTUED         : bytes from 127 through 255 (0x7f-0xff).
 fragment LETTER              : LOWER | UPPER; //| ACCENTUED;
 fragment ALPHANUM            : LETTER | DIGIT;
+fragment POSITIVE            : '+';
+fragment NEGATIVE            : '-';
+fragment DOT                 : '\.';
+fragment WHITESPACE_CHAR     : ( '\t' | ' ' | '\r' | '\n'| '\u000C' );
 
 // control characters
 AT          : '@';
@@ -96,6 +101,17 @@ STRING_LITERAL
     { setText(builder.toString()); }
   ;
 
+INTEGER_LITERAL
+  : NEGATIVE? DIGIT+
+  ;
+
+FLOAT_LITERAL
+  : NEGATIVE? DIGIT* DOT DIGIT+
+  ;
+
 // hidden characters
-WHITESPACE   : ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+ { $channel = HIDDEN; };
-COMMENT_CHAR : ('*')+ { $channel = HIDDEN; };
+WHITESPACE    : ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+ { $channel = HIDDEN; };
+COMMENT_START : ('\\' '*') { $channel = HIDDEN; };
+COMMENT_END   : ('*' '/') { $channel = HIDDEN; };
+COMMENT_CHAR  : ('*')+ { $channel = HIDDEN; };
+//REST          : ('.')+ { $channel = HIDDEN; };

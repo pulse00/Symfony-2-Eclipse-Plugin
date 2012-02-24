@@ -1,8 +1,9 @@
-// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2012-02-23 09:34:56
+// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2012-02-24 15:23:12
 
 package com.dubture.symfony.annotation.parser.antlr;
 
 import com.dubture.symfony.annotation.parser.antlr.error.IAnnotationErrorReporter;
+import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 
 
 import org.antlr.runtime.*;
@@ -15,49 +16,62 @@ import org.antlr.runtime.tree.*;
 
 public class AnnotationParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "LOWER", "UPPER", "DIGIT", "UNDERSCORE", "QUOTE", "DOUBLE_QUOTE", "ESCAPE_QUOTE", "ESCAPE_DOUBLE_QUOTE", "LETTER", "ALPHANUM", "AT", "PARAM_START", "PARAM_END", "EQUAL", "COMMA", "BSLASH", "CURLY_START", "CURLY_END", "TRUE", "FALSE", "NULL", "IDENTIFIER", "STRING_LITERAL", "WHITESPACE", "COMMENT_CHAR", "ANNOTATION", "ARGUMENT", "ARGUMENT_NAME", "ARGUMENT_VALUE", "BOOLEAN_VALUE", "CLASS", "DECLARATION", "LITERAL", "NAMESPACE", "NAMESPACE_DEFAULT", "NAMESPACE_SEGMENT", "NULL_VALUE", "OBJECT_VALUE", "PAIR", "STRING_VALUE"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "LOWER", "UPPER", "DIGIT", "DIGIT_NOZERO", "UNDERSCORE", "QUOTE", "DOUBLE_QUOTE", "ESCAPE_QUOTE", "ESCAPE_DOUBLE_QUOTE", "LETTER", "ALPHANUM", "POSITIVE", "NEGATIVE", "DOT", "WHITESPACE_CHAR", "AT", "PARAM_START", "PARAM_END", "EQUAL", "COMMA", "BSLASH", "CURLY_START", "CURLY_END", "TRUE", "FALSE", "NULL", "IDENTIFIER", "STRING_LITERAL", "INTEGER_LITERAL", "FLOAT_LITERAL", "WHITESPACE", "COMMENT_START", "COMMENT_END", "COMMENT_CHAR", "ANNOTATION", "ANNOTATION_LIST", "ANNOTATION_VALUE", "ARGUMENT", "ARGUMENT_NAME", "ARGUMENT_VALUE", "ARRAY_VALUE", "BOOLEAN_VALUE", "CLASS", "DECLARATION", "NAMED_ARGUMENT", "NAMESPACE", "NAMESPACE_DEFAULT", "NAMESPACE_SEGMENT", "NULL_VALUE", "NUMBER_VALUE", "OBJECT_VALUE", "PAIR", "STRING_VALUE"
     };
     public static final int EOF=-1;
     public static final int LOWER=4;
     public static final int UPPER=5;
     public static final int DIGIT=6;
-    public static final int UNDERSCORE=7;
-    public static final int QUOTE=8;
-    public static final int DOUBLE_QUOTE=9;
-    public static final int ESCAPE_QUOTE=10;
-    public static final int ESCAPE_DOUBLE_QUOTE=11;
-    public static final int LETTER=12;
-    public static final int ALPHANUM=13;
-    public static final int AT=14;
-    public static final int PARAM_START=15;
-    public static final int PARAM_END=16;
-    public static final int EQUAL=17;
-    public static final int COMMA=18;
-    public static final int BSLASH=19;
-    public static final int CURLY_START=20;
-    public static final int CURLY_END=21;
-    public static final int TRUE=22;
-    public static final int FALSE=23;
-    public static final int NULL=24;
-    public static final int IDENTIFIER=25;
-    public static final int STRING_LITERAL=26;
-    public static final int WHITESPACE=27;
-    public static final int COMMENT_CHAR=28;
-    public static final int ANNOTATION=29;
-    public static final int ARGUMENT=30;
-    public static final int ARGUMENT_NAME=31;
-    public static final int ARGUMENT_VALUE=32;
-    public static final int BOOLEAN_VALUE=33;
-    public static final int CLASS=34;
-    public static final int DECLARATION=35;
-    public static final int LITERAL=36;
-    public static final int NAMESPACE=37;
-    public static final int NAMESPACE_DEFAULT=38;
-    public static final int NAMESPACE_SEGMENT=39;
-    public static final int NULL_VALUE=40;
-    public static final int OBJECT_VALUE=41;
-    public static final int PAIR=42;
-    public static final int STRING_VALUE=43;
+    public static final int DIGIT_NOZERO=7;
+    public static final int UNDERSCORE=8;
+    public static final int QUOTE=9;
+    public static final int DOUBLE_QUOTE=10;
+    public static final int ESCAPE_QUOTE=11;
+    public static final int ESCAPE_DOUBLE_QUOTE=12;
+    public static final int LETTER=13;
+    public static final int ALPHANUM=14;
+    public static final int POSITIVE=15;
+    public static final int NEGATIVE=16;
+    public static final int DOT=17;
+    public static final int WHITESPACE_CHAR=18;
+    public static final int AT=19;
+    public static final int PARAM_START=20;
+    public static final int PARAM_END=21;
+    public static final int EQUAL=22;
+    public static final int COMMA=23;
+    public static final int BSLASH=24;
+    public static final int CURLY_START=25;
+    public static final int CURLY_END=26;
+    public static final int TRUE=27;
+    public static final int FALSE=28;
+    public static final int NULL=29;
+    public static final int IDENTIFIER=30;
+    public static final int STRING_LITERAL=31;
+    public static final int INTEGER_LITERAL=32;
+    public static final int FLOAT_LITERAL=33;
+    public static final int WHITESPACE=34;
+    public static final int COMMENT_START=35;
+    public static final int COMMENT_END=36;
+    public static final int COMMENT_CHAR=37;
+    public static final int ANNOTATION=38;
+    public static final int ANNOTATION_LIST=39;
+    public static final int ANNOTATION_VALUE=40;
+    public static final int ARGUMENT=41;
+    public static final int ARGUMENT_NAME=42;
+    public static final int ARGUMENT_VALUE=43;
+    public static final int ARRAY_VALUE=44;
+    public static final int BOOLEAN_VALUE=45;
+    public static final int CLASS=46;
+    public static final int DECLARATION=47;
+    public static final int NAMED_ARGUMENT=48;
+    public static final int NAMESPACE=49;
+    public static final int NAMESPACE_DEFAULT=50;
+    public static final int NAMESPACE_SEGMENT=51;
+    public static final int NULL_VALUE=52;
+    public static final int NUMBER_VALUE=53;
+    public static final int OBJECT_VALUE=54;
+    public static final int PAIR=55;
+    public static final int STRING_VALUE=56;
 
     // delegates
     // delegators
@@ -124,7 +138,7 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "annotation"
-    // AnnotationParser.g:69:1: annotation : AT class_name ( declaration )? -> ^( ANNOTATION class_name ( declaration )? ) ;
+    // AnnotationParser.g:79:1: annotation : AT class_name ( declaration )? -> ^( ANNOTATION class_name ( declaration )? ) ;
     public final AnnotationParser.annotation_return annotation() throws RecognitionException {
         AnnotationParser.annotation_return retval = new AnnotationParser.annotation_return();
         retval.start = input.LT(1);
@@ -142,19 +156,19 @@ public class AnnotationParser extends Parser {
         RewriteRuleSubtreeStream stream_declaration=new RewriteRuleSubtreeStream(adaptor,"rule declaration");
         RewriteRuleSubtreeStream stream_class_name=new RewriteRuleSubtreeStream(adaptor,"rule class_name");
         try {
-            // AnnotationParser.g:70:3: ( AT class_name ( declaration )? -> ^( ANNOTATION class_name ( declaration )? ) )
-            // AnnotationParser.g:71:6: AT class_name ( declaration )?
+            // AnnotationParser.g:80:3: ( AT class_name ( declaration )? -> ^( ANNOTATION class_name ( declaration )? ) )
+            // AnnotationParser.g:80:5: AT class_name ( declaration )?
             {
-            AT1=(Token)match(input,AT,FOLLOW_AT_in_annotation150);  
+            AT1=(Token)match(input,AT,FOLLOW_AT_in_annotation172);  
             stream_AT.add(AT1);
 
-            pushFollow(FOLLOW_class_name_in_annotation152);
+            pushFollow(FOLLOW_class_name_in_annotation174);
             class_name2=class_name();
 
             state._fsp--;
 
             stream_class_name.add(class_name2.getTree());
-            // AnnotationParser.g:71:20: ( declaration )?
+            // AnnotationParser.g:80:19: ( declaration )?
             int alt1=2;
             int LA1_0 = input.LA(1);
 
@@ -163,9 +177,9 @@ public class AnnotationParser extends Parser {
             }
             switch (alt1) {
                 case 1 :
-                    // AnnotationParser.g:71:20: declaration
+                    // AnnotationParser.g:80:19: declaration
                     {
-                    pushFollow(FOLLOW_declaration_in_annotation154);
+                    pushFollow(FOLLOW_declaration_in_annotation176);
                     declaration3=declaration();
 
                     state._fsp--;
@@ -190,15 +204,15 @@ public class AnnotationParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 72:7: -> ^( ANNOTATION class_name ( declaration )? )
+            // 81:7: -> ^( ANNOTATION class_name ( declaration )? )
             {
-                // AnnotationParser.g:72:10: ^( ANNOTATION class_name ( declaration )? )
+                // AnnotationParser.g:81:10: ^( ANNOTATION class_name ( declaration )? )
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ANNOTATION, "ANNOTATION"), root_1);
 
                 adaptor.addChild(root_1, stream_class_name.nextTree());
-                // AnnotationParser.g:72:34: ( declaration )?
+                // AnnotationParser.g:81:34: ( declaration )?
                 if ( stream_declaration.hasNext() ) {
                     adaptor.addChild(root_1, stream_declaration.nextTree());
 
@@ -237,7 +251,7 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "class_name"
-    // AnnotationParser.g:75:1: class_name : ( namespace name= IDENTIFIER ) -> ^( CLASS namespace $name) ;
+    // AnnotationParser.g:84:1: class_name : ( namespace name= IDENTIFIER ) -> ^( CLASS namespace $name) ;
     public final AnnotationParser.class_name_return class_name() throws RecognitionException {
         AnnotationParser.class_name_return retval = new AnnotationParser.class_name_return();
         retval.start = input.LT(1);
@@ -252,19 +266,19 @@ public class AnnotationParser extends Parser {
         RewriteRuleTokenStream stream_IDENTIFIER=new RewriteRuleTokenStream(adaptor,"token IDENTIFIER");
         RewriteRuleSubtreeStream stream_namespace=new RewriteRuleSubtreeStream(adaptor,"rule namespace");
         try {
-            // AnnotationParser.g:76:3: ( ( namespace name= IDENTIFIER ) -> ^( CLASS namespace $name) )
-            // AnnotationParser.g:76:5: ( namespace name= IDENTIFIER )
+            // AnnotationParser.g:85:3: ( ( namespace name= IDENTIFIER ) -> ^( CLASS namespace $name) )
+            // AnnotationParser.g:85:5: ( namespace name= IDENTIFIER )
             {
-            // AnnotationParser.g:76:5: ( namespace name= IDENTIFIER )
-            // AnnotationParser.g:76:6: namespace name= IDENTIFIER
+            // AnnotationParser.g:85:5: ( namespace name= IDENTIFIER )
+            // AnnotationParser.g:85:6: namespace name= IDENTIFIER
             {
-            pushFollow(FOLLOW_namespace_in_class_name186);
+            pushFollow(FOLLOW_namespace_in_class_name208);
             namespace4=namespace();
 
             state._fsp--;
 
             stream_namespace.add(namespace4.getTree());
-            name=(Token)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_class_name190);  
+            name=(Token)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_class_name212);  
             stream_IDENTIFIER.add(name);
 
 
@@ -273,7 +287,7 @@ public class AnnotationParser extends Parser {
 
 
             // AST REWRITE
-            // elements: name, namespace
+            // elements: namespace, name
             // token labels: name
             // rule labels: retval
             // token list labels: 
@@ -284,9 +298,9 @@ public class AnnotationParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 77:7: -> ^( CLASS namespace $name)
+            // 86:7: -> ^( CLASS namespace $name)
             {
-                // AnnotationParser.g:77:10: ^( CLASS namespace $name)
+                // AnnotationParser.g:86:10: ^( CLASS namespace $name)
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(CLASS, "CLASS"), root_1);
@@ -326,7 +340,7 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "namespace"
-    // AnnotationParser.g:80:1: namespace : (start= BSLASH )? (segments+= IDENTIFIER BSLASH )* -> ^( NAMESPACE ( ^( NAMESPACE_DEFAULT $start) )? ( $segments)* ) ;
+    // AnnotationParser.g:89:1: namespace : (start= BSLASH )? (segments+= IDENTIFIER BSLASH )* -> ^( NAMESPACE ( ^( NAMESPACE_DEFAULT $start) )? ( $segments)* ) ;
     public final AnnotationParser.namespace_return namespace() throws RecognitionException {
         AnnotationParser.namespace_return retval = new AnnotationParser.namespace_return();
         retval.start = input.LT(1);
@@ -345,10 +359,10 @@ public class AnnotationParser extends Parser {
         RewriteRuleTokenStream stream_IDENTIFIER=new RewriteRuleTokenStream(adaptor,"token IDENTIFIER");
 
         try {
-            // AnnotationParser.g:81:3: ( (start= BSLASH )? (segments+= IDENTIFIER BSLASH )* -> ^( NAMESPACE ( ^( NAMESPACE_DEFAULT $start) )? ( $segments)* ) )
-            // AnnotationParser.g:81:5: (start= BSLASH )? (segments+= IDENTIFIER BSLASH )*
+            // AnnotationParser.g:90:3: ( (start= BSLASH )? (segments+= IDENTIFIER BSLASH )* -> ^( NAMESPACE ( ^( NAMESPACE_DEFAULT $start) )? ( $segments)* ) )
+            // AnnotationParser.g:90:5: (start= BSLASH )? (segments+= IDENTIFIER BSLASH )*
             {
-            // AnnotationParser.g:81:10: (start= BSLASH )?
+            // AnnotationParser.g:90:10: (start= BSLASH )?
             int alt2=2;
             int LA2_0 = input.LA(1);
 
@@ -357,9 +371,9 @@ public class AnnotationParser extends Parser {
             }
             switch (alt2) {
                 case 1 :
-                    // AnnotationParser.g:81:10: start= BSLASH
+                    // AnnotationParser.g:90:10: start= BSLASH
                     {
-                    start=(Token)match(input,BSLASH,FOLLOW_BSLASH_in_namespace223);  
+                    start=(Token)match(input,BSLASH,FOLLOW_BSLASH_in_namespace245);  
                     stream_BSLASH.add(start);
 
 
@@ -368,7 +382,7 @@ public class AnnotationParser extends Parser {
 
             }
 
-            // AnnotationParser.g:81:19: (segments+= IDENTIFIER BSLASH )*
+            // AnnotationParser.g:90:19: (segments+= IDENTIFIER BSLASH )*
             loop3:
             do {
                 int alt3=2;
@@ -387,15 +401,15 @@ public class AnnotationParser extends Parser {
 
                 switch (alt3) {
             	case 1 :
-            	    // AnnotationParser.g:81:20: segments+= IDENTIFIER BSLASH
+            	    // AnnotationParser.g:90:20: segments+= IDENTIFIER BSLASH
             	    {
-            	    segments=(Token)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_namespace229);  
+            	    segments=(Token)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_namespace251);  
             	    stream_IDENTIFIER.add(segments);
 
             	    if (list_segments==null) list_segments=new ArrayList();
             	    list_segments.add(segments);
 
-            	    BSLASH5=(Token)match(input,BSLASH,FOLLOW_BSLASH_in_namespace231);  
+            	    BSLASH5=(Token)match(input,BSLASH,FOLLOW_BSLASH_in_namespace253);  
             	    stream_BSLASH.add(BSLASH5);
 
 
@@ -410,7 +424,7 @@ public class AnnotationParser extends Parser {
 
 
             // AST REWRITE
-            // elements: segments, start
+            // elements: start, segments
             // token labels: start
             // rule labels: retval
             // token list labels: segments
@@ -422,16 +436,16 @@ public class AnnotationParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 82:7: -> ^( NAMESPACE ( ^( NAMESPACE_DEFAULT $start) )? ( $segments)* )
+            // 91:7: -> ^( NAMESPACE ( ^( NAMESPACE_DEFAULT $start) )? ( $segments)* )
             {
-                // AnnotationParser.g:82:10: ^( NAMESPACE ( ^( NAMESPACE_DEFAULT $start) )? ( $segments)* )
+                // AnnotationParser.g:91:10: ^( NAMESPACE ( ^( NAMESPACE_DEFAULT $start) )? ( $segments)* )
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(NAMESPACE, "NAMESPACE"), root_1);
 
-                // AnnotationParser.g:82:22: ( ^( NAMESPACE_DEFAULT $start) )?
+                // AnnotationParser.g:91:22: ( ^( NAMESPACE_DEFAULT $start) )?
                 if ( stream_start.hasNext() ) {
-                    // AnnotationParser.g:82:22: ^( NAMESPACE_DEFAULT $start)
+                    // AnnotationParser.g:91:22: ^( NAMESPACE_DEFAULT $start)
                     {
                     AnnotationCommonTree root_2 = (AnnotationCommonTree)adaptor.nil();
                     root_2 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(NAMESPACE_DEFAULT, "NAMESPACE_DEFAULT"), root_2);
@@ -443,7 +457,7 @@ public class AnnotationParser extends Parser {
 
                 }
                 stream_start.reset();
-                // AnnotationParser.g:82:51: ( $segments)*
+                // AnnotationParser.g:91:51: ( $segments)*
                 while ( stream_segments.hasNext() ) {
                     adaptor.addChild(root_1, stream_segments.nextNode());
 
@@ -482,7 +496,7 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "declaration"
-    // AnnotationParser.g:85:1: declaration : PARAM_START (statements+= statement )? ( COMMA statements+= statement )* PARAM_END -> ^( DECLARATION ( $statements)* ) ;
+    // AnnotationParser.g:94:1: declaration : PARAM_START (statements+= statement )? ( COMMA statements+= statement )* PARAM_END -> ^( DECLARATION ( $statements)* ) ;
     public final AnnotationParser.declaration_return declaration() throws RecognitionException {
         AnnotationParser.declaration_return retval = new AnnotationParser.declaration_return();
         retval.start = input.LT(1);
@@ -502,24 +516,24 @@ public class AnnotationParser extends Parser {
         RewriteRuleTokenStream stream_PARAM_END=new RewriteRuleTokenStream(adaptor,"token PARAM_END");
         RewriteRuleSubtreeStream stream_statement=new RewriteRuleSubtreeStream(adaptor,"rule statement");
         try {
-            // AnnotationParser.g:86:3: ( PARAM_START (statements+= statement )? ( COMMA statements+= statement )* PARAM_END -> ^( DECLARATION ( $statements)* ) )
-            // AnnotationParser.g:86:5: PARAM_START (statements+= statement )? ( COMMA statements+= statement )* PARAM_END
+            // AnnotationParser.g:95:3: ( PARAM_START (statements+= statement )? ( COMMA statements+= statement )* PARAM_END -> ^( DECLARATION ( $statements)* ) )
+            // AnnotationParser.g:95:5: PARAM_START (statements+= statement )? ( COMMA statements+= statement )* PARAM_END
             {
-            PARAM_START6=(Token)match(input,PARAM_START,FOLLOW_PARAM_START_in_declaration270);  
+            PARAM_START6=(Token)match(input,PARAM_START,FOLLOW_PARAM_START_in_declaration292);  
             stream_PARAM_START.add(PARAM_START6);
 
-            // AnnotationParser.g:86:27: (statements+= statement )?
+            // AnnotationParser.g:95:27: (statements+= statement )?
             int alt4=2;
             int LA4_0 = input.LA(1);
 
-            if ( ((LA4_0>=IDENTIFIER && LA4_0<=STRING_LITERAL)) ) {
+            if ( (LA4_0==AT||LA4_0==CURLY_START||(LA4_0>=TRUE && LA4_0<=FLOAT_LITERAL)) ) {
                 alt4=1;
             }
             switch (alt4) {
                 case 1 :
-                    // AnnotationParser.g:86:27: statements+= statement
+                    // AnnotationParser.g:95:27: statements+= statement
                     {
-                    pushFollow(FOLLOW_statement_in_declaration274);
+                    pushFollow(FOLLOW_statement_in_declaration296);
                     statements=statement();
 
                     state._fsp--;
@@ -534,7 +548,7 @@ public class AnnotationParser extends Parser {
 
             }
 
-            // AnnotationParser.g:86:40: ( COMMA statements+= statement )*
+            // AnnotationParser.g:95:40: ( COMMA statements+= statement )*
             loop5:
             do {
                 int alt5=2;
@@ -547,12 +561,12 @@ public class AnnotationParser extends Parser {
 
                 switch (alt5) {
             	case 1 :
-            	    // AnnotationParser.g:86:41: COMMA statements+= statement
+            	    // AnnotationParser.g:95:41: COMMA statements+= statement
             	    {
-            	    COMMA7=(Token)match(input,COMMA,FOLLOW_COMMA_in_declaration278);  
+            	    COMMA7=(Token)match(input,COMMA,FOLLOW_COMMA_in_declaration300);  
             	    stream_COMMA.add(COMMA7);
 
-            	    pushFollow(FOLLOW_statement_in_declaration282);
+            	    pushFollow(FOLLOW_statement_in_declaration304);
             	    statements=statement();
 
             	    state._fsp--;
@@ -570,7 +584,7 @@ public class AnnotationParser extends Parser {
                 }
             } while (true);
 
-            PARAM_END8=(Token)match(input,PARAM_END,FOLLOW_PARAM_END_in_declaration286);  
+            PARAM_END8=(Token)match(input,PARAM_END,FOLLOW_PARAM_END_in_declaration308);  
             stream_PARAM_END.add(PARAM_END8);
 
 
@@ -586,14 +600,14 @@ public class AnnotationParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
             RewriteRuleSubtreeStream stream_statements=new RewriteRuleSubtreeStream(adaptor,"token statements",list_statements);
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 87:7: -> ^( DECLARATION ( $statements)* )
+            // 96:7: -> ^( DECLARATION ( $statements)* )
             {
-                // AnnotationParser.g:87:10: ^( DECLARATION ( $statements)* )
+                // AnnotationParser.g:96:10: ^( DECLARATION ( $statements)* )
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(DECLARATION, "DECLARATION"), root_1);
 
-                // AnnotationParser.g:87:24: ( $statements)*
+                // AnnotationParser.g:96:24: ( $statements)*
                 while ( stream_statements.hasNext() ) {
                     adaptor.addChild(root_1, stream_statements.nextTree());
 
@@ -632,25 +646,25 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "statement"
-    // AnnotationParser.g:90:1: statement : ( literal | argument );
+    // AnnotationParser.g:99:1: statement : ( argument | namedArgument );
     public final AnnotationParser.statement_return statement() throws RecognitionException {
         AnnotationParser.statement_return retval = new AnnotationParser.statement_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        AnnotationParser.literal_return literal9 = null;
+        AnnotationParser.argument_return argument9 = null;
 
-        AnnotationParser.argument_return argument10 = null;
+        AnnotationParser.namedArgument_return namedArgument10 = null;
 
 
 
         try {
-            // AnnotationParser.g:91:3: ( literal | argument )
+            // AnnotationParser.g:100:3: ( argument | namedArgument )
             int alt6=2;
             int LA6_0 = input.LA(1);
 
-            if ( (LA6_0==STRING_LITERAL) ) {
+            if ( (LA6_0==AT||LA6_0==CURLY_START||(LA6_0>=TRUE && LA6_0<=NULL)||(LA6_0>=STRING_LITERAL && LA6_0<=FLOAT_LITERAL)) ) {
                 alt6=1;
             }
             else if ( (LA6_0==IDENTIFIER) ) {
@@ -664,30 +678,30 @@ public class AnnotationParser extends Parser {
             }
             switch (alt6) {
                 case 1 :
-                    // AnnotationParser.g:91:5: literal
+                    // AnnotationParser.g:100:5: argument
                     {
                     root_0 = (AnnotationCommonTree)adaptor.nil();
 
-                    pushFollow(FOLLOW_literal_in_statement315);
-                    literal9=literal();
+                    pushFollow(FOLLOW_argument_in_statement337);
+                    argument9=argument();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, literal9.getTree());
+                    adaptor.addChild(root_0, argument9.getTree());
 
                     }
                     break;
                 case 2 :
-                    // AnnotationParser.g:91:15: argument
+                    // AnnotationParser.g:100:16: namedArgument
                     {
                     root_0 = (AnnotationCommonTree)adaptor.nil();
 
-                    pushFollow(FOLLOW_argument_in_statement319);
-                    argument10=argument();
+                    pushFollow(FOLLOW_namedArgument_in_statement341);
+                    namedArgument10=namedArgument();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, argument10.getTree());
+                    adaptor.addChild(root_0, namedArgument10.getTree());
 
                     }
                     break;
@@ -711,145 +725,54 @@ public class AnnotationParser extends Parser {
     }
     // $ANTLR end "statement"
 
-    public static class literal_return extends ParserRuleReturnScope {
-        AnnotationCommonTree tree;
-        public Object getTree() { return tree; }
-    };
-
-    // $ANTLR start "literal"
-    // AnnotationParser.g:94:1: literal : literal_value= STRING_LITERAL -> ^( LITERAL $literal_value) ;
-    public final AnnotationParser.literal_return literal() throws RecognitionException {
-        AnnotationParser.literal_return retval = new AnnotationParser.literal_return();
-        retval.start = input.LT(1);
-
-        AnnotationCommonTree root_0 = null;
-
-        Token literal_value=null;
-
-        AnnotationCommonTree literal_value_tree=null;
-        RewriteRuleTokenStream stream_STRING_LITERAL=new RewriteRuleTokenStream(adaptor,"token STRING_LITERAL");
-
-        try {
-            // AnnotationParser.g:95:3: (literal_value= STRING_LITERAL -> ^( LITERAL $literal_value) )
-            // AnnotationParser.g:95:5: literal_value= STRING_LITERAL
-            {
-            literal_value=(Token)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_literal334);  
-            stream_STRING_LITERAL.add(literal_value);
-
-
-
-            // AST REWRITE
-            // elements: literal_value
-            // token labels: literal_value
-            // rule labels: retval
-            // token list labels: 
-            // rule list labels: 
-            // wildcard labels: 
-            retval.tree = root_0;
-            RewriteRuleTokenStream stream_literal_value=new RewriteRuleTokenStream(adaptor,"token literal_value",literal_value);
-            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 96:7: -> ^( LITERAL $literal_value)
-            {
-                // AnnotationParser.g:96:10: ^( LITERAL $literal_value)
-                {
-                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
-                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(LITERAL, "LITERAL"), root_1);
-
-                adaptor.addChild(root_1, stream_literal_value.nextNode());
-
-                adaptor.addChild(root_0, root_1);
-                }
-
-            }
-
-            retval.tree = root_0;
-            }
-
-            retval.stop = input.LT(-1);
-
-            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
-            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
-
-        }
-        finally {
-        }
-        return retval;
-    }
-    // $ANTLR end "literal"
-
     public static class argument_return extends ParserRuleReturnScope {
         AnnotationCommonTree tree;
         public Object getTree() { return tree; }
     };
 
     // $ANTLR start "argument"
-    // AnnotationParser.g:99:1: argument : name= argumentName EQUAL argument_value= argumentValue -> ^( ARGUMENT $name $argument_value) ;
+    // AnnotationParser.g:103:1: argument : argument_value= value -> ^( ARGUMENT $argument_value) ;
     public final AnnotationParser.argument_return argument() throws RecognitionException {
         AnnotationParser.argument_return retval = new AnnotationParser.argument_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        Token EQUAL11=null;
-        AnnotationParser.argumentName_return name = null;
-
-        AnnotationParser.argumentValue_return argument_value = null;
+        AnnotationParser.value_return argument_value = null;
 
 
-        AnnotationCommonTree EQUAL11_tree=null;
-        RewriteRuleTokenStream stream_EQUAL=new RewriteRuleTokenStream(adaptor,"token EQUAL");
-        RewriteRuleSubtreeStream stream_argumentValue=new RewriteRuleSubtreeStream(adaptor,"rule argumentValue");
-        RewriteRuleSubtreeStream stream_argumentName=new RewriteRuleSubtreeStream(adaptor,"rule argumentName");
+        RewriteRuleSubtreeStream stream_value=new RewriteRuleSubtreeStream(adaptor,"rule value");
         try {
-            // AnnotationParser.g:100:3: (name= argumentName EQUAL argument_value= argumentValue -> ^( ARGUMENT $name $argument_value) )
-            // AnnotationParser.g:100:5: name= argumentName EQUAL argument_value= argumentValue
+            // AnnotationParser.g:104:3: (argument_value= value -> ^( ARGUMENT $argument_value) )
+            // AnnotationParser.g:104:5: argument_value= value
             {
-            pushFollow(FOLLOW_argumentName_in_argument364);
-            name=argumentName();
+            pushFollow(FOLLOW_value_in_argument356);
+            argument_value=value();
 
             state._fsp--;
 
-            stream_argumentName.add(name.getTree());
-            EQUAL11=(Token)match(input,EQUAL,FOLLOW_EQUAL_in_argument366);  
-            stream_EQUAL.add(EQUAL11);
-
-            pushFollow(FOLLOW_argumentValue_in_argument370);
-            argument_value=argumentValue();
-
-            state._fsp--;
-
-            stream_argumentValue.add(argument_value.getTree());
+            stream_value.add(argument_value.getTree());
 
 
             // AST REWRITE
-            // elements: name, argument_value
+            // elements: argument_value
             // token labels: 
-            // rule labels: retval, name, argument_value
+            // rule labels: retval, argument_value
             // token list labels: 
             // rule list labels: 
             // wildcard labels: 
             retval.tree = root_0;
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-            RewriteRuleSubtreeStream stream_name=new RewriteRuleSubtreeStream(adaptor,"rule name",name!=null?name.tree:null);
             RewriteRuleSubtreeStream stream_argument_value=new RewriteRuleSubtreeStream(adaptor,"rule argument_value",argument_value!=null?argument_value.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 101:7: -> ^( ARGUMENT $name $argument_value)
+            // 105:7: -> ^( ARGUMENT $argument_value)
             {
-                // AnnotationParser.g:101:10: ^( ARGUMENT $name $argument_value)
+                // AnnotationParser.g:105:10: ^( ARGUMENT $argument_value)
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ARGUMENT, "ARGUMENT"), root_1);
 
-                adaptor.addChild(root_1, stream_name.nextTree());
                 adaptor.addChild(root_1, stream_argument_value.nextTree());
 
                 adaptor.addChild(root_0, root_1);
@@ -878,13 +801,106 @@ public class AnnotationParser extends Parser {
     }
     // $ANTLR end "argument"
 
+    public static class namedArgument_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "namedArgument"
+    // AnnotationParser.g:108:1: namedArgument : name= argumentName EQUAL argument_value= argumentValue -> ^( NAMED_ARGUMENT $name $argument_value) ;
+    public final AnnotationParser.namedArgument_return namedArgument() throws RecognitionException {
+        AnnotationParser.namedArgument_return retval = new AnnotationParser.namedArgument_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        Token EQUAL11=null;
+        AnnotationParser.argumentName_return name = null;
+
+        AnnotationParser.argumentValue_return argument_value = null;
+
+
+        AnnotationCommonTree EQUAL11_tree=null;
+        RewriteRuleTokenStream stream_EQUAL=new RewriteRuleTokenStream(adaptor,"token EQUAL");
+        RewriteRuleSubtreeStream stream_argumentValue=new RewriteRuleSubtreeStream(adaptor,"rule argumentValue");
+        RewriteRuleSubtreeStream stream_argumentName=new RewriteRuleSubtreeStream(adaptor,"rule argumentName");
+        try {
+            // AnnotationParser.g:109:3: (name= argumentName EQUAL argument_value= argumentValue -> ^( NAMED_ARGUMENT $name $argument_value) )
+            // AnnotationParser.g:109:5: name= argumentName EQUAL argument_value= argumentValue
+            {
+            pushFollow(FOLLOW_argumentName_in_namedArgument386);
+            name=argumentName();
+
+            state._fsp--;
+
+            stream_argumentName.add(name.getTree());
+            EQUAL11=(Token)match(input,EQUAL,FOLLOW_EQUAL_in_namedArgument388);  
+            stream_EQUAL.add(EQUAL11);
+
+            pushFollow(FOLLOW_argumentValue_in_namedArgument392);
+            argument_value=argumentValue();
+
+            state._fsp--;
+
+            stream_argumentValue.add(argument_value.getTree());
+
+
+            // AST REWRITE
+            // elements: argument_value, name
+            // token labels: 
+            // rule labels: retval, name, argument_value
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+            RewriteRuleSubtreeStream stream_name=new RewriteRuleSubtreeStream(adaptor,"rule name",name!=null?name.tree:null);
+            RewriteRuleSubtreeStream stream_argument_value=new RewriteRuleSubtreeStream(adaptor,"rule argument_value",argument_value!=null?argument_value.tree:null);
+
+            root_0 = (AnnotationCommonTree)adaptor.nil();
+            // 110:7: -> ^( NAMED_ARGUMENT $name $argument_value)
+            {
+                // AnnotationParser.g:110:10: ^( NAMED_ARGUMENT $name $argument_value)
+                {
+                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(NAMED_ARGUMENT, "NAMED_ARGUMENT"), root_1);
+
+                adaptor.addChild(root_1, stream_name.nextTree());
+                adaptor.addChild(root_1, stream_argument_value.nextTree());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;
+            }
+
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "namedArgument"
+
     public static class argumentName_return extends ParserRuleReturnScope {
         AnnotationCommonTree tree;
         public Object getTree() { return tree; }
     };
 
     // $ANTLR start "argumentName"
-    // AnnotationParser.g:104:1: argumentName : name= IDENTIFIER -> ^( ARGUMENT_NAME $name) ;
+    // AnnotationParser.g:113:1: argumentName : name= IDENTIFIER -> ^( ARGUMENT_NAME $name) ;
     public final AnnotationParser.argumentName_return argumentName() throws RecognitionException {
         AnnotationParser.argumentName_return retval = new AnnotationParser.argumentName_return();
         retval.start = input.LT(1);
@@ -897,10 +913,10 @@ public class AnnotationParser extends Parser {
         RewriteRuleTokenStream stream_IDENTIFIER=new RewriteRuleTokenStream(adaptor,"token IDENTIFIER");
 
         try {
-            // AnnotationParser.g:105:3: (name= IDENTIFIER -> ^( ARGUMENT_NAME $name) )
-            // AnnotationParser.g:105:5: name= IDENTIFIER
+            // AnnotationParser.g:114:3: (name= IDENTIFIER -> ^( ARGUMENT_NAME $name) )
+            // AnnotationParser.g:114:5: name= IDENTIFIER
             {
-            name=(Token)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_argumentName403);  
+            name=(Token)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_argumentName425);  
             stream_IDENTIFIER.add(name);
 
 
@@ -917,9 +933,9 @@ public class AnnotationParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 106:7: -> ^( ARGUMENT_NAME $name)
+            // 115:7: -> ^( ARGUMENT_NAME $name)
             {
-                // AnnotationParser.g:106:10: ^( ARGUMENT_NAME $name)
+                // AnnotationParser.g:115:10: ^( ARGUMENT_NAME $name)
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ARGUMENT_NAME, "ARGUMENT_NAME"), root_1);
@@ -958,183 +974,205 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "argumentValue"
-    // AnnotationParser.g:109:1: argumentValue : ( value -> ^( ARGUMENT_VALUE value ) | CURLY_START annotations= subAnnotation ( COMMA annotations= subAnnotation )* CURLY_END -> ^( ARGUMENT_VALUE ( $annotations)+ ) );
+    // AnnotationParser.g:118:1: argumentValue : value -> ^( ARGUMENT_VALUE value ) ;
     public final AnnotationParser.argumentValue_return argumentValue() throws RecognitionException {
         AnnotationParser.argumentValue_return retval = new AnnotationParser.argumentValue_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        Token CURLY_START13=null;
-        Token COMMA14=null;
-        Token CURLY_END15=null;
-        AnnotationParser.subAnnotation_return annotations = null;
-
         AnnotationParser.value_return value12 = null;
 
 
-        AnnotationCommonTree CURLY_START13_tree=null;
-        AnnotationCommonTree COMMA14_tree=null;
-        AnnotationCommonTree CURLY_END15_tree=null;
-        RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
-        RewriteRuleTokenStream stream_CURLY_START=new RewriteRuleTokenStream(adaptor,"token CURLY_START");
-        RewriteRuleTokenStream stream_CURLY_END=new RewriteRuleTokenStream(adaptor,"token CURLY_END");
         RewriteRuleSubtreeStream stream_value=new RewriteRuleSubtreeStream(adaptor,"rule value");
-        RewriteRuleSubtreeStream stream_subAnnotation=new RewriteRuleSubtreeStream(adaptor,"rule subAnnotation");
         try {
-            // AnnotationParser.g:110:3: ( value -> ^( ARGUMENT_VALUE value ) | CURLY_START annotations= subAnnotation ( COMMA annotations= subAnnotation )* CURLY_END -> ^( ARGUMENT_VALUE ( $annotations)+ ) )
-            int alt8=2;
-            int LA8_0 = input.LA(1);
+            // AnnotationParser.g:119:3: ( value -> ^( ARGUMENT_VALUE value ) )
+            // AnnotationParser.g:119:5: value
+            {
+            pushFollow(FOLLOW_value_in_argumentValue453);
+            value12=value();
 
-            if ( (LA8_0==CURLY_START) ) {
-                int LA8_1 = input.LA(2);
+            state._fsp--;
 
-                if ( (LA8_1==STRING_LITERAL) ) {
-                    alt8=1;
+            stream_value.add(value12.getTree());
+
+
+            // AST REWRITE
+            // elements: value
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+            root_0 = (AnnotationCommonTree)adaptor.nil();
+            // 120:7: -> ^( ARGUMENT_VALUE value )
+            {
+                // AnnotationParser.g:120:10: ^( ARGUMENT_VALUE value )
+                {
+                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ARGUMENT_VALUE, "ARGUMENT_VALUE"), root_1);
+
+                adaptor.addChild(root_1, stream_value.nextTree());
+
+                adaptor.addChild(root_0, root_1);
                 }
-                else if ( (LA8_1==AT) ) {
-                    alt8=2;
-                }
-                else {
-                    NoViableAltException nvae =
-                        new NoViableAltException("", 8, 1, input);
 
-                    throw nvae;
-                }
             }
-            else if ( ((LA8_0>=TRUE && LA8_0<=NULL)||LA8_0==STRING_LITERAL) ) {
-                alt8=1;
-            }
-            else {
-                NoViableAltException nvae =
-                    new NoViableAltException("", 8, 0, input);
 
-                throw nvae;
+            retval.tree = root_0;
             }
-            switch (alt8) {
+
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "argumentValue"
+
+    public static class value_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "value"
+    // AnnotationParser.g:123:1: value : ( annotationValue | objectValue | arrayValue | stringValue | numberValue | booleanValue | nullValue );
+    public final AnnotationParser.value_return value() throws RecognitionException {
+        AnnotationParser.value_return retval = new AnnotationParser.value_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        AnnotationParser.annotationValue_return annotationValue13 = null;
+
+        AnnotationParser.objectValue_return objectValue14 = null;
+
+        AnnotationParser.arrayValue_return arrayValue15 = null;
+
+        AnnotationParser.stringValue_return stringValue16 = null;
+
+        AnnotationParser.numberValue_return numberValue17 = null;
+
+        AnnotationParser.booleanValue_return booleanValue18 = null;
+
+        AnnotationParser.nullValue_return nullValue19 = null;
+
+
+
+        try {
+            // AnnotationParser.g:124:3: ( annotationValue | objectValue | arrayValue | stringValue | numberValue | booleanValue | nullValue )
+            int alt7=7;
+            alt7 = dfa7.predict(input);
+            switch (alt7) {
                 case 1 :
-                    // AnnotationParser.g:110:5: value
+                    // AnnotationParser.g:124:5: annotationValue
                     {
-                    pushFollow(FOLLOW_value_in_argumentValue431);
-                    value12=value();
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_annotationValue_in_value480);
+                    annotationValue13=annotationValue();
 
                     state._fsp--;
 
-                    stream_value.add(value12.getTree());
+                    adaptor.addChild(root_0, annotationValue13.getTree());
 
-
-                    // AST REWRITE
-                    // elements: value
-                    // token labels: 
-                    // rule labels: retval
-                    // token list labels: 
-                    // rule list labels: 
-                    // wildcard labels: 
-                    retval.tree = root_0;
-                    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-                    root_0 = (AnnotationCommonTree)adaptor.nil();
-                    // 111:7: -> ^( ARGUMENT_VALUE value )
-                    {
-                        // AnnotationParser.g:111:10: ^( ARGUMENT_VALUE value )
-                        {
-                        AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
-                        root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ARGUMENT_VALUE, "ARGUMENT_VALUE"), root_1);
-
-                        adaptor.addChild(root_1, stream_value.nextTree());
-
-                        adaptor.addChild(root_0, root_1);
-                        }
-
-                    }
-
-                    retval.tree = root_0;
                     }
                     break;
                 case 2 :
-                    // AnnotationParser.g:112:5: CURLY_START annotations= subAnnotation ( COMMA annotations= subAnnotation )* CURLY_END
+                    // AnnotationParser.g:125:5: objectValue
                     {
-                    CURLY_START13=(Token)match(input,CURLY_START,FOLLOW_CURLY_START_in_argumentValue451);  
-                    stream_CURLY_START.add(CURLY_START13);
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
 
-                    pushFollow(FOLLOW_subAnnotation_in_argumentValue455);
-                    annotations=subAnnotation();
+                    pushFollow(FOLLOW_objectValue_in_value486);
+                    objectValue14=objectValue();
 
                     state._fsp--;
 
-                    stream_subAnnotation.add(annotations.getTree());
-                    // AnnotationParser.g:112:43: ( COMMA annotations= subAnnotation )*
-                    loop7:
-                    do {
-                        int alt7=2;
-                        int LA7_0 = input.LA(1);
-
-                        if ( (LA7_0==COMMA) ) {
-                            alt7=1;
-                        }
-
-
-                        switch (alt7) {
-                    	case 1 :
-                    	    // AnnotationParser.g:112:44: COMMA annotations= subAnnotation
-                    	    {
-                    	    COMMA14=(Token)match(input,COMMA,FOLLOW_COMMA_in_argumentValue458);  
-                    	    stream_COMMA.add(COMMA14);
-
-                    	    pushFollow(FOLLOW_subAnnotation_in_argumentValue462);
-                    	    annotations=subAnnotation();
-
-                    	    state._fsp--;
-
-                    	    stream_subAnnotation.add(annotations.getTree());
-
-                    	    }
-                    	    break;
-
-                    	default :
-                    	    break loop7;
-                        }
-                    } while (true);
-
-                    CURLY_END15=(Token)match(input,CURLY_END,FOLLOW_CURLY_END_in_argumentValue466);  
-                    stream_CURLY_END.add(CURLY_END15);
-
-
-
-                    // AST REWRITE
-                    // elements: annotations
-                    // token labels: 
-                    // rule labels: retval, annotations
-                    // token list labels: 
-                    // rule list labels: 
-                    // wildcard labels: 
-                    retval.tree = root_0;
-                    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-                    RewriteRuleSubtreeStream stream_annotations=new RewriteRuleSubtreeStream(adaptor,"rule annotations",annotations!=null?annotations.tree:null);
-
-                    root_0 = (AnnotationCommonTree)adaptor.nil();
-                    // 113:7: -> ^( ARGUMENT_VALUE ( $annotations)+ )
-                    {
-                        // AnnotationParser.g:113:10: ^( ARGUMENT_VALUE ( $annotations)+ )
-                        {
-                        AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
-                        root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ARGUMENT_VALUE, "ARGUMENT_VALUE"), root_1);
-
-                        if ( !(stream_annotations.hasNext()) ) {
-                            throw new RewriteEarlyExitException();
-                        }
-                        while ( stream_annotations.hasNext() ) {
-                            adaptor.addChild(root_1, stream_annotations.nextTree());
-
-                        }
-                        stream_annotations.reset();
-
-                        adaptor.addChild(root_0, root_1);
-                        }
+                    adaptor.addChild(root_0, objectValue14.getTree());
 
                     }
+                    break;
+                case 3 :
+                    // AnnotationParser.g:126:5: arrayValue
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
 
-                    retval.tree = root_0;
+                    pushFollow(FOLLOW_arrayValue_in_value492);
+                    arrayValue15=arrayValue();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, arrayValue15.getTree());
+
+                    }
+                    break;
+                case 4 :
+                    // AnnotationParser.g:127:5: stringValue
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_stringValue_in_value498);
+                    stringValue16=stringValue();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, stringValue16.getTree());
+
+                    }
+                    break;
+                case 5 :
+                    // AnnotationParser.g:128:5: numberValue
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_numberValue_in_value504);
+                    numberValue17=numberValue();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, numberValue17.getTree());
+
+                    }
+                    break;
+                case 6 :
+                    // AnnotationParser.g:129:5: booleanValue
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_booleanValue_in_value510);
+                    booleanValue18=booleanValue();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, booleanValue18.getTree());
+
+                    }
+                    break;
+                case 7 :
+                    // AnnotationParser.g:130:5: nullValue
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_nullValue_in_value516);
+                    nullValue19=nullValue();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, nullValue19.getTree());
+
                     }
                     break;
 
@@ -1155,61 +1193,61 @@ public class AnnotationParser extends Parser {
         }
         return retval;
     }
-    // $ANTLR end "argumentValue"
+    // $ANTLR end "value"
 
-    public static class subAnnotation_return extends ParserRuleReturnScope {
+    public static class annotationValue_return extends ParserRuleReturnScope {
         AnnotationCommonTree tree;
         public Object getTree() { return tree; }
     };
 
-    // $ANTLR start "subAnnotation"
-    // AnnotationParser.g:116:1: subAnnotation : AT class_name ( declaration )? -> ^( ANNOTATION class_name ( declaration )? ) ;
-    public final AnnotationParser.subAnnotation_return subAnnotation() throws RecognitionException {
-        AnnotationParser.subAnnotation_return retval = new AnnotationParser.subAnnotation_return();
+    // $ANTLR start "annotationValue"
+    // AnnotationParser.g:133:1: annotationValue : AT class_name ( declaration )? -> ^( ANNOTATION_VALUE class_name ( declaration )? ) ;
+    public final AnnotationParser.annotationValue_return annotationValue() throws RecognitionException {
+        AnnotationParser.annotationValue_return retval = new AnnotationParser.annotationValue_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        Token AT16=null;
-        AnnotationParser.class_name_return class_name17 = null;
+        Token AT20=null;
+        AnnotationParser.class_name_return class_name21 = null;
 
-        AnnotationParser.declaration_return declaration18 = null;
+        AnnotationParser.declaration_return declaration22 = null;
 
 
-        AnnotationCommonTree AT16_tree=null;
+        AnnotationCommonTree AT20_tree=null;
         RewriteRuleTokenStream stream_AT=new RewriteRuleTokenStream(adaptor,"token AT");
         RewriteRuleSubtreeStream stream_declaration=new RewriteRuleSubtreeStream(adaptor,"rule declaration");
         RewriteRuleSubtreeStream stream_class_name=new RewriteRuleSubtreeStream(adaptor,"rule class_name");
         try {
-            // AnnotationParser.g:117:3: ( AT class_name ( declaration )? -> ^( ANNOTATION class_name ( declaration )? ) )
-            // AnnotationParser.g:118:6: AT class_name ( declaration )?
+            // AnnotationParser.g:134:3: ( AT class_name ( declaration )? -> ^( ANNOTATION_VALUE class_name ( declaration )? ) )
+            // AnnotationParser.g:135:6: AT class_name ( declaration )?
             {
-            AT16=(Token)match(input,AT,FOLLOW_AT_in_subAnnotation500);  
-            stream_AT.add(AT16);
+            AT20=(Token)match(input,AT,FOLLOW_AT_in_annotationValue534);  
+            stream_AT.add(AT20);
 
-            pushFollow(FOLLOW_class_name_in_subAnnotation502);
-            class_name17=class_name();
+            pushFollow(FOLLOW_class_name_in_annotationValue536);
+            class_name21=class_name();
 
             state._fsp--;
 
-            stream_class_name.add(class_name17.getTree());
-            // AnnotationParser.g:118:20: ( declaration )?
-            int alt9=2;
-            int LA9_0 = input.LA(1);
+            stream_class_name.add(class_name21.getTree());
+            // AnnotationParser.g:135:20: ( declaration )?
+            int alt8=2;
+            int LA8_0 = input.LA(1);
 
-            if ( (LA9_0==PARAM_START) ) {
-                alt9=1;
+            if ( (LA8_0==PARAM_START) ) {
+                alt8=1;
             }
-            switch (alt9) {
+            switch (alt8) {
                 case 1 :
-                    // AnnotationParser.g:118:20: declaration
+                    // AnnotationParser.g:135:20: declaration
                     {
-                    pushFollow(FOLLOW_declaration_in_subAnnotation504);
-                    declaration18=declaration();
+                    pushFollow(FOLLOW_declaration_in_annotationValue538);
+                    declaration22=declaration();
 
                     state._fsp--;
 
-                    stream_declaration.add(declaration18.getTree());
+                    stream_declaration.add(declaration22.getTree());
 
                     }
                     break;
@@ -1229,15 +1267,15 @@ public class AnnotationParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 119:8: -> ^( ANNOTATION class_name ( declaration )? )
+            // 136:8: -> ^( ANNOTATION_VALUE class_name ( declaration )? )
             {
-                // AnnotationParser.g:119:11: ^( ANNOTATION class_name ( declaration )? )
+                // AnnotationParser.g:136:11: ^( ANNOTATION_VALUE class_name ( declaration )? )
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
-                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ANNOTATION, "ANNOTATION"), root_1);
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ANNOTATION_VALUE, "ANNOTATION_VALUE"), root_1);
 
                 adaptor.addChild(root_1, stream_class_name.nextTree());
-                // AnnotationParser.g:119:35: ( declaration )?
+                // AnnotationParser.g:136:41: ( declaration )?
                 if ( stream_declaration.hasNext() ) {
                     adaptor.addChild(root_1, stream_declaration.nextTree());
 
@@ -1268,139 +1306,7 @@ public class AnnotationParser extends Parser {
         }
         return retval;
     }
-    // $ANTLR end "subAnnotation"
-
-    public static class value_return extends ParserRuleReturnScope {
-        AnnotationCommonTree tree;
-        public Object getTree() { return tree; }
-    };
-
-    // $ANTLR start "value"
-    // AnnotationParser.g:122:1: value : ( objectValue | stringValue | booleanValue | nullValue );
-    public final AnnotationParser.value_return value() throws RecognitionException {
-        AnnotationParser.value_return retval = new AnnotationParser.value_return();
-        retval.start = input.LT(1);
-
-        AnnotationCommonTree root_0 = null;
-
-        AnnotationParser.objectValue_return objectValue19 = null;
-
-        AnnotationParser.stringValue_return stringValue20 = null;
-
-        AnnotationParser.booleanValue_return booleanValue21 = null;
-
-        AnnotationParser.nullValue_return nullValue22 = null;
-
-
-
-        try {
-            // AnnotationParser.g:123:3: ( objectValue | stringValue | booleanValue | nullValue )
-            int alt10=4;
-            switch ( input.LA(1) ) {
-            case CURLY_START:
-                {
-                alt10=1;
-                }
-                break;
-            case STRING_LITERAL:
-                {
-                alt10=2;
-                }
-                break;
-            case TRUE:
-            case FALSE:
-                {
-                alt10=3;
-                }
-                break;
-            case NULL:
-                {
-                alt10=4;
-                }
-                break;
-            default:
-                NoViableAltException nvae =
-                    new NoViableAltException("", 10, 0, input);
-
-                throw nvae;
-            }
-
-            switch (alt10) {
-                case 1 :
-                    // AnnotationParser.g:123:5: objectValue
-                    {
-                    root_0 = (AnnotationCommonTree)adaptor.nil();
-
-                    pushFollow(FOLLOW_objectValue_in_value536);
-                    objectValue19=objectValue();
-
-                    state._fsp--;
-
-                    adaptor.addChild(root_0, objectValue19.getTree());
-
-                    }
-                    break;
-                case 2 :
-                    // AnnotationParser.g:124:5: stringValue
-                    {
-                    root_0 = (AnnotationCommonTree)adaptor.nil();
-
-                    pushFollow(FOLLOW_stringValue_in_value542);
-                    stringValue20=stringValue();
-
-                    state._fsp--;
-
-                    adaptor.addChild(root_0, stringValue20.getTree());
-
-                    }
-                    break;
-                case 3 :
-                    // AnnotationParser.g:125:5: booleanValue
-                    {
-                    root_0 = (AnnotationCommonTree)adaptor.nil();
-
-                    pushFollow(FOLLOW_booleanValue_in_value548);
-                    booleanValue21=booleanValue();
-
-                    state._fsp--;
-
-                    adaptor.addChild(root_0, booleanValue21.getTree());
-
-                    }
-                    break;
-                case 4 :
-                    // AnnotationParser.g:126:5: nullValue
-                    {
-                    root_0 = (AnnotationCommonTree)adaptor.nil();
-
-                    pushFollow(FOLLOW_nullValue_in_value554);
-                    nullValue22=nullValue();
-
-                    state._fsp--;
-
-                    adaptor.addChild(root_0, nullValue22.getTree());
-
-                    }
-                    break;
-
-            }
-            retval.stop = input.LT(-1);
-
-            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
-            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
-
-        }
-        finally {
-        }
-        return retval;
-    }
-    // $ANTLR end "value"
+    // $ANTLR end "annotationValue"
 
     public static class objectValue_return extends ParserRuleReturnScope {
         AnnotationCommonTree tree;
@@ -1408,7 +1314,7 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "objectValue"
-    // AnnotationParser.g:129:1: objectValue : CURLY_START pairs+= pair ( COMMA pairs+= pair )* CURLY_END -> ^( OBJECT_VALUE ( $pairs)+ ) ;
+    // AnnotationParser.g:139:1: objectValue : CURLY_START pairs+= pair ( COMMA pairs+= pair )* CURLY_END -> ^( OBJECT_VALUE ( $pairs)+ ) ;
     public final AnnotationParser.objectValue_return objectValue() throws RecognitionException {
         AnnotationParser.objectValue_return retval = new AnnotationParser.objectValue_return();
         retval.start = input.LT(1);
@@ -1428,13 +1334,13 @@ public class AnnotationParser extends Parser {
         RewriteRuleTokenStream stream_CURLY_END=new RewriteRuleTokenStream(adaptor,"token CURLY_END");
         RewriteRuleSubtreeStream stream_pair=new RewriteRuleSubtreeStream(adaptor,"rule pair");
         try {
-            // AnnotationParser.g:130:3: ( CURLY_START pairs+= pair ( COMMA pairs+= pair )* CURLY_END -> ^( OBJECT_VALUE ( $pairs)+ ) )
-            // AnnotationParser.g:130:5: CURLY_START pairs+= pair ( COMMA pairs+= pair )* CURLY_END
+            // AnnotationParser.g:140:3: ( CURLY_START pairs+= pair ( COMMA pairs+= pair )* CURLY_END -> ^( OBJECT_VALUE ( $pairs)+ ) )
+            // AnnotationParser.g:140:5: CURLY_START pairs+= pair ( COMMA pairs+= pair )* CURLY_END
             {
-            CURLY_START23=(Token)match(input,CURLY_START,FOLLOW_CURLY_START_in_objectValue567);  
+            CURLY_START23=(Token)match(input,CURLY_START,FOLLOW_CURLY_START_in_objectValue570);  
             stream_CURLY_START.add(CURLY_START23);
 
-            pushFollow(FOLLOW_pair_in_objectValue571);
+            pushFollow(FOLLOW_pair_in_objectValue574);
             pairs=pair();
 
             state._fsp--;
@@ -1443,25 +1349,25 @@ public class AnnotationParser extends Parser {
             if (list_pairs==null) list_pairs=new ArrayList();
             list_pairs.add(pairs.getTree());
 
-            // AnnotationParser.g:130:29: ( COMMA pairs+= pair )*
-            loop11:
+            // AnnotationParser.g:140:29: ( COMMA pairs+= pair )*
+            loop9:
             do {
-                int alt11=2;
-                int LA11_0 = input.LA(1);
+                int alt9=2;
+                int LA9_0 = input.LA(1);
 
-                if ( (LA11_0==COMMA) ) {
-                    alt11=1;
+                if ( (LA9_0==COMMA) ) {
+                    alt9=1;
                 }
 
 
-                switch (alt11) {
+                switch (alt9) {
             	case 1 :
-            	    // AnnotationParser.g:130:30: COMMA pairs+= pair
+            	    // AnnotationParser.g:140:30: COMMA pairs+= pair
             	    {
-            	    COMMA24=(Token)match(input,COMMA,FOLLOW_COMMA_in_objectValue574);  
+            	    COMMA24=(Token)match(input,COMMA,FOLLOW_COMMA_in_objectValue577);  
             	    stream_COMMA.add(COMMA24);
 
-            	    pushFollow(FOLLOW_pair_in_objectValue578);
+            	    pushFollow(FOLLOW_pair_in_objectValue581);
             	    pairs=pair();
 
             	    state._fsp--;
@@ -1475,11 +1381,11 @@ public class AnnotationParser extends Parser {
             	    break;
 
             	default :
-            	    break loop11;
+            	    break loop9;
                 }
             } while (true);
 
-            CURLY_END25=(Token)match(input,CURLY_END,FOLLOW_CURLY_END_in_objectValue582);  
+            CURLY_END25=(Token)match(input,CURLY_END,FOLLOW_CURLY_END_in_objectValue585);  
             stream_CURLY_END.add(CURLY_END25);
 
 
@@ -1495,9 +1401,9 @@ public class AnnotationParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
             RewriteRuleSubtreeStream stream_pairs=new RewriteRuleSubtreeStream(adaptor,"token pairs",list_pairs);
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 131:7: -> ^( OBJECT_VALUE ( $pairs)+ )
+            // 141:7: -> ^( OBJECT_VALUE ( $pairs)+ )
             {
-                // AnnotationParser.g:131:10: ^( OBJECT_VALUE ( $pairs)+ )
+                // AnnotationParser.g:141:10: ^( OBJECT_VALUE ( $pairs)+ )
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(OBJECT_VALUE, "OBJECT_VALUE"), root_1);
@@ -1537,13 +1443,255 @@ public class AnnotationParser extends Parser {
     }
     // $ANTLR end "objectValue"
 
+    public static class pair_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "pair"
+    // AnnotationParser.g:144:1: pair : name= stringValue EQUAL value -> ^( PAIR $name value ) ;
+    public final AnnotationParser.pair_return pair() throws RecognitionException {
+        AnnotationParser.pair_return retval = new AnnotationParser.pair_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        Token EQUAL26=null;
+        AnnotationParser.stringValue_return name = null;
+
+        AnnotationParser.value_return value27 = null;
+
+
+        AnnotationCommonTree EQUAL26_tree=null;
+        RewriteRuleTokenStream stream_EQUAL=new RewriteRuleTokenStream(adaptor,"token EQUAL");
+        RewriteRuleSubtreeStream stream_value=new RewriteRuleSubtreeStream(adaptor,"rule value");
+        RewriteRuleSubtreeStream stream_stringValue=new RewriteRuleSubtreeStream(adaptor,"rule stringValue");
+        try {
+            // AnnotationParser.g:145:3: (name= stringValue EQUAL value -> ^( PAIR $name value ) )
+            // AnnotationParser.g:145:5: name= stringValue EQUAL value
+            {
+            pushFollow(FOLLOW_stringValue_in_pair616);
+            name=stringValue();
+
+            state._fsp--;
+
+            stream_stringValue.add(name.getTree());
+            EQUAL26=(Token)match(input,EQUAL,FOLLOW_EQUAL_in_pair618);  
+            stream_EQUAL.add(EQUAL26);
+
+            pushFollow(FOLLOW_value_in_pair620);
+            value27=value();
+
+            state._fsp--;
+
+            stream_value.add(value27.getTree());
+
+
+            // AST REWRITE
+            // elements: name, value
+            // token labels: 
+            // rule labels: retval, name
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+            RewriteRuleSubtreeStream stream_name=new RewriteRuleSubtreeStream(adaptor,"rule name",name!=null?name.tree:null);
+
+            root_0 = (AnnotationCommonTree)adaptor.nil();
+            // 146:7: -> ^( PAIR $name value )
+            {
+                // AnnotationParser.g:146:10: ^( PAIR $name value )
+                {
+                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(PAIR, "PAIR"), root_1);
+
+                adaptor.addChild(root_1, stream_name.nextTree());
+                adaptor.addChild(root_1, stream_value.nextTree());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;
+            }
+
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "pair"
+
+    public static class arrayValue_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "arrayValue"
+    // AnnotationParser.g:149:1: arrayValue : CURLY_START (values+= value )? ( COMMA values+= value )* CURLY_END -> ^( ARRAY_VALUE ( $values)* ) ;
+    public final AnnotationParser.arrayValue_return arrayValue() throws RecognitionException {
+        AnnotationParser.arrayValue_return retval = new AnnotationParser.arrayValue_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        Token CURLY_START28=null;
+        Token COMMA29=null;
+        Token CURLY_END30=null;
+        List list_values=null;
+        RuleReturnScope values = null;
+        AnnotationCommonTree CURLY_START28_tree=null;
+        AnnotationCommonTree COMMA29_tree=null;
+        AnnotationCommonTree CURLY_END30_tree=null;
+        RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
+        RewriteRuleTokenStream stream_CURLY_START=new RewriteRuleTokenStream(adaptor,"token CURLY_START");
+        RewriteRuleTokenStream stream_CURLY_END=new RewriteRuleTokenStream(adaptor,"token CURLY_END");
+        RewriteRuleSubtreeStream stream_value=new RewriteRuleSubtreeStream(adaptor,"rule value");
+        try {
+            // AnnotationParser.g:150:3: ( CURLY_START (values+= value )? ( COMMA values+= value )* CURLY_END -> ^( ARRAY_VALUE ( $values)* ) )
+            // AnnotationParser.g:150:5: CURLY_START (values+= value )? ( COMMA values+= value )* CURLY_END
+            {
+            CURLY_START28=(Token)match(input,CURLY_START,FOLLOW_CURLY_START_in_arrayValue650);  
+            stream_CURLY_START.add(CURLY_START28);
+
+            // AnnotationParser.g:150:23: (values+= value )?
+            int alt10=2;
+            int LA10_0 = input.LA(1);
+
+            if ( (LA10_0==AT||LA10_0==CURLY_START||(LA10_0>=TRUE && LA10_0<=NULL)||(LA10_0>=STRING_LITERAL && LA10_0<=FLOAT_LITERAL)) ) {
+                alt10=1;
+            }
+            switch (alt10) {
+                case 1 :
+                    // AnnotationParser.g:150:23: values+= value
+                    {
+                    pushFollow(FOLLOW_value_in_arrayValue654);
+                    values=value();
+
+                    state._fsp--;
+
+                    stream_value.add(values.getTree());
+                    if (list_values==null) list_values=new ArrayList();
+                    list_values.add(values.getTree());
+
+
+                    }
+                    break;
+
+            }
+
+            // AnnotationParser.g:150:32: ( COMMA values+= value )*
+            loop11:
+            do {
+                int alt11=2;
+                int LA11_0 = input.LA(1);
+
+                if ( (LA11_0==COMMA) ) {
+                    alt11=1;
+                }
+
+
+                switch (alt11) {
+            	case 1 :
+            	    // AnnotationParser.g:150:33: COMMA values+= value
+            	    {
+            	    COMMA29=(Token)match(input,COMMA,FOLLOW_COMMA_in_arrayValue658);  
+            	    stream_COMMA.add(COMMA29);
+
+            	    pushFollow(FOLLOW_value_in_arrayValue662);
+            	    values=value();
+
+            	    state._fsp--;
+
+            	    stream_value.add(values.getTree());
+            	    if (list_values==null) list_values=new ArrayList();
+            	    list_values.add(values.getTree());
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop11;
+                }
+            } while (true);
+
+            CURLY_END30=(Token)match(input,CURLY_END,FOLLOW_CURLY_END_in_arrayValue666);  
+            stream_CURLY_END.add(CURLY_END30);
+
+
+
+            // AST REWRITE
+            // elements: values
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: values
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+            RewriteRuleSubtreeStream stream_values=new RewriteRuleSubtreeStream(adaptor,"token values",list_values);
+            root_0 = (AnnotationCommonTree)adaptor.nil();
+            // 151:7: -> ^( ARRAY_VALUE ( $values)* )
+            {
+                // AnnotationParser.g:151:10: ^( ARRAY_VALUE ( $values)* )
+                {
+                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ARRAY_VALUE, "ARRAY_VALUE"), root_1);
+
+                // AnnotationParser.g:151:24: ( $values)*
+                while ( stream_values.hasNext() ) {
+                    adaptor.addChild(root_1, stream_values.nextTree());
+
+                }
+                stream_values.reset();
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;
+            }
+
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "arrayValue"
+
     public static class stringValue_return extends ParserRuleReturnScope {
         AnnotationCommonTree tree;
         public Object getTree() { return tree; }
     };
 
     // $ANTLR start "stringValue"
-    // AnnotationParser.g:134:1: stringValue : string_value= STRING_LITERAL -> ^( STRING_VALUE $string_value) ;
+    // AnnotationParser.g:154:1: stringValue : string_value= STRING_LITERAL -> ^( STRING_VALUE $string_value) ;
     public final AnnotationParser.stringValue_return stringValue() throws RecognitionException {
         AnnotationParser.stringValue_return retval = new AnnotationParser.stringValue_return();
         retval.start = input.LT(1);
@@ -1556,10 +1704,10 @@ public class AnnotationParser extends Parser {
         RewriteRuleTokenStream stream_STRING_LITERAL=new RewriteRuleTokenStream(adaptor,"token STRING_LITERAL");
 
         try {
-            // AnnotationParser.g:135:3: (string_value= STRING_LITERAL -> ^( STRING_VALUE $string_value) )
-            // AnnotationParser.g:135:5: string_value= STRING_LITERAL
+            // AnnotationParser.g:155:3: (string_value= STRING_LITERAL -> ^( STRING_VALUE $string_value) )
+            // AnnotationParser.g:155:5: string_value= STRING_LITERAL
             {
-            string_value=(Token)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_stringValue613);  
+            string_value=(Token)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_stringValue697);  
             stream_STRING_LITERAL.add(string_value);
 
 
@@ -1576,9 +1724,9 @@ public class AnnotationParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 136:7: -> ^( STRING_VALUE $string_value)
+            // 156:7: -> ^( STRING_VALUE $string_value)
             {
-                // AnnotationParser.g:136:10: ^( STRING_VALUE $string_value)
+                // AnnotationParser.g:156:10: ^( STRING_VALUE $string_value)
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(STRING_VALUE, "STRING_VALUE"), root_1);
@@ -1611,36 +1759,36 @@ public class AnnotationParser extends Parser {
     }
     // $ANTLR end "stringValue"
 
-    public static class booleanValue_return extends ParserRuleReturnScope {
+    public static class numberValue_return extends ParserRuleReturnScope {
         AnnotationCommonTree tree;
         public Object getTree() { return tree; }
     };
 
-    // $ANTLR start "booleanValue"
-    // AnnotationParser.g:139:1: booleanValue : ( TRUE -> ^( BOOLEAN_VALUE TRUE ) | FALSE -> ^( BOOLEAN_VALUE FALSE ) );
-    public final AnnotationParser.booleanValue_return booleanValue() throws RecognitionException {
-        AnnotationParser.booleanValue_return retval = new AnnotationParser.booleanValue_return();
+    // $ANTLR start "numberValue"
+    // AnnotationParser.g:159:1: numberValue : (interger_value= INTEGER_LITERAL -> ^( NUMBER_VALUE $interger_value) | float_value= FLOAT_LITERAL -> ^( NUMBER_VALUE $float_value) );
+    public final AnnotationParser.numberValue_return numberValue() throws RecognitionException {
+        AnnotationParser.numberValue_return retval = new AnnotationParser.numberValue_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        Token TRUE26=null;
-        Token FALSE27=null;
+        Token interger_value=null;
+        Token float_value=null;
 
-        AnnotationCommonTree TRUE26_tree=null;
-        AnnotationCommonTree FALSE27_tree=null;
-        RewriteRuleTokenStream stream_FALSE=new RewriteRuleTokenStream(adaptor,"token FALSE");
-        RewriteRuleTokenStream stream_TRUE=new RewriteRuleTokenStream(adaptor,"token TRUE");
+        AnnotationCommonTree interger_value_tree=null;
+        AnnotationCommonTree float_value_tree=null;
+        RewriteRuleTokenStream stream_FLOAT_LITERAL=new RewriteRuleTokenStream(adaptor,"token FLOAT_LITERAL");
+        RewriteRuleTokenStream stream_INTEGER_LITERAL=new RewriteRuleTokenStream(adaptor,"token INTEGER_LITERAL");
 
         try {
-            // AnnotationParser.g:140:3: ( TRUE -> ^( BOOLEAN_VALUE TRUE ) | FALSE -> ^( BOOLEAN_VALUE FALSE ) )
+            // AnnotationParser.g:160:3: (interger_value= INTEGER_LITERAL -> ^( NUMBER_VALUE $interger_value) | float_value= FLOAT_LITERAL -> ^( NUMBER_VALUE $float_value) )
             int alt12=2;
             int LA12_0 = input.LA(1);
 
-            if ( (LA12_0==TRUE) ) {
+            if ( (LA12_0==INTEGER_LITERAL) ) {
                 alt12=1;
             }
-            else if ( (LA12_0==FALSE) ) {
+            else if ( (LA12_0==FLOAT_LITERAL) ) {
                 alt12=2;
             }
             else {
@@ -1651,10 +1799,143 @@ public class AnnotationParser extends Parser {
             }
             switch (alt12) {
                 case 1 :
-                    // AnnotationParser.g:140:5: TRUE
+                    // AnnotationParser.g:160:5: interger_value= INTEGER_LITERAL
                     {
-                    TRUE26=(Token)match(input,TRUE,FOLLOW_TRUE_in_booleanValue641);  
-                    stream_TRUE.add(TRUE26);
+                    interger_value=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_numberValue727);  
+                    stream_INTEGER_LITERAL.add(interger_value);
+
+
+
+                    // AST REWRITE
+                    // elements: interger_value
+                    // token labels: interger_value
+                    // rule labels: retval
+                    // token list labels: 
+                    // rule list labels: 
+                    // wildcard labels: 
+                    retval.tree = root_0;
+                    RewriteRuleTokenStream stream_interger_value=new RewriteRuleTokenStream(adaptor,"token interger_value",interger_value);
+                    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+                    // 161:7: -> ^( NUMBER_VALUE $interger_value)
+                    {
+                        // AnnotationParser.g:161:10: ^( NUMBER_VALUE $interger_value)
+                        {
+                        AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                        root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(NUMBER_VALUE, "NUMBER_VALUE"), root_1);
+
+                        adaptor.addChild(root_1, stream_interger_value.nextNode());
+
+                        adaptor.addChild(root_0, root_1);
+                        }
+
+                    }
+
+                    retval.tree = root_0;
+                    }
+                    break;
+                case 2 :
+                    // AnnotationParser.g:162:5: float_value= FLOAT_LITERAL
+                    {
+                    float_value=(Token)match(input,FLOAT_LITERAL,FOLLOW_FLOAT_LITERAL_in_numberValue750);  
+                    stream_FLOAT_LITERAL.add(float_value);
+
+
+
+                    // AST REWRITE
+                    // elements: float_value
+                    // token labels: float_value
+                    // rule labels: retval
+                    // token list labels: 
+                    // rule list labels: 
+                    // wildcard labels: 
+                    retval.tree = root_0;
+                    RewriteRuleTokenStream stream_float_value=new RewriteRuleTokenStream(adaptor,"token float_value",float_value);
+                    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+                    // 163:7: -> ^( NUMBER_VALUE $float_value)
+                    {
+                        // AnnotationParser.g:163:10: ^( NUMBER_VALUE $float_value)
+                        {
+                        AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                        root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(NUMBER_VALUE, "NUMBER_VALUE"), root_1);
+
+                        adaptor.addChild(root_1, stream_float_value.nextNode());
+
+                        adaptor.addChild(root_0, root_1);
+                        }
+
+                    }
+
+                    retval.tree = root_0;
+                    }
+                    break;
+
+            }
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "numberValue"
+
+    public static class booleanValue_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "booleanValue"
+    // AnnotationParser.g:166:1: booleanValue : ( TRUE -> ^( BOOLEAN_VALUE TRUE ) | FALSE -> ^( BOOLEAN_VALUE FALSE ) );
+    public final AnnotationParser.booleanValue_return booleanValue() throws RecognitionException {
+        AnnotationParser.booleanValue_return retval = new AnnotationParser.booleanValue_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        Token TRUE31=null;
+        Token FALSE32=null;
+
+        AnnotationCommonTree TRUE31_tree=null;
+        AnnotationCommonTree FALSE32_tree=null;
+        RewriteRuleTokenStream stream_FALSE=new RewriteRuleTokenStream(adaptor,"token FALSE");
+        RewriteRuleTokenStream stream_TRUE=new RewriteRuleTokenStream(adaptor,"token TRUE");
+
+        try {
+            // AnnotationParser.g:167:3: ( TRUE -> ^( BOOLEAN_VALUE TRUE ) | FALSE -> ^( BOOLEAN_VALUE FALSE ) )
+            int alt13=2;
+            int LA13_0 = input.LA(1);
+
+            if ( (LA13_0==TRUE) ) {
+                alt13=1;
+            }
+            else if ( (LA13_0==FALSE) ) {
+                alt13=2;
+            }
+            else {
+                NoViableAltException nvae =
+                    new NoViableAltException("", 13, 0, input);
+
+                throw nvae;
+            }
+            switch (alt13) {
+                case 1 :
+                    // AnnotationParser.g:167:5: TRUE
+                    {
+                    TRUE31=(Token)match(input,TRUE,FOLLOW_TRUE_in_booleanValue778);  
+                    stream_TRUE.add(TRUE31);
 
 
 
@@ -1669,9 +1950,9 @@ public class AnnotationParser extends Parser {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (AnnotationCommonTree)adaptor.nil();
-                    // 141:7: -> ^( BOOLEAN_VALUE TRUE )
+                    // 168:7: -> ^( BOOLEAN_VALUE TRUE )
                     {
-                        // AnnotationParser.g:141:10: ^( BOOLEAN_VALUE TRUE )
+                        // AnnotationParser.g:168:10: ^( BOOLEAN_VALUE TRUE )
                         {
                         AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                         root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(BOOLEAN_VALUE, "BOOLEAN_VALUE"), root_1);
@@ -1687,10 +1968,10 @@ public class AnnotationParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // AnnotationParser.g:142:5: FALSE
+                    // AnnotationParser.g:169:5: FALSE
                     {
-                    FALSE27=(Token)match(input,FALSE,FOLLOW_FALSE_in_booleanValue661);  
-                    stream_FALSE.add(FALSE27);
+                    FALSE32=(Token)match(input,FALSE,FOLLOW_FALSE_in_booleanValue798);  
+                    stream_FALSE.add(FALSE32);
 
 
 
@@ -1705,9 +1986,9 @@ public class AnnotationParser extends Parser {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (AnnotationCommonTree)adaptor.nil();
-                    // 143:7: -> ^( BOOLEAN_VALUE FALSE )
+                    // 170:7: -> ^( BOOLEAN_VALUE FALSE )
                     {
-                        // AnnotationParser.g:143:10: ^( BOOLEAN_VALUE FALSE )
+                        // AnnotationParser.g:170:10: ^( BOOLEAN_VALUE FALSE )
                         {
                         AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                         root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(BOOLEAN_VALUE, "BOOLEAN_VALUE"), root_1);
@@ -1748,24 +2029,24 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "nullValue"
-    // AnnotationParser.g:146:1: nullValue : NULL -> ^( NULL_VALUE NULL ) ;
+    // AnnotationParser.g:173:1: nullValue : NULL -> ^( NULL_VALUE NULL ) ;
     public final AnnotationParser.nullValue_return nullValue() throws RecognitionException {
         AnnotationParser.nullValue_return retval = new AnnotationParser.nullValue_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        Token NULL28=null;
+        Token NULL33=null;
 
-        AnnotationCommonTree NULL28_tree=null;
+        AnnotationCommonTree NULL33_tree=null;
         RewriteRuleTokenStream stream_NULL=new RewriteRuleTokenStream(adaptor,"token NULL");
 
         try {
-            // AnnotationParser.g:147:3: ( NULL -> ^( NULL_VALUE NULL ) )
-            // AnnotationParser.g:147:5: NULL
+            // AnnotationParser.g:174:3: ( NULL -> ^( NULL_VALUE NULL ) )
+            // AnnotationParser.g:174:5: NULL
             {
-            NULL28=(Token)match(input,NULL,FOLLOW_NULL_in_nullValue688);  
-            stream_NULL.add(NULL28);
+            NULL33=(Token)match(input,NULL,FOLLOW_NULL_in_nullValue825);  
+            stream_NULL.add(NULL33);
 
 
 
@@ -1780,9 +2061,9 @@ public class AnnotationParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 148:7: -> ^( NULL_VALUE NULL )
+            // 175:7: -> ^( NULL_VALUE NULL )
             {
-                // AnnotationParser.g:148:10: ^( NULL_VALUE NULL )
+                // AnnotationParser.g:175:10: ^( NULL_VALUE NULL )
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(NULL_VALUE, "NULL_VALUE"), root_1);
@@ -1815,147 +2096,119 @@ public class AnnotationParser extends Parser {
     }
     // $ANTLR end "nullValue"
 
-    public static class pair_return extends ParserRuleReturnScope {
-        AnnotationCommonTree tree;
-        public Object getTree() { return tree; }
-    };
-
-    // $ANTLR start "pair"
-    // AnnotationParser.g:151:1: pair : name= stringValue EQUAL value -> ^( PAIR $name value ) ;
-    public final AnnotationParser.pair_return pair() throws RecognitionException {
-        AnnotationParser.pair_return retval = new AnnotationParser.pair_return();
-        retval.start = input.LT(1);
-
-        AnnotationCommonTree root_0 = null;
-
-        Token EQUAL29=null;
-        AnnotationParser.stringValue_return name = null;
-
-        AnnotationParser.value_return value30 = null;
-
-
-        AnnotationCommonTree EQUAL29_tree=null;
-        RewriteRuleTokenStream stream_EQUAL=new RewriteRuleTokenStream(adaptor,"token EQUAL");
-        RewriteRuleSubtreeStream stream_value=new RewriteRuleSubtreeStream(adaptor,"rule value");
-        RewriteRuleSubtreeStream stream_stringValue=new RewriteRuleSubtreeStream(adaptor,"rule stringValue");
-        try {
-            // AnnotationParser.g:152:3: (name= stringValue EQUAL value -> ^( PAIR $name value ) )
-            // AnnotationParser.g:152:5: name= stringValue EQUAL value
-            {
-            pushFollow(FOLLOW_stringValue_in_pair717);
-            name=stringValue();
-
-            state._fsp--;
-
-            stream_stringValue.add(name.getTree());
-            EQUAL29=(Token)match(input,EQUAL,FOLLOW_EQUAL_in_pair719);  
-            stream_EQUAL.add(EQUAL29);
-
-            pushFollow(FOLLOW_value_in_pair721);
-            value30=value();
-
-            state._fsp--;
-
-            stream_value.add(value30.getTree());
-
-
-            // AST REWRITE
-            // elements: value, name
-            // token labels: 
-            // rule labels: retval, name
-            // token list labels: 
-            // rule list labels: 
-            // wildcard labels: 
-            retval.tree = root_0;
-            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-            RewriteRuleSubtreeStream stream_name=new RewriteRuleSubtreeStream(adaptor,"rule name",name!=null?name.tree:null);
-
-            root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 153:7: -> ^( PAIR $name value )
-            {
-                // AnnotationParser.g:153:10: ^( PAIR $name value )
-                {
-                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
-                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(PAIR, "PAIR"), root_1);
-
-                adaptor.addChild(root_1, stream_name.nextTree());
-                adaptor.addChild(root_1, stream_value.nextTree());
-
-                adaptor.addChild(root_0, root_1);
-                }
-
-            }
-
-            retval.tree = root_0;
-            }
-
-            retval.stop = input.LT(-1);
-
-            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
-            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
-
-        }
-        finally {
-        }
-        return retval;
-    }
-    // $ANTLR end "pair"
-
     // Delegated rules
 
 
+    protected DFA7 dfa7 = new DFA7(this);
+    static final String DFA7_eotS =
+        "\12\uffff";
+    static final String DFA7_eofS =
+        "\12\uffff";
+    static final String DFA7_minS =
+        "\1\23\1\uffff\1\23\4\uffff\1\26\2\uffff";
+    static final String DFA7_maxS =
+        "\1\41\1\uffff\1\41\4\uffff\1\32\2\uffff";
+    static final String DFA7_acceptS =
+        "\1\uffff\1\1\1\uffff\1\4\1\5\1\6\1\7\1\uffff\1\3\1\2";
+    static final String DFA7_specialS =
+        "\12\uffff}>";
+    static final String[] DFA7_transitionS = {
+            "\1\1\5\uffff\1\2\1\uffff\2\5\1\6\1\uffff\1\3\2\4",
+            "",
+            "\1\10\3\uffff\1\10\1\uffff\5\10\1\uffff\1\7\2\10",
+            "",
+            "",
+            "",
+            "",
+            "\1\11\1\10\2\uffff\1\10",
+            "",
+            ""
+    };
+
+    static final short[] DFA7_eot = DFA.unpackEncodedString(DFA7_eotS);
+    static final short[] DFA7_eof = DFA.unpackEncodedString(DFA7_eofS);
+    static final char[] DFA7_min = DFA.unpackEncodedStringToUnsignedChars(DFA7_minS);
+    static final char[] DFA7_max = DFA.unpackEncodedStringToUnsignedChars(DFA7_maxS);
+    static final short[] DFA7_accept = DFA.unpackEncodedString(DFA7_acceptS);
+    static final short[] DFA7_special = DFA.unpackEncodedString(DFA7_specialS);
+    static final short[][] DFA7_transition;
+
+    static {
+        int numStates = DFA7_transitionS.length;
+        DFA7_transition = new short[numStates][];
+        for (int i=0; i<numStates; i++) {
+            DFA7_transition[i] = DFA.unpackEncodedString(DFA7_transitionS[i]);
+        }
+    }
+
+    class DFA7 extends DFA {
+
+        public DFA7(BaseRecognizer recognizer) {
+            this.recognizer = recognizer;
+            this.decisionNumber = 7;
+            this.eot = DFA7_eot;
+            this.eof = DFA7_eof;
+            this.min = DFA7_min;
+            this.max = DFA7_max;
+            this.accept = DFA7_accept;
+            this.special = DFA7_special;
+            this.transition = DFA7_transition;
+        }
+        public String getDescription() {
+            return "123:1: value : ( annotationValue | objectValue | arrayValue | stringValue | numberValue | booleanValue | nullValue );";
+        }
+    }
  
 
-    public static final BitSet FOLLOW_AT_in_annotation150 = new BitSet(new long[]{0x0000000002080000L});
-    public static final BitSet FOLLOW_class_name_in_annotation152 = new BitSet(new long[]{0x0000000000008002L});
-    public static final BitSet FOLLOW_declaration_in_annotation154 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_namespace_in_class_name186 = new BitSet(new long[]{0x0000000002000000L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_class_name190 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_BSLASH_in_namespace223 = new BitSet(new long[]{0x0000000002000002L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_namespace229 = new BitSet(new long[]{0x0000000000080000L});
-    public static final BitSet FOLLOW_BSLASH_in_namespace231 = new BitSet(new long[]{0x0000000002000002L});
-    public static final BitSet FOLLOW_PARAM_START_in_declaration270 = new BitSet(new long[]{0x0000000006050000L});
-    public static final BitSet FOLLOW_statement_in_declaration274 = new BitSet(new long[]{0x0000000000050000L});
-    public static final BitSet FOLLOW_COMMA_in_declaration278 = new BitSet(new long[]{0x0000000006000000L});
-    public static final BitSet FOLLOW_statement_in_declaration282 = new BitSet(new long[]{0x0000000000050000L});
-    public static final BitSet FOLLOW_PARAM_END_in_declaration286 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_literal_in_statement315 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_argument_in_statement319 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_literal334 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_argumentName_in_argument364 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_EQUAL_in_argument366 = new BitSet(new long[]{0x0000000005D00000L});
-    public static final BitSet FOLLOW_argumentValue_in_argument370 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_argumentName403 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_value_in_argumentValue431 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_CURLY_START_in_argumentValue451 = new BitSet(new long[]{0x0000000000004000L});
-    public static final BitSet FOLLOW_subAnnotation_in_argumentValue455 = new BitSet(new long[]{0x0000000000240000L});
-    public static final BitSet FOLLOW_COMMA_in_argumentValue458 = new BitSet(new long[]{0x0000000000004000L});
-    public static final BitSet FOLLOW_subAnnotation_in_argumentValue462 = new BitSet(new long[]{0x0000000000240000L});
-    public static final BitSet FOLLOW_CURLY_END_in_argumentValue466 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_AT_in_subAnnotation500 = new BitSet(new long[]{0x0000000002080000L});
-    public static final BitSet FOLLOW_class_name_in_subAnnotation502 = new BitSet(new long[]{0x0000000000008002L});
-    public static final BitSet FOLLOW_declaration_in_subAnnotation504 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_objectValue_in_value536 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_stringValue_in_value542 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_booleanValue_in_value548 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_nullValue_in_value554 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_CURLY_START_in_objectValue567 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_pair_in_objectValue571 = new BitSet(new long[]{0x0000000000240000L});
-    public static final BitSet FOLLOW_COMMA_in_objectValue574 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_pair_in_objectValue578 = new BitSet(new long[]{0x0000000000240000L});
-    public static final BitSet FOLLOW_CURLY_END_in_objectValue582 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_stringValue613 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TRUE_in_booleanValue641 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_FALSE_in_booleanValue661 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NULL_in_nullValue688 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_stringValue_in_pair717 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_EQUAL_in_pair719 = new BitSet(new long[]{0x0000000005D00000L});
-    public static final BitSet FOLLOW_value_in_pair721 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_AT_in_annotation172 = new BitSet(new long[]{0x0000000041000000L});
+    public static final BitSet FOLLOW_class_name_in_annotation174 = new BitSet(new long[]{0x0000000000100002L});
+    public static final BitSet FOLLOW_declaration_in_annotation176 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_namespace_in_class_name208 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_class_name212 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_BSLASH_in_namespace245 = new BitSet(new long[]{0x0000000040000002L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_namespace251 = new BitSet(new long[]{0x0000000001000000L});
+    public static final BitSet FOLLOW_BSLASH_in_namespace253 = new BitSet(new long[]{0x0000000040000002L});
+    public static final BitSet FOLLOW_PARAM_START_in_declaration292 = new BitSet(new long[]{0x00000003FAA80000L});
+    public static final BitSet FOLLOW_statement_in_declaration296 = new BitSet(new long[]{0x0000000000A00000L});
+    public static final BitSet FOLLOW_COMMA_in_declaration300 = new BitSet(new long[]{0x00000003FA080000L});
+    public static final BitSet FOLLOW_statement_in_declaration304 = new BitSet(new long[]{0x0000000000A00000L});
+    public static final BitSet FOLLOW_PARAM_END_in_declaration308 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_argument_in_statement337 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_namedArgument_in_statement341 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_value_in_argument356 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_argumentName_in_namedArgument386 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_EQUAL_in_namedArgument388 = new BitSet(new long[]{0x00000003BA080000L});
+    public static final BitSet FOLLOW_argumentValue_in_namedArgument392 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_argumentName425 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_value_in_argumentValue453 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_annotationValue_in_value480 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_objectValue_in_value486 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_arrayValue_in_value492 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_stringValue_in_value498 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_numberValue_in_value504 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_booleanValue_in_value510 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_nullValue_in_value516 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_AT_in_annotationValue534 = new BitSet(new long[]{0x0000000041000000L});
+    public static final BitSet FOLLOW_class_name_in_annotationValue536 = new BitSet(new long[]{0x0000000000100002L});
+    public static final BitSet FOLLOW_declaration_in_annotationValue538 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_CURLY_START_in_objectValue570 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_pair_in_objectValue574 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_COMMA_in_objectValue577 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_pair_in_objectValue581 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_CURLY_END_in_objectValue585 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_stringValue_in_pair616 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_EQUAL_in_pair618 = new BitSet(new long[]{0x00000003BA080000L});
+    public static final BitSet FOLLOW_value_in_pair620 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_CURLY_START_in_arrayValue650 = new BitSet(new long[]{0x00000003BE880000L});
+    public static final BitSet FOLLOW_value_in_arrayValue654 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_COMMA_in_arrayValue658 = new BitSet(new long[]{0x00000003BA080000L});
+    public static final BitSet FOLLOW_value_in_arrayValue662 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_CURLY_END_in_arrayValue666 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_LITERAL_in_stringValue697 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_INTEGER_LITERAL_in_numberValue727 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_FLOAT_LITERAL_in_numberValue750 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TRUE_in_booleanValue778 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_FALSE_in_booleanValue798 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NULL_in_nullValue825 = new BitSet(new long[]{0x0000000000000002L});
 
 }

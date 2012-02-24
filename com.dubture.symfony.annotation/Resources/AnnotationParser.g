@@ -3,23 +3,27 @@ parser grammar AnnotationParser;
 options {
   language = Java;
   output = AST;
-  ASTLabelType=AnnotationCommonTree;
+  ASTLabelType = AnnotationCommonTree;
   tokenVocab = AnnotationLexer;
 }
 
 tokens {
   ANNOTATION;
+  ANNOTATION_LIST;
+  ANNOTATION_VALUE;
   ARGUMENT;
   ARGUMENT_NAME;
   ARGUMENT_VALUE;
+  ARRAY_VALUE;
   BOOLEAN_VALUE;
   CLASS;
   DECLARATION;
-  LITERAL;
+  NAMED_ARGUMENT;
   NAMESPACE;
   NAMESPACE_DEFAULT;
   NAMESPACE_SEGMENT;
   NULL_VALUE;
+  NUMBER_VALUE;
   OBJECT_VALUE;
   PAIR;
   STRING_VALUE;
@@ -29,6 +33,7 @@ tokens {
 package com.dubture.symfony.annotation.parser.antlr;
 
 import com.dubture.symfony.annotation.parser.antlr.error.IAnnotationErrorReporter;
+import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 }
 
 @members {
@@ -66,9 +71,13 @@ import com.dubture.symfony.annotation.parser.antlr.error.IAnnotationErrorReporte
 
 }
 
+//annotationList
+//  : annotations=annotation*
+//      -> ^(ANNOTATION_LIST $annotations*)
+//  ;
+
 annotation
-  :
-     AT class_name declaration?
+  : AT class_name declaration?
       -> ^(ANNOTATION class_name declaration?)
   ;
 
@@ -88,17 +97,17 @@ declaration
   ;
 
 statement
-  : literal | argument
-  ;
-
-literal
-  : literal_value=STRING_LITERAL
-      -> ^(LITERAL $literal_value)
+  : argument | namedArgument
   ;
 
 argument
+  : argument_value=value
+      -> ^(ARGUMENT $argument_value)
+  ;
+
+namedArgument
   : name=argumentName EQUAL argument_value=argumentValue
-      -> ^(ARGUMENT $name $argument_value)
+      -> ^(NAMED_ARGUMENT $name $argument_value)
   ;
 
 argumentName
@@ -109,21 +118,22 @@ argumentName
 argumentValue
   : value
       -> ^(ARGUMENT_VALUE value)
-  | CURLY_START annotations=subAnnotation (COMMA annotations=subAnnotation)* CURLY_END
-      -> ^(ARGUMENT_VALUE $annotations+)
-  ;
-
-subAnnotation
-  :
-     AT class_name declaration?
-       -> ^(ANNOTATION class_name declaration?)
   ;
 
 value
-  : objectValue
+  : annotationValue
+  | objectValue
+  | arrayValue
   | stringValue
+  | numberValue
   | booleanValue
   | nullValue
+  ;
+
+annotationValue
+  :
+     AT class_name declaration?
+       -> ^(ANNOTATION_VALUE class_name declaration?)
   ;
 
 objectValue
@@ -131,9 +141,26 @@ objectValue
       -> ^(OBJECT_VALUE $pairs+)
   ;
 
+pair
+  : name=stringValue EQUAL value
+      -> ^(PAIR $name value)
+  ;
+
+arrayValue
+  : CURLY_START values+=value? (COMMA values+=value)* CURLY_END
+      -> ^(ARRAY_VALUE $values*)
+  ;
+
 stringValue
   : string_value=STRING_LITERAL
       -> ^(STRING_VALUE $string_value)
+  ;
+
+numberValue
+  : interger_value=INTEGER_LITERAL
+      -> ^(NUMBER_VALUE $interger_value)
+  | float_value=FLOAT_LITERAL
+      -> ^(NUMBER_VALUE $float_value)
   ;
 
 booleanValue
@@ -146,11 +173,6 @@ booleanValue
 nullValue
   : NULL
       -> ^(NULL_VALUE NULL)
-  ;
-
-pair
-  : name=stringValue EQUAL value
-      -> ^(PAIR $name value)
   ;
 
 

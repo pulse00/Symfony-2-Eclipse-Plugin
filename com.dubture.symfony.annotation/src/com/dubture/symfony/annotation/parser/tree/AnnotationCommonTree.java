@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
-package com.dubture.symfony.annotation.parser.antlr;
+package com.dubture.symfony.annotation.parser.tree;
 
 import java.util.List;
 
@@ -14,6 +14,9 @@ import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.Tree;
+
+import com.dubture.symfony.annotation.parser.tree.visitor.IAnnotationNodeVisitor;
 
 
 
@@ -40,11 +43,17 @@ public class AnnotationCommonTree extends CommonTree {
 
     @Override
     public AnnotationCommonTree getChild(int i) {
-        if (children == null || i >= children.size()) {
+        if (children == null || i < 0 || i >= children.size()) {
             return null;
         }
 
         return (AnnotationCommonTree)children.get(i);
+    }
+
+    public AnnotationCommonTree getFirstChildFromType(int type) {
+        Tree child = getFirstChildWithType(type);
+
+        return (AnnotationCommonTree) child;
     }
 
     @Override
@@ -63,15 +72,6 @@ public class AnnotationCommonTree extends CommonTree {
      * @param visitor
      */
     public void accept(IAnnotationNodeVisitor visitor) {
-
-        visitor.beginVisit(this);
-
-        for (int i = 0; i < getChildCount(); i++) {
-            AnnotationCommonTree child = (AnnotationCommonTree) getChild(i);
-            child.accept(visitor);
-
-        }
-
-        visitor.endVisit(this);
+        visitor.visit(this);
     }
 }

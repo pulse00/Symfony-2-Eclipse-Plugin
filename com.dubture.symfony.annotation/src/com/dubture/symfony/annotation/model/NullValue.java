@@ -1,14 +1,13 @@
 package com.dubture.symfony.annotation.model;
 
 /**
- * This object represents a null value. This object can
- * be assigned to annotation argument. This object is not
+ * This object represents a null value. This object is not
  * intended to be instantiated. Use the static instance
  * variable to get a NullValue object.
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public final class NullValue implements ObjectArgumentValue {
+public final class NullValue implements ArgumentValue {
 
     static public NullValue instance = new NullValue();
 
@@ -22,8 +21,8 @@ public final class NullValue implements ObjectArgumentValue {
     }
 
     @Override
-    public ArgumentValueTypes getType() {
-        return ArgumentValueTypes.NULL;
+    public ArgumentValueType getType() {
+        return ArgumentValueType.NULL;
     }
 
     @Override

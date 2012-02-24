@@ -20,9 +20,9 @@ import java.util.Map;
  */
 public class ObjectValue implements ArgumentValue {
 
-    private Map<String, ObjectArgumentValue> pairs = new HashMap<String, ObjectArgumentValue>();
+    private Map<String, ArgumentValue> pairs = new HashMap<String, ArgumentValue>();
 
-    public void put(String name, ObjectArgumentValue value) {
+    public void put(String name, ArgumentValue value) {
         pairs.put(name, value);
     }
 
@@ -34,8 +34,8 @@ public class ObjectValue implements ArgumentValue {
         return null;
     }
 
-    public ObjectArgumentValue getArgumentValue(String name) {
-        ObjectArgumentValue argumentValue = null;
+    public ArgumentValue getArgumentValue(String name) {
+        ArgumentValue argumentValue = null;
         if (pairs.containsKey(name)) {
             argumentValue = pairs.get(name);
         }
@@ -49,7 +49,12 @@ public class ObjectValue implements ArgumentValue {
     }
 
     @Override
-    public ArgumentValueTypes getType() {
-        return ArgumentValueTypes.OBJECT;
+    public ArgumentValueType getType() {
+        return ArgumentValueType.OBJECT;
+    }
+
+    @Override
+    public String toString() {
+        return pairs.toString();
     }
 }
