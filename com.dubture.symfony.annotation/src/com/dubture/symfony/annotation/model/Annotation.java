@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import com.dubture.symfony.annotation.parser.antlr.Position;
+
 /**
  * This object represents a Symfony2 annotation. It holds
  * information about the annotation like the class name,
@@ -18,9 +20,12 @@ import java.util.Stack;
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
 public class Annotation {
+
+    protected Position startPosition;
+    protected Position endPosition;
+
     protected String className = "";
     protected Stack<String> namespace = new Stack<String>();
-
     protected List<Argument> arguments = new LinkedList<Argument>();
 
     public Annotation() {
@@ -134,6 +139,22 @@ public class Annotation {
         }
 
         return null;
+    }
+
+    public Position getStartPosition() {
+        return startPosition;
+    }
+
+    public void setStartPosition(Position startPosition) {
+        this.startPosition = startPosition;
+    }
+
+    public Position getEndPosition() {
+        return endPosition;
+    }
+
+    public void setEndPosition(Position endPosition) {
+        this.endPosition = endPosition;
     }
 
     @Override
