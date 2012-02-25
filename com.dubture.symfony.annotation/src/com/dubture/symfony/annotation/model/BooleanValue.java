@@ -5,7 +5,7 @@ package com.dubture.symfony.annotation.model;
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public class BooleanValue implements ArgumentValue {
+public class BooleanValue extends ArgumentValue {
 
     private Boolean value;
 

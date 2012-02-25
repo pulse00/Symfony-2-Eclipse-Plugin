@@ -17,7 +17,7 @@ import org.eclipse.dltk.core.builder.IBuildContext;
 
 import com.dubture.symfony.annotation.model.Annotation;
 import com.dubture.symfony.annotation.model.Argument;
-import com.dubture.symfony.annotation.model.ArgumentValue;
+import com.dubture.symfony.annotation.model.IArgumentValue;
 import com.dubture.symfony.annotation.model.NamedArgument;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
 import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
@@ -33,15 +33,17 @@ import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
 
     protected Annotation annotation;
-    protected int offset = 0;
 
     public AnnotationNodeVisitor() {
         annotation = new Annotation();
     }
 
-    public AnnotationNodeVisitor(int offset) {
+    public AnnotationNodeVisitor(int lineOffset, int columnOffset, int indexOffset) {
         annotation = new Annotation();
-        this.offset = offset;
+
+        AnnotationCommonTree.lineOffset = lineOffset;
+        AnnotationCommonTree.columnOffset = columnOffset;
+        AnnotationCommonTree.indexOffset = indexOffset;
     }
 
     public AnnotationNodeVisitor(IBuildContext context) {
@@ -61,7 +63,7 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
             return;
         }
 
-        annotation.setStartPosition(node.getChild(0).getPosition(this.offset));
+        annotation.getSourcePosition().setStart(node.getChild(0).getToken());
 
         visitClass(node.getChild(1));
         if (node.getChildCount() > 2) {
@@ -91,6 +93,10 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
 
         for (AnnotationCommonTree argumentNode : declarationNode.getChildTrees()) {
             switch (argumentNode.getType()) {
+                case AnnotationParser.PARAM_START:
+                    // Do nothing with a param start
+                    break;
+
                 case AnnotationParser.ARGUMENT:
                     visitArgument(argumentNode);
                     break;
@@ -100,7 +106,7 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
                     break;
 
                 case AnnotationParser.PARAM_END:
-                    annotation.setEndPosition(argumentNode.getPosition(this.offset));
+                    annotation.getSourcePosition().setEnd(argumentNode.getToken());
                     break;
 
                 default:
@@ -111,7 +117,7 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
     }
 
     protected void visitArgument(AnnotationCommonTree argumentNode) {
-        ArgumentValue argumentValue = visitArgumentValue(argumentNode.getChild(0));
+        IArgumentValue argumentValue = visitArgumentValue(argumentNode.getChild(0));
         annotation.addArgument(new Argument(argumentValue));
     }
 
@@ -120,7 +126,7 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
         String name = argumentNameNode.getChild(0).getText();
 
         AnnotationCommonTree argumentValueNode = namedArgumentNode.getFirstChildFromType(AnnotationParser.ARGUMENT_VALUE);
-        ArgumentValue argumentValue = null;
+        IArgumentValue argumentValue = null;
         if (argumentValueNode != null && argumentValueNode.getChildCount() > 0) {
             // There is a value provided, get the argument from it
             argumentValue = visitArgumentValue(argumentValueNode.getChild(0));
@@ -171,7 +177,7 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
         return annotation.getArgument(name);
     }
 
-    public ArgumentValue getArgumentValue(String name) {
+    public IArgumentValue getArgumentValue(String name) {
         return annotation.getArgumentValue(name);
     }
 

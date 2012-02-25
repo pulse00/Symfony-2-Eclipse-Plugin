@@ -8,8 +8,9 @@
  ******************************************************************************/
 package com.dubture.symfony.annotation.parser.tree.visitor;
 
-import com.dubture.symfony.annotation.model.ArgumentValue;
+import com.dubture.symfony.annotation.model.IArgumentValue;
 import com.dubture.symfony.annotation.model.ArrayValue;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
 import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 
 /**
@@ -26,10 +27,33 @@ public class AnnotationArrayValueNodeVisitor  extends AbstractAnnotationNodeVisi
 
     @Override
     public void visit(AnnotationCommonTree node) {
-        for (AnnotationCommonTree valueNode : node.getChildTrees()) {
-            ArgumentValue argumentValue = visitArgumentValue(valueNode);
-            arrayValue.add(argumentValue);
+        for (AnnotationCommonTree childNode : node.getChildTrees()) {
+            switch(childNode.getType()) {
+                case AnnotationParser.CURLY_START:
+                    arrayValue.getSourcePosition().setStart(childNode.getToken());
+                    break;
+
+                // Intended Fallback
+                case AnnotationParser.ANNOTATION_VALUE:
+                case AnnotationParser.OBJECT_VALUE:
+                case AnnotationParser.ARRAY_VALUE:
+                case AnnotationParser.STRING_VALUE:
+                case AnnotationParser.NUMBER_VALUE:
+                case AnnotationParser.BOOLEAN_VALUE:
+                case AnnotationParser.NULL_VALUE:
+                    visitValue(childNode);
+                    break;
+
+                case AnnotationParser.CURLY_END:
+                    arrayValue.getSourcePosition().setEnd(childNode.getToken());
+                    break;
+            }
         }
+    }
+
+    public void visitValue(AnnotationCommonTree valueNode) {
+        IArgumentValue argumentValue = visitArgumentValue(valueNode);
+        arrayValue.add(argumentValue);
     }
 
     public ArrayValue getArrayValue() {

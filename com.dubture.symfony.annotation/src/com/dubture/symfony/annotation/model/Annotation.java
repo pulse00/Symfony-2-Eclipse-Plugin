@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import com.dubture.symfony.annotation.parser.antlr.Position;
-
 /**
  * This object represents a Symfony2 annotation. It holds
  * information about the annotation like the class name,
@@ -19,10 +17,7 @@ import com.dubture.symfony.annotation.parser.antlr.Position;
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public class Annotation {
-
-    protected Position startPosition;
-    protected Position endPosition;
+public class Annotation extends Value {
 
     protected String className = "";
     protected Stack<String> namespace = new Stack<String>();
@@ -105,12 +100,12 @@ public class Annotation {
         arguments.add(argument);
     }
 
-    public void addArgument(String name, ArgumentValue value) {
+    public void addArgument(String name, IArgumentValue value) {
         arguments.add(new NamedArgument(name, value));
     }
 
     public String getArgument(String name) {
-        ArgumentValue argumentValue = getArgumentValue(name);
+        IArgumentValue argumentValue = getArgumentValue(name);
         if (argumentValue == null) {
             return null;
         }
@@ -118,7 +113,7 @@ public class Annotation {
         return argumentValue.toString();
     }
 
-    public ArgumentValue getArgumentValue(String name) {
+    public IArgumentValue getArgumentValue(String name) {
         for (Argument argument : arguments) {
             if (!(argument instanceof NamedArgument)) {
                 continue;
@@ -139,22 +134,6 @@ public class Annotation {
         }
 
         return null;
-    }
-
-    public Position getStartPosition() {
-        return startPosition;
-    }
-
-    public void setStartPosition(Position startPosition) {
-        this.startPosition = startPosition;
-    }
-
-    public Position getEndPosition() {
-        return endPosition;
-    }
-
-    public void setEndPosition(Position endPosition) {
-        this.endPosition = endPosition;
     }
 
     @Override

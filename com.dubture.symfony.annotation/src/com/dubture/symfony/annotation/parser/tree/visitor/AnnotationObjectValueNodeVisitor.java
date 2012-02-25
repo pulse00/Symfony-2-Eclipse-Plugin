@@ -8,8 +8,9 @@
  ******************************************************************************/
 package com.dubture.symfony.annotation.parser.tree.visitor;
 
-import com.dubture.symfony.annotation.model.ArgumentValue;
+import com.dubture.symfony.annotation.model.IArgumentValue;
 import com.dubture.symfony.annotation.model.ObjectValue;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
 import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 
 /**
@@ -28,14 +29,30 @@ public class AnnotationObjectValueNodeVisitor extends AbstractAnnotationNodeVisi
 
     @Override
     public void visit(AnnotationCommonTree node) {
-        for (AnnotationCommonTree pairNode : node.getChildTrees()) {
-            String name = pairNode.getChild(0).getChild(0).getText();
+        for (AnnotationCommonTree childNode : node.getChildTrees()) {
+            switch(childNode.getType()) {
+                case AnnotationParser.CURLY_START:
+                    objectValue.getSourcePosition().setStart(childNode.getToken());
+                    break;
 
-            AnnotationCommonTree nodeValue = (AnnotationCommonTree) pairNode.getChild(1);
-            ArgumentValue argumentValue = visitArgumentValue(nodeValue);
+                case AnnotationParser.PAIR:
+                    visitPair(childNode);
+                    break;
 
-            objectValue.put(name, argumentValue);
+                case AnnotationParser.CURLY_END:
+                    objectValue.getSourcePosition().setEnd(childNode.getToken());
+                    break;
+            }
         }
+    }
+
+    protected void visitPair(AnnotationCommonTree pairNode) {
+        String name = pairNode.getChild(0).getChild(0).getText();
+
+        AnnotationCommonTree nodeValue = (AnnotationCommonTree) pairNode.getChild(1);
+        IArgumentValue argumentValue = visitArgumentValue(nodeValue);
+
+        objectValue.put(name, argumentValue);
     }
 
     public ObjectValue getObjectValue() {

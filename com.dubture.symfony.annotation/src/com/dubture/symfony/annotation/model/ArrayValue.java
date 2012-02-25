@@ -7,15 +7,15 @@ import java.util.List;
  * This object represents an array value. This object can
  * be assigned to annotation argument. It holds the values
  * of the array. The values holded are all of type
- * {@link ArgumentValue}
+ * {@link IArgumentValue}
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public class ArrayValue implements ArgumentValue {
+public class ArrayValue extends ArgumentValue {
 
-    private List<ArgumentValue> values = new LinkedList<ArgumentValue>();
+    private List<IArgumentValue> values = new LinkedList<IArgumentValue>();
 
-    public void add(ArgumentValue value) {
+    public void add(IArgumentValue value) {
         values.add(value);
     }
 
@@ -27,7 +27,7 @@ public class ArrayValue implements ArgumentValue {
         return null;
     }
 
-    public ArgumentValue getArgumentValue(int index) {
+    public IArgumentValue getArgumentValue(int index) {
         if (index >= 0 && index < values.size()) {
             return values.get(index);
         }

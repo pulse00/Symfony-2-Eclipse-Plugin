@@ -8,7 +8,7 @@ package com.dubture.symfony.annotation.model;
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public class AnnotationValue extends Annotation implements ArgumentValue {
+public class AnnotationValue extends Annotation implements IArgumentValue {
     @Override
     public Object getValue() {
         return this;

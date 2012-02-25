@@ -2,19 +2,19 @@ package com.dubture.symfony.annotation.model;
 
 /**
  * This represents an {@link Annotation} argument. The argument
- * value is an {@link ArgumentValue}.
+ * value is an {@link IArgumentValue}.
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public class Argument {
+public class Argument extends Value {
 
-    protected ArgumentValue value;
+    protected IArgumentValue value;
 
-    public Argument(ArgumentValue value){
+    public Argument(IArgumentValue value){
         this.value = value;
     }
 
-    public ArgumentValue getValue() {
+    public IArgumentValue getValue() {
         return value;
     }
 

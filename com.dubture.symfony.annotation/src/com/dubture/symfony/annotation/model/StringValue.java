@@ -6,7 +6,7 @@ package com.dubture.symfony.annotation.model;
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public class StringValue implements ArgumentValue {
+public class StringValue extends ArgumentValue {
 
     private String value;
 

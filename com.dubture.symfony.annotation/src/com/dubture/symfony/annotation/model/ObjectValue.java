@@ -18,11 +18,11 @@ import java.util.Map;
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public class ObjectValue implements ArgumentValue {
+public class ObjectValue extends ArgumentValue {
 
-    private Map<String, ArgumentValue> pairs = new HashMap<String, ArgumentValue>();
+    private Map<String, IArgumentValue> pairs = new HashMap<String, IArgumentValue>();
 
-    public void put(String name, ArgumentValue value) {
+    public void put(String name, IArgumentValue value) {
         pairs.put(name, value);
     }
 
@@ -34,8 +34,8 @@ public class ObjectValue implements ArgumentValue {
         return null;
     }
 
-    public ArgumentValue getArgumentValue(String name) {
-        ArgumentValue argumentValue = null;
+    public IArgumentValue getArgumentValue(String name) {
+        IArgumentValue argumentValue = null;
         if (pairs.containsKey(name)) {
             argumentValue = pairs.get(name);
         }

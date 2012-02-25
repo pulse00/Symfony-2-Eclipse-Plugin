@@ -8,7 +8,7 @@
  ******************************************************************************/
 package com.dubture.symfony.annotation.parser.tree.visitor;
 
-import com.dubture.symfony.annotation.model.ArgumentValue;
+import com.dubture.symfony.annotation.model.IArgumentValue;
 import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 
 /**
@@ -23,7 +23,7 @@ public abstract class AbstractAnnotationNodeVisitor implements IAnnotationNodeVi
 
     abstract public void visit(AnnotationCommonTree node);
 
-    protected ArgumentValue visitArgumentValue(AnnotationCommonTree argumentValueNode) {
+    protected IArgumentValue visitArgumentValue(AnnotationCommonTree argumentValueNode) {
         AnnotationArgumentValueNodeVisitor argumentValueVisitor = new AnnotationArgumentValueNodeVisitor();
         argumentValueNode.accept(argumentValueVisitor);
 

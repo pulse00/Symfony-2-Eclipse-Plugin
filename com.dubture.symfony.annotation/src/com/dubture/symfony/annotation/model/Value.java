@@ -2,7 +2,7 @@ package com.dubture.symfony.annotation.model;
 
 import com.dubture.symfony.annotation.parser.antlr.SourcePosition;
 
-abstract public class ArgumentValue implements IArgumentValue {
+public class Value implements IValue {
 
     protected SourcePosition sourcePosition = new SourcePosition();
 

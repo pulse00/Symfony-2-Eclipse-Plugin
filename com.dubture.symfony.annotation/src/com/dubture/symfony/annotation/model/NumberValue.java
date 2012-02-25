@@ -6,7 +6,7 @@ package com.dubture.symfony.annotation.model;
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public class NumberValue implements ArgumentValue {
+public class NumberValue extends ArgumentValue {
 
     private Double value;
 
