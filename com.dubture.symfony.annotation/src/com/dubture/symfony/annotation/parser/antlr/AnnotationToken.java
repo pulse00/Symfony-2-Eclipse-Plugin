@@ -9,15 +9,28 @@ public class AnnotationToken extends CommonToken {
      */
     private static final long serialVersionUID = 391767298498973645L;
 
+    protected int column = -1;
+
     public AnnotationToken(CharStream input, int type, int channel, int start, int stop) {
         super(input, type, channel, start, stop);
+        column = getCharPositionInLine();
     }
 
-    public Position getPosition() {
-        return new Position(this);
+    @Override
+    public void setCharPositionInLine(int charPositionInLine) {
+        super.setCharPositionInLine(charPositionInLine);
+
+        column = charPositionInLine;
     }
 
-    public Position getPosition(int offset) {
-        return new Position(this, offset);
+    public int getColumn() {
+        return column;
+    }
+
+    public void adjustOffset(int lineOffset, int columnOffset, int indexOffset) {
+        this.line += lineOffset;
+        this.column += columnOffset;
+        this.start += indexOffset;
+        this.stop += indexOffset;
     }
 }

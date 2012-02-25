@@ -16,7 +16,6 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 
 import com.dubture.symfony.annotation.parser.antlr.AnnotationToken;
-import com.dubture.symfony.annotation.parser.antlr.Position;
 import com.dubture.symfony.annotation.parser.tree.visitor.IAnnotationNodeVisitor;
 
 
@@ -33,6 +32,29 @@ import com.dubture.symfony.annotation.parser.tree.visitor.IAnnotationNodeVisitor
  */
 public class AnnotationCommonTree extends CommonTree {
 
+    /**
+    * These offset parameters are used to adjust the position of the
+    * token. Take for example
+    * this string: "*   @test()". Using the AnnotationCommentParser,
+    * the parse would be on "@test()" and the position returned here
+    * would be relative to this substring. The start index would be
+    * 0 and the end index would be 6. However, in respect to
+    * the original comment, this is not true.
+    * </p>
+    *
+    * <p>
+    * The offset is then used to make the position relative to
+    * the start of the comment. So passing an offset of 5, would
+    * then results in the good position start index 5 and the good
+    * position end index 11.
+    * </p>
+    *
+    * @param offset The offset from which the parse starts
+    * @return
+    */
+    static public int lineOffset = 0;
+    static public int columnOffset = 0;
+    static public int indexOffset = 0;
 
     public AnnotationCommonTree(Token payload) {
         super(payload);
@@ -58,36 +80,10 @@ public class AnnotationCommonTree extends CommonTree {
     }
 
     public AnnotationToken getToken() {
-        return (AnnotationToken)token;
-    }
+        AnnotationToken annotationToken = (AnnotationToken)token;
+        annotationToken.adjustOffset(lineOffset, columnOffset, indexOffset);
 
-    public Position getPosition() {
-        return getToken().getPosition();
-    }
-
-    /**
-     * <p>
-     * This returns the position of the token. The offset parameter
-     * is used to adjust the position of the token. Take for example
-     * this string: "*   @test()". Using the AnnotationCommentParser,
-     * the parse would be on "@test()" and the position returned here
-     * would be relative to this substring. The start index would be
-     * 0 and the end index would be 6. However, in respect to
-     * the original comment, this is not true.
-     * </p>
-     *
-     * <p>
-     * The offset is then used to make the position relative to
-     * the start of the comment. So passing an offset of 5, would
-     * then results in the good position start index 5 and the good
-     * position end index 11.
-     * </p>
-     *
-     * @param offset The offset from which the parse starts
-     * @return
-     */
-    public Position getPosition(int offset) {
-        return getToken().getPosition(offset);
+        return annotationToken;
     }
 
     @SuppressWarnings("unchecked")
