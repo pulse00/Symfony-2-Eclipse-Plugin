@@ -246,17 +246,6 @@ public class AnnotationParserTest extends TestCase {
         assertEquals(4, annotation.getArguments().size());
     }
 
-    // This is not possible right now, and may be not possible at all,
-//    @Test
-//    public void testFullComment() {
-//        root = getRootNode("\\* " +
-//                           "* This is a comment " +
-//                           "* @Orm\\JoinColumn(name=\"inverse_id\", referencedColumnName=\"id_second\") " +
-//                           "* " +
-//                           "* @param test array" +
-//                           "*/", false);
-//    }
-
     public void testWithAttributes() {
         root = getRootNode(" * @Attributes({ " +
         " @Attribute(\"mixed\",                type = \"mixed\"), " +

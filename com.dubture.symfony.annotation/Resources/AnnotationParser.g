@@ -9,7 +9,6 @@ options {
 
 tokens {
   ANNOTATION;
-  ANNOTATION_LIST;
   ANNOTATION_VALUE;
   ARGUMENT;
   ARGUMENT_NAME;
@@ -21,7 +20,6 @@ tokens {
   NAMED_ARGUMENT;
   NAMESPACE;
   NAMESPACE_DEFAULT;
-  NAMESPACE_SEGMENT;
   NULL_VALUE;
   NUMBER_VALUE;
   OBJECT_VALUE;
@@ -71,14 +69,9 @@ import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 
 }
 
-//annotationList
-//  : annotations=annotation*
-//      -> ^(ANNOTATION_LIST $annotations*)
-//  ;
-
 annotation
   : AT class_name declaration?
-      -> ^(ANNOTATION class_name declaration?)
+      -> ^(ANNOTATION AT class_name declaration?)
   ;
 
 class_name
@@ -93,7 +86,7 @@ namespace
 
 declaration
   : PARAM_START statements+=statement? (COMMA statements+=statement)* PARAM_END
-      -> ^(DECLARATION $statements*)
+      -> ^(DECLARATION PARAM_START $statements* PARAM_END)
   ;
 
 statement
@@ -133,7 +126,7 @@ value
 annotationValue
   :
      AT class_name declaration?
-       -> ^(ANNOTATION_VALUE class_name declaration?)
+       -> ^(ANNOTATION_VALUE AT class_name declaration?)
   ;
 
 objectValue

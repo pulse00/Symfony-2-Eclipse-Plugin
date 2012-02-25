@@ -33,9 +33,15 @@ import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
 
     protected Annotation annotation;
+    protected int offset = 0;
 
     public AnnotationNodeVisitor() {
         annotation = new Annotation();
+    }
+
+    public AnnotationNodeVisitor(int offset) {
+        annotation = new Annotation();
+        this.offset = offset;
     }
 
     public AnnotationNodeVisitor(IBuildContext context) {
@@ -45,7 +51,7 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
     /**
      * This method will visit an Annotation node. The node should have the following
      * form:
-     *   (ANNOTATION (CLASS (NAMESPACE segments*) name) (DECLARATION arguments*))
+     *   (ANNOTATION AT (CLASS (NAMESPACE segments*) name) (DECLARATION arguments*))
      */
     @Override
     public void visit(AnnotationCommonTree node) {
@@ -55,10 +61,11 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
             return;
         }
 
-        visitClass(node.getChild(0));
+        annotation.setStartPosition(node.getChild(0).getPosition(this.offset));
 
-        if (node.getChildCount() > 1) {
-            visitDeclaration(node.getChild(1));
+        visitClass(node.getChild(1));
+        if (node.getChildCount() > 2) {
+            visitDeclaration(node.getChild(2));
         }
     }
 
@@ -90,6 +97,10 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
 
                 case AnnotationParser.NAMED_ARGUMENT:
                     visitNamedArgument(argumentNode);
+                    break;
+
+                case AnnotationParser.PARAM_END:
+                    annotation.setEndPosition(argumentNode.getPosition(this.offset));
                     break;
 
                 default:

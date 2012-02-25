@@ -5,8 +5,8 @@ lexer grammar AnnotationLexer;
 package com.dubture.symfony.annotation.parser.antlr;
 
 import com.dubture.symfony.annotation.parser.antlr.error.IAnnotationErrorReporter;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationToken;
 }
-
 
 // add custom fields to the generated code
 @members {
@@ -16,6 +16,20 @@ import com.dubture.symfony.annotation.parser.antlr.error.IAnnotationErrorReporte
     public AnnotationLexer(CharStream input, IAnnotationErrorReporter errorReporter) {
         this(input, new RecognizerSharedState());
         this.errorReporter = errorReporter;
+    }
+
+    public Token emit() {
+        AnnotationToken token = new AnnotationToken(input,
+                                                    state.type,
+                                                    state.channel,
+                                                    state.tokenStartCharIndex,
+                                                    getCharIndex() - 1);
+        token.setLine(state.tokenStartLine);
+        token.setText(state.text);
+        token.setCharPositionInLine(state.tokenStartCharPositionInLine);
+
+        emit(token);
+        return token;
     }
 
     public void displayRecognitionError(String[] tokenNames, RecognitionException e) {
@@ -48,7 +62,6 @@ import com.dubture.symfony.annotation.parser.antlr.error.IAnnotationErrorReporte
 fragment LOWER               : 'a'..'z';
 fragment UPPER               : 'A'..'Z';
 fragment DIGIT               : '0'..'9';
-fragment DIGIT_NOZERO        : '1'..'9';
 fragment UNDERSCORE          : '_';
 fragment QUOTE               : '\'';
 fragment DOUBLE_QUOTE        : '"';
@@ -57,10 +70,8 @@ fragment ESCAPE_DOUBLE_QUOTE : '\\' '"';
 //fragment ACCENTUED         : bytes from 127 through 255 (0x7f-0xff).
 fragment LETTER              : LOWER | UPPER; //| ACCENTUED;
 fragment ALPHANUM            : LETTER | DIGIT;
-fragment POSITIVE            : '+';
 fragment NEGATIVE            : '-';
 fragment DOT                 : '\.';
-fragment WHITESPACE_CHAR     : ( '\t' | ' ' | '\r' | '\n'| '\u000C' );
 
 // control characters
 AT          : '@';
@@ -114,4 +125,3 @@ WHITESPACE    : ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+ { $channel = HIDDEN; };
 COMMENT_START : ('\\' '*') { $channel = HIDDEN; };
 COMMENT_END   : ('*' '/') { $channel = HIDDEN; };
 COMMENT_CHAR  : ('*')+ { $channel = HIDDEN; };
-//REST          : ('.')+ { $channel = HIDDEN; };
