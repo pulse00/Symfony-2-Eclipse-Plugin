@@ -131,7 +131,7 @@ annotationValue
 
 objectValue
   : CURLY_START pairs+=pair (COMMA pairs+=pair)* CURLY_END
-      -> ^(OBJECT_VALUE $pairs+)
+      -> ^(OBJECT_VALUE CURLY_START $pairs+ CURLY_END)
   ;
 
 pair
@@ -141,7 +141,7 @@ pair
 
 arrayValue
   : CURLY_START values+=value? (COMMA values+=value)* CURLY_END
-      -> ^(ARRAY_VALUE $values*)
+      -> ^(ARRAY_VALUE CURLY_START $values* CURLY_END)
   ;
 
 stringValue

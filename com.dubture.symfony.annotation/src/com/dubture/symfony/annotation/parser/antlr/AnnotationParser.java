@@ -1,4 +1,4 @@
-// $ANTLR 3.3 Nov 30, 2010 12:45:30 C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g 2012-02-25 12:14:19
+// $ANTLR 3.3 Nov 30, 2010 12:45:30 C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g 2012-02-25 13:29:02
 
 package com.dubture.symfony.annotation.parser.antlr;
 
@@ -1313,7 +1313,7 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "objectValue"
-    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:132:1: objectValue : CURLY_START pairs+= pair ( COMMA pairs+= pair )* CURLY_END -> ^( OBJECT_VALUE ( $pairs)+ ) ;
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:132:1: objectValue : CURLY_START pairs+= pair ( COMMA pairs+= pair )* CURLY_END -> ^( OBJECT_VALUE CURLY_START ( $pairs)+ CURLY_END ) ;
     public final AnnotationParser.objectValue_return objectValue() throws RecognitionException {
         AnnotationParser.objectValue_return retval = new AnnotationParser.objectValue_return();
         retval.start = input.LT(1);
@@ -1333,7 +1333,7 @@ public class AnnotationParser extends Parser {
         RewriteRuleTokenStream stream_CURLY_END=new RewriteRuleTokenStream(adaptor,"token CURLY_END");
         RewriteRuleSubtreeStream stream_pair=new RewriteRuleSubtreeStream(adaptor,"rule pair");
         try {
-            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:133:3: ( CURLY_START pairs+= pair ( COMMA pairs+= pair )* CURLY_END -> ^( OBJECT_VALUE ( $pairs)+ ) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:133:3: ( CURLY_START pairs+= pair ( COMMA pairs+= pair )* CURLY_END -> ^( OBJECT_VALUE CURLY_START ( $pairs)+ CURLY_END ) )
             // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:133:5: CURLY_START pairs+= pair ( COMMA pairs+= pair )* CURLY_END
             {
             CURLY_START23=(Token)match(input,CURLY_START,FOLLOW_CURLY_START_in_objectValue563);  
@@ -1390,7 +1390,7 @@ public class AnnotationParser extends Parser {
 
 
             // AST REWRITE
-            // elements: pairs
+            // elements: CURLY_END, pairs, CURLY_START
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -1400,13 +1400,14 @@ public class AnnotationParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
             RewriteRuleSubtreeStream stream_pairs=new RewriteRuleSubtreeStream(adaptor,"token pairs",list_pairs);
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 134:7: -> ^( OBJECT_VALUE ( $pairs)+ )
+            // 134:7: -> ^( OBJECT_VALUE CURLY_START ( $pairs)+ CURLY_END )
             {
-                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:134:10: ^( OBJECT_VALUE ( $pairs)+ )
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:134:10: ^( OBJECT_VALUE CURLY_START ( $pairs)+ CURLY_END )
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(OBJECT_VALUE, "OBJECT_VALUE"), root_1);
 
+                adaptor.addChild(root_1, stream_CURLY_START.nextNode());
                 if ( !(stream_pairs.hasNext()) ) {
                     throw new RewriteEarlyExitException();
                 }
@@ -1415,6 +1416,7 @@ public class AnnotationParser extends Parser {
 
                 }
                 stream_pairs.reset();
+                adaptor.addChild(root_1, stream_CURLY_END.nextNode());
 
                 adaptor.addChild(root_0, root_1);
                 }
@@ -1469,16 +1471,16 @@ public class AnnotationParser extends Parser {
             // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:138:3: (name= stringValue EQUAL value -> ^( PAIR $name value ) )
             // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:138:5: name= stringValue EQUAL value
             {
-            pushFollow(FOLLOW_stringValue_in_pair609);
+            pushFollow(FOLLOW_stringValue_in_pair613);
             name=stringValue();
 
             state._fsp--;
 
             stream_stringValue.add(name.getTree());
-            EQUAL26=(Token)match(input,EQUAL,FOLLOW_EQUAL_in_pair611);  
+            EQUAL26=(Token)match(input,EQUAL,FOLLOW_EQUAL_in_pair615);  
             stream_EQUAL.add(EQUAL26);
 
-            pushFollow(FOLLOW_value_in_pair613);
+            pushFollow(FOLLOW_value_in_pair617);
             value27=value();
 
             state._fsp--;
@@ -1540,7 +1542,7 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "arrayValue"
-    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:142:1: arrayValue : CURLY_START (values+= value )? ( COMMA values+= value )* CURLY_END -> ^( ARRAY_VALUE ( $values)* ) ;
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:142:1: arrayValue : CURLY_START (values+= value )? ( COMMA values+= value )* CURLY_END -> ^( ARRAY_VALUE CURLY_START ( $values)* CURLY_END ) ;
     public final AnnotationParser.arrayValue_return arrayValue() throws RecognitionException {
         AnnotationParser.arrayValue_return retval = new AnnotationParser.arrayValue_return();
         retval.start = input.LT(1);
@@ -1560,10 +1562,10 @@ public class AnnotationParser extends Parser {
         RewriteRuleTokenStream stream_CURLY_END=new RewriteRuleTokenStream(adaptor,"token CURLY_END");
         RewriteRuleSubtreeStream stream_value=new RewriteRuleSubtreeStream(adaptor,"rule value");
         try {
-            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:143:3: ( CURLY_START (values+= value )? ( COMMA values+= value )* CURLY_END -> ^( ARRAY_VALUE ( $values)* ) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:143:3: ( CURLY_START (values+= value )? ( COMMA values+= value )* CURLY_END -> ^( ARRAY_VALUE CURLY_START ( $values)* CURLY_END ) )
             // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:143:5: CURLY_START (values+= value )? ( COMMA values+= value )* CURLY_END
             {
-            CURLY_START28=(Token)match(input,CURLY_START,FOLLOW_CURLY_START_in_arrayValue643);  
+            CURLY_START28=(Token)match(input,CURLY_START,FOLLOW_CURLY_START_in_arrayValue647);  
             stream_CURLY_START.add(CURLY_START28);
 
             // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:143:23: (values+= value )?
@@ -1577,7 +1579,7 @@ public class AnnotationParser extends Parser {
                 case 1 :
                     // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:143:23: values+= value
                     {
-                    pushFollow(FOLLOW_value_in_arrayValue647);
+                    pushFollow(FOLLOW_value_in_arrayValue651);
                     values=value();
 
                     state._fsp--;
@@ -1607,10 +1609,10 @@ public class AnnotationParser extends Parser {
             	case 1 :
             	    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:143:33: COMMA values+= value
             	    {
-            	    COMMA29=(Token)match(input,COMMA,FOLLOW_COMMA_in_arrayValue651);  
+            	    COMMA29=(Token)match(input,COMMA,FOLLOW_COMMA_in_arrayValue655);  
             	    stream_COMMA.add(COMMA29);
 
-            	    pushFollow(FOLLOW_value_in_arrayValue655);
+            	    pushFollow(FOLLOW_value_in_arrayValue659);
             	    values=value();
 
             	    state._fsp--;
@@ -1628,13 +1630,13 @@ public class AnnotationParser extends Parser {
                 }
             } while (true);
 
-            CURLY_END30=(Token)match(input,CURLY_END,FOLLOW_CURLY_END_in_arrayValue659);  
+            CURLY_END30=(Token)match(input,CURLY_END,FOLLOW_CURLY_END_in_arrayValue663);  
             stream_CURLY_END.add(CURLY_END30);
 
 
 
             // AST REWRITE
-            // elements: values
+            // elements: CURLY_START, values, CURLY_END
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -1644,19 +1646,21 @@ public class AnnotationParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
             RewriteRuleSubtreeStream stream_values=new RewriteRuleSubtreeStream(adaptor,"token values",list_values);
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 144:7: -> ^( ARRAY_VALUE ( $values)* )
+            // 144:7: -> ^( ARRAY_VALUE CURLY_START ( $values)* CURLY_END )
             {
-                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:144:10: ^( ARRAY_VALUE ( $values)* )
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:144:10: ^( ARRAY_VALUE CURLY_START ( $values)* CURLY_END )
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
                 root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ARRAY_VALUE, "ARRAY_VALUE"), root_1);
 
-                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:144:24: ( $values)*
+                adaptor.addChild(root_1, stream_CURLY_START.nextNode());
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:144:36: ( $values)*
                 while ( stream_values.hasNext() ) {
                     adaptor.addChild(root_1, stream_values.nextTree());
 
                 }
                 stream_values.reset();
+                adaptor.addChild(root_1, stream_CURLY_END.nextNode());
 
                 adaptor.addChild(root_0, root_1);
                 }
@@ -1706,7 +1710,7 @@ public class AnnotationParser extends Parser {
             // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:148:3: (string_value= STRING_LITERAL -> ^( STRING_VALUE $string_value) )
             // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:148:5: string_value= STRING_LITERAL
             {
-            string_value=(Token)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_stringValue690);  
+            string_value=(Token)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_stringValue698);  
             stream_STRING_LITERAL.add(string_value);
 
 
@@ -1800,7 +1804,7 @@ public class AnnotationParser extends Parser {
                 case 1 :
                     // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:153:5: interger_value= INTEGER_LITERAL
                     {
-                    interger_value=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_numberValue720);  
+                    interger_value=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_numberValue728);  
                     stream_INTEGER_LITERAL.add(interger_value);
 
 
@@ -1837,7 +1841,7 @@ public class AnnotationParser extends Parser {
                 case 2 :
                     // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:155:5: float_value= FLOAT_LITERAL
                     {
-                    float_value=(Token)match(input,FLOAT_LITERAL,FOLLOW_FLOAT_LITERAL_in_numberValue743);  
+                    float_value=(Token)match(input,FLOAT_LITERAL,FOLLOW_FLOAT_LITERAL_in_numberValue751);  
                     stream_FLOAT_LITERAL.add(float_value);
 
 
@@ -1933,7 +1937,7 @@ public class AnnotationParser extends Parser {
                 case 1 :
                     // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:160:5: TRUE
                     {
-                    TRUE31=(Token)match(input,TRUE,FOLLOW_TRUE_in_booleanValue771);  
+                    TRUE31=(Token)match(input,TRUE,FOLLOW_TRUE_in_booleanValue779);  
                     stream_TRUE.add(TRUE31);
 
 
@@ -1969,7 +1973,7 @@ public class AnnotationParser extends Parser {
                 case 2 :
                     // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:162:5: FALSE
                     {
-                    FALSE32=(Token)match(input,FALSE,FOLLOW_FALSE_in_booleanValue791);  
+                    FALSE32=(Token)match(input,FALSE,FOLLOW_FALSE_in_booleanValue799);  
                     stream_FALSE.add(FALSE32);
 
 
@@ -2044,7 +2048,7 @@ public class AnnotationParser extends Parser {
             // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:167:3: ( NULL -> ^( NULL_VALUE NULL ) )
             // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:167:5: NULL
             {
-            NULL33=(Token)match(input,NULL,FOLLOW_NULL_in_nullValue818);  
+            NULL33=(Token)match(input,NULL,FOLLOW_NULL_in_nullValue826);  
             stream_NULL.add(NULL33);
 
 
@@ -2195,19 +2199,19 @@ public class AnnotationParser extends Parser {
     public static final BitSet FOLLOW_COMMA_in_objectValue570 = new BitSet(new long[]{0x0000000010000000L});
     public static final BitSet FOLLOW_pair_in_objectValue574 = new BitSet(new long[]{0x0000000000900000L});
     public static final BitSet FOLLOW_CURLY_END_in_objectValue578 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_stringValue_in_pair609 = new BitSet(new long[]{0x0000000000080000L});
-    public static final BitSet FOLLOW_EQUAL_in_pair611 = new BitSet(new long[]{0x0000000077410000L});
-    public static final BitSet FOLLOW_value_in_pair613 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_CURLY_START_in_arrayValue643 = new BitSet(new long[]{0x0000000077D10000L});
-    public static final BitSet FOLLOW_value_in_arrayValue647 = new BitSet(new long[]{0x0000000000900000L});
-    public static final BitSet FOLLOW_COMMA_in_arrayValue651 = new BitSet(new long[]{0x0000000077410000L});
-    public static final BitSet FOLLOW_value_in_arrayValue655 = new BitSet(new long[]{0x0000000000900000L});
-    public static final BitSet FOLLOW_CURLY_END_in_arrayValue659 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_stringValue690 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_INTEGER_LITERAL_in_numberValue720 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_FLOAT_LITERAL_in_numberValue743 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TRUE_in_booleanValue771 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_FALSE_in_booleanValue791 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NULL_in_nullValue818 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_stringValue_in_pair613 = new BitSet(new long[]{0x0000000000080000L});
+    public static final BitSet FOLLOW_EQUAL_in_pair615 = new BitSet(new long[]{0x0000000077410000L});
+    public static final BitSet FOLLOW_value_in_pair617 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_CURLY_START_in_arrayValue647 = new BitSet(new long[]{0x0000000077D10000L});
+    public static final BitSet FOLLOW_value_in_arrayValue651 = new BitSet(new long[]{0x0000000000900000L});
+    public static final BitSet FOLLOW_COMMA_in_arrayValue655 = new BitSet(new long[]{0x0000000077410000L});
+    public static final BitSet FOLLOW_value_in_arrayValue659 = new BitSet(new long[]{0x0000000000900000L});
+    public static final BitSet FOLLOW_CURLY_END_in_arrayValue663 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_LITERAL_in_stringValue698 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_INTEGER_LITERAL_in_numberValue728 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_FLOAT_LITERAL_in_numberValue751 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TRUE_in_booleanValue779 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_FALSE_in_booleanValue799 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NULL_in_nullValue826 = new BitSet(new long[]{0x0000000000000002L});
 
 }
