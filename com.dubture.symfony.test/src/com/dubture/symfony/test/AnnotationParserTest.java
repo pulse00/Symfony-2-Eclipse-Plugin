@@ -9,8 +9,6 @@
 package com.dubture.symfony.test;
 
 
-import java.util.Map;
-
 import junit.framework.TestCase;
 
 import org.antlr.runtime.ANTLRStringStream;

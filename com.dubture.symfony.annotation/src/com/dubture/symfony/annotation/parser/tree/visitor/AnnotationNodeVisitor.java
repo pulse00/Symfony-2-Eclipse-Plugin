@@ -22,6 +22,7 @@ import com.dubture.symfony.annotation.model.IArgumentValue;
 import com.dubture.symfony.annotation.model.NamedArgument;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationToken;
+import com.dubture.symfony.annotation.parser.antlr.SourcePosition;
 import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 
 /**
@@ -70,12 +71,16 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
         visitClass(node.getChild(1));
         if (node.getChildCount() > 2) {
             visitDeclaration(node.getChild(2));
+        } else {
+            SourcePosition classPosition = annotation.getAnnotationClass().getSourcePosition();
+            annotation.getSourcePosition().setEnd(classPosition.endOffset);
         }
     }
 
     protected void visitClass(AnnotationCommonTree classNode) {
         AnnotationClass annotationClass = annotation.getAnnotationClass();
 
+        boolean hasNamespaceSegment = false;
         AnnotationCommonTree namespaceNode = classNode.getChild(0);
         List<AnnotationCommonTree> children = namespaceNode.getChildTrees();
 
@@ -83,14 +88,27 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
             for (AnnotationCommonTree childNode : children) {
                 if (childNode.getText() != "\\") {
                     annotation.pushNamespaceSegment(childNode.getText());
+                    hasNamespaceSegment = true;
                 }
             }
         }
 
         AnnotationCommonTree classNameNode = classNode.getChild(1);
-        AnnotationToken classNameToken = classNameNode.getToken();
-
         annotationClass.setClassName(classNameNode.getText());
+
+        AnnotationToken classNameToken = classNameNode.getToken();
+        annotationClass.getClassNamePosition().setToken(classNameToken);
+        if (!hasNamespaceSegment) {
+            annotationClass.getSourcePosition().setToken(classNameToken);
+            return;
+        }
+
+        // We have at least one namespace segment
+        annotationClass.getSourcePosition().setStart(children.get(0).getToken());
+        annotationClass.getSourcePosition().setEnd(classNameToken);
+
+        annotationClass.getNamespacePosition().setStart(children.get(0).getToken());
+        annotationClass.getNamespacePosition().setEnd(children.get(children.size() - 1).getToken());
     }
 
     protected void visitDeclaration(AnnotationCommonTree declarationNode) {
