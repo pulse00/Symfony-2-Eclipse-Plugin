@@ -8,24 +8,19 @@
  ******************************************************************************/
 package com.dubture.symfony.ui.editor.highlighting;
 
-import java.io.BufferedReader;
-import java.io.StringReader;
+import java.util.List;
 
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CharStream;
-import org.antlr.runtime.CommonTokenStream;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.internal.core.ast.nodes.Comment;
 import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.swt.graphics.RGB;
 
-import com.dubture.symfony.annotation.parser.antlr.AnnotationLexer;
-import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
-import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
-import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTreeAdaptor;
-import com.dubture.symfony.annotation.parser.tree.visitor.IAnnotationNodeVisitor;
-import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.annotation.model.Annotation;
+import com.dubture.symfony.annotation.parser.AnnotationCommentParser;
+import com.dubture.symfony.annotation.parser.antlr.SourcePosition;
 
 /**
  *
@@ -37,78 +32,29 @@ public class AnnotationHighlighting extends AbstractSemanticHighlighting {
 
     protected class AnnotationApply extends AbstractSemanticApply {
 
-        private boolean isAnnotation;
-
         @Override
         public boolean visit(Comment comment) {
+            if (comment.getCommentType() != Comment.TYPE_PHPDOC) {
+                return true;
+            }
 
             try {
-
+                int commentStartOffset = comment.getStart();
+                int commentEndOffset = comment.getStart() + comment.getLength();
                 String source = getSourceModule().getSource();
-                source = source.substring(comment.getStart(), comment.getStart() + comment.getLength());
+                String commentSource = source.substring(commentStartOffset, commentEndOffset);
 
-                BufferedReader reader = new BufferedReader(new StringReader(source));
-                String line = "";
+                AnnotationCommentParser parser = new AnnotationCommentParser(commentSource, commentStartOffset);
+                parser.setExcludedClassNames(PHPDocTagStrategy.PHPDOC_TAGS);
 
-                int currentOffset = comment.getStart();
+                List<Annotation> annotations = parser.parse();
 
-                while((line = reader.readLine()) != null) {
-
-                    currentOffset += line.length() +1;
-
-                    int start = line.indexOf('@');
-                    int end = line.length()-1;
-
-                    if ((start == -1 || end == -1)) continue;
-
-                    boolean isTag = false;
-                    String aTag = line.substring(start +1).trim();
-
-                    // check for built-int phpdoc tags and don't parse them
-                    // as annotations
-                    for(String tag : PHPDocTagStrategy.PHPDOC_TAGS) {
-
-                        if (aTag.startsWith(tag)) {
-
-                            isTag = true;
-                            break;
-                        }
-                    }
-
-                    if (isTag) {
-                        continue;
-                    }
-
-                    isAnnotation = false;
-                    String annotation = line.substring(start, end+1);
-
-                    CharStream content = new ANTLRStringStream(annotation);
-
-                    AnnotationLexer lexer = new AnnotationLexer(content);
-                    AnnotationParser parser = new AnnotationParser(new CommonTokenStream(lexer));
-                    parser.setTreeAdaptor(new AnnotationCommonTreeAdaptor());
-                    AnnotationParser.annotation_return root = parser.annotation();
-                    AnnotationCommonTree tree = (AnnotationCommonTree) root.getTree();
-
-                    tree.accept(new IAnnotationNodeVisitor() {
-                        @Override
-                        public void visit(AnnotationCommonTree node) {
-                            if (node.getType() == AnnotationParser.ANNOTATION) {
-                                isAnnotation = true;
-                            }
-                        }
-                    });
-
-                    if (isAnnotation) {
-                        int annotationOffset = line.indexOf("@");
-                        int highlightStart = currentOffset - line.length() + annotationOffset - 1;
-                        int length = line.length() - annotationOffset + 1;
-                        highlight(highlightStart, length);
-                    }
+                for (Annotation annotation : annotations) {
+                    SourcePosition sourcePosition = annotation.getSourcePosition();
+                    highlight(sourcePosition.startIndex, sourcePosition.length);
                 }
-
-            } catch (Exception e) {
-                Logger.logException(e);
+            } catch (ModelException exception) {
+                Logger.logException(exception);
             }
 
             return true;
