@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
@@ -157,9 +158,13 @@ public class ServicePart extends ViewPart {
 	
 	protected void updateViewer() {
 		
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();				
-		viewer.setInput(projects);
-		viewer.refresh();
+		Display.getDefault().asyncExec(new Runnable(){
+			public void run() {
+				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+				viewer.setInput(projects);
+				viewer.refresh();
+			}
+		});
 
 	}
 	
