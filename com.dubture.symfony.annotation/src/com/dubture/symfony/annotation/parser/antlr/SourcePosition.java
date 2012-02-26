@@ -33,15 +33,15 @@ public class SourcePosition {
     /**
      * The absolute start index relative to the source input
      */
-    public int startIndex;
+    public int startOffset;
 
     /**
      * The absolute end index relative to the source input
      */
-    public int endIndex;
+    public int endOffset;
 
     /**
-     * The length of this source position, endIndex - startIndex
+     * The length of this source position, endOffset - startOffset
      */
     public int length;
 
@@ -49,67 +49,67 @@ public class SourcePosition {
         this(-1, -1, -1, -1);
     }
 
-    public SourcePosition(int line, int column, int startIndex) {
+    public SourcePosition(int line, int column, int startOffset) {
         this.line = line;
         this.column = column;
-        this.startIndex = startIndex;
+        this.startOffset = startOffset;
     }
 
-    public SourcePosition(int startLine, int startColumn, int startIndex, int endIndex) {
+    public SourcePosition(int startLine, int startColumn, int startOffset, int endOffset) {
         this.line = startLine;
         this.column = startColumn;
-        this.startIndex = startIndex;
-        this.endIndex = endIndex;
-        this.length = endIndex - startIndex + 1;
+        this.startOffset = startOffset;
+        this.endOffset = endOffset;
+        this.length = endOffset - startOffset + 1;
     }
 
     public SourcePosition(AnnotationToken startToken) {
         this(startToken.getLine(),
              startToken.getColumn(),
-             startToken.getStartIndex());
+             startToken.getStartOffset());
     }
 
     public SourcePosition(AnnotationToken startToken, AnnotationToken endToken) {
         this(startToken.getLine(),
              startToken.getColumn(),
-             startToken.getStartIndex(),
-             endToken.getStopIndex());
+             startToken.getStartOffset(),
+             endToken.getEndOffset());
     }
 
-    public void set(int startLine, int startColumn, int startIndex, int endIndex) {
+    public void set(int startLine, int startColumn, int startOffset, int endOffset) {
         this.line = startLine;
         this.column = startColumn;
-        this.startIndex = startIndex;
-        this.endIndex = endIndex;
-        this.length = endIndex - startIndex + 1;
+        this.startOffset = startOffset;
+        this.endOffset = endOffset;
+        this.length = endOffset - startOffset + 1;
     }
 
     public void set(AnnotationToken startToken, AnnotationToken endToken) {
         set(startToken.getLine(),
             startToken.getColumn(),
-            startToken.getStartIndex(),
-            endToken.getStopIndex());
+            startToken.getStartOffset(),
+            endToken.getEndOffset());
     }
 
-    public void setStart(int line, int column, int startIndex) {
+    public void setStart(int line, int column, int startOffset) {
         this.line = line;
         this.column = column;
-        this.startIndex = startIndex;
+        this.startOffset = startOffset;
     }
 
     public void setStart(AnnotationToken startToken) {
         setStart(startToken.getLine(),
                  startToken.getColumn(),
-                 startToken.getStartIndex());
+                 startToken.getStartOffset());
     }
 
-    public void setEnd(int endIndex) {
-        this.endIndex = endIndex;
-        this.length = endIndex - startIndex + 1;
+    public void setEnd(int endOffset) {
+        this.endOffset = endOffset;
+        this.length = endOffset - startOffset + 1;
     }
 
     public void setEnd(AnnotationToken endToken) {
-        setEnd(endToken.getStopIndex());
+        setEnd(endToken.getEndOffset());
     }
 
     /**
@@ -126,6 +126,6 @@ public class SourcePosition {
 
     @Override
     public String toString() {
-        return "<" + line + ", " + column + ">(" + startIndex + ", " + endIndex + ")";
+        return "<" + line + ", " + column + ">(" + startOffset + ", " + endOffset + ")";
     }
 }

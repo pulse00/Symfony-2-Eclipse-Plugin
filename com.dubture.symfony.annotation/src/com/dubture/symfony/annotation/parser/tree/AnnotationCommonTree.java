@@ -54,7 +54,7 @@ public class AnnotationCommonTree extends CommonTree {
     */
     static public int lineOffset = 0;
     static public int columnOffset = 0;
-    static public int indexOffset = 0;
+    static public int charOffset = 0;
 
     public AnnotationCommonTree(Token payload) {
         super(payload);
@@ -81,7 +81,7 @@ public class AnnotationCommonTree extends CommonTree {
 
     public AnnotationToken getToken() {
         AnnotationToken annotationToken = (AnnotationToken)token;
-        annotationToken.adjustOffset(lineOffset, columnOffset, indexOffset);
+        annotationToken.adjustOffset(lineOffset, columnOffset, charOffset);
 
         return annotationToken;
     }

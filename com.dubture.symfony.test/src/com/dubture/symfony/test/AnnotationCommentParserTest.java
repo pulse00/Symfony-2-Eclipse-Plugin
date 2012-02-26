@@ -46,8 +46,8 @@ public class AnnotationCommentParserTest extends TestCase {
         Annotation annotation = annotations.get(0);
         assertEquals(2, annotation.getSourcePosition().line);
         assertEquals(4, annotation.getSourcePosition().column);
-        assertEquals(8, annotation.getSourcePosition().startIndex);
-        assertEquals(22, annotation.getSourcePosition().endIndex);
+        assertEquals(8, annotation.getSourcePosition().startOffset);
+        assertEquals(22, annotation.getSourcePosition().endOffset);
     }
 
     @Test
@@ -92,8 +92,8 @@ public class AnnotationCommentParserTest extends TestCase {
         assertEquals(null, annotation.getArgumentValue("other").getValue());
         assertEquals(7, annotation.getSourcePosition().line);
         assertEquals(14, annotation.getSourcePosition().column);
-        assertEquals(219, annotation.getSourcePosition().startIndex);
-        assertEquals(275, annotation.getSourcePosition().endIndex);
+        assertEquals(219, annotation.getSourcePosition().startOffset);
+        assertEquals(275, annotation.getSourcePosition().endOffset);
     }
 
     @Test
@@ -117,8 +117,8 @@ public class AnnotationCommentParserTest extends TestCase {
         assertEquals("join_table_name", annotation.getArgumentValue("name").getValue());
         assertEquals(2, annotation.getSourcePosition().line);
         assertEquals(12, annotation.getSourcePosition().column);
-        assertEquals(16 + commentOffset, annotation.getSourcePosition().startIndex);
-        assertEquals(252 + commentOffset, annotation.getSourcePosition().endIndex);
+        assertEquals(16 + commentOffset, annotation.getSourcePosition().startOffset);
+        assertEquals(252 + commentOffset, annotation.getSourcePosition().endOffset);
     }
 
     @Test

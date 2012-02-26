@@ -79,12 +79,8 @@ public class AnnotationParserTest extends TestCase {
     @Test
     public void testRoute() {
         root = getRootNode("* @Route('/blog', name='_blog')", false);
-        Map<String, String> args = root.getArguments();
 
-        assertNotNull(args);
-        String route = args.get("name");
-        assertNotNull(route);
-        assertEquals("_blog", route);
+        assertEquals("_blog", root.getAnnotation().getArgumentValue("name").getValue());
     }
 
     @Test

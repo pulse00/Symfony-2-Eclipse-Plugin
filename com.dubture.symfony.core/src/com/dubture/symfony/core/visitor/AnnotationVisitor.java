@@ -273,7 +273,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
             SourcePosition sourcePosition = annotation.getSourcePosition();
             String filename = context.getFile().getName();
             String message = "Unable to resolve annotation '" + fqcn + "'";
-            int lineNo = context.getLineTracker().getLineInformationOfOffset(sourcePosition.startIndex).getOffset();
+            int lineNo = context.getLineTracker().getLineInformationOfOffset(sourcePosition.startOffset).getOffset();
 
             /**
             * this should be the way to create the problem without the deprecation
@@ -284,7 +284,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
             ProblemSeverity severity = SymfonyCorePreferences.getAnnotationSeverity();
 
             IProblem problem = new DefaultProblem(filename, message, IProblem.ImportRelated,
-                    new String[0], severity, sourcePosition.startIndex + 1, sourcePosition.endIndex + 1, lineNo);
+                    new String[0], severity, sourcePosition.startOffset + 1, sourcePosition.endOffset + 1, lineNo);
 
             context.getProblemReporter().reportProblem(problem);
 

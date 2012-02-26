@@ -36,10 +36,10 @@ public class AnnotationCommentParser {
     }
 
     static public List<Annotation> parseFromString(String comment,
-                                                   int commentOffset,
+                                                   int commentCharOffset,
                                                    List<String> excludedAnnotationClassNames) {
         AnnotationCommentParser parser = new AnnotationCommentParser(comment,
-                                                                     commentOffset,
+                                                                     commentCharOffset,
                                                                      excludedAnnotationClassNames);
 
         return parser.parse();
@@ -51,8 +51,8 @@ public class AnnotationCommentParser {
 
     protected int lineOffset;
     protected int columnOffset;
-    protected int currentOffset;
-    protected int commentOffset;
+    protected int currentCharOffset;
+    protected int commentCharOffset;
 
     public AnnotationCommentParser(String comment) {
         this(comment, 0, new ArrayList<String>());
@@ -66,14 +66,14 @@ public class AnnotationCommentParser {
         this(comment, 0, excludedClassNames);
     }
 
-    public AnnotationCommentParser(String comment, int commentOffset, List<String> excludedClassNames) {
+    public AnnotationCommentParser(String comment, int commentCharOffset, List<String> excludedClassNames) {
         this.buffer = new StringBuffer(comment);
         this.excludedClassNames = excludedClassNames;
 
         this.lineOffset = 0;
         this.columnOffset = 0;
-        this.currentOffset = 0;
-        this.commentOffset = commentOffset;
+        this.currentCharOffset = 0;
+        this.commentCharOffset = commentCharOffset;
     }
 
     public void setIncludedClassNames(String[] classNames) {
@@ -90,14 +90,14 @@ public class AnnotationCommentParser {
         while (hasMoreChunk()) {
             String chunk = getNextChunk();
             Annotation annotation = parseChunk(chunk);
-            if (annotation == null || annotation.getSourcePosition().endIndex == -1) {
+            if (annotation == null || annotation.getSourcePosition().endOffset == -1) {
                 // If we couldn't get an annotation or it is not ended, increase offset an try at the next @
-                currentOffset++;
+                currentCharOffset++;
                 continue;
             }
 
             annotations.add(annotation);
-            currentOffset = annotation.getSourcePosition().endIndex + 1 - commentOffset;
+            currentCharOffset = annotation.getSourcePosition().endOffset + 1 - commentCharOffset;
         }
 
         return postProcess(annotations);
@@ -154,7 +154,7 @@ public class AnnotationCommentParser {
             AnnotationCommonTree tree = (AnnotationCommonTree) root.getTree();
             AnnotationNodeVisitor visitor = new AnnotationNodeVisitor(lineOffset,
                                                                       columnOffset,
-                                                                      currentOffset + commentOffset);
+                                                                      currentCharOffset + commentCharOffset);
             tree.accept(visitor);
 
             annotation = visitor.getAnnotation();
@@ -167,15 +167,15 @@ public class AnnotationCommentParser {
     }
 
     protected boolean hasMoreChunk() {
-        return currentOffset < buffer.length() && buffer.indexOf("@", currentOffset) != -1;
+        return currentCharOffset < buffer.length() && buffer.indexOf("@", currentCharOffset) != -1;
     }
 
     protected String getNextChunk() {
-        int oldOffset = currentOffset;
-        currentOffset = buffer.indexOf("@", currentOffset);
+        int oldOffset = currentCharOffset;
+        currentCharOffset = buffer.indexOf("@", currentCharOffset);
 
-        String oldChunk = buffer.substring(oldOffset, currentOffset);
-        String newChunk = buffer.substring(currentOffset);
+        String oldChunk = buffer.substring(oldOffset, currentCharOffset);
+        String newChunk = buffer.substring(currentCharOffset);
 
         adjustOffset(oldChunk);
 

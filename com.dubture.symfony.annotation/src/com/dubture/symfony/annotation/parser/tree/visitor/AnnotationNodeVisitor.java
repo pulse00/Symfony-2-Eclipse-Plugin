@@ -16,10 +16,12 @@ import java.util.Map;
 import org.eclipse.dltk.core.builder.IBuildContext;
 
 import com.dubture.symfony.annotation.model.Annotation;
+import com.dubture.symfony.annotation.model.AnnotationClass;
 import com.dubture.symfony.annotation.model.Argument;
 import com.dubture.symfony.annotation.model.IArgumentValue;
 import com.dubture.symfony.annotation.model.NamedArgument;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
+import com.dubture.symfony.annotation.parser.antlr.AnnotationToken;
 import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 
 /**
@@ -38,12 +40,12 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
         annotation = new Annotation();
     }
 
-    public AnnotationNodeVisitor(int lineOffset, int columnOffset, int indexOffset) {
+    public AnnotationNodeVisitor(int lineOffset, int columnOffset, int charOffset) {
         annotation = new Annotation();
 
         AnnotationCommonTree.lineOffset = lineOffset;
         AnnotationCommonTree.columnOffset = columnOffset;
-        AnnotationCommonTree.indexOffset = indexOffset;
+        AnnotationCommonTree.charOffset = charOffset;
     }
 
     public AnnotationNodeVisitor(IBuildContext context) {
@@ -72,18 +74,23 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
     }
 
     protected void visitClass(AnnotationCommonTree classNode) {
-        annotation.setClassName(classNode.getChild(1).getText());
+        AnnotationClass annotationClass = annotation.getAnnotationClass();
 
         AnnotationCommonTree namespaceNode = classNode.getChild(0);
         List<AnnotationCommonTree> children = namespaceNode.getChildTrees();
+
         if (children != null) {
-            for (Object child : namespaceNode.getChildren()) {
-                AnnotationCommonTree childNode = (AnnotationCommonTree) child;
+            for (AnnotationCommonTree childNode : children) {
                 if (childNode.getText() != "\\") {
                     annotation.pushNamespaceSegment(childNode.getText());
                 }
             }
         }
+
+        AnnotationCommonTree classNameNode = classNode.getChild(1);
+        AnnotationToken classNameToken = classNameNode.getToken();
+
+        annotationClass.setClassName(classNameNode.getText());
     }
 
     protected void visitDeclaration(AnnotationCommonTree declarationNode) {
@@ -91,22 +98,23 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
             return;
         }
 
-        for (AnnotationCommonTree argumentNode : declarationNode.getChildTrees()) {
-            switch (argumentNode.getType()) {
+        for (AnnotationCommonTree childNode : declarationNode.getChildTrees()) {
+            switch (childNode.getType()) {
                 case AnnotationParser.PARAM_START:
-                    // Do nothing with a param start
+                    annotation.getDeclaration().getSourcePosition().setStart(childNode.getToken());
                     break;
 
                 case AnnotationParser.ARGUMENT:
-                    visitArgument(argumentNode);
+                    visitArgument(childNode);
                     break;
 
                 case AnnotationParser.NAMED_ARGUMENT:
-                    visitNamedArgument(argumentNode);
+                    visitNamedArgument(childNode);
                     break;
 
                 case AnnotationParser.PARAM_END:
-                    annotation.getSourcePosition().setEnd(argumentNode.getToken());
+                    annotation.getSourcePosition().setEnd(childNode.getToken());
+                    annotation.getDeclaration().getSourcePosition().setEnd(childNode.getToken());
                     break;
 
                 default:

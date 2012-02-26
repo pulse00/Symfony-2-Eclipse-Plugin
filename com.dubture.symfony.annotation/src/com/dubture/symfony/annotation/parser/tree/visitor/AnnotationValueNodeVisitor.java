@@ -24,8 +24,8 @@ public class AnnotationValueNodeVisitor extends AnnotationNodeVisitor {
         annotation = new AnnotationValue();
     }
 
-    public AnnotationValueNodeVisitor(int lineOffset, int columnOffset, int indexOffset) {
-        super(lineOffset, columnOffset, indexOffset);
+    public AnnotationValueNodeVisitor(int lineOffset, int columnOffset, int charOffset) {
+        super(lineOffset, columnOffset, charOffset);
 
         annotation = new AnnotationValue();
     }
