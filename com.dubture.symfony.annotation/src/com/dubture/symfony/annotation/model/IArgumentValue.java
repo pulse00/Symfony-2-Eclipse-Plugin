@@ -14,7 +14,7 @@ package com.dubture.symfony.annotation.model;
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public interface IArgumentValue extends IValue {
+public interface IArgumentValue extends ISourceElement {
     /**
      * Returns the value holded by this argument. The value
      * is different depending on the result of the getType()

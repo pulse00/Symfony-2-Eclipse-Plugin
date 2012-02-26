@@ -1,10 +1,7 @@
 package com.dubture.symfony.annotation.model;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 /**
  * This object represents a Symfony2 annotation. It holds
@@ -17,18 +14,17 @@ import java.util.Stack;
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public class Annotation extends Value {
+public class Annotation extends AnnotationSourceElement {
 
-    protected String className = "";
-    protected Stack<String> namespace = new Stack<String>();
-    protected List<Argument> arguments = new LinkedList<Argument>();
+    protected AnnotationClass annotationClass = new AnnotationClass();
+    protected AnnotationDeclaration annotationDeclaration = new AnnotationDeclaration();
 
-    public Annotation() {
+    public AnnotationClass getAnnotationClass() {
+        return annotationClass;
     }
 
-    public Annotation(Stack<String> namespace, String className) {
-        this.namespace.addAll(namespace);
-        this.className = className;
+    public AnnotationDeclaration getDeclaration() {
+        return annotationDeclaration;
     }
 
     /**
@@ -39,101 +35,51 @@ public class Annotation extends Value {
      * @return The class name of the annotation
      */
     public String getClassName() {
-        return className;
+        return annotationClass.getClassName();
     }
 
     public void setClassName(String className) {
-        this.className = className;
+        annotationClass.setClassName(className);
     }
 
-    /**
-     * Returns the namespace of the annotation. With the string
-     * "Orm\Assert\Special", the namespace returned will be
-     * "Orm\Assert\".
-     *
-     * @return The namespace with a trailing backslash
-     */
     public String getNamespace() {
-        StringBuilder namespaceBuilder = new StringBuilder();
-
-        for (String part : namespace) {
-            namespaceBuilder.append(part);
-            namespaceBuilder.append('\\');
-        }
-
-        return namespaceBuilder.toString();
+        return annotationClass.getNamespace();
     }
 
     public void pushNamespaceSegment(String namespaceSegment) {
-        namespace.push(namespaceSegment);
+        annotationClass.pushNamespaceSegment(namespaceSegment);
     }
 
-    /**
-     * Get the fully qualified name of the annotation. This
-     * is the concatenation of {@link getNamespace} and
-     * {@link getClassName}.
-     *
-     * @return The fully qualified name of the annotation.
-     */
     public String getFullyQualifiedName() {
-        return getNamespace() + getClassName();
+        return annotationClass.getFullyQualifiedName();
     }
 
     public List<Argument> getArguments() {
-        return arguments;
+        return annotationDeclaration.getArguments();
     }
 
     public Map<String, NamedArgument> getNamedArguments() {
-        Map<String, NamedArgument> namedArguments = new HashMap<String, NamedArgument>();
-
-        for (Argument argument : arguments) {
-            if (argument instanceof NamedArgument) {
-                NamedArgument namedArgument = (NamedArgument) argument;
-                namedArguments.put(namedArgument.getName(), namedArgument);
-            }
-        }
-
-        return namedArguments;
+        return annotationDeclaration.getNamedArguments();
     }
 
     public void addArgument(Argument argument) {
-        arguments.add(argument);
+        annotationDeclaration.addArgument(argument);
     }
 
     public void addArgument(String name, IArgumentValue value) {
-        arguments.add(new NamedArgument(name, value));
+        annotationDeclaration.addArgument(name, value);
     }
 
     public String getArgument(String name) {
-        IArgumentValue argumentValue = getArgumentValue(name);
-        if (argumentValue == null) {
-            return null;
-        }
-
-        return argumentValue.toString();
+        return annotationDeclaration.getArgument(name);
     }
 
     public IArgumentValue getArgumentValue(String name) {
-        for (Argument argument : arguments) {
-            if (!(argument instanceof NamedArgument)) {
-                continue;
-            }
-
-            NamedArgument namedArgument = (NamedArgument) argument;
-            if (namedArgument.getName().equals(name)) {
-                return namedArgument.getValue();
-            }
-        }
-
-        return null;
+        return annotationDeclaration.getArgumentValue(name);
     }
 
     public String getFirstNamespacePart() {
-        if (namespace.size() > 0) {
-            return namespace.get(0);
-        }
-
-        return null;
+        return annotationClass.getFirstNamespacePart();
     }
 
     @Override
@@ -142,9 +88,7 @@ public class Annotation extends Value {
 
         builder.append('@');
         builder.append(getFullyQualifiedName());
-        builder.append('(');
-        builder.append(arguments.toString());
-        builder.append(')');
+        builder.append(annotationDeclaration.toString());
 
         return builder.toString();
     }

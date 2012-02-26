@@ -6,7 +6,7 @@ package com.dubture.symfony.annotation.model;
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public class Argument extends Value {
+public class Argument extends AnnotationSourceElement {
 
     protected IArgumentValue value;
 

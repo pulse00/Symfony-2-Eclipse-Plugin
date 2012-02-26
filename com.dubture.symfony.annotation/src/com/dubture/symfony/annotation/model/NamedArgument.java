@@ -30,6 +30,6 @@ public class NamedArgument extends Argument {
 
     @Override
     public String toString() {
-        return value.toString();
+        return name + " = " + value.toString();
     }
 }

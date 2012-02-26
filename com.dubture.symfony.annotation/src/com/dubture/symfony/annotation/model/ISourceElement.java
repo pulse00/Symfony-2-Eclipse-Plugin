@@ -3,17 +3,20 @@ package com.dubture.symfony.annotation.model;
 import com.dubture.symfony.annotation.parser.antlr.SourcePosition;
 
 /**
- * This represent a value. A value in the context of an
- * annotation is anything that can be associated with a
- * source position.
+ * This represent a source element. A source element
+ * is an element that has a source position within
+ * it. This source position is used to locate the element
+ * in a particular text source.
  *
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
  */
-public interface IValue {
+public interface ISourceElement {
 
     /**
-     * Returns the source position associated with this value
-     * @return
+     * Returns the source position associated with this
+     * source element.
+     *
+     * @return The associated source position
      */
     SourcePosition getSourcePosition();
 
