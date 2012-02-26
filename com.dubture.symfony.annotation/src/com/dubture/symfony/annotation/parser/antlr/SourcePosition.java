@@ -60,7 +60,7 @@ public class SourcePosition {
         this.column = startColumn;
         this.startIndex = startIndex;
         this.endIndex = endIndex;
-        this.length = endIndex - startIndex;
+        this.length = endIndex - startIndex + 1;
     }
 
     public SourcePosition(AnnotationToken startToken) {
@@ -81,7 +81,7 @@ public class SourcePosition {
         this.column = startColumn;
         this.startIndex = startIndex;
         this.endIndex = endIndex;
-        this.length = endIndex - startIndex;
+        this.length = endIndex - startIndex + 1;
     }
 
     public void set(AnnotationToken startToken, AnnotationToken endToken) {
@@ -105,7 +105,7 @@ public class SourcePosition {
 
     public void setEnd(int endIndex) {
         this.endIndex = endIndex;
-        this.length = endIndex - startIndex;
+        this.length = endIndex - startIndex + 1;
     }
 
     public void setEnd(AnnotationToken endToken) {
