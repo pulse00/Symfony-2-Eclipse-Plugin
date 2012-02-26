@@ -62,24 +62,25 @@ import com.dubture.symfony.annotation.parser.antlr.AnnotationToken;
 fragment LOWER               : 'a'..'z';
 fragment UPPER               : 'A'..'Z';
 fragment DIGIT               : '0'..'9';
+fragment AT                  : '@';
 fragment UNDERSCORE          : '_';
+fragment BSLASH              : '\\';
 fragment QUOTE               : '\'';
 fragment DOUBLE_QUOTE        : '"';
 fragment ESCAPE_QUOTE        : '\\' '\'';
 fragment ESCAPE_DOUBLE_QUOTE : '\\' '"';
+fragment NEGATIVE            : '-';
+fragment DOT                 : '\.';
 //fragment ACCENTUED         : bytes from 127 through 255 (0x7f-0xff).
 fragment LETTER              : LOWER | UPPER; //| ACCENTUED;
 fragment ALPHANUM            : LETTER | DIGIT;
-fragment NEGATIVE            : '-';
-fragment DOT                 : '\.';
+fragment IDENTIFIER_FRAG     : (LETTER | UNDERSCORE) (ALPHANUM | UNDERSCORE)*;
 
 // control characters
-AT          : '@';
 PARAM_START : '(';
 PARAM_END   : ')';
 EQUAL       : '=';
 COMMA       : ',';
-BSLASH      : '\\';
 CURLY_START : '{' ;
 CURLY_END   : '}' ;
 
@@ -88,8 +89,11 @@ TRUE  : 'true';
 FALSE : 'false';
 NULL  : 'null';
 
+// annotation
+ANNOTATION : AT BSLASH? IDENTIFIER_FRAG (BSLASH IDENTIFIER_FRAG)*;
+
 // identifier
-IDENTIFIER  : (LETTER | UNDERSCORE) (ALPHANUM | UNDERSCORE)*;
+IDENTIFIER : IDENTIFIER_FRAG;
 
 // string literals (either single quoted or double quoted)
 STRING_LITERAL
@@ -120,8 +124,5 @@ FLOAT_LITERAL
   : NEGATIVE? DIGIT* DOT DIGIT+
   ;
 
-// hidden characters
-WHITESPACE    : ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+ { $channel = HIDDEN; };
-COMMENT_START : ('\\' '*') { $channel = HIDDEN; };
-COMMENT_END   : ('*' '/') { $channel = HIDDEN; };
-COMMENT_CHAR  : ('*')+ { $channel = HIDDEN; };
+// whitespaces characters
+WHITESPACE : ( '\t' | ' ' | '\r' | '\n'| '\u000C' | '\\' '*' | '*' '/' | '*')+ { $channel = HIDDEN; };

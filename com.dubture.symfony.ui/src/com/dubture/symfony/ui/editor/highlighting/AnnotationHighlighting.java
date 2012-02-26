@@ -42,16 +42,19 @@ public class AnnotationHighlighting extends AbstractSemanticHighlighting {
                 int commentStartOffset = comment.getStart();
                 int commentEndOffset = comment.getStart() + comment.getLength();
                 String source = getSourceModule().getSource();
-                String commentSource = source.substring(commentStartOffset, commentEndOffset);
+                String commentSource = source.substring(commentStartOffset,
+                        commentEndOffset);
 
-                AnnotationCommentParser parser = new AnnotationCommentParser(commentSource, commentStartOffset);
+                AnnotationCommentParser parser = new AnnotationCommentParser(
+                        commentSource, commentStartOffset);
                 parser.setExcludedClassNames(PHPDocTagStrategy.PHPDOC_TAGS);
 
                 List<Annotation> annotations = parser.parse();
 
                 for (Annotation annotation : annotations) {
-                    SourcePosition sourcePosition = annotation.getSourcePosition();
-                    highlight(sourcePosition.startIndex, sourcePosition.length);
+                    SourcePosition sourcePosition = annotation
+                            .getSourcePosition();
+                    highlight(sourcePosition.startOffset, sourcePosition.length);
                 }
             } catch (ModelException exception) {
                 Logger.logException(exception);
@@ -59,6 +62,7 @@ public class AnnotationHighlighting extends AbstractSemanticHighlighting {
 
             return true;
         }
+
     }
 
     public AnnotationHighlighting() {
@@ -67,22 +71,17 @@ public class AnnotationHighlighting extends AbstractSemanticHighlighting {
 
     @Override
     public String getDisplayName() {
-
         return "Annotations";
-
     }
 
     @Override
     public AbstractSemanticApply getSemanticApply() {
-
         return new AnnotationApply();
     }
 
     @Override
     public void initDefaultPreferences() {
-
-        getStyle().setUnderlineByDefault(false)
-         .setDefaultTextColor(new RGB(64, 64, 64));
-
+        getStyle().setUnderlineByDefault(false).setDefaultTextColor(
+                new RGB(64, 64, 64));
     }
 }

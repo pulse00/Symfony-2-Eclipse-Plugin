@@ -2,31 +2,10 @@ package com.dubture.symfony.annotation.model;
 
 import java.util.Stack;
 
-import com.dubture.symfony.annotation.parser.antlr.SourcePosition;
-
 public class AnnotationClass extends AnnotationSourceElement {
 
     protected String className = "";
     protected Stack<String> namespace = new Stack<String>();
-
-    protected SourcePosition classNamePosition = new SourcePosition();
-    protected SourcePosition namespacePosition = new SourcePosition();
-
-    public SourcePosition getClassNamePosition() {
-        return classNamePosition;
-    }
-
-    public void setClassNamePosition(SourcePosition classNamePosition) {
-        this.classNamePosition = classNamePosition;
-    }
-
-    public SourcePosition getNamespacePosition() {
-        return namespacePosition;
-    }
-
-    public void setNamespacePosition(SourcePosition namespacePosition) {
-        this.namespacePosition = namespacePosition;
-    }
 
     /**
      * Returns the class name of the annotation. With the

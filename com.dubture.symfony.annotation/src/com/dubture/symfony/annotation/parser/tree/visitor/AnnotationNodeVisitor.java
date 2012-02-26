@@ -8,6 +8,7 @@
  ******************************************************************************/
 package com.dubture.symfony.annotation.parser.tree.visitor;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,18 +17,15 @@ import java.util.Map;
 import org.eclipse.dltk.core.builder.IBuildContext;
 
 import com.dubture.symfony.annotation.model.Annotation;
-import com.dubture.symfony.annotation.model.AnnotationClass;
 import com.dubture.symfony.annotation.model.Argument;
 import com.dubture.symfony.annotation.model.IArgumentValue;
 import com.dubture.symfony.annotation.model.NamedArgument;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
-import com.dubture.symfony.annotation.parser.antlr.AnnotationToken;
-import com.dubture.symfony.annotation.parser.antlr.SourcePosition;
 import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 
 /**
  * {@link AnnotationNodeVisitor} parses the structured elements
- * from an annotation like namespace classname and parameters.
+ * from an annotation like namespace, class name and arguments.
  *
  * @author Robert Gruendler <r.gruendler@gmail.com>
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
@@ -56,7 +54,7 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
     /**
      * This method will visit an Annotation node. The node should have the following
      * form:
-     *   (ANNOTATION AT (CLASS (NAMESPACE segments*) name) (DECLARATION arguments*))
+     *   (ANNOTATION (DECLARATION arguments*))
      */
     @Override
     public void visit(AnnotationCommonTree node) {
@@ -66,49 +64,26 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
             return;
         }
 
-        annotation.getSourcePosition().setStart(node.getChild(0).getToken());
-
-        visitClass(node.getChild(1));
-        if (node.getChildCount() > 2) {
-            visitDeclaration(node.getChild(2));
+        visitClass(node.getChild(0));
+        if (node.getChildCount() > 1) {
+            visitDeclaration(node.getChild(1));
         } else {
-            SourcePosition classPosition = annotation.getAnnotationClass().getSourcePosition();
-            annotation.getSourcePosition().setEnd(classPosition.endOffset);
+            annotation.getSourcePosition().setEnd(node.getToken());
         }
     }
 
     protected void visitClass(AnnotationCommonTree classNode) {
-        AnnotationClass annotationClass = annotation.getAnnotationClass();
+        annotation.getSourcePosition().setStart(classNode.getToken());
+        annotation.getAnnotationClass().getSourcePosition().setToken(classNode.getToken());
 
-        boolean hasNamespaceSegment = false;
-        AnnotationCommonTree namespaceNode = classNode.getChild(0);
-        List<AnnotationCommonTree> children = namespaceNode.getChildTrees();
+        String fullyQualifiedClass = classNode.getText().substring(1);
+        List<String> namespaceSegments = new LinkedList<String>(Arrays.asList(fullyQualifiedClass.split("\\\\")));
+        String className = namespaceSegments.remove(namespaceSegments.size() - 1);
 
-        if (children != null) {
-            for (AnnotationCommonTree childNode : children) {
-                if (childNode.getText() != "\\") {
-                    annotation.pushNamespaceSegment(childNode.getText());
-                    hasNamespaceSegment = true;
-                }
-            }
+        annotation.setClassName(className);
+        for (String namespaceSegment : namespaceSegments) {
+            annotation.pushNamespaceSegment(namespaceSegment);
         }
-
-        AnnotationCommonTree classNameNode = classNode.getChild(1);
-        annotationClass.setClassName(classNameNode.getText());
-
-        AnnotationToken classNameToken = classNameNode.getToken();
-        annotationClass.getClassNamePosition().setToken(classNameToken);
-        if (!hasNamespaceSegment) {
-            annotationClass.getSourcePosition().setToken(classNameToken);
-            return;
-        }
-
-        // We have at least one namespace segment
-        annotationClass.getSourcePosition().setStart(children.get(0).getToken());
-        annotationClass.getSourcePosition().setEnd(classNameToken);
-
-        annotationClass.getNamespacePosition().setStart(children.get(0).getToken());
-        annotationClass.getNamespacePosition().setEnd(children.get(children.size() - 1).getToken());
     }
 
     protected void visitDeclaration(AnnotationCommonTree declarationNode) {

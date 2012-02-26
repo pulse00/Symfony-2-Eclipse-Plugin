@@ -70,18 +70,8 @@ import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 }
 
 annotation
-  : AT class_name declaration?
-      -> ^(ANNOTATION AT class_name declaration?)
-  ;
-
-class_name
-  : (namespace name=IDENTIFIER)
-      -> ^(CLASS namespace $name)
-  ;
-
-namespace
-  : start=BSLASH? (segments+=IDENTIFIER BSLASH)*
-      -> ^(NAMESPACE ^(NAMESPACE_DEFAULT $start)? $segments*)
+  : annotation_class=ANNOTATION declaration?
+      -> ^(ANNOTATION $annotation_class declaration?)
   ;
 
 declaration
@@ -125,8 +115,8 @@ value
 
 annotationValue
   :
-     AT class_name declaration?
-       -> ^(ANNOTATION_VALUE AT class_name declaration?)
+     annotation_class=ANNOTATION declaration?
+       -> ^(ANNOTATION_VALUE $annotation_class declaration?)
   ;
 
 objectValue
