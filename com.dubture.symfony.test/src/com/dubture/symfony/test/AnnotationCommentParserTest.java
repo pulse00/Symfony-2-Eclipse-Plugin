@@ -105,7 +105,8 @@ public class AnnotationCommentParserTest extends TestCase {
                 "* )" +
                 "           */";
 
-        List<Annotation> annotations = getCommentAnnotations(comment);
+        int commentOffset = 17;
+        List<Annotation> annotations = getCommentAnnotations(comment, commentOffset);
 
         assertEquals(1, annotations.size());
 
@@ -116,8 +117,8 @@ public class AnnotationCommentParserTest extends TestCase {
         assertEquals("join_table_name", annotation.getArgumentValue("name").getValue());
         assertEquals(2, annotation.getSourcePosition().line);
         assertEquals(12, annotation.getSourcePosition().column);
-        assertEquals(16, annotation.getSourcePosition().startIndex);
-        assertEquals(252, annotation.getSourcePosition().endIndex);
+        assertEquals(16 + commentOffset, annotation.getSourcePosition().startIndex);
+        assertEquals(252 + commentOffset, annotation.getSourcePosition().endIndex);
     }
 
     @Test
@@ -141,13 +142,72 @@ public class AnnotationCommentParserTest extends TestCase {
         assertEquals("Route", annotation.getClassName());
     }
 
+    @Test
+    public void testWithCommentOffsetFarAway() {
+        String comment = "/**\r\n" +
+"     * @Route(\"/hello/{name}\", name=null, requierements={\"name\" = \"\\+\"})\r\n" +
+"     * @Template()\r\n" +
+"     */";
+
+        List<Annotation> annotations = getCommentAnnotations(comment, 1568);
+
+        assertEquals(2, annotations.size());
+
+        Annotation annotation = annotations.get(1);
+        assertEquals("", annotation.getNamespace());
+        assertEquals("Template", annotation.getClassName());
+    }
+
+    @Test
+    public void testWithIncludedClassNames() {
+        String comment = "/**\r\n" +
+"     * @Route(\"/hello/{name}\", name=null, requierements={\"name\" = \"\\+\"})\r\n" +
+"     * @Template()\r\n" +
+"     */";
+
+        AnnotationCommentParser parser = new AnnotationCommentParser(comment, 1568);
+        parser.setIncludedClassNames(new String[]{"Template"});
+
+        List<Annotation> annotations = parser.parse();
+
+        assertEquals(1, annotations.size());
+
+        Annotation annotation = annotations.get(0);
+        assertEquals("", annotation.getNamespace());
+        assertEquals("Template", annotation.getClassName());
+    }
+
+    @Test
+    public void testAnnotationNoDeclaration() {
+        String comment = "/**\r\n" +
+"     * @Route(\"/hello/{name}\", name=null, requierements={\"name\" = \"\\+\"})\r\n" +
+"     * @Assert\\NotBlank\r\n" +
+"     */";
+
+        List<Annotation> annotations = getCommentAnnotations(comment, 1245);
+
+        assertEquals(2, annotations.size());
+
+        Annotation annotation = annotations.get(1);
+        assertEquals("Assert\\", annotation.getNamespace());
+        assertEquals("NotBlank", annotation.getClassName());
+    }
+
     protected List<Annotation> getCommentAnnotations(String comment) {
-        AnnotationCommentParser parser = new AnnotationCommentParser(comment);
+        return getCommentAnnotations(comment, 0);
+    }
+
+    protected List<Annotation> getCommentAnnotations(String comment, int commentOffset) {
+        AnnotationCommentParser parser = new AnnotationCommentParser(comment, commentOffset);
 
         return parser.parse();
     }
 
     protected List<Annotation> getCommentAnnotations(String comment, boolean excludePhpDocBlock) {
+        return getCommentAnnotations(comment, 0, excludePhpDocBlock);
+    }
+
+    protected List<Annotation> getCommentAnnotations(String comment, int commentOffset, boolean excludePhpDocBlock) {
         List<String> excludedClassNames = new LinkedList<String>();
         if (excludePhpDocBlock) {
             // Could add more
@@ -156,7 +216,7 @@ public class AnnotationCommentParserTest extends TestCase {
             excludedClassNames.add("author");
         }
 
-        AnnotationCommentParser parser = new AnnotationCommentParser(comment, excludedClassNames);
+        AnnotationCommentParser parser = new AnnotationCommentParser(comment, commentOffset, excludedClassNames);
 
         return parser.parse();
     }

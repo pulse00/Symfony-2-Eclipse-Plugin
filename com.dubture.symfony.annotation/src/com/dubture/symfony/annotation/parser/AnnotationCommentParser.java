@@ -1,6 +1,7 @@
 package com.dubture.symfony.annotation.parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,29 +30,58 @@ public class AnnotationCommentParser {
     }
 
     static public List<Annotation> parseFromString(String comment, List<String> excludedAnnotationClassNames) {
-        AnnotationCommentParser parser = new AnnotationCommentParser(comment, excludedAnnotationClassNames);
+        AnnotationCommentParser parser = new AnnotationCommentParser(comment, 0, excludedAnnotationClassNames);
+
+        return parser.parse();
+    }
+
+    static public List<Annotation> parseFromString(String comment,
+                                                   int commentOffset,
+                                                   List<String> excludedAnnotationClassNames) {
+        AnnotationCommentParser parser = new AnnotationCommentParser(comment,
+                                                                     commentOffset,
+                                                                     excludedAnnotationClassNames);
 
         return parser.parse();
     }
 
     protected StringBuffer buffer;
+    protected List<String> includedClassNames;
     protected List<String> excludedClassNames;
 
     protected int lineOffset;
     protected int columnOffset;
     protected int currentOffset;
+    protected int commentOffset;
 
     public AnnotationCommentParser(String comment) {
-        this(comment, new ArrayList<String>());
+        this(comment, 0, new ArrayList<String>());
+    }
+
+    public AnnotationCommentParser(String comment, int commentOffset) {
+        this(comment, commentOffset, new ArrayList<String>());
     }
 
     public AnnotationCommentParser(String comment, List<String> excludedClassNames) {
+        this(comment, 0, excludedClassNames);
+    }
+
+    public AnnotationCommentParser(String comment, int commentOffset, List<String> excludedClassNames) {
         this.buffer = new StringBuffer(comment);
         this.excludedClassNames = excludedClassNames;
 
         this.lineOffset = 0;
         this.columnOffset = 0;
         this.currentOffset = 0;
+        this.commentOffset = commentOffset;
+    }
+
+    public void setIncludedClassNames(String[] classNames) {
+        includedClassNames = Arrays.asList(classNames);
+    }
+
+    public void setExcludedClassNames(String[] classNames) {
+        excludedClassNames = Arrays.asList(classNames);
     }
 
     public List<Annotation> parse() {
@@ -67,7 +97,7 @@ public class AnnotationCommentParser {
             }
 
             annotations.add(annotation);
-            currentOffset = annotation.getSourcePosition().endIndex + 1;
+            currentOffset = annotation.getSourcePosition().endIndex + 1 - commentOffset;
         }
 
         return postProcess(annotations);
@@ -80,10 +110,23 @@ public class AnnotationCommentParser {
      * @return A post-processed list of annotations
      */
     protected List<Annotation> postProcess(List<Annotation> annotations) {
+        boolean hasIncludeRestriction = includedClassNames != null && includedClassNames.size() > 0;
+        boolean hasExcludeRestriction = excludedClassNames != null && excludedClassNames.size() > 0;
+
+        if (!hasIncludeRestriction && !hasExcludeRestriction) {
+            return annotations;
+        }
+
         Iterator<Annotation> iterator = annotations.iterator();
         while (iterator.hasNext()) {
             Annotation annotation = iterator.next();
-            if (excludedClassNames.contains(annotation.getFullyQualifiedName())) {
+            String fullyQualifiedName = annotation.getFullyQualifiedName();
+
+            if (hasExcludeRestriction && excludedClassNames.contains(fullyQualifiedName)) {
+                iterator.remove();
+            }
+
+            if (hasIncludeRestriction && !includedClassNames.contains(fullyQualifiedName)) {
                 iterator.remove();
             }
         }
@@ -109,11 +152,14 @@ public class AnnotationCommentParser {
             root = parser.annotation();
 
             AnnotationCommonTree tree = (AnnotationCommonTree) root.getTree();
-            AnnotationNodeVisitor visitor = new AnnotationNodeVisitor(lineOffset, columnOffset, currentOffset);
+            AnnotationNodeVisitor visitor = new AnnotationNodeVisitor(lineOffset,
+                                                                      columnOffset,
+                                                                      currentOffset + commentOffset);
             tree.accept(visitor);
 
             annotation = visitor.getAnnotation();
         } catch (RecognitionException exception) {
+            // FIXME: Handle error differently
             exception.printStackTrace();
         }
 
