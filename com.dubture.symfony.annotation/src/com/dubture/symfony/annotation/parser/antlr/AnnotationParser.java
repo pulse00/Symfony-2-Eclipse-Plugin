@@ -1,4 +1,4 @@
-// $ANTLR 3.3 Nov 30, 2010 12:45:30 C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g 2012-02-26 10:25:05
+// $ANTLR 3.3 Nov 30, 2010 12:45:30 C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g 2012-02-26 10:38:30
 
 package com.dubture.symfony.annotation.parser.antlr;
 
@@ -16,7 +16,7 @@ import org.antlr.runtime.tree.*;
 
 public class AnnotationParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "LOWER", "UPPER", "DIGIT", "AT", "UNDERSCORE", "BSLASH", "QUOTE", "DOUBLE_QUOTE", "ESCAPE_QUOTE", "ESCAPE_DOUBLE_QUOTE", "NEGATIVE", "DOT", "LETTER", "ALPHANUM", "IDENTIFIER_FRAG", "PARAM_START", "PARAM_END", "EQUAL", "COMMA", "CURLY_START", "CURLY_END", "TRUE", "FALSE", "NULL", "ANNOTATION", "IDENTIFIER", "STRING_LITERAL", "INTEGER_LITERAL", "FLOAT_LITERAL", "WHITESPACE", "ANNOTATION_VALUE", "ARGUMENT", "ARGUMENT_NAME", "ARGUMENT_VALUE", "ARRAY_VALUE", "BOOLEAN_VALUE", "CLASS", "DECLARATION", "NAMED_ARGUMENT", "NAMESPACE", "NAMESPACE_DEFAULT", "NULL_VALUE", "NUMBER_VALUE", "OBJECT_VALUE", "PAIR", "STRING_VALUE"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "LOWER", "UPPER", "DIGIT", "AT", "UNDERSCORE", "BSLASH", "QUOTE", "DOUBLE_QUOTE", "ESCAPE_QUOTE", "ESCAPE_DOUBLE_QUOTE", "NEGATIVE", "DOT", "LETTER", "ALPHANUM", "IDENTIFIER_FRAG", "PARAM_START", "PARAM_END", "EQUAL", "COMMA", "CURLY_START", "CURLY_END", "TRUE", "FALSE", "NULL", "ANNOTATION", "IDENTIFIER", "STRING_LITERAL", "INTEGER_LITERAL", "FLOAT_LITERAL", "WHITESPACE", "ANNOTATION_ROOT", "ANNOTATION_VALUE", "ARGUMENT", "ARGUMENT_NAME", "ARGUMENT_VALUE", "ARRAY_VALUE", "BOOLEAN_VALUE", "CLASS", "DECLARATION", "NAMED_ARGUMENT", "NAMESPACE", "NAMESPACE_DEFAULT", "NULL_VALUE", "NUMBER_VALUE", "OBJECT_VALUE", "PAIR", "STRING_VALUE"
     };
     public static final int EOF=-1;
     public static final int LOWER=4;
@@ -49,22 +49,23 @@ public class AnnotationParser extends Parser {
     public static final int INTEGER_LITERAL=31;
     public static final int FLOAT_LITERAL=32;
     public static final int WHITESPACE=33;
-    public static final int ANNOTATION_VALUE=34;
-    public static final int ARGUMENT=35;
-    public static final int ARGUMENT_NAME=36;
-    public static final int ARGUMENT_VALUE=37;
-    public static final int ARRAY_VALUE=38;
-    public static final int BOOLEAN_VALUE=39;
-    public static final int CLASS=40;
-    public static final int DECLARATION=41;
-    public static final int NAMED_ARGUMENT=42;
-    public static final int NAMESPACE=43;
-    public static final int NAMESPACE_DEFAULT=44;
-    public static final int NULL_VALUE=45;
-    public static final int NUMBER_VALUE=46;
-    public static final int OBJECT_VALUE=47;
-    public static final int PAIR=48;
-    public static final int STRING_VALUE=49;
+    public static final int ANNOTATION_ROOT=34;
+    public static final int ANNOTATION_VALUE=35;
+    public static final int ARGUMENT=36;
+    public static final int ARGUMENT_NAME=37;
+    public static final int ARGUMENT_VALUE=38;
+    public static final int ARRAY_VALUE=39;
+    public static final int BOOLEAN_VALUE=40;
+    public static final int CLASS=41;
+    public static final int DECLARATION=42;
+    public static final int NAMED_ARGUMENT=43;
+    public static final int NAMESPACE=44;
+    public static final int NAMESPACE_DEFAULT=45;
+    public static final int NULL_VALUE=46;
+    public static final int NUMBER_VALUE=47;
+    public static final int OBJECT_VALUE=48;
+    public static final int PAIR=49;
+    public static final int STRING_VALUE=50;
 
     // delegates
     // delegators
@@ -131,7 +132,7 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "annotation"
-    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:72:1: annotation : annotation_class= ANNOTATION ( declaration )? -> ^( ANNOTATION $annotation_class ( declaration )? ) ;
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:72:1: annotation : annotation_class= ANNOTATION ( declaration )? -> ^( ANNOTATION_ROOT $annotation_class ( declaration )? ) ;
     public final AnnotationParser.annotation_return annotation() throws RecognitionException {
         AnnotationParser.annotation_return retval = new AnnotationParser.annotation_return();
         retval.start = input.LT(1);
@@ -146,7 +147,7 @@ public class AnnotationParser extends Parser {
         RewriteRuleTokenStream stream_ANNOTATION=new RewriteRuleTokenStream(adaptor,"token ANNOTATION");
         RewriteRuleSubtreeStream stream_declaration=new RewriteRuleSubtreeStream(adaptor,"rule declaration");
         try {
-            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:73:3: (annotation_class= ANNOTATION ( declaration )? -> ^( ANNOTATION $annotation_class ( declaration )? ) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:73:3: (annotation_class= ANNOTATION ( declaration )? -> ^( ANNOTATION_ROOT $annotation_class ( declaration )? ) )
             // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:73:5: annotation_class= ANNOTATION ( declaration )?
             {
             annotation_class=(Token)match(input,ANNOTATION,FOLLOW_ANNOTATION_in_annotation159);  
@@ -178,7 +179,7 @@ public class AnnotationParser extends Parser {
 
 
             // AST REWRITE
-            // elements: annotation_class, ANNOTATION, declaration
+            // elements: declaration, annotation_class
             // token labels: annotation_class
             // rule labels: retval
             // token list labels: 
@@ -189,15 +190,15 @@ public class AnnotationParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 74:7: -> ^( ANNOTATION $annotation_class ( declaration )? )
+            // 74:7: -> ^( ANNOTATION_ROOT $annotation_class ( declaration )? )
             {
-                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:74:10: ^( ANNOTATION $annotation_class ( declaration )? )
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:74:10: ^( ANNOTATION_ROOT $annotation_class ( declaration )? )
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
-                root_1 = (AnnotationCommonTree)adaptor.becomeRoot(stream_ANNOTATION.nextNode(), root_1);
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ANNOTATION_ROOT, "ANNOTATION_ROOT"), root_1);
 
                 adaptor.addChild(root_1, stream_annotation_class.nextNode());
-                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:74:41: ( declaration )?
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:74:46: ( declaration )?
                 if ( stream_declaration.hasNext() ) {
                     adaptor.addChild(root_1, stream_declaration.nextTree());
 
@@ -330,7 +331,7 @@ public class AnnotationParser extends Parser {
 
 
             // AST REWRITE
-            // elements: statements, PARAM_START, PARAM_END
+            // elements: PARAM_START, PARAM_END, statements
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -588,7 +589,7 @@ public class AnnotationParser extends Parser {
 
 
             // AST REWRITE
-            // elements: name, argument_value
+            // elements: argument_value, name
             // token labels: 
             // rule labels: retval, name, argument_value
             // token list labels: 
@@ -1125,7 +1126,7 @@ public class AnnotationParser extends Parser {
 
 
             // AST REWRITE
-            // elements: CURLY_END, pairs, CURLY_START
+            // elements: pairs, CURLY_START, CURLY_END
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -1371,7 +1372,7 @@ public class AnnotationParser extends Parser {
 
 
             // AST REWRITE
-            // elements: CURLY_END, CURLY_START, values
+            // elements: CURLY_END, values, CURLY_START
             // token labels: 
             // rule labels: retval
             // token list labels: 

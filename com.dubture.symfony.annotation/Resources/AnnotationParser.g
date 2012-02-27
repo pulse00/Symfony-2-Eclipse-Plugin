@@ -8,7 +8,7 @@ options {
 }
 
 tokens {
-  ANNOTATION;
+  ANNOTATION_ROOT;
   ANNOTATION_VALUE;
   ARGUMENT;
   ARGUMENT_NAME;
@@ -71,7 +71,7 @@ import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 
 annotation
   : annotation_class=ANNOTATION declaration?
-      -> ^(ANNOTATION $annotation_class declaration?)
+      -> ^(ANNOTATION_ROOT $annotation_class declaration?)
   ;
 
 declaration

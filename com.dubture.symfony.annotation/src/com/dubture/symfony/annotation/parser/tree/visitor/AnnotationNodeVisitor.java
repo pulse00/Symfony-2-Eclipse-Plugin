@@ -68,7 +68,7 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
         if (node.getChildCount() > 1) {
             visitDeclaration(node.getChild(1));
         } else {
-            annotation.getSourcePosition().setEnd(node.getToken());
+            annotation.getSourcePosition().setEnd(node.getChild(0).getToken());
         }
     }
 
