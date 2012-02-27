@@ -179,18 +179,23 @@ public class AnnotationCommentParserTest extends TestCase {
 
     @Test
     public void testAnnotationNoDeclaration() {
-        String comment = "/**\r\n" +
-"     * @Route(\"/hello/{name}\", name=null, requierements={\"name\" = \"\\+\"})\r\n" +
-"     * @Assert\\NotBlank\r\n" +
+        String comment = "/** @A\\B\r\n" +
+"     *\r\n" +
+"     * @var Test" +
+"     * @param author" +
 "     */";
 
-        List<Annotation> annotations = getCommentAnnotations(comment, 1245);
+        List<Annotation> annotations = getCommentAnnotations(comment, true);
 
-        assertEquals(2, annotations.size());
+        assertEquals(1, annotations.size());
 
-        Annotation annotation = annotations.get(1);
-        assertEquals("Assert\\", annotation.getNamespace());
-        assertEquals("NotBlank", annotation.getClassName());
+        Annotation annotation = annotations.get(0);
+        assertEquals("A\\", annotation.getNamespace());
+        assertEquals("B", annotation.getClassName());
+        assertEquals(1, annotation.getSourcePosition().line);
+        assertEquals(5, annotation.getSourcePosition().column);
+        assertEquals(4, annotation.getSourcePosition().startOffset);
+        assertEquals(7, annotation.getSourcePosition().endOffset);
     }
 
     protected List<Annotation> getCommentAnnotations(String comment) {
@@ -214,6 +219,7 @@ public class AnnotationCommentParserTest extends TestCase {
             excludedClassNames.add("param");
             excludedClassNames.add("return");
             excludedClassNames.add("author");
+            excludedClassNames.add("var");
         }
 
         AnnotationCommentParser parser = new AnnotationCommentParser(comment, commentOffset, excludedClassNames);

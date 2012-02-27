@@ -90,6 +90,7 @@ public class AnnotationCommentParser {
         while (hasMoreChunk()) {
             String chunk = getNextChunk();
             Annotation annotation = parseChunk(chunk);
+
             if (annotation == null || annotation.getSourcePosition().endOffset == -1) {
                 // If we couldn't get an annotation or it is not ended, increase offset an try at the next @
                 currentCharOffset++;
@@ -167,15 +168,23 @@ public class AnnotationCommentParser {
     }
 
     protected boolean hasMoreChunk() {
-        return currentCharOffset < buffer.length() && buffer.indexOf("@", currentCharOffset) != -1;
+        if (currentCharOffset >= buffer.length()) {
+            // Offset is passed the buffer, no more chunk
+            return false;
+        }
+
+        int atSignIndex = buffer.indexOf("@", currentCharOffset);
+
+        // No more at sign, or at sign is the last character, no more chunk
+        return atSignIndex != -1 && atSignIndex < buffer.length() - 1;
     }
 
     protected String getNextChunk() {
         int oldOffset = currentCharOffset;
         currentCharOffset = buffer.indexOf("@", currentCharOffset);
 
-        String oldChunk = buffer.substring(oldOffset, currentCharOffset);
         String newChunk = buffer.substring(currentCharOffset);
+        String oldChunk = buffer.substring(oldOffset, currentCharOffset);
 
         adjustOffset(oldChunk);
 
@@ -184,7 +193,7 @@ public class AnnotationCommentParser {
 
     protected void adjustOffset(String oldChunk) {
         Matcher matcher = Pattern.compile("\r\n|\n|\r").matcher(oldChunk);
-        int lastMatchEnd = 0;
+        int lastMatchEnd = -1;
 
         while (matcher.find()) {
             lineOffset++;
@@ -192,5 +201,12 @@ public class AnnotationCommentParser {
         }
 
         columnOffset = oldChunk.length() - lastMatchEnd;
+    }
+
+    protected boolean isIdentifierFirstChar(char character) {
+        // This is not entirely ok for our definition of Identifier. However,
+        // it is sufficient to eliminate a lot of impossible annotation which
+        // is what we seek.
+        return Character.isJavaIdentifierStart(character);
     }
 }

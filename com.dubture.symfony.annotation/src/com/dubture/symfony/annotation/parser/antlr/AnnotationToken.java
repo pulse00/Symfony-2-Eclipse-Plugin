@@ -9,55 +9,49 @@ public class AnnotationToken extends CommonToken {
      */
     private static final long serialVersionUID = 391767298498973645L;
 
-    protected int lineNumber = -1;
-    protected int column = -1;
-    protected int startOffset = -1;
-    protected int endOffset = -1;
+    /**
+     * These are offset that needs to be applied to the various getters. They
+     * are used to adjust the token position relative to a different
+     * referential. For example, if we parse an annotation, we usually receive
+     * only the substring starting at the @ sign until the end of the comment.
+     * The offset are then used to adjust where they are suppose to appear
+     * within the comment.
+     */
+    protected int lineOffset = 0;
+    protected int columnOffset = 0;
+    protected int charOffset = 0;
 
-    public AnnotationToken(CharStream input, int type, int channel, int start, int stop) {
+    public AnnotationToken(CharStream input, int type, int channel, int start,
+            int stop) {
         super(input, type, channel, start, stop);
-
-        lineNumber = getLine();
-        column = getCharPositionInLine();
-        startOffset = start;
-        endOffset = stop;
     }
 
     @Override
     public int getLine() {
-        return lineNumber;
+        return line + lineOffset;
     }
 
     public int getColumn() {
-        return column;
+        return getCharPositionInLine() + columnOffset;
     }
 
     public int getStartOffset() {
-        return startOffset;
+        return getStartIndex() + charOffset;
     }
 
     public int getEndOffset() {
-        return endOffset;
-    }
-
-    @Override
-    public void setCharPositionInLine(int charPositionInLine) {
-        super.setCharPositionInLine(charPositionInLine);
-
-        column = charPositionInLine;
-    }
-
-    @Override
-    public void setLine(int line) {
-        super.setLine(line);
-
-        lineNumber = line;
+        return getStopIndex() + charOffset;
     }
 
     public void adjustOffset(int lineOffset, int columnOffset, int charOffset) {
-        this.lineNumber += lineOffset;
-        this.column += columnOffset;
-        this.startOffset += charOffset;
-        this.endOffset += charOffset;
+        this.lineOffset = lineOffset;
+        this.columnOffset = columnOffset;
+        this.charOffset = charOffset;
+    }
+
+    @Override
+    public String toString() {
+        return getText() + "[" + getLine() + ", " + getColumn() + "]("
+                + getStartOffset() + ", " + getEndOffset() + ")";
     }
 }
