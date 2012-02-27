@@ -43,7 +43,7 @@ public class AnnotationParserTest extends TestCase {
 
 
     private DebugErrorReporter reporter = new DebugErrorReporter();
-    private AnnotationNodeVisitor root;
+    private Annotation annotation;
 
     @Before
     public void setUp() throws Exception {
@@ -57,40 +57,38 @@ public class AnnotationParserTest extends TestCase {
 
     @Test
     public void testSyntaxErrors() {
-        root = getRootNode("@ManyToManyPersister('shall\". fo)", false);
+        annotation = parseAnnotation("@ManyToManyPersister('shall\". fo)", false);
     }
 
     @Test
     public void testSimple() {
-        root = getRootNode("@O()", false);
+        annotation = parseAnnotation("@O()", false);
 
-        assertEquals("O", root.getClassName());
+        assertEquals("O", annotation.getClassName());
     }
 
     @Test
     public void testTemplatePath() {
-        root = getRootNode("* @Template(\"DemoBundle:Welcome:index.html.twig\")", false);
+        annotation = parseAnnotation("* @Template(\"DemoBundle:Welcome:index.html.twig\")", false);
 
-        assertEquals("Template", root.getClassName());
+        assertEquals("Template", annotation.getClassName());
     }
 
     @Test
     public void testRoute() {
-        root = getRootNode("* @Route('/blog', name='_blog')", false);
+        annotation = parseAnnotation("* @Route('/blog', name='_blog')", false);
 
-        assertEquals("_blog", root.getAnnotation().getArgumentValue("name").getValue());
+        assertEquals("_blog", annotation.getArgumentValue("name").getValue());
     }
 
     @Test
     public void testRequirementsAdvanced() {
-        root = getRootNode("@Route(\"/.{_format}\", " +
+        annotation = parseAnnotation("@Route(\"/.{_format}\", " +
                 "                  name=\"post\", " +
                 "                  double=-10.0," +
                 "                  int = 100," +
                 "                  defaults={\"_format\" = \"\\s+\"}, " +
                 "                  requirements={\"one\", \"two\"})\"", false);
-
-        Annotation annotation = root.getAnnotation();
 
         assertEquals("post", annotation.getArgumentValue("name").getValue());
         assertEquals(-10.0, annotation.getArgumentValue("double").getValue());
@@ -110,60 +108,60 @@ public class AnnotationParserTest extends TestCase {
 
     @Test
     public void testEmpty() {
-        root = getRootNode("* @Route()", false);
+        annotation = parseAnnotation("* @Route()", false);
 
-        assertNotNull(root);
-        assertEquals("Route", root.getClassName());
-        assertTrue(root.getNamespace().length() == 0);
+        assertNotNull(annotation);
+        assertEquals("Route", annotation.getClassName());
+        assertTrue(annotation.getNamespace().length() == 0);
     }
 
     @Test
     public void testNoDeclaration() {
-        root = getRootNode("* @ORM\\Foo", false);
+        annotation = parseAnnotation("* @ORM\\Foo", false);
 
-        assertEquals("Foo", root.getClassName());
-        assertEquals("ORM\\", root.getNamespace());
-        assertEquals("ORM\\Foo", root.getFullyQualifiedName());
+        assertEquals("Foo", annotation.getClassName());
+        assertEquals("ORM\\", annotation.getNamespace());
+        assertEquals("ORM\\Foo", annotation.getFullyQualifiedName());
     }
 
     @Test
     public void testPhpDoc() {
-        root = getRootNode("@param Value", false);
-        assertEquals("param", root.getClassName());
+        annotation = parseAnnotation("@param Value", false);
+        assertEquals("param", annotation.getClassName());
 
-        root = getRootNode("@inheritdoc Value", false);
-        assertEquals("inheritdoc", root.getClassName());
+        annotation = parseAnnotation("@inheritdoc Value", false);
+        assertEquals("inheritdoc", annotation.getClassName());
 
-        root = getRootNode("{@inheritdoc}", false);
-        assertNull(root.getAnnotation());
+        annotation = parseAnnotation("{@inheritdoc}", false);
+        assertNull(annotation);
 
-        root = getRootNode("@inheritdoc}", false);
-        assertEquals("inheritdoc", root.getClassName());
+        annotation = parseAnnotation("@inheritdoc}", false);
+        assertEquals("inheritdoc", annotation.getClassName());
     }
 
     @Test
     public void testNamespace() {
-        root = getRootNode("* @ORM\\Foo()", false);
+        annotation = parseAnnotation("* @ORM\\Foo()", false);
 
-        assertEquals("Foo", root.getClassName());
-        assertEquals("ORM\\", root.getNamespace());
-        assertEquals("ORM\\Foo", root.getFullyQualifiedName());
+        assertEquals("Foo", annotation.getClassName());
+        assertEquals("ORM\\", annotation.getNamespace());
+        assertEquals("ORM\\Foo", annotation.getFullyQualifiedName());
     }
 
     @Test
     public void testObjectValue() {
-        root = getRootNode("* @Sensio\\Route(\"/hello\", " +
+        annotation = parseAnnotation("* @Sensio\\Route(\"/hello\", " +
                         "        defaults={\"name\"=\"*World*\" " +
                         " *       ,\"isFalse\"=    true,     \"false\"    =    false,  " +
                         "        \"null\" = null})", false);
 
-        assertNotNull(root);
-        assertEquals("Route",root.getClassName());
+        assertNotNull(annotation);
+        assertEquals("Route",annotation.getClassName());
         assertFalse(reporter.hasErrors());
 
-        assertEquals(ArgumentValueType.OBJECT, root.getArgumentValue("defaults").getType());
+        assertEquals(ArgumentValueType.OBJECT, annotation.getArgumentValue("defaults").getType());
 
-        ObjectValue objectValue = (ObjectValue) root.getArgumentValue("defaults");
+        ObjectValue objectValue = (ObjectValue) annotation.getArgumentValue("defaults");
         assertEquals("*World*", objectValue.get("name"));
         assertEquals(true, objectValue.get("isFalse"));
         assertEquals(false, objectValue.get("false"));
@@ -172,48 +170,48 @@ public class AnnotationParserTest extends TestCase {
 
     @Test
     public void testRoles() {
-        root = getRootNode("* @Secure(roles=\"ROLE_ADMIN, ROLE_USER\")", false);
+        annotation = parseAnnotation("* @Secure(roles=\"ROLE_ADMIN, ROLE_USER\")", false);
 
-        assertNotNull(root);
-        assertEquals("Secure",root.getClassName());
+        assertNotNull(annotation);
+        assertEquals("Secure",annotation.getClassName());
         assertFalse(reporter.hasErrors());
     }
 
     @Test
     public void testDoctrineParameters() {
-        root = getRootNode("* @ORM\\Entity(repositoryClass=\"Acme\\DemoBundle\\Entity\\DoctorRepository\")", false);
+        annotation = parseAnnotation("* @ORM\\Entity(repositoryClass=\"Acme\\DemoBundle\\Entity\\DoctorRepository\")", false);
 
-        assertNotNull(root);
-        assertEquals("Entity",root.getClassName());
+        assertNotNull(annotation);
+        assertEquals("Entity",annotation.getClassName());
         assertFalse(reporter.hasErrors());
 
-        assertEquals("Acme\\DemoBundle\\Entity\\DoctorRepository", root.getArgument("repositoryClass"));
+        assertEquals("Acme\\DemoBundle\\Entity\\DoctorRepository", annotation.getArgument("repositoryClass"));
     }
 
     @Test
     public void testDoctrineSubAnnotations() {
-        root = getRootNode("         * @Orm\\JoinTable(\"literal\", name=\"join_table_name\", " +
+        annotation = parseAnnotation("         * @Orm\\JoinTable(\"literal\", name=\"join_table_name\", " +
                 "*      joinColumns={@Orm\\JoinColumn(name=\"join_id\", referencedColumnName=\"id_first\")}, " +
                 "*      inverseJoinColumns={@Orm\\JoinColumn(name=\"inverse_id\", referencedColumnName=\"id_second\")} " +
                 "* )", false);
 
-        assertNotNull(root);
-        assertEquals("JoinTable", root.getClassName());
+        assertNotNull(annotation);
+        assertEquals("JoinTable", annotation.getClassName());
         assertFalse(reporter.hasErrors());
 
-        assertNotNull(root.getLiteralArguments().contains("\"literal\""));
-        assertEquals("join_table_name", root.getArgument("name"));
-        assertEquals(ArgumentValueType.ARRAY, root.getArgumentValue("joinColumns").getType());
-        assertEquals(ArgumentValueType.ARRAY, root.getArgumentValue("inverseJoinColumns").getType());
+        assertNotNull(annotation.getArguments().contains("\"literal\""));
+        assertEquals("join_table_name", annotation.getArgument("name"));
+        assertEquals(ArgumentValueType.ARRAY, annotation.getArgumentValue("joinColumns").getType());
+        assertEquals(ArgumentValueType.ARRAY, annotation.getArgumentValue("inverseJoinColumns").getType());
 
-        ArrayValue joinColumn = (ArrayValue) root.getArgumentValue("joinColumns");
+        ArrayValue joinColumn = (ArrayValue) annotation.getArgumentValue("joinColumns");
         AnnotationValue joinColumnAnnotation = (AnnotationValue) joinColumn.getArgumentValue(0);
         assertEquals("JoinColumn", joinColumnAnnotation.getClassName());
         assertEquals("Orm\\", joinColumnAnnotation.getNamespace());
         assertEquals("join_id", joinColumnAnnotation.getArgument("name"));
         assertEquals("id_first", joinColumnAnnotation.getArgument("referencedColumnName"));
 
-        ArrayValue inverseJoinColumn = (ArrayValue) root.getArgumentValue("inverseJoinColumns");
+        ArrayValue inverseJoinColumn = (ArrayValue) annotation.getArgumentValue("inverseJoinColumns");
         AnnotationValue inverseJoinColumnAnnotation = (AnnotationValue) inverseJoinColumn.getArgumentValue(0);
         assertEquals("JoinColumn", inverseJoinColumnAnnotation.getClassName());
         assertEquals("Orm\\", inverseJoinColumnAnnotation.getNamespace());
@@ -223,7 +221,7 @@ public class AnnotationParserTest extends TestCase {
 
     @Test
     public void testSimpleComment() {
-        root = getRootNode(
+        annotation = parseAnnotation(
                 "\\** " +
                 "  * @Orm\\JoinColumn(" +
                 "        \"literal\", " +
@@ -234,14 +232,13 @@ public class AnnotationParserTest extends TestCase {
                 "    ) " +
                 "  */", false);
 
-        Annotation annotation = root.getAnnotation();
         assertEquals("JoinColumn", annotation.getClassName());
         assertEquals("Orm\\", annotation.getNamespace());
         assertEquals(4, annotation.getArguments().size());
     }
 
     public void testWithAttributes() {
-        root = getRootNode(" * @Attributes({ " +
+        annotation = parseAnnotation(" * @Attributes({ " +
         " @Attribute(\"mixed\",                type = \"mixed\"), " +
         " @Attribute(\"boolean\",              type = \"boolean\"), " +
         " @Attribute(\"bool\",                 type = \"bool\"), " +
@@ -254,48 +251,48 @@ public class AnnotationParserTest extends TestCase {
         " @Attribute(\"arrayOfAnnotations\",   type = \"array<Doctrine\\Tests\\Common\\Annotations\\Fixtures\\AnnotationTargetAll>\")})",
         false);
 
-        assertNotNull(root);
-        assertEquals("Attributes", root.getClassName());
+        assertNotNull(annotation);
+        assertEquals("Attributes", annotation.getClassName());
         System.out.println(reporter.getErrorsAsString());
         assertFalse(reporter.hasErrors());
     }
 
     @Test
     public void testRouteVariable() {
-        root = getRootNode("* @Route(\"/hello/{name}\", name=\"_demo_secured_hello\")", false);
+        annotation = parseAnnotation("* @Route(\"/hello/{name}\", name=\"_demo_secured_hello\")", false);
 
-        assertNotNull(root);
+        assertNotNull(annotation);
         assertNotNull(reporter);
-        assertEquals("Route",root.getClassName());
+        assertEquals("Route",annotation.getClassName());
         System.out.println(reporter.getErrorsAsString());
         assertFalse(reporter.hasErrors());
     }
 
     @Test
     public void testSyntaxError() {
-        root = getRootNode("* @Ro+--ute(name='test\")", true);
-        assertNotNull(root);
+        annotation = parseAnnotation("* @Ro+--ute(name='test\")", true);
+        assertNotNull(annotation);
         assertTrue(reporter.hasErrors());
     }
 
     @Test
     public void testMissingArgument() {
-        root = getRootNode("* @Route(name=)", true);
-        assertNotNull(root);
+        annotation = parseAnnotation("* @Route(name=)", true);
+        assertNotNull(annotation);
         assertTrue(reporter.hasErrors());
     }
 
     @Test
     public void testMissingComma() {
-        root = getRootNode("* @Template(name='foo' bar)", true);
-        assertNotNull(root);
+        annotation = parseAnnotation("* @Template(name='foo' bar)", true);
+        assertNotNull(annotation);
         assertTrue(reporter.hasErrors());
     }
 
     @Test
     public void testUnclosedQuote() {
-        root = getRootNode("* @Template(aho=')", true);
-        assertNotNull(root);
+        annotation = parseAnnotation("* @Template(aho=')", true);
+        assertNotNull(annotation);
         assertTrue(reporter.hasErrors());
     }
 
@@ -306,7 +303,7 @@ public class AnnotationParserTest extends TestCase {
     * @param expectFail if the parsing process is expected to fail
     * @return {@link AnnotationNodeVisitor}
     */
-    private AnnotationNodeVisitor getRootNode(String line, boolean expectFail) {
+    private Annotation parseAnnotation(String line, boolean expectFail) {
         try {
             CharStream content = new ANTLRStringStream(line);
 
@@ -328,7 +325,7 @@ public class AnnotationParserTest extends TestCase {
                 fail();
             }
 
-            return visitor;
+            return visitor.getAnnotation();
 
         } catch (Exception e) {
 

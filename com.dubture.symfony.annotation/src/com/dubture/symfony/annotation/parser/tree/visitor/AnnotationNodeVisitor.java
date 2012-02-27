@@ -9,17 +9,14 @@
 package com.dubture.symfony.annotation.parser.tree.visitor;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.dltk.core.builder.IBuildContext;
 
 import com.dubture.symfony.annotation.model.Annotation;
 import com.dubture.symfony.annotation.model.Argument;
 import com.dubture.symfony.annotation.model.IArgumentValue;
-import com.dubture.symfony.annotation.model.NamedArgument;
 import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
 import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 
@@ -29,7 +26,6 @@ import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
  *
  * @author Robert Gruendler <r.gruendler@gmail.com>
  * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
- *
  */
 public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
 
@@ -138,51 +134,5 @@ public class AnnotationNodeVisitor  extends AbstractAnnotationNodeVisitor {
 
     public Annotation getAnnotation () {
         return annotation;
-    }
-
-    public String getClassName() {
-        return annotation.getClassName();
-    }
-
-    public String getNamespace() {
-        return annotation.getNamespace();
-    }
-
-    public String getFullyQualifiedName() {
-        return getNamespace() + getClassName();
-    }
-
-    public Map<String, String> getArguments() {
-        Map<String, String> arguments = new HashMap<String, String>();
-        Map<String, NamedArgument> annotationArguments = annotation.getNamedArguments();
-        for (String argumentName : annotationArguments.keySet()) {
-            arguments.put(argumentName, annotationArguments.get(argumentName).toString());
-        }
-
-        return arguments;
-    }
-
-    public List<String> getLiteralArguments() {
-        List<String> arguments = new LinkedList<String>();
-        List<Argument> annotationArguments = annotation.getArguments();
-        for (Argument argument : annotationArguments) {
-            if (!(argument instanceof NamedArgument)) {
-                arguments.add(argument.getValue().toString());
-            }
-        }
-
-        return arguments;
-    }
-
-    public String getArgument(String name) {
-        return annotation.getArgument(name);
-    }
-
-    public IArgumentValue getArgumentValue(String name) {
-        return annotation.getArgumentValue(name);
-    }
-
-    public String getFirstNamespacePart() {
-        return annotation.getFirstNamespacePart();
     }
 }
