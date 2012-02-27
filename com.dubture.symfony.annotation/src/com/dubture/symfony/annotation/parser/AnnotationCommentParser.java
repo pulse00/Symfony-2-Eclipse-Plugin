@@ -137,6 +137,8 @@ public class AnnotationCommentParser {
 
     protected Annotation parseChunk(String chunk) {
         CharStream content = new ANTLRStringStream(chunk);
+
+        // FIXME: The error reporter should be passed to the parser
         AnnotationLexer lexer = new AnnotationLexer(content, new IAnnotationErrorReporter() {
             @Override
             public void reportError(String header, String message, RecognitionException e) {
@@ -160,7 +162,7 @@ public class AnnotationCommentParser {
 
             annotation = visitor.getAnnotation();
         } catch (RecognitionException exception) {
-            // FIXME: Handle error differently
+            // FIXME: Handle error correctly
             exception.printStackTrace();
         }
 
@@ -201,12 +203,5 @@ public class AnnotationCommentParser {
         }
 
         columnOffset = oldChunk.length() - lastMatchEnd;
-    }
-
-    protected boolean isIdentifierFirstChar(char character) {
-        // This is not entirely ok for our definition of Identifier. However,
-        // it is sufficient to eliminate a lot of impossible annotation which
-        // is what we seek.
-        return Character.isJavaIdentifierStart(character);
     }
 }
