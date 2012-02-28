@@ -70,8 +70,20 @@ public class Annotation extends AnnotationSourceElement {
         annotationDeclaration.addArgument(name, value);
     }
 
+    public boolean hasArgument(int index) {
+        return annotationDeclaration.hasArgument(index);
+    }
+
+    public String getArgument(int index) {
+        return annotationDeclaration.getArgument(index);
+    }
+
     public String getArgument(String name) {
         return annotationDeclaration.getArgument(name);
+    }
+
+    public IArgumentValue getArgumentValue(int index) {
+        return annotationDeclaration.getArgumentValue(index);
     }
 
     public IArgumentValue getArgumentValue(String name) {

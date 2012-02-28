@@ -48,6 +48,18 @@ public class AnnotationDeclaration extends AnnotationSourceElement {
         arguments.add(new NamedArgument(name, value));
     }
 
+    public boolean hasArgument(int index) {
+        return index >= 0 && index < arguments.size();
+    }
+
+    public String getArgument(int index) {
+        if (index < 0 || index >= arguments.size()) {
+            return null;
+        }
+
+        return arguments.get(index).getValue().toString();
+    }
+
     public String getArgument(String name) {
         IArgumentValue argumentValue = getArgumentValue(name);
         if (argumentValue == null) {
@@ -55,6 +67,14 @@ public class AnnotationDeclaration extends AnnotationSourceElement {
         }
 
         return argumentValue.toString();
+    }
+
+    public IArgumentValue getArgumentValue(int index) {
+        if (index < 0 || index >= arguments.size()) {
+            return null;
+        }
+
+        return arguments.get(index).getValue();
     }
 
     public IArgumentValue getArgumentValue(String name) {
