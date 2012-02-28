@@ -8,77 +8,124 @@
  ******************************************************************************/
 package com.dubture.symfony.core.util;
 
-import java.util.Iterator;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CharStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.php.internal.core.ast.nodes.Comment;
+import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
+import org.eclipse.php.internal.ui.Logger;
 
-import com.dubture.symfony.annotation.model.NamedArgument;
-import com.dubture.symfony.annotation.parser.antlr.AnnotationLexer;
-import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
-import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
-import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTreeAdaptor;
-import com.dubture.symfony.annotation.parser.tree.visitor.AnnotationNodeVisitor;
-import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.annotation.model.Annotation;
+import com.dubture.symfony.annotation.parser.AnnotationCommentParser;
+import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.index.dao.Route;
 
+@SuppressWarnings("restriction")
 public class AnnotationUtils {
 
-
-    @SuppressWarnings("rawtypes")
-    public static Route getRoute(String line, String bundle, String controller, String action) {
-
-        Route route = null;
+    public static List<Annotation> extractAnnotations(Comment comment, ISourceModule sourceModule) {
+        if (comment.getCommentType() != Comment.TYPE_PHPDOC) {
+            return new LinkedList<Annotation>();
+        }
 
         try {
-            int start = line.indexOf('@');
-            int end = line.length()-1;
+            int commentStartOffset = comment.getStart();
+            int commentEndOffset = comment.getStart() + comment.getLength();
+            String source = sourceModule.getSource();
+            String commentSource = source.substring(commentStartOffset,
+                    commentEndOffset);
 
-            String annotation = line.substring(start, end+1);
-            CharStream content = new ANTLRStringStream(annotation);
+            AnnotationCommentParser parser = new AnnotationCommentParser(
+                    commentSource, commentStartOffset);
+            parser.setExcludedClassNames(PHPDocTagStrategy.PHPDOC_TAGS);
 
-            AnnotationLexer lexer = new AnnotationLexer(content);
+            return parser.parse();
+        } catch (ModelException exception) {
+            Logger.logException("Unable to extract annotations from comment", exception);
+            return new LinkedList<Annotation>();
+        }
+    }
 
-            AnnotationParser parser = new AnnotationParser(new CommonTokenStream(lexer));
+    public static List<Annotation> extractAnnotations(PHPMethodDeclaration methodDeclaration) {
+        return extractAnnotations(methodDeclaration, null);
+    }
 
-            parser.setTreeAdaptor(new AnnotationCommonTreeAdaptor());
-            AnnotationParser.annotation_return root;
-
-            root = parser.annotation();
-            AnnotationCommonTree tree = (AnnotationCommonTree) root.getTree();
-            AnnotationNodeVisitor visitor = new AnnotationNodeVisitor();
-            tree.accept(visitor);
-
-            Map<String, NamedArgument> args = visitor.getAnnotation().getNamedArguments();
-
-            Iterator it = args.keySet().iterator();
-
-            String name = null;
-            String pattern = null;
-
-            while(it.hasNext()) {
-
-                String key = (String) it.next();
-                NamedArgument value = args.get(key);
-
-                if (key != null && value != null && key.equals("name")) {
-                    name = value.getValueAsString();
-                } else {
-                    pattern = key;
-                }
-
+    public static List<Annotation> extractAnnotations(PHPMethodDeclaration methodDeclaration, String[] includedClassNames) {
+        try {
+            PHPDocBlock comment = methodDeclaration.getPHPDoc();
+            if (comment == null || comment.getCommentType() != Comment.TYPE_PHPDOC) {
+                return new LinkedList<Annotation>();
             }
 
-            if (name != null & pattern != null)
-                route = new Route(bundle, controller, action, name, pattern);
+            int commentStartOffset = comment.sourceStart();
 
-        } catch (RecognitionException e) {
+            String commentSource = comment.getShortDescription();
+            AnnotationCommentParser parser = new AnnotationCommentParser(commentSource, commentStartOffset);
+            parser.setExcludedClassNames(PHPDocTagStrategy.PHPDOC_TAGS);
+            if (includedClassNames != null) {
+                parser.setIncludedClassNames(includedClassNames);
+            }
 
-            Logger.logException(e);
+            return parser.parse();
+        } catch (Exception exception) {
+            Logger.logException("Unable to extract annotations from method " + methodDeclaration.getName(), exception);
+            return new LinkedList<Annotation>();
         }
-        return route;
+    }
+
+    public static List<Annotation> extractAnnotations(ClassDeclaration classDeclaration) {
+        return extractAnnotations(classDeclaration, null);
+    }
+
+    public static List<Annotation> extractAnnotations(ClassDeclaration classDeclaration, String[] includedClassNames) {
+        try {
+            PHPDocBlock comment = classDeclaration.getPHPDoc();
+            if (comment == null || comment.getCommentType() != Comment.TYPE_PHPDOC) {
+                return new LinkedList<Annotation>();
+            }
+
+            int commentStartOffset = comment.sourceStart();
+            String commentSource = comment.getLongDescription();
+            if (commentSource.length() == 0) {
+                commentSource = comment.getShortDescription();
+            }
+
+            AnnotationCommentParser parser = new AnnotationCommentParser(commentSource, commentStartOffset);
+            parser.setExcludedClassNames(PHPDocTagStrategy.PHPDOC_TAGS);
+            if (includedClassNames != null) {
+                parser.setIncludedClassNames(includedClassNames);
+            }
+
+            return parser.parse();
+        } catch (Exception exception) {
+            Logger.logException("Unable to extract annotations from  class " + classDeclaration.getName(), exception);
+            return new LinkedList<Annotation>();
+        }
+    }
+
+    public static Route extractRoute(Annotation routeAnnotation, String bundle, String controller, String action) {
+        assert(routeAnnotation.getClassName().startsWith(SymfonyCoreConstants.ROUTE_ANNOTATION));
+
+        String pattern = (String) routeAnnotation.getArgumentValue(0).getValue();
+        String name = (String) routeAnnotation.getArgumentValue("name").getValue();
+
+        return new Route(bundle, controller, action, name, pattern);
+    }
+
+    public static String extractTemplate(Annotation templateAnnotation, String bundle, String controller, String action) {
+        assert(templateAnnotation.getClassName().startsWith(SymfonyCoreConstants.TEMPLATE_ANNOTATION));
+
+        String defaultViewPath = bundle + ":" + controller + ":" + action;
+        String viewPath = defaultViewPath;
+        if (templateAnnotation.hasArgument(0)) {
+            viewPath = (String) templateAnnotation.getArgumentValue(0).getValue();
+        }
+
+        return PathUtils.createViewPath(viewPath);
     }
 }

@@ -17,23 +17,19 @@ import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.dltk.core.builder.IBuildContext;
-import org.eclipse.php.internal.core.ast.nodes.Comment;
-import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 
 import com.dubture.symfony.annotation.model.Annotation;
-import com.dubture.symfony.annotation.parser.AnnotationCommentParser;
 import com.dubture.symfony.annotation.parser.antlr.SourcePosition;
 import com.dubture.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
+import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.core.preferences.SymfonyCorePreferences;
+import com.dubture.symfony.core.util.AnnotationUtils;
 
 /**
  *
@@ -52,61 +48,23 @@ import com.dubture.symfony.core.preferences.SymfonyCorePreferences;
 @SuppressWarnings("restriction")
 public class AnnotationVisitor extends PHPASTVisitor {
 
-
     private ClassDeclaration currentClass = null;
     private PHPMethodDeclaration currentMethod = null;
 
-//    private NamespaceDeclaration currentNamespace = null;
-//    private Annotation currentAnnotation = null;
-
     private boolean isAction = false;
-    private char[] content;
     private IBuildContext context;
-
-
 
     private Stack<UseStatement> useStatements = new Stack<UseStatement>();
 
-
     public AnnotationVisitor(IBuildContext context) {
-
-        this(context.getContents());
         this.context = context;
-
-    }
-
-    public AnnotationVisitor(char[] content) {
-
-        this.content = content;
-    }
-
-
-    @Override
-    public boolean visit(UseStatement s) throws Exception {
-
-        useStatements.push(s);
-
-        return true;
-
     }
 
     @Override
-    public boolean visit(NamespaceDeclaration s) throws Exception {
-
-//        currentNamespace = s;
-
-
-
+    public boolean visit(UseStatement useStatement) throws Exception {
+        useStatements.push(useStatement);
         return true;
     }
-
-    @Override
-    public boolean endvisit(NamespaceDeclaration s) throws Exception {
-
-//        currentNamespace = null;
-        return true;
-    }
-
 
     /**
     * This could be used to parse Annotationclasses themselves
@@ -119,64 +77,30 @@ public class AnnotationVisitor extends PHPASTVisitor {
     * @see http://www.doctrine-project.org/jira/browse/DDC-1198
     */
     @Override
-    public boolean visit(ClassDeclaration s) throws Exception {
-
-        currentClass = s;
+    public boolean visit(ClassDeclaration classDeclaration) throws Exception {
+        currentClass = classDeclaration;
         return true;
-
     }
 
     @Override
-    public boolean endvisit(ClassDeclaration s) throws Exception {
-
+    public boolean endvisit(ClassDeclaration classDeclaration) throws Exception {
         currentClass = null;
         return true;
     }
-
-
-
-
-    @Override
-    public boolean visit(PHPFieldDeclaration s) throws Exception {
-
-
-//        if (currentAnnotation == null)
-//            return true;
-
-//        currentAnnotation.addParameter(s);
-
-        return true;
-
-    }
-
-
 
     /**
      * Parses annotations from method declarations.
      */
     @Override
-    public boolean visit(PHPMethodDeclaration method) throws Exception {
-        currentMethod = method;
-        isAction = currentMethod.getName().endsWith("Action");
+    public boolean visit(PHPMethodDeclaration methodDeclaration) throws Exception {
+        currentMethod = methodDeclaration;
+        isAction = currentMethod.getName().endsWith(SymfonyCoreConstants.ACTION_SUFFIX);
 
-        if (currentClass == null || isAction == false)
-            return true;
-
-        PHPDocBlock comment = method.getPHPDoc();
-        if (comment == null || comment.getCommentType() != Comment.TYPE_PHPDOC) {
-            return true;
+        if (currentClass == null || isAction == false) {
+            return false;
         }
 
-        int commentStartOffset = comment.sourceStart();
-        int commentEndOffset = comment.sourceEnd();
-
-        String commentSource = String.valueOf(content).substring(commentStartOffset, commentEndOffset);
-
-        AnnotationCommentParser parser = new AnnotationCommentParser(commentSource, commentStartOffset);
-        parser.setExcludedClassNames(PHPDocTagStrategy.PHPDOC_TAGS);
-
-        List<Annotation> annotations = parser.parse();
-
+        List<Annotation> annotations = AnnotationUtils.extractAnnotations(methodDeclaration);
         for (Annotation annotation : annotations) {
             reportUnresolvableAnnotation(annotation);
         }
@@ -185,8 +109,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
     }
 
     @Override
-    public boolean endvisit(PHPMethodDeclaration s) throws Exception {
-
+    public boolean endvisit(PHPMethodDeclaration methodDeclaration) throws Exception {
         currentMethod = null;
         return true;
     }
@@ -252,8 +175,6 @@ public class AnnotationVisitor extends PHPASTVisitor {
                     }
                 } else if (annotationNamespace != null && annotationClass != null) {
 
-                    String ns = annotationNamespace + annotationClass;
-
                     if (fqcn.startsWith(annotationNamespace))
                         found = true;
                 }
@@ -268,8 +189,6 @@ public class AnnotationVisitor extends PHPASTVisitor {
         }
 
         if (found == false) {
-
-
             SourcePosition sourcePosition = annotation.getSourcePosition();
             String filename = context.getFile().getName();
             String message = "Unable to resolve annotation '" + fqcn + "'";
@@ -287,11 +206,6 @@ public class AnnotationVisitor extends PHPASTVisitor {
                     new String[0], severity, sourcePosition.startOffset + 1, sourcePosition.endOffset + 1, lineNo);
 
             context.getProblemReporter().reportProblem(problem);
-
-
         }
     }
-
-
-
 }

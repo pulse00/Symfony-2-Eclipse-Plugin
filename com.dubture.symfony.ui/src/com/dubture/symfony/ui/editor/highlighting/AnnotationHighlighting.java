@@ -10,17 +10,14 @@ package com.dubture.symfony.ui.editor.highlighting;
 
 import java.util.List;
 
-import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.internal.core.ast.nodes.Comment;
-import org.eclipse.php.internal.core.codeassist.strategies.PHPDocTagStrategy;
-import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.swt.graphics.RGB;
 
 import com.dubture.symfony.annotation.model.Annotation;
-import com.dubture.symfony.annotation.parser.AnnotationCommentParser;
 import com.dubture.symfony.annotation.parser.antlr.SourcePosition;
+import com.dubture.symfony.core.util.AnnotationUtils;
 
 /**
  *
@@ -34,30 +31,10 @@ public class AnnotationHighlighting extends AbstractSemanticHighlighting {
 
         @Override
         public boolean visit(Comment comment) {
-            if (comment.getCommentType() != Comment.TYPE_PHPDOC) {
-                return true;
-            }
-
-            try {
-                int commentStartOffset = comment.getStart();
-                int commentEndOffset = comment.getStart() + comment.getLength();
-                String source = getSourceModule().getSource();
-                String commentSource = source.substring(commentStartOffset,
-                        commentEndOffset);
-
-                AnnotationCommentParser parser = new AnnotationCommentParser(
-                        commentSource, commentStartOffset);
-                parser.setExcludedClassNames(PHPDocTagStrategy.PHPDOC_TAGS);
-
-                List<Annotation> annotations = parser.parse();
-
-                for (Annotation annotation : annotations) {
-                    SourcePosition sourcePosition = annotation
-                            .getSourcePosition();
-                    highlight(sourcePosition.startOffset, sourcePosition.length);
-                }
-            } catch (ModelException exception) {
-                Logger.logException(exception);
+            List<Annotation> annotations = AnnotationUtils.extractAnnotations(comment, getSourceModule());
+            for (Annotation annotation : annotations) {
+                SourcePosition sourcePosition = annotation.getSourcePosition();
+                highlight(sourcePosition.startOffset, sourcePosition.length);
             }
 
             return true;
