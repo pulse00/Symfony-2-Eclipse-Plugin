@@ -24,4 +24,8 @@ For more info visit [http://symfony.dubture.com/](http://symfony.dubture.com/)
 [http://symfony.dubture.com/installation/](http://symfony.dubture.com/installation)
 
 
+### Contributors
+
+- [Matthieu Vachon](https://github.com/maoueh)
+
 
