@@ -1,3 +1,7 @@
+1.0.58
+
+* merged new annotation parser from maoueh => https://github.com/pulse00/Symfony-2-Eclipse-Plugin/pull/91
+
 1.0.57
 
 * updated to Symfony 2.0.11
