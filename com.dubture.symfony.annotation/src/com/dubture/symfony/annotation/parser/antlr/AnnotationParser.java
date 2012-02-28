@@ -1,16 +1,9 @@
-/*******************************************************************************
- * This file is part of the Symfony eclipse plugin.
- * 
- * (c) Robert Gruendler <r.gruendler@gmail.com>
- * 
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
-// $ANTLR 3.3 Nov 30, 2010 12:45:30 AnnotationParser.g 2011-10-25 00:39:56
+// $ANTLR 3.3 Nov 30, 2010 12:45:30 C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g 2012-02-26 10:38:30
 
 package com.dubture.symfony.annotation.parser.antlr;
 
 import com.dubture.symfony.annotation.parser.antlr.error.IAnnotationErrorReporter;
+import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 
 
 import org.antlr.runtime.*;
@@ -23,37 +16,56 @@ import org.antlr.runtime.tree.*;
 
 public class AnnotationParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "AT", "PARAM_START", "PARAM_END", "ASIG", "COMMA", "BSLASH", "JSON_START", "JSON_END", "STRING_CHAR", "STRING", "NONCONTROL_CHAR", "STRING_LITERAL", "LOWER", "UPPER", "DIGIT", "UNDER", "LETTER", "SYMBOL", "WHITESPACE", "ANNOTATION", "ARGUMENT_LIST", "ARGS", "NAMED_ARG", "LITERAL_ARG", "NSPART", "CLASSNAME", "FQCN", "RHTYPE"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "LOWER", "UPPER", "DIGIT", "AT", "UNDERSCORE", "BSLASH", "QUOTE", "DOUBLE_QUOTE", "ESCAPE_QUOTE", "ESCAPE_DOUBLE_QUOTE", "NEGATIVE", "DOT", "LETTER", "ALPHANUM", "IDENTIFIER_FRAG", "PARAM_START", "PARAM_END", "EQUAL", "COMMA", "CURLY_START", "CURLY_END", "TRUE", "FALSE", "NULL", "ANNOTATION", "IDENTIFIER", "STRING_LITERAL", "INTEGER_LITERAL", "FLOAT_LITERAL", "WHITESPACE", "ANNOTATION_ROOT", "ANNOTATION_VALUE", "ARGUMENT", "ARGUMENT_NAME", "ARGUMENT_VALUE", "ARRAY_VALUE", "BOOLEAN_VALUE", "CLASS", "DECLARATION", "NAMED_ARGUMENT", "NAMESPACE", "NAMESPACE_DEFAULT", "NULL_VALUE", "NUMBER_VALUE", "OBJECT_VALUE", "PAIR", "STRING_VALUE"
     };
     public static final int EOF=-1;
-    public static final int AT=4;
-    public static final int PARAM_START=5;
-    public static final int PARAM_END=6;
-    public static final int ASIG=7;
-    public static final int COMMA=8;
+    public static final int LOWER=4;
+    public static final int UPPER=5;
+    public static final int DIGIT=6;
+    public static final int AT=7;
+    public static final int UNDERSCORE=8;
     public static final int BSLASH=9;
-    public static final int JSON_START=10;
-    public static final int JSON_END=11;
-    public static final int STRING_CHAR=12;
-    public static final int STRING=13;
-    public static final int NONCONTROL_CHAR=14;
-    public static final int STRING_LITERAL=15;
-    public static final int LOWER=16;
-    public static final int UPPER=17;
-    public static final int DIGIT=18;
-    public static final int UNDER=19;
-    public static final int LETTER=20;
-    public static final int SYMBOL=21;
-    public static final int WHITESPACE=22;
-    public static final int ANNOTATION=23;
-    public static final int ARGUMENT_LIST=24;
-    public static final int ARGS=25;
-    public static final int NAMED_ARG=26;
-    public static final int LITERAL_ARG=27;
-    public static final int NSPART=28;
-    public static final int CLASSNAME=29;
-    public static final int FQCN=30;
-    public static final int RHTYPE=31;
+    public static final int QUOTE=10;
+    public static final int DOUBLE_QUOTE=11;
+    public static final int ESCAPE_QUOTE=12;
+    public static final int ESCAPE_DOUBLE_QUOTE=13;
+    public static final int NEGATIVE=14;
+    public static final int DOT=15;
+    public static final int LETTER=16;
+    public static final int ALPHANUM=17;
+    public static final int IDENTIFIER_FRAG=18;
+    public static final int PARAM_START=19;
+    public static final int PARAM_END=20;
+    public static final int EQUAL=21;
+    public static final int COMMA=22;
+    public static final int CURLY_START=23;
+    public static final int CURLY_END=24;
+    public static final int TRUE=25;
+    public static final int FALSE=26;
+    public static final int NULL=27;
+    public static final int ANNOTATION=28;
+    public static final int IDENTIFIER=29;
+    public static final int STRING_LITERAL=30;
+    public static final int INTEGER_LITERAL=31;
+    public static final int FLOAT_LITERAL=32;
+    public static final int WHITESPACE=33;
+    public static final int ANNOTATION_ROOT=34;
+    public static final int ANNOTATION_VALUE=35;
+    public static final int ARGUMENT=36;
+    public static final int ARGUMENT_NAME=37;
+    public static final int ARGUMENT_VALUE=38;
+    public static final int ARRAY_VALUE=39;
+    public static final int BOOLEAN_VALUE=40;
+    public static final int CLASS=41;
+    public static final int DECLARATION=42;
+    public static final int NAMED_ARGUMENT=43;
+    public static final int NAMESPACE=44;
+    public static final int NAMESPACE_DEFAULT=45;
+    public static final int NULL_VALUE=46;
+    public static final int NUMBER_VALUE=47;
+    public static final int OBJECT_VALUE=48;
+    public static final int PAIR=49;
+    public static final int STRING_VALUE=50;
 
     // delegates
     // delegators
@@ -77,45 +89,41 @@ public class AnnotationParser extends Parser {
     }
 
     public String[] getTokenNames() { return AnnotationParser.tokenNames; }
-    public String getGrammarFileName() { return "AnnotationParser.g"; }
+    public String getGrammarFileName() { return "C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g"; }
 
 
 
         private IAnnotationErrorReporter errorReporter = null;
-        
+
         public AnnotationParser(TokenStream input, IAnnotationErrorReporter errorReporter) {
             this(input, new RecognizerSharedState());
             this.errorReporter = errorReporter;
         }
 
-    	public void displayRecognitionError(String[] tokenNames,
-                                            RecognitionException e) {
-            
-        		if(errorReporter != null) {
-            		String hdr = getErrorHeader(e);
-                    String msg = getErrorMessage(e, tokenNames);        
-                    errorReporter.reportError(hdr,msg,e);
-        		}
+        public void displayRecognitionError(String[] tokenNames, RecognitionException e) {
+            if (errorReporter != null) {
+                String hdr = getErrorHeader(e);
+                String msg = getErrorMessage(e, tokenNames);
+                errorReporter.reportError(hdr,msg,e);
+            }
+        }
 
-            
-        }    
-        
         public void setErrorReporter(IAnnotationErrorReporter errorReporter) {
             this.errorReporter = errorReporter;
         }
-        
-    	protected Object recoverFromMismatchedToken(IntStream input,
-    				int ttype, BitSet follow) throws RecognitionException
-    	{   
-    	    throw new MismatchedTokenException(ttype, input);
-    	}       
-    	
+
+        protected Object recoverFromMismatchedToken(IntStream input,
+                                                    int ttype, BitSet follow) throws RecognitionException
+        {
+            throw new MismatchedTokenException(ttype, input);
+        }
+
         public Object recoverFromMismatchedSet(IntStream input,
-        			RecognitionException e, BitSet follow) throws RecognitionException 
-        { 
-    		throw new MismatchedSetException(follow, input);
-       	}
-    	
+                                               RecognitionException e, BitSet follow) throws RecognitionException
+        {
+            throw new MismatchedSetException(follow, input);
+        }
+
 
 
     public static class annotation_return extends ParserRuleReturnScope {
@@ -124,64 +132,78 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "annotation"
-    // AnnotationParser.g:72:1: annotation : AT ann_class argument_list -> ^( ANNOTATION ann_class argument_list ) ;
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:72:1: annotation : annotation_class= ANNOTATION ( declaration )? -> ^( ANNOTATION_ROOT $annotation_class ( declaration )? ) ;
     public final AnnotationParser.annotation_return annotation() throws RecognitionException {
         AnnotationParser.annotation_return retval = new AnnotationParser.annotation_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        CommonToken AT1=null;
-        AnnotationParser.ann_class_return ann_class2 = null;
-
-        AnnotationParser.argument_list_return argument_list3 = null;
+        Token annotation_class=null;
+        AnnotationParser.declaration_return declaration1 = null;
 
 
-        AnnotationCommonTree AT1_tree=null;
-        RewriteRuleTokenStream stream_AT=new RewriteRuleTokenStream(adaptor,"token AT");
-        RewriteRuleSubtreeStream stream_argument_list=new RewriteRuleSubtreeStream(adaptor,"rule argument_list");
-        RewriteRuleSubtreeStream stream_ann_class=new RewriteRuleSubtreeStream(adaptor,"rule ann_class");
+        AnnotationCommonTree annotation_class_tree=null;
+        RewriteRuleTokenStream stream_ANNOTATION=new RewriteRuleTokenStream(adaptor,"token ANNOTATION");
+        RewriteRuleSubtreeStream stream_declaration=new RewriteRuleSubtreeStream(adaptor,"rule declaration");
         try {
-            // AnnotationParser.g:73:3: ( AT ann_class argument_list -> ^( ANNOTATION ann_class argument_list ) )
-            // AnnotationParser.g:73:5: AT ann_class argument_list
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:73:3: (annotation_class= ANNOTATION ( declaration )? -> ^( ANNOTATION_ROOT $annotation_class ( declaration )? ) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:73:5: annotation_class= ANNOTATION ( declaration )?
             {
-            AT1=(CommonToken)match(input,AT,FOLLOW_AT_in_annotation90);  
-            stream_AT.add(AT1);
+            annotation_class=(Token)match(input,ANNOTATION,FOLLOW_ANNOTATION_in_annotation159);  
+            stream_ANNOTATION.add(annotation_class);
 
-            pushFollow(FOLLOW_ann_class_in_annotation92);
-            ann_class2=ann_class();
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:73:33: ( declaration )?
+            int alt1=2;
+            int LA1_0 = input.LA(1);
 
-            state._fsp--;
+            if ( (LA1_0==PARAM_START) ) {
+                alt1=1;
+            }
+            switch (alt1) {
+                case 1 :
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:73:33: declaration
+                    {
+                    pushFollow(FOLLOW_declaration_in_annotation161);
+                    declaration1=declaration();
 
-            stream_ann_class.add(ann_class2.getTree());
-            pushFollow(FOLLOW_argument_list_in_annotation94);
-            argument_list3=argument_list();
+                    state._fsp--;
 
-            state._fsp--;
+                    stream_declaration.add(declaration1.getTree());
 
-            stream_argument_list.add(argument_list3.getTree());
+                    }
+                    break;
+
+            }
+
 
 
             // AST REWRITE
-            // elements: argument_list, ann_class
-            // token labels: 
+            // elements: declaration, annotation_class
+            // token labels: annotation_class
             // rule labels: retval
             // token list labels: 
             // rule list labels: 
             // wildcard labels: 
             retval.tree = root_0;
+            RewriteRuleTokenStream stream_annotation_class=new RewriteRuleTokenStream(adaptor,"token annotation_class",annotation_class);
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 74:5: -> ^( ANNOTATION ann_class argument_list )
+            // 74:7: -> ^( ANNOTATION_ROOT $annotation_class ( declaration )? )
             {
-                // AnnotationParser.g:74:7: ^( ANNOTATION ann_class argument_list )
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:74:10: ^( ANNOTATION_ROOT $annotation_class ( declaration )? )
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
-                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ANNOTATION, "ANNOTATION"), root_1);
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ANNOTATION_ROOT, "ANNOTATION_ROOT"), root_1);
 
-                adaptor.addChild(root_1, stream_ann_class.nextTree());
-                adaptor.addChild(root_1, stream_argument_list.nextTree());
+                adaptor.addChild(root_1, stream_annotation_class.nextNode());
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:74:46: ( declaration )?
+                if ( stream_declaration.hasNext() ) {
+                    adaptor.addChild(root_1, stream_declaration.nextTree());
+
+                }
+                stream_declaration.reset();
 
                 adaptor.addChild(root_0, root_1);
                 }
@@ -209,72 +231,57 @@ public class AnnotationParser extends Parser {
     }
     // $ANTLR end "annotation"
 
-    public static class argument_list_return extends ParserRuleReturnScope {
+    public static class declaration_return extends ParserRuleReturnScope {
         AnnotationCommonTree tree;
         public Object getTree() { return tree; }
     };
 
-    // $ANTLR start "argument_list"
-    // AnnotationParser.g:78:1: argument_list : ( PARAM_START ( arguments )? PARAM_END )? -> ^( ARGUMENT_LIST ( arguments )? ) ;
-    public final AnnotationParser.argument_list_return argument_list() throws RecognitionException {
-        AnnotationParser.argument_list_return retval = new AnnotationParser.argument_list_return();
+    // $ANTLR start "declaration"
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:77:1: declaration : PARAM_START (statements+= statement )? ( COMMA statements+= statement )* PARAM_END -> ^( DECLARATION PARAM_START ( $statements)* PARAM_END ) ;
+    public final AnnotationParser.declaration_return declaration() throws RecognitionException {
+        AnnotationParser.declaration_return retval = new AnnotationParser.declaration_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        CommonToken PARAM_START4=null;
-        CommonToken PARAM_END6=null;
-        AnnotationParser.arguments_return arguments5 = null;
-
-
-        AnnotationCommonTree PARAM_START4_tree=null;
-        AnnotationCommonTree PARAM_END6_tree=null;
+        Token PARAM_START2=null;
+        Token COMMA3=null;
+        Token PARAM_END4=null;
+        List list_statements=null;
+        RuleReturnScope statements = null;
+        AnnotationCommonTree PARAM_START2_tree=null;
+        AnnotationCommonTree COMMA3_tree=null;
+        AnnotationCommonTree PARAM_END4_tree=null;
         RewriteRuleTokenStream stream_PARAM_START=new RewriteRuleTokenStream(adaptor,"token PARAM_START");
+        RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
         RewriteRuleTokenStream stream_PARAM_END=new RewriteRuleTokenStream(adaptor,"token PARAM_END");
-        RewriteRuleSubtreeStream stream_arguments=new RewriteRuleSubtreeStream(adaptor,"rule arguments");
+        RewriteRuleSubtreeStream stream_statement=new RewriteRuleSubtreeStream(adaptor,"rule statement");
         try {
-            // AnnotationParser.g:79:3: ( ( PARAM_START ( arguments )? PARAM_END )? -> ^( ARGUMENT_LIST ( arguments )? ) )
-            // AnnotationParser.g:79:5: ( PARAM_START ( arguments )? PARAM_END )?
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:78:3: ( PARAM_START (statements+= statement )? ( COMMA statements+= statement )* PARAM_END -> ^( DECLARATION PARAM_START ( $statements)* PARAM_END ) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:78:5: PARAM_START (statements+= statement )? ( COMMA statements+= statement )* PARAM_END
             {
-            // AnnotationParser.g:79:5: ( PARAM_START ( arguments )? PARAM_END )?
+            PARAM_START2=(Token)match(input,PARAM_START,FOLLOW_PARAM_START_in_declaration193);  
+            stream_PARAM_START.add(PARAM_START2);
+
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:78:27: (statements+= statement )?
             int alt2=2;
             int LA2_0 = input.LA(1);
 
-            if ( (LA2_0==PARAM_START) ) {
+            if ( (LA2_0==CURLY_START||(LA2_0>=TRUE && LA2_0<=FLOAT_LITERAL)) ) {
                 alt2=1;
             }
             switch (alt2) {
                 case 1 :
-                    // AnnotationParser.g:79:6: PARAM_START ( arguments )? PARAM_END
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:78:27: statements+= statement
                     {
-                    PARAM_START4=(CommonToken)match(input,PARAM_START,FOLLOW_PARAM_START_in_argument_list122);  
-                    stream_PARAM_START.add(PARAM_START4);
+                    pushFollow(FOLLOW_statement_in_declaration197);
+                    statements=statement();
 
-                    // AnnotationParser.g:79:18: ( arguments )?
-                    int alt1=2;
-                    int LA1_0 = input.LA(1);
+                    state._fsp--;
 
-                    if ( (LA1_0==JSON_START||LA1_0==STRING||LA1_0==STRING_LITERAL) ) {
-                        alt1=1;
-                    }
-                    switch (alt1) {
-                        case 1 :
-                            // AnnotationParser.g:79:18: arguments
-                            {
-                            pushFollow(FOLLOW_arguments_in_argument_list124);
-                            arguments5=arguments();
-
-                            state._fsp--;
-
-                            stream_arguments.add(arguments5.getTree());
-
-                            }
-                            break;
-
-                    }
-
-                    PARAM_END6=(CommonToken)match(input,PARAM_END,FOLLOW_PARAM_END_in_argument_list127);  
-                    stream_PARAM_END.add(PARAM_END6);
+                    stream_statement.add(statements.getTree());
+                    if (list_statements==null) list_statements=new ArrayList();
+                    list_statements.add(statements.getTree());
 
 
                     }
@@ -282,111 +289,33 @@ public class AnnotationParser extends Parser {
 
             }
 
-
-
-            // AST REWRITE
-            // elements: arguments
-            // token labels: 
-            // rule labels: retval
-            // token list labels: 
-            // rule list labels: 
-            // wildcard labels: 
-            retval.tree = root_0;
-            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 80:5: -> ^( ARGUMENT_LIST ( arguments )? )
-            {
-                // AnnotationParser.g:80:8: ^( ARGUMENT_LIST ( arguments )? )
-                {
-                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
-                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ARGUMENT_LIST, "ARGUMENT_LIST"), root_1);
-
-                // AnnotationParser.g:80:24: ( arguments )?
-                if ( stream_arguments.hasNext() ) {
-                    adaptor.addChild(root_1, stream_arguments.nextTree());
-
-                }
-                stream_arguments.reset();
-
-                adaptor.addChild(root_0, root_1);
-                }
-
-            }
-
-            retval.tree = root_0;
-            }
-
-            retval.stop = input.LT(-1);
-
-            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
-            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
-
-        }
-        finally {
-        }
-        return retval;
-    }
-    // $ANTLR end "argument_list"
-
-    public static class ann_class_return extends ParserRuleReturnScope {
-        AnnotationCommonTree tree;
-        public Object getTree() { return tree; }
-    };
-
-    // $ANTLR start "ann_class"
-    // AnnotationParser.g:83:1: ann_class : ( namespace )* classname ;
-    public final AnnotationParser.ann_class_return ann_class() throws RecognitionException {
-        AnnotationParser.ann_class_return retval = new AnnotationParser.ann_class_return();
-        retval.start = input.LT(1);
-
-        AnnotationCommonTree root_0 = null;
-
-        AnnotationParser.namespace_return namespace7 = null;
-
-        AnnotationParser.classname_return classname8 = null;
-
-
-
-        try {
-            // AnnotationParser.g:84:3: ( ( namespace )* classname )
-            // AnnotationParser.g:84:5: ( namespace )* classname
-            {
-            root_0 = (AnnotationCommonTree)adaptor.nil();
-
-            // AnnotationParser.g:84:5: ( namespace )*
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:78:40: ( COMMA statements+= statement )*
             loop3:
             do {
                 int alt3=2;
                 int LA3_0 = input.LA(1);
 
-                if ( (LA3_0==STRING) ) {
-                    int LA3_1 = input.LA(2);
-
-                    if ( (LA3_1==BSLASH) ) {
-                        alt3=1;
-                    }
-
-
+                if ( (LA3_0==COMMA) ) {
+                    alt3=1;
                 }
 
 
                 switch (alt3) {
             	case 1 :
-            	    // AnnotationParser.g:84:5: namespace
+            	    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:78:41: COMMA statements+= statement
             	    {
-            	    pushFollow(FOLLOW_namespace_in_ann_class155);
-            	    namespace7=namespace();
+            	    COMMA3=(Token)match(input,COMMA,FOLLOW_COMMA_in_declaration201);  
+            	    stream_COMMA.add(COMMA3);
+
+            	    pushFollow(FOLLOW_statement_in_declaration205);
+            	    statements=statement();
 
             	    state._fsp--;
 
-            	    adaptor.addChild(root_0, namespace7.getTree());
+            	    stream_statement.add(statements.getTree());
+            	    if (list_statements==null) list_statements=new ArrayList();
+            	    list_statements.add(statements.getTree());
+
 
             	    }
             	    break;
@@ -396,86 +325,37 @@ public class AnnotationParser extends Parser {
                 }
             } while (true);
 
-            pushFollow(FOLLOW_classname_in_ann_class158);
-            classname8=classname();
-
-            state._fsp--;
-
-            adaptor.addChild(root_0, classname8.getTree());
-
-            }
-
-            retval.stop = input.LT(-1);
-
-            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
-            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
-
-        }
-        finally {
-        }
-        return retval;
-    }
-    // $ANTLR end "ann_class"
-
-    public static class namespace_return extends ParserRuleReturnScope {
-        AnnotationCommonTree tree;
-        public Object getTree() { return tree; }
-    };
-
-    // $ANTLR start "namespace"
-    // AnnotationParser.g:87:1: namespace : ns= STRING BSLASH -> ^( NSPART $ns) ;
-    public final AnnotationParser.namespace_return namespace() throws RecognitionException {
-        AnnotationParser.namespace_return retval = new AnnotationParser.namespace_return();
-        retval.start = input.LT(1);
-
-        AnnotationCommonTree root_0 = null;
-
-        CommonToken ns=null;
-        CommonToken BSLASH9=null;
-
-        AnnotationCommonTree ns_tree=null;
-        AnnotationCommonTree BSLASH9_tree=null;
-        RewriteRuleTokenStream stream_BSLASH=new RewriteRuleTokenStream(adaptor,"token BSLASH");
-        RewriteRuleTokenStream stream_STRING=new RewriteRuleTokenStream(adaptor,"token STRING");
-
-        try {
-            // AnnotationParser.g:88:3: (ns= STRING BSLASH -> ^( NSPART $ns) )
-            // AnnotationParser.g:88:5: ns= STRING BSLASH
-            {
-            ns=(CommonToken)match(input,STRING,FOLLOW_STRING_in_namespace175);  
-            stream_STRING.add(ns);
-
-            BSLASH9=(CommonToken)match(input,BSLASH,FOLLOW_BSLASH_in_namespace177);  
-            stream_BSLASH.add(BSLASH9);
+            PARAM_END4=(Token)match(input,PARAM_END,FOLLOW_PARAM_END_in_declaration209);  
+            stream_PARAM_END.add(PARAM_END4);
 
 
 
             // AST REWRITE
-            // elements: ns
-            // token labels: ns
+            // elements: PARAM_START, PARAM_END, statements
+            // token labels: 
             // rule labels: retval
             // token list labels: 
-            // rule list labels: 
+            // rule list labels: statements
             // wildcard labels: 
             retval.tree = root_0;
-            RewriteRuleTokenStream stream_ns=new RewriteRuleTokenStream(adaptor,"token ns",ns);
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
+            RewriteRuleSubtreeStream stream_statements=new RewriteRuleSubtreeStream(adaptor,"token statements",list_statements);
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 89:4: -> ^( NSPART $ns)
+            // 79:7: -> ^( DECLARATION PARAM_START ( $statements)* PARAM_END )
             {
-                // AnnotationParser.g:89:6: ^( NSPART $ns)
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:79:10: ^( DECLARATION PARAM_START ( $statements)* PARAM_END )
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
-                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(NSPART, "NSPART"), root_1);
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(DECLARATION, "DECLARATION"), root_1);
 
-                adaptor.addChild(root_1, stream_ns.nextNode());
+                adaptor.addChild(root_1, stream_PARAM_START.nextNode());
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:79:36: ( $statements)*
+                while ( stream_statements.hasNext() ) {
+                    adaptor.addChild(root_1, stream_statements.nextTree());
+
+                }
+                stream_statements.reset();
+                adaptor.addChild(root_1, stream_PARAM_END.nextNode());
 
                 adaptor.addChild(root_0, root_1);
                 }
@@ -501,169 +381,75 @@ public class AnnotationParser extends Parser {
         }
         return retval;
     }
-    // $ANTLR end "namespace"
+    // $ANTLR end "declaration"
 
-    public static class classname_return extends ParserRuleReturnScope {
+    public static class statement_return extends ParserRuleReturnScope {
         AnnotationCommonTree tree;
         public Object getTree() { return tree; }
     };
 
-    // $ANTLR start "classname"
-    // AnnotationParser.g:92:1: classname : cn= STRING -> ^( CLASSNAME $cn) ;
-    public final AnnotationParser.classname_return classname() throws RecognitionException {
-        AnnotationParser.classname_return retval = new AnnotationParser.classname_return();
+    // $ANTLR start "statement"
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:82:1: statement : ( argument | namedArgument );
+    public final AnnotationParser.statement_return statement() throws RecognitionException {
+        AnnotationParser.statement_return retval = new AnnotationParser.statement_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        CommonToken cn=null;
+        AnnotationParser.argument_return argument5 = null;
 
-        AnnotationCommonTree cn_tree=null;
-        RewriteRuleTokenStream stream_STRING=new RewriteRuleTokenStream(adaptor,"token STRING");
+        AnnotationParser.namedArgument_return namedArgument6 = null;
+
+
 
         try {
-            // AnnotationParser.g:93:3: (cn= STRING -> ^( CLASSNAME $cn) )
-            // AnnotationParser.g:93:5: cn= STRING
-            {
-            cn=(CommonToken)match(input,STRING,FOLLOW_STRING_in_classname205);  
-            stream_STRING.add(cn);
-
-
-
-            // AST REWRITE
-            // elements: cn
-            // token labels: cn
-            // rule labels: retval
-            // token list labels: 
-            // rule list labels: 
-            // wildcard labels: 
-            retval.tree = root_0;
-            RewriteRuleTokenStream stream_cn=new RewriteRuleTokenStream(adaptor,"token cn",cn);
-            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 94:5: -> ^( CLASSNAME $cn)
-            {
-                // AnnotationParser.g:94:7: ^( CLASSNAME $cn)
-                {
-                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
-                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(CLASSNAME, "CLASSNAME"), root_1);
-
-                adaptor.addChild(root_1, stream_cn.nextNode());
-
-                adaptor.addChild(root_0, root_1);
-                }
-
-            }
-
-            retval.tree = root_0;
-            }
-
-            retval.stop = input.LT(-1);
-
-            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
-            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
-
-        }
-        finally {
-        }
-        return retval;
-    }
-    // $ANTLR end "classname"
-
-    public static class arguments_return extends ParserRuleReturnScope {
-        AnnotationCommonTree tree;
-        public Object getTree() { return tree; }
-    };
-
-    // $ANTLR start "arguments"
-    // AnnotationParser.g:97:1: arguments : argument ( COMMA arguments )? -> argument ( arguments )? ;
-    public final AnnotationParser.arguments_return arguments() throws RecognitionException {
-        AnnotationParser.arguments_return retval = new AnnotationParser.arguments_return();
-        retval.start = input.LT(1);
-
-        AnnotationCommonTree root_0 = null;
-
-        CommonToken COMMA11=null;
-        AnnotationParser.argument_return argument10 = null;
-
-        AnnotationParser.arguments_return arguments12 = null;
-
-
-        AnnotationCommonTree COMMA11_tree=null;
-        RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
-        RewriteRuleSubtreeStream stream_argument=new RewriteRuleSubtreeStream(adaptor,"rule argument");
-        RewriteRuleSubtreeStream stream_arguments=new RewriteRuleSubtreeStream(adaptor,"rule arguments");
-        try {
-            // AnnotationParser.g:98:3: ( argument ( COMMA arguments )? -> argument ( arguments )? )
-            // AnnotationParser.g:98:5: argument ( COMMA arguments )?
-            {
-            pushFollow(FOLLOW_argument_in_arguments230);
-            argument10=argument();
-
-            state._fsp--;
-
-            stream_argument.add(argument10.getTree());
-            // AnnotationParser.g:98:15: ( COMMA arguments )?
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:83:3: ( argument | namedArgument )
             int alt4=2;
             int LA4_0 = input.LA(1);
 
-            if ( (LA4_0==COMMA) ) {
+            if ( (LA4_0==CURLY_START||(LA4_0>=TRUE && LA4_0<=ANNOTATION)||(LA4_0>=STRING_LITERAL && LA4_0<=FLOAT_LITERAL)) ) {
                 alt4=1;
+            }
+            else if ( (LA4_0==IDENTIFIER) ) {
+                alt4=2;
+            }
+            else {
+                NoViableAltException nvae =
+                    new NoViableAltException("", 4, 0, input);
+
+                throw nvae;
             }
             switch (alt4) {
                 case 1 :
-                    // AnnotationParser.g:98:16: COMMA arguments
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:83:5: argument
                     {
-                    COMMA11=(CommonToken)match(input,COMMA,FOLLOW_COMMA_in_arguments234);  
-                    stream_COMMA.add(COMMA11);
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
 
-                    pushFollow(FOLLOW_arguments_in_arguments236);
-                    arguments12=arguments();
+                    pushFollow(FOLLOW_argument_in_statement242);
+                    argument5=argument();
 
                     state._fsp--;
 
-                    stream_arguments.add(arguments12.getTree());
+                    adaptor.addChild(root_0, argument5.getTree());
+
+                    }
+                    break;
+                case 2 :
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:83:16: namedArgument
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_namedArgument_in_statement246);
+                    namedArgument6=namedArgument();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, namedArgument6.getTree());
 
                     }
                     break;
 
             }
-
-
-
-            // AST REWRITE
-            // elements: arguments, argument
-            // token labels: 
-            // rule labels: retval
-            // token list labels: 
-            // rule list labels: 
-            // wildcard labels: 
-            retval.tree = root_0;
-            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 99:5: -> argument ( arguments )?
-            {
-                adaptor.addChild(root_0, stream_argument.nextTree());
-                // AnnotationParser.g:99:17: ( arguments )?
-                if ( stream_arguments.hasNext() ) {
-                    adaptor.addChild(root_0, stream_arguments.nextTree());
-
-                }
-                stream_arguments.reset();
-
-            }
-
-            retval.tree = root_0;
-            }
-
             retval.stop = input.LT(-1);
 
             retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
@@ -680,7 +466,7 @@ public class AnnotationParser extends Parser {
         }
         return retval;
     }
-    // $ANTLR end "arguments"
+    // $ANTLR end "statement"
 
     public static class argument_return extends ParserRuleReturnScope {
         AnnotationCommonTree tree;
@@ -688,92 +474,58 @@ public class AnnotationParser extends Parser {
     };
 
     // $ANTLR start "argument"
-    // AnnotationParser.g:102:1: argument : ( literal_argument | named_argument | json );
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:86:1: argument : argument_value= value -> ^( ARGUMENT $argument_value) ;
     public final AnnotationParser.argument_return argument() throws RecognitionException {
         AnnotationParser.argument_return retval = new AnnotationParser.argument_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        AnnotationParser.literal_argument_return literal_argument13 = null;
-
-        AnnotationParser.named_argument_return named_argument14 = null;
-
-        AnnotationParser.json_return json15 = null;
+        AnnotationParser.value_return argument_value = null;
 
 
-
+        RewriteRuleSubtreeStream stream_value=new RewriteRuleSubtreeStream(adaptor,"rule value");
         try {
-            // AnnotationParser.g:103:1: ( literal_argument | named_argument | json )
-            int alt5=3;
-            switch ( input.LA(1) ) {
-            case STRING_LITERAL:
-                {
-                alt5=1;
-                }
-                break;
-            case STRING:
-                {
-                alt5=2;
-                }
-                break;
-            case JSON_START:
-                {
-                alt5=3;
-                }
-                break;
-            default:
-                NoViableAltException nvae =
-                    new NoViableAltException("", 5, 0, input);
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:87:3: (argument_value= value -> ^( ARGUMENT $argument_value) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:87:5: argument_value= value
+            {
+            pushFollow(FOLLOW_value_in_argument261);
+            argument_value=value();
 
-                throw nvae;
+            state._fsp--;
+
+            stream_value.add(argument_value.getTree());
+
+
+            // AST REWRITE
+            // elements: argument_value
+            // token labels: 
+            // rule labels: retval, argument_value
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+            RewriteRuleSubtreeStream stream_argument_value=new RewriteRuleSubtreeStream(adaptor,"rule argument_value",argument_value!=null?argument_value.tree:null);
+
+            root_0 = (AnnotationCommonTree)adaptor.nil();
+            // 88:7: -> ^( ARGUMENT $argument_value)
+            {
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:88:10: ^( ARGUMENT $argument_value)
+                {
+                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ARGUMENT, "ARGUMENT"), root_1);
+
+                adaptor.addChild(root_1, stream_argument_value.nextTree());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
             }
 
-            switch (alt5) {
-                case 1 :
-                    // AnnotationParser.g:103:3: literal_argument
-                    {
-                    root_0 = (AnnotationCommonTree)adaptor.nil();
-
-                    pushFollow(FOLLOW_literal_argument_in_argument260);
-                    literal_argument13=literal_argument();
-
-                    state._fsp--;
-
-                    adaptor.addChild(root_0, literal_argument13.getTree());
-
-                    }
-                    break;
-                case 2 :
-                    // AnnotationParser.g:103:22: named_argument
-                    {
-                    root_0 = (AnnotationCommonTree)adaptor.nil();
-
-                    pushFollow(FOLLOW_named_argument_in_argument264);
-                    named_argument14=named_argument();
-
-                    state._fsp--;
-
-                    adaptor.addChild(root_0, named_argument14.getTree());
-
-                    }
-                    break;
-                case 3 :
-                    // AnnotationParser.g:103:39: json
-                    {
-                    root_0 = (AnnotationCommonTree)adaptor.nil();
-
-                    pushFollow(FOLLOW_json_in_argument268);
-                    json15=json();
-
-                    state._fsp--;
-
-                    adaptor.addChild(root_0, json15.getTree());
-
-                    }
-                    break;
-
+            retval.tree = root_0;
             }
+
             retval.stop = input.LT(-1);
 
             retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
@@ -792,142 +544,72 @@ public class AnnotationParser extends Parser {
     }
     // $ANTLR end "argument"
 
-    public static class literal_argument_return extends ParserRuleReturnScope {
+    public static class namedArgument_return extends ParserRuleReturnScope {
         AnnotationCommonTree tree;
         public Object getTree() { return tree; }
     };
 
-    // $ANTLR start "literal_argument"
-    // AnnotationParser.g:107:1: literal_argument : param= STRING_LITERAL -> ^( LITERAL_ARG $param) ;
-    public final AnnotationParser.literal_argument_return literal_argument() throws RecognitionException {
-        AnnotationParser.literal_argument_return retval = new AnnotationParser.literal_argument_return();
+    // $ANTLR start "namedArgument"
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:91:1: namedArgument : name= argumentName EQUAL argument_value= argumentValue -> ^( NAMED_ARGUMENT $name $argument_value) ;
+    public final AnnotationParser.namedArgument_return namedArgument() throws RecognitionException {
+        AnnotationParser.namedArgument_return retval = new AnnotationParser.namedArgument_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        CommonToken param=null;
+        Token EQUAL7=null;
+        AnnotationParser.argumentName_return name = null;
 
-        AnnotationCommonTree param_tree=null;
-        RewriteRuleTokenStream stream_STRING_LITERAL=new RewriteRuleTokenStream(adaptor,"token STRING_LITERAL");
+        AnnotationParser.argumentValue_return argument_value = null;
 
+
+        AnnotationCommonTree EQUAL7_tree=null;
+        RewriteRuleTokenStream stream_EQUAL=new RewriteRuleTokenStream(adaptor,"token EQUAL");
+        RewriteRuleSubtreeStream stream_argumentValue=new RewriteRuleSubtreeStream(adaptor,"rule argumentValue");
+        RewriteRuleSubtreeStream stream_argumentName=new RewriteRuleSubtreeStream(adaptor,"rule argumentName");
         try {
-            // AnnotationParser.g:108:3: (param= STRING_LITERAL -> ^( LITERAL_ARG $param) )
-            // AnnotationParser.g:108:5: param= STRING_LITERAL
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:92:3: (name= argumentName EQUAL argument_value= argumentValue -> ^( NAMED_ARGUMENT $name $argument_value) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:92:5: name= argumentName EQUAL argument_value= argumentValue
             {
-            param=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_literal_argument282);  
-            stream_STRING_LITERAL.add(param);
-
-
-
-            // AST REWRITE
-            // elements: param
-            // token labels: param
-            // rule labels: retval
-            // token list labels: 
-            // rule list labels: 
-            // wildcard labels: 
-            retval.tree = root_0;
-            RewriteRuleTokenStream stream_param=new RewriteRuleTokenStream(adaptor,"token param",param);
-            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 109:5: -> ^( LITERAL_ARG $param)
-            {
-                // AnnotationParser.g:109:8: ^( LITERAL_ARG $param)
-                {
-                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
-                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(LITERAL_ARG, "LITERAL_ARG"), root_1);
-
-                adaptor.addChild(root_1, stream_param.nextNode());
-
-                adaptor.addChild(root_0, root_1);
-                }
-
-            }
-
-            retval.tree = root_0;
-            }
-
-            retval.stop = input.LT(-1);
-
-            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
-            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
-
-        }
-        finally {
-        }
-        return retval;
-    }
-    // $ANTLR end "literal_argument"
-
-    public static class named_argument_return extends ParserRuleReturnScope {
-        AnnotationCommonTree tree;
-        public Object getTree() { return tree; }
-    };
-
-    // $ANTLR start "named_argument"
-    // AnnotationParser.g:112:1: named_argument : param= STRING ASIG rhtype -> ^( NAMED_ARG $param rhtype ) ;
-    public final AnnotationParser.named_argument_return named_argument() throws RecognitionException {
-        AnnotationParser.named_argument_return retval = new AnnotationParser.named_argument_return();
-        retval.start = input.LT(1);
-
-        AnnotationCommonTree root_0 = null;
-
-        CommonToken param=null;
-        CommonToken ASIG16=null;
-        AnnotationParser.rhtype_return rhtype17 = null;
-
-
-        AnnotationCommonTree param_tree=null;
-        AnnotationCommonTree ASIG16_tree=null;
-        RewriteRuleTokenStream stream_ASIG=new RewriteRuleTokenStream(adaptor,"token ASIG");
-        RewriteRuleTokenStream stream_STRING=new RewriteRuleTokenStream(adaptor,"token STRING");
-        RewriteRuleSubtreeStream stream_rhtype=new RewriteRuleSubtreeStream(adaptor,"rule rhtype");
-        try {
-            // AnnotationParser.g:113:3: (param= STRING ASIG rhtype -> ^( NAMED_ARG $param rhtype ) )
-            // AnnotationParser.g:113:5: param= STRING ASIG rhtype
-            {
-            param=(CommonToken)match(input,STRING,FOLLOW_STRING_in_named_argument310);  
-            stream_STRING.add(param);
-
-            ASIG16=(CommonToken)match(input,ASIG,FOLLOW_ASIG_in_named_argument312);  
-            stream_ASIG.add(ASIG16);
-
-            pushFollow(FOLLOW_rhtype_in_named_argument314);
-            rhtype17=rhtype();
+            pushFollow(FOLLOW_argumentName_in_namedArgument291);
+            name=argumentName();
 
             state._fsp--;
 
-            stream_rhtype.add(rhtype17.getTree());
+            stream_argumentName.add(name.getTree());
+            EQUAL7=(Token)match(input,EQUAL,FOLLOW_EQUAL_in_namedArgument293);  
+            stream_EQUAL.add(EQUAL7);
+
+            pushFollow(FOLLOW_argumentValue_in_namedArgument297);
+            argument_value=argumentValue();
+
+            state._fsp--;
+
+            stream_argumentValue.add(argument_value.getTree());
 
 
             // AST REWRITE
-            // elements: rhtype, param
-            // token labels: param
-            // rule labels: retval
+            // elements: argument_value, name
+            // token labels: 
+            // rule labels: retval, name, argument_value
             // token list labels: 
             // rule list labels: 
             // wildcard labels: 
             retval.tree = root_0;
-            RewriteRuleTokenStream stream_param=new RewriteRuleTokenStream(adaptor,"token param",param);
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+            RewriteRuleSubtreeStream stream_name=new RewriteRuleSubtreeStream(adaptor,"rule name",name!=null?name.tree:null);
+            RewriteRuleSubtreeStream stream_argument_value=new RewriteRuleSubtreeStream(adaptor,"rule argument_value",argument_value!=null?argument_value.tree:null);
 
             root_0 = (AnnotationCommonTree)adaptor.nil();
-            // 114:5: -> ^( NAMED_ARG $param rhtype )
+            // 93:7: -> ^( NAMED_ARGUMENT $name $argument_value)
             {
-                // AnnotationParser.g:114:8: ^( NAMED_ARG $param rhtype )
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:93:10: ^( NAMED_ARGUMENT $name $argument_value)
                 {
                 AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
-                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(NAMED_ARG, "NAMED_ARG"), root_1);
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(NAMED_ARGUMENT, "NAMED_ARGUMENT"), root_1);
 
-                adaptor.addChild(root_1, stream_param.nextNode());
-                adaptor.addChild(root_1, stream_rhtype.nextTree());
+                adaptor.addChild(root_1, stream_name.nextTree());
+                adaptor.addChild(root_1, stream_argument_value.nextTree());
 
                 adaptor.addChild(root_0, root_1);
                 }
@@ -953,67 +635,394 @@ public class AnnotationParser extends Parser {
         }
         return retval;
     }
-    // $ANTLR end "named_argument"
+    // $ANTLR end "namedArgument"
 
-    public static class json_return extends ParserRuleReturnScope {
+    public static class argumentName_return extends ParserRuleReturnScope {
         AnnotationCommonTree tree;
         public Object getTree() { return tree; }
     };
 
-    // $ANTLR start "json"
-    // AnnotationParser.g:117:1: json : JSON_START ( json_arguments )? JSON_END ;
-    public final AnnotationParser.json_return json() throws RecognitionException {
-        AnnotationParser.json_return retval = new AnnotationParser.json_return();
+    // $ANTLR start "argumentName"
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:96:1: argumentName : name= IDENTIFIER -> ^( ARGUMENT_NAME $name) ;
+    public final AnnotationParser.argumentName_return argumentName() throws RecognitionException {
+        AnnotationParser.argumentName_return retval = new AnnotationParser.argumentName_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        CommonToken JSON_START18=null;
-        CommonToken JSON_END20=null;
-        AnnotationParser.json_arguments_return json_arguments19 = null;
+        Token name=null;
 
-
-        AnnotationCommonTree JSON_START18_tree=null;
-        AnnotationCommonTree JSON_END20_tree=null;
+        AnnotationCommonTree name_tree=null;
+        RewriteRuleTokenStream stream_IDENTIFIER=new RewriteRuleTokenStream(adaptor,"token IDENTIFIER");
 
         try {
-            // AnnotationParser.g:118:3: ( JSON_START ( json_arguments )? JSON_END )
-            // AnnotationParser.g:118:5: JSON_START ( json_arguments )? JSON_END
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:97:3: (name= IDENTIFIER -> ^( ARGUMENT_NAME $name) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:97:5: name= IDENTIFIER
             {
+            name=(Token)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_argumentName330);  
+            stream_IDENTIFIER.add(name);
+
+
+
+            // AST REWRITE
+            // elements: name
+            // token labels: name
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleTokenStream stream_name=new RewriteRuleTokenStream(adaptor,"token name",name);
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
             root_0 = (AnnotationCommonTree)adaptor.nil();
+            // 98:7: -> ^( ARGUMENT_NAME $name)
+            {
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:98:10: ^( ARGUMENT_NAME $name)
+                {
+                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ARGUMENT_NAME, "ARGUMENT_NAME"), root_1);
 
-            JSON_START18=(CommonToken)match(input,JSON_START,FOLLOW_JSON_START_in_json342); 
-            JSON_START18_tree = (AnnotationCommonTree)adaptor.create(JSON_START18);
-            adaptor.addChild(root_0, JSON_START18_tree);
+                adaptor.addChild(root_1, stream_name.nextNode());
 
-            // AnnotationParser.g:118:16: ( json_arguments )?
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;
+            }
+
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "argumentName"
+
+    public static class argumentValue_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "argumentValue"
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:101:1: argumentValue : value -> ^( ARGUMENT_VALUE value ) ;
+    public final AnnotationParser.argumentValue_return argumentValue() throws RecognitionException {
+        AnnotationParser.argumentValue_return retval = new AnnotationParser.argumentValue_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        AnnotationParser.value_return value8 = null;
+
+
+        RewriteRuleSubtreeStream stream_value=new RewriteRuleSubtreeStream(adaptor,"rule value");
+        try {
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:102:3: ( value -> ^( ARGUMENT_VALUE value ) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:102:5: value
+            {
+            pushFollow(FOLLOW_value_in_argumentValue358);
+            value8=value();
+
+            state._fsp--;
+
+            stream_value.add(value8.getTree());
+
+
+            // AST REWRITE
+            // elements: value
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+            root_0 = (AnnotationCommonTree)adaptor.nil();
+            // 103:7: -> ^( ARGUMENT_VALUE value )
+            {
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:103:10: ^( ARGUMENT_VALUE value )
+                {
+                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ARGUMENT_VALUE, "ARGUMENT_VALUE"), root_1);
+
+                adaptor.addChild(root_1, stream_value.nextTree());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;
+            }
+
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "argumentValue"
+
+    public static class value_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "value"
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:106:1: value : ( annotationValue | objectValue | arrayValue | stringValue | numberValue | booleanValue | nullValue );
+    public final AnnotationParser.value_return value() throws RecognitionException {
+        AnnotationParser.value_return retval = new AnnotationParser.value_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        AnnotationParser.annotationValue_return annotationValue9 = null;
+
+        AnnotationParser.objectValue_return objectValue10 = null;
+
+        AnnotationParser.arrayValue_return arrayValue11 = null;
+
+        AnnotationParser.stringValue_return stringValue12 = null;
+
+        AnnotationParser.numberValue_return numberValue13 = null;
+
+        AnnotationParser.booleanValue_return booleanValue14 = null;
+
+        AnnotationParser.nullValue_return nullValue15 = null;
+
+
+
+        try {
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:107:3: ( annotationValue | objectValue | arrayValue | stringValue | numberValue | booleanValue | nullValue )
+            int alt5=7;
+            alt5 = dfa5.predict(input);
+            switch (alt5) {
+                case 1 :
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:107:5: annotationValue
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_annotationValue_in_value385);
+                    annotationValue9=annotationValue();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, annotationValue9.getTree());
+
+                    }
+                    break;
+                case 2 :
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:108:5: objectValue
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_objectValue_in_value391);
+                    objectValue10=objectValue();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, objectValue10.getTree());
+
+                    }
+                    break;
+                case 3 :
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:109:5: arrayValue
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_arrayValue_in_value397);
+                    arrayValue11=arrayValue();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, arrayValue11.getTree());
+
+                    }
+                    break;
+                case 4 :
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:110:5: stringValue
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_stringValue_in_value403);
+                    stringValue12=stringValue();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, stringValue12.getTree());
+
+                    }
+                    break;
+                case 5 :
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:111:5: numberValue
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_numberValue_in_value409);
+                    numberValue13=numberValue();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, numberValue13.getTree());
+
+                    }
+                    break;
+                case 6 :
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:112:5: booleanValue
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_booleanValue_in_value415);
+                    booleanValue14=booleanValue();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, booleanValue14.getTree());
+
+                    }
+                    break;
+                case 7 :
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:113:5: nullValue
+                    {
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+
+                    pushFollow(FOLLOW_nullValue_in_value421);
+                    nullValue15=nullValue();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, nullValue15.getTree());
+
+                    }
+                    break;
+
+            }
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "value"
+
+    public static class annotationValue_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "annotationValue"
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:116:1: annotationValue : annotation_class= ANNOTATION ( declaration )? -> ^( ANNOTATION_VALUE $annotation_class ( declaration )? ) ;
+    public final AnnotationParser.annotationValue_return annotationValue() throws RecognitionException {
+        AnnotationParser.annotationValue_return retval = new AnnotationParser.annotationValue_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        Token annotation_class=null;
+        AnnotationParser.declaration_return declaration16 = null;
+
+
+        AnnotationCommonTree annotation_class_tree=null;
+        RewriteRuleTokenStream stream_ANNOTATION=new RewriteRuleTokenStream(adaptor,"token ANNOTATION");
+        RewriteRuleSubtreeStream stream_declaration=new RewriteRuleSubtreeStream(adaptor,"rule declaration");
+        try {
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:117:3: (annotation_class= ANNOTATION ( declaration )? -> ^( ANNOTATION_VALUE $annotation_class ( declaration )? ) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:118:6: annotation_class= ANNOTATION ( declaration )?
+            {
+            annotation_class=(Token)match(input,ANNOTATION,FOLLOW_ANNOTATION_in_annotationValue441);  
+            stream_ANNOTATION.add(annotation_class);
+
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:118:34: ( declaration )?
             int alt6=2;
             int LA6_0 = input.LA(1);
 
-            if ( (LA6_0==STRING_LITERAL) ) {
+            if ( (LA6_0==PARAM_START) ) {
                 alt6=1;
             }
             switch (alt6) {
                 case 1 :
-                    // AnnotationParser.g:118:16: json_arguments
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:118:34: declaration
                     {
-                    pushFollow(FOLLOW_json_arguments_in_json344);
-                    json_arguments19=json_arguments();
+                    pushFollow(FOLLOW_declaration_in_annotationValue443);
+                    declaration16=declaration();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, json_arguments19.getTree());
+                    stream_declaration.add(declaration16.getTree());
 
                     }
                     break;
 
             }
 
-            JSON_END20=(CommonToken)match(input,JSON_END,FOLLOW_JSON_END_in_json347); 
-            JSON_END20_tree = (AnnotationCommonTree)adaptor.create(JSON_END20);
-            adaptor.addChild(root_0, JSON_END20_tree);
 
 
+            // AST REWRITE
+            // elements: declaration, annotation_class
+            // token labels: annotation_class
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleTokenStream stream_annotation_class=new RewriteRuleTokenStream(adaptor,"token annotation_class",annotation_class);
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+            root_0 = (AnnotationCommonTree)adaptor.nil();
+            // 119:8: -> ^( ANNOTATION_VALUE $annotation_class ( declaration )? )
+            {
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:119:11: ^( ANNOTATION_VALUE $annotation_class ( declaration )? )
+                {
+                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ANNOTATION_VALUE, "ANNOTATION_VALUE"), root_1);
+
+                adaptor.addChild(root_1, stream_annotation_class.nextNode());
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:119:48: ( declaration )?
+                if ( stream_declaration.hasNext() ) {
+                    adaptor.addChild(root_1, stream_declaration.nextTree());
+
+                }
+                stream_declaration.reset();
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;
             }
 
             retval.stop = input.LT(-1);
@@ -1032,42 +1041,50 @@ public class AnnotationParser extends Parser {
         }
         return retval;
     }
-    // $ANTLR end "json"
+    // $ANTLR end "annotationValue"
 
-    public static class json_arguments_return extends ParserRuleReturnScope {
+    public static class objectValue_return extends ParserRuleReturnScope {
         AnnotationCommonTree tree;
         public Object getTree() { return tree; }
     };
 
-    // $ANTLR start "json_arguments"
-    // AnnotationParser.g:121:1: json_arguments : json_argument ( COMMA ( json_argument ) )* ;
-    public final AnnotationParser.json_arguments_return json_arguments() throws RecognitionException {
-        AnnotationParser.json_arguments_return retval = new AnnotationParser.json_arguments_return();
+    // $ANTLR start "objectValue"
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:122:1: objectValue : CURLY_START pairs+= pair ( COMMA pairs+= pair )* CURLY_END -> ^( OBJECT_VALUE CURLY_START ( $pairs)+ CURLY_END ) ;
+    public final AnnotationParser.objectValue_return objectValue() throws RecognitionException {
+        AnnotationParser.objectValue_return retval = new AnnotationParser.objectValue_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        CommonToken COMMA22=null;
-        AnnotationParser.json_argument_return json_argument21 = null;
-
-        AnnotationParser.json_argument_return json_argument23 = null;
-
-
-        AnnotationCommonTree COMMA22_tree=null;
-
+        Token CURLY_START17=null;
+        Token COMMA18=null;
+        Token CURLY_END19=null;
+        List list_pairs=null;
+        RuleReturnScope pairs = null;
+        AnnotationCommonTree CURLY_START17_tree=null;
+        AnnotationCommonTree COMMA18_tree=null;
+        AnnotationCommonTree CURLY_END19_tree=null;
+        RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
+        RewriteRuleTokenStream stream_CURLY_START=new RewriteRuleTokenStream(adaptor,"token CURLY_START");
+        RewriteRuleTokenStream stream_CURLY_END=new RewriteRuleTokenStream(adaptor,"token CURLY_END");
+        RewriteRuleSubtreeStream stream_pair=new RewriteRuleSubtreeStream(adaptor,"rule pair");
         try {
-            // AnnotationParser.g:122:3: ( json_argument ( COMMA ( json_argument ) )* )
-            // AnnotationParser.g:122:5: json_argument ( COMMA ( json_argument ) )*
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:123:3: ( CURLY_START pairs+= pair ( COMMA pairs+= pair )* CURLY_END -> ^( OBJECT_VALUE CURLY_START ( $pairs)+ CURLY_END ) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:123:5: CURLY_START pairs+= pair ( COMMA pairs+= pair )* CURLY_END
             {
-            root_0 = (AnnotationCommonTree)adaptor.nil();
+            CURLY_START17=(Token)match(input,CURLY_START,FOLLOW_CURLY_START_in_objectValue476);  
+            stream_CURLY_START.add(CURLY_START17);
 
-            pushFollow(FOLLOW_json_argument_in_json_arguments362);
-            json_argument21=json_argument();
+            pushFollow(FOLLOW_pair_in_objectValue480);
+            pairs=pair();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, json_argument21.getTree());
-            // AnnotationParser.g:122:19: ( COMMA ( json_argument ) )*
+            stream_pair.add(pairs.getTree());
+            if (list_pairs==null) list_pairs=new ArrayList();
+            list_pairs.add(pairs.getTree());
+
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:123:29: ( COMMA pairs+= pair )*
             loop7:
             do {
                 int alt7=2;
@@ -1080,23 +1097,19 @@ public class AnnotationParser extends Parser {
 
                 switch (alt7) {
             	case 1 :
-            	    // AnnotationParser.g:122:20: COMMA ( json_argument )
+            	    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:123:30: COMMA pairs+= pair
             	    {
-            	    COMMA22=(CommonToken)match(input,COMMA,FOLLOW_COMMA_in_json_arguments365); 
-            	    COMMA22_tree = (AnnotationCommonTree)adaptor.create(COMMA22);
-            	    adaptor.addChild(root_0, COMMA22_tree);
+            	    COMMA18=(Token)match(input,COMMA,FOLLOW_COMMA_in_objectValue483);  
+            	    stream_COMMA.add(COMMA18);
 
-            	    // AnnotationParser.g:122:26: ( json_argument )
-            	    // AnnotationParser.g:122:27: json_argument
-            	    {
-            	    pushFollow(FOLLOW_json_argument_in_json_arguments368);
-            	    json_argument23=json_argument();
+            	    pushFollow(FOLLOW_pair_in_objectValue487);
+            	    pairs=pair();
 
             	    state._fsp--;
 
-            	    adaptor.addChild(root_0, json_argument23.getTree());
-
-            	    }
+            	    stream_pair.add(pairs.getTree());
+            	    if (list_pairs==null) list_pairs=new ArrayList();
+            	    list_pairs.add(pairs.getTree());
 
 
             	    }
@@ -1107,7 +1120,46 @@ public class AnnotationParser extends Parser {
                 }
             } while (true);
 
+            CURLY_END19=(Token)match(input,CURLY_END,FOLLOW_CURLY_END_in_objectValue491);  
+            stream_CURLY_END.add(CURLY_END19);
 
+
+
+            // AST REWRITE
+            // elements: pairs, CURLY_START, CURLY_END
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: pairs
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+            RewriteRuleSubtreeStream stream_pairs=new RewriteRuleSubtreeStream(adaptor,"token pairs",list_pairs);
+            root_0 = (AnnotationCommonTree)adaptor.nil();
+            // 124:7: -> ^( OBJECT_VALUE CURLY_START ( $pairs)+ CURLY_END )
+            {
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:124:10: ^( OBJECT_VALUE CURLY_START ( $pairs)+ CURLY_END )
+                {
+                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(OBJECT_VALUE, "OBJECT_VALUE"), root_1);
+
+                adaptor.addChild(root_1, stream_CURLY_START.nextNode());
+                if ( !(stream_pairs.hasNext()) ) {
+                    throw new RewriteEarlyExitException();
+                }
+                while ( stream_pairs.hasNext() ) {
+                    adaptor.addChild(root_1, stream_pairs.nextTree());
+
+                }
+                stream_pairs.reset();
+                adaptor.addChild(root_1, stream_CURLY_END.nextNode());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;
             }
 
             retval.stop = input.LT(-1);
@@ -1126,151 +1178,393 @@ public class AnnotationParser extends Parser {
         }
         return retval;
     }
-    // $ANTLR end "json_arguments"
+    // $ANTLR end "objectValue"
 
-    public static class json_argument_return extends ParserRuleReturnScope {
+    public static class pair_return extends ParserRuleReturnScope {
         AnnotationCommonTree tree;
         public Object getTree() { return tree; }
     };
 
-    // $ANTLR start "json_argument"
-    // AnnotationParser.g:125:1: json_argument : STRING_LITERAL ASIG ( STRING_LITERAL | STRING ) ;
-    public final AnnotationParser.json_argument_return json_argument() throws RecognitionException {
-        AnnotationParser.json_argument_return retval = new AnnotationParser.json_argument_return();
+    // $ANTLR start "pair"
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:127:1: pair : name= stringValue EQUAL value -> ^( PAIR $name value ) ;
+    public final AnnotationParser.pair_return pair() throws RecognitionException {
+        AnnotationParser.pair_return retval = new AnnotationParser.pair_return();
         retval.start = input.LT(1);
 
         AnnotationCommonTree root_0 = null;
 
-        CommonToken STRING_LITERAL24=null;
-        CommonToken ASIG25=null;
-        CommonToken set26=null;
+        Token EQUAL20=null;
+        AnnotationParser.stringValue_return name = null;
 
-        AnnotationCommonTree STRING_LITERAL24_tree=null;
-        AnnotationCommonTree ASIG25_tree=null;
-        AnnotationCommonTree set26_tree=null;
+        AnnotationParser.value_return value21 = null;
+
+
+        AnnotationCommonTree EQUAL20_tree=null;
+        RewriteRuleTokenStream stream_EQUAL=new RewriteRuleTokenStream(adaptor,"token EQUAL");
+        RewriteRuleSubtreeStream stream_value=new RewriteRuleSubtreeStream(adaptor,"rule value");
+        RewriteRuleSubtreeStream stream_stringValue=new RewriteRuleSubtreeStream(adaptor,"rule stringValue");
+        try {
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:128:3: (name= stringValue EQUAL value -> ^( PAIR $name value ) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:128:5: name= stringValue EQUAL value
+            {
+            pushFollow(FOLLOW_stringValue_in_pair526);
+            name=stringValue();
+
+            state._fsp--;
+
+            stream_stringValue.add(name.getTree());
+            EQUAL20=(Token)match(input,EQUAL,FOLLOW_EQUAL_in_pair528);  
+            stream_EQUAL.add(EQUAL20);
+
+            pushFollow(FOLLOW_value_in_pair530);
+            value21=value();
+
+            state._fsp--;
+
+            stream_value.add(value21.getTree());
+
+
+            // AST REWRITE
+            // elements: value, name
+            // token labels: 
+            // rule labels: retval, name
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+            RewriteRuleSubtreeStream stream_name=new RewriteRuleSubtreeStream(adaptor,"rule name",name!=null?name.tree:null);
+
+            root_0 = (AnnotationCommonTree)adaptor.nil();
+            // 129:7: -> ^( PAIR $name value )
+            {
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:129:10: ^( PAIR $name value )
+                {
+                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(PAIR, "PAIR"), root_1);
+
+                adaptor.addChild(root_1, stream_name.nextTree());
+                adaptor.addChild(root_1, stream_value.nextTree());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;
+            }
+
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "pair"
+
+    public static class arrayValue_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "arrayValue"
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:132:1: arrayValue : CURLY_START (values+= value )? ( COMMA values+= value )* CURLY_END -> ^( ARRAY_VALUE CURLY_START ( $values)* CURLY_END ) ;
+    public final AnnotationParser.arrayValue_return arrayValue() throws RecognitionException {
+        AnnotationParser.arrayValue_return retval = new AnnotationParser.arrayValue_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        Token CURLY_START22=null;
+        Token COMMA23=null;
+        Token CURLY_END24=null;
+        List list_values=null;
+        RuleReturnScope values = null;
+        AnnotationCommonTree CURLY_START22_tree=null;
+        AnnotationCommonTree COMMA23_tree=null;
+        AnnotationCommonTree CURLY_END24_tree=null;
+        RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
+        RewriteRuleTokenStream stream_CURLY_START=new RewriteRuleTokenStream(adaptor,"token CURLY_START");
+        RewriteRuleTokenStream stream_CURLY_END=new RewriteRuleTokenStream(adaptor,"token CURLY_END");
+        RewriteRuleSubtreeStream stream_value=new RewriteRuleSubtreeStream(adaptor,"rule value");
+        try {
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:133:3: ( CURLY_START (values+= value )? ( COMMA values+= value )* CURLY_END -> ^( ARRAY_VALUE CURLY_START ( $values)* CURLY_END ) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:133:5: CURLY_START (values+= value )? ( COMMA values+= value )* CURLY_END
+            {
+            CURLY_START22=(Token)match(input,CURLY_START,FOLLOW_CURLY_START_in_arrayValue560);  
+            stream_CURLY_START.add(CURLY_START22);
+
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:133:23: (values+= value )?
+            int alt8=2;
+            int LA8_0 = input.LA(1);
+
+            if ( (LA8_0==CURLY_START||(LA8_0>=TRUE && LA8_0<=ANNOTATION)||(LA8_0>=STRING_LITERAL && LA8_0<=FLOAT_LITERAL)) ) {
+                alt8=1;
+            }
+            switch (alt8) {
+                case 1 :
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:133:23: values+= value
+                    {
+                    pushFollow(FOLLOW_value_in_arrayValue564);
+                    values=value();
+
+                    state._fsp--;
+
+                    stream_value.add(values.getTree());
+                    if (list_values==null) list_values=new ArrayList();
+                    list_values.add(values.getTree());
+
+
+                    }
+                    break;
+
+            }
+
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:133:32: ( COMMA values+= value )*
+            loop9:
+            do {
+                int alt9=2;
+                int LA9_0 = input.LA(1);
+
+                if ( (LA9_0==COMMA) ) {
+                    alt9=1;
+                }
+
+
+                switch (alt9) {
+            	case 1 :
+            	    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:133:33: COMMA values+= value
+            	    {
+            	    COMMA23=(Token)match(input,COMMA,FOLLOW_COMMA_in_arrayValue568);  
+            	    stream_COMMA.add(COMMA23);
+
+            	    pushFollow(FOLLOW_value_in_arrayValue572);
+            	    values=value();
+
+            	    state._fsp--;
+
+            	    stream_value.add(values.getTree());
+            	    if (list_values==null) list_values=new ArrayList();
+            	    list_values.add(values.getTree());
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop9;
+                }
+            } while (true);
+
+            CURLY_END24=(Token)match(input,CURLY_END,FOLLOW_CURLY_END_in_arrayValue576);  
+            stream_CURLY_END.add(CURLY_END24);
+
+
+
+            // AST REWRITE
+            // elements: CURLY_END, values, CURLY_START
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: values
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+            RewriteRuleSubtreeStream stream_values=new RewriteRuleSubtreeStream(adaptor,"token values",list_values);
+            root_0 = (AnnotationCommonTree)adaptor.nil();
+            // 134:7: -> ^( ARRAY_VALUE CURLY_START ( $values)* CURLY_END )
+            {
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:134:10: ^( ARRAY_VALUE CURLY_START ( $values)* CURLY_END )
+                {
+                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(ARRAY_VALUE, "ARRAY_VALUE"), root_1);
+
+                adaptor.addChild(root_1, stream_CURLY_START.nextNode());
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:134:36: ( $values)*
+                while ( stream_values.hasNext() ) {
+                    adaptor.addChild(root_1, stream_values.nextTree());
+
+                }
+                stream_values.reset();
+                adaptor.addChild(root_1, stream_CURLY_END.nextNode());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;
+            }
+
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "arrayValue"
+
+    public static class stringValue_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "stringValue"
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:137:1: stringValue : string_value= STRING_LITERAL -> ^( STRING_VALUE $string_value) ;
+    public final AnnotationParser.stringValue_return stringValue() throws RecognitionException {
+        AnnotationParser.stringValue_return retval = new AnnotationParser.stringValue_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        Token string_value=null;
+
+        AnnotationCommonTree string_value_tree=null;
+        RewriteRuleTokenStream stream_STRING_LITERAL=new RewriteRuleTokenStream(adaptor,"token STRING_LITERAL");
 
         try {
-            // AnnotationParser.g:126:3: ( STRING_LITERAL ASIG ( STRING_LITERAL | STRING ) )
-            // AnnotationParser.g:126:5: STRING_LITERAL ASIG ( STRING_LITERAL | STRING )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:138:3: (string_value= STRING_LITERAL -> ^( STRING_VALUE $string_value) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:138:5: string_value= STRING_LITERAL
             {
+            string_value=(Token)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_stringValue611);  
+            stream_STRING_LITERAL.add(string_value);
+
+
+
+            // AST REWRITE
+            // elements: string_value
+            // token labels: string_value
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleTokenStream stream_string_value=new RewriteRuleTokenStream(adaptor,"token string_value",string_value);
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
             root_0 = (AnnotationCommonTree)adaptor.nil();
+            // 139:7: -> ^( STRING_VALUE $string_value)
+            {
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:139:10: ^( STRING_VALUE $string_value)
+                {
+                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(STRING_VALUE, "STRING_VALUE"), root_1);
 
-            STRING_LITERAL24=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_json_argument386); 
-            STRING_LITERAL24_tree = (AnnotationCommonTree)adaptor.create(STRING_LITERAL24);
-            adaptor.addChild(root_0, STRING_LITERAL24_tree);
+                adaptor.addChild(root_1, stream_string_value.nextNode());
 
-            ASIG25=(CommonToken)match(input,ASIG,FOLLOW_ASIG_in_json_argument388); 
-            ASIG25_tree = (AnnotationCommonTree)adaptor.create(ASIG25);
-            adaptor.addChild(root_0, ASIG25_tree);
+                adaptor.addChild(root_0, root_1);
+                }
 
-            set26=(CommonToken)input.LT(1);
-            if ( input.LA(1)==STRING||input.LA(1)==STRING_LITERAL ) {
-                input.consume();
-                adaptor.addChild(root_0, (AnnotationCommonTree)adaptor.create(set26));
-                state.errorRecovery=false;
+            }
+
+            retval.tree = root_0;
+            }
+
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "stringValue"
+
+    public static class numberValue_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "numberValue"
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:142:1: numberValue : (interger_value= INTEGER_LITERAL -> ^( NUMBER_VALUE $interger_value) | float_value= FLOAT_LITERAL -> ^( NUMBER_VALUE $float_value) );
+    public final AnnotationParser.numberValue_return numberValue() throws RecognitionException {
+        AnnotationParser.numberValue_return retval = new AnnotationParser.numberValue_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        Token interger_value=null;
+        Token float_value=null;
+
+        AnnotationCommonTree interger_value_tree=null;
+        AnnotationCommonTree float_value_tree=null;
+        RewriteRuleTokenStream stream_FLOAT_LITERAL=new RewriteRuleTokenStream(adaptor,"token FLOAT_LITERAL");
+        RewriteRuleTokenStream stream_INTEGER_LITERAL=new RewriteRuleTokenStream(adaptor,"token INTEGER_LITERAL");
+
+        try {
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:143:3: (interger_value= INTEGER_LITERAL -> ^( NUMBER_VALUE $interger_value) | float_value= FLOAT_LITERAL -> ^( NUMBER_VALUE $float_value) )
+            int alt10=2;
+            int LA10_0 = input.LA(1);
+
+            if ( (LA10_0==INTEGER_LITERAL) ) {
+                alt10=1;
+            }
+            else if ( (LA10_0==FLOAT_LITERAL) ) {
+                alt10=2;
             }
             else {
-                MismatchedSetException mse = new MismatchedSetException(null,input);
-                throw mse;
-            }
-
-
-            }
-
-            retval.stop = input.LT(-1);
-
-            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
-            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
-
-        }
-        finally {
-        }
-        return retval;
-    }
-    // $ANTLR end "json_argument"
-
-    public static class rhtype_return extends ParserRuleReturnScope {
-        AnnotationCommonTree tree;
-        public Object getTree() { return tree; }
-    };
-
-    // $ANTLR start "rhtype"
-    // AnnotationParser.g:129:1: rhtype : (param= STRING -> ^( RHTYPE $param) | param= STRING_LITERAL -> ^( RHTYPE $param) | json );
-    public final AnnotationParser.rhtype_return rhtype() throws RecognitionException {
-        AnnotationParser.rhtype_return retval = new AnnotationParser.rhtype_return();
-        retval.start = input.LT(1);
-
-        AnnotationCommonTree root_0 = null;
-
-        CommonToken param=null;
-        AnnotationParser.json_return json27 = null;
-
-
-        AnnotationCommonTree param_tree=null;
-        RewriteRuleTokenStream stream_STRING_LITERAL=new RewriteRuleTokenStream(adaptor,"token STRING_LITERAL");
-        RewriteRuleTokenStream stream_STRING=new RewriteRuleTokenStream(adaptor,"token STRING");
-
-        try {
-            // AnnotationParser.g:130:3: (param= STRING -> ^( RHTYPE $param) | param= STRING_LITERAL -> ^( RHTYPE $param) | json )
-            int alt8=3;
-            switch ( input.LA(1) ) {
-            case STRING:
-                {
-                alt8=1;
-                }
-                break;
-            case STRING_LITERAL:
-                {
-                alt8=2;
-                }
-                break;
-            case JSON_START:
-                {
-                alt8=3;
-                }
-                break;
-            default:
                 NoViableAltException nvae =
-                    new NoViableAltException("", 8, 0, input);
+                    new NoViableAltException("", 10, 0, input);
 
                 throw nvae;
             }
-
-            switch (alt8) {
+            switch (alt10) {
                 case 1 :
-                    // AnnotationParser.g:130:5: param= STRING
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:143:5: interger_value= INTEGER_LITERAL
                     {
-                    param=(CommonToken)match(input,STRING,FOLLOW_STRING_in_rhtype411);  
-                    stream_STRING.add(param);
+                    interger_value=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_numberValue641);  
+                    stream_INTEGER_LITERAL.add(interger_value);
 
 
 
                     // AST REWRITE
-                    // elements: param
-                    // token labels: param
+                    // elements: interger_value
+                    // token labels: interger_value
                     // rule labels: retval
                     // token list labels: 
                     // rule list labels: 
                     // wildcard labels: 
                     retval.tree = root_0;
-                    RewriteRuleTokenStream stream_param=new RewriteRuleTokenStream(adaptor,"token param",param);
+                    RewriteRuleTokenStream stream_interger_value=new RewriteRuleTokenStream(adaptor,"token interger_value",interger_value);
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (AnnotationCommonTree)adaptor.nil();
-                    // 131:5: -> ^( RHTYPE $param)
+                    // 144:7: -> ^( NUMBER_VALUE $interger_value)
                     {
-                        // AnnotationParser.g:131:8: ^( RHTYPE $param)
+                        // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:144:10: ^( NUMBER_VALUE $interger_value)
                         {
                         AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
-                        root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(RHTYPE, "RHTYPE"), root_1);
+                        root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(NUMBER_VALUE, "NUMBER_VALUE"), root_1);
 
-                        adaptor.addChild(root_1, stream_param.nextNode());
+                        adaptor.addChild(root_1, stream_interger_value.nextNode());
 
                         adaptor.addChild(root_0, root_1);
                         }
@@ -1281,33 +1575,33 @@ public class AnnotationParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // AnnotationParser.g:132:5: param= STRING_LITERAL
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:145:5: float_value= FLOAT_LITERAL
                     {
-                    param=(CommonToken)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_rhtype432);  
-                    stream_STRING_LITERAL.add(param);
+                    float_value=(Token)match(input,FLOAT_LITERAL,FOLLOW_FLOAT_LITERAL_in_numberValue664);  
+                    stream_FLOAT_LITERAL.add(float_value);
 
 
 
                     // AST REWRITE
-                    // elements: param
-                    // token labels: param
+                    // elements: float_value
+                    // token labels: float_value
                     // rule labels: retval
                     // token list labels: 
                     // rule list labels: 
                     // wildcard labels: 
                     retval.tree = root_0;
-                    RewriteRuleTokenStream stream_param=new RewriteRuleTokenStream(adaptor,"token param",param);
+                    RewriteRuleTokenStream stream_float_value=new RewriteRuleTokenStream(adaptor,"token float_value",float_value);
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (AnnotationCommonTree)adaptor.nil();
-                    // 133:5: -> ^( RHTYPE $param)
+                    // 146:7: -> ^( NUMBER_VALUE $float_value)
                     {
-                        // AnnotationParser.g:133:8: ^( RHTYPE $param)
+                        // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:146:10: ^( NUMBER_VALUE $float_value)
                         {
                         AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
-                        root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(RHTYPE, "RHTYPE"), root_1);
+                        root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(NUMBER_VALUE, "NUMBER_VALUE"), root_1);
 
-                        adaptor.addChild(root_1, stream_param.nextNode());
+                        adaptor.addChild(root_1, stream_float_value.nextNode());
 
                         adaptor.addChild(root_0, root_1);
                         }
@@ -1315,20 +1609,6 @@ public class AnnotationParser extends Parser {
                     }
 
                     retval.tree = root_0;
-                    }
-                    break;
-                case 3 :
-                    // AnnotationParser.g:134:5: json
-                    {
-                    root_0 = (AnnotationCommonTree)adaptor.nil();
-
-                    pushFollow(FOLLOW_json_in_rhtype451);
-                    json27=json();
-
-                    state._fsp--;
-
-                    adaptor.addChild(root_0, json27.getTree());
-
                     }
                     break;
 
@@ -1349,45 +1629,318 @@ public class AnnotationParser extends Parser {
         }
         return retval;
     }
-    // $ANTLR end "rhtype"
+    // $ANTLR end "numberValue"
+
+    public static class booleanValue_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "booleanValue"
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:149:1: booleanValue : ( TRUE -> ^( BOOLEAN_VALUE TRUE ) | FALSE -> ^( BOOLEAN_VALUE FALSE ) );
+    public final AnnotationParser.booleanValue_return booleanValue() throws RecognitionException {
+        AnnotationParser.booleanValue_return retval = new AnnotationParser.booleanValue_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        Token TRUE25=null;
+        Token FALSE26=null;
+
+        AnnotationCommonTree TRUE25_tree=null;
+        AnnotationCommonTree FALSE26_tree=null;
+        RewriteRuleTokenStream stream_FALSE=new RewriteRuleTokenStream(adaptor,"token FALSE");
+        RewriteRuleTokenStream stream_TRUE=new RewriteRuleTokenStream(adaptor,"token TRUE");
+
+        try {
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:150:3: ( TRUE -> ^( BOOLEAN_VALUE TRUE ) | FALSE -> ^( BOOLEAN_VALUE FALSE ) )
+            int alt11=2;
+            int LA11_0 = input.LA(1);
+
+            if ( (LA11_0==TRUE) ) {
+                alt11=1;
+            }
+            else if ( (LA11_0==FALSE) ) {
+                alt11=2;
+            }
+            else {
+                NoViableAltException nvae =
+                    new NoViableAltException("", 11, 0, input);
+
+                throw nvae;
+            }
+            switch (alt11) {
+                case 1 :
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:150:5: TRUE
+                    {
+                    TRUE25=(Token)match(input,TRUE,FOLLOW_TRUE_in_booleanValue692);  
+                    stream_TRUE.add(TRUE25);
+
+
+
+                    // AST REWRITE
+                    // elements: TRUE
+                    // token labels: 
+                    // rule labels: retval
+                    // token list labels: 
+                    // rule list labels: 
+                    // wildcard labels: 
+                    retval.tree = root_0;
+                    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+                    // 151:7: -> ^( BOOLEAN_VALUE TRUE )
+                    {
+                        // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:151:10: ^( BOOLEAN_VALUE TRUE )
+                        {
+                        AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                        root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(BOOLEAN_VALUE, "BOOLEAN_VALUE"), root_1);
+
+                        adaptor.addChild(root_1, stream_TRUE.nextNode());
+
+                        adaptor.addChild(root_0, root_1);
+                        }
+
+                    }
+
+                    retval.tree = root_0;
+                    }
+                    break;
+                case 2 :
+                    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:152:5: FALSE
+                    {
+                    FALSE26=(Token)match(input,FALSE,FOLLOW_FALSE_in_booleanValue712);  
+                    stream_FALSE.add(FALSE26);
+
+
+
+                    // AST REWRITE
+                    // elements: FALSE
+                    // token labels: 
+                    // rule labels: retval
+                    // token list labels: 
+                    // rule list labels: 
+                    // wildcard labels: 
+                    retval.tree = root_0;
+                    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+                    root_0 = (AnnotationCommonTree)adaptor.nil();
+                    // 153:7: -> ^( BOOLEAN_VALUE FALSE )
+                    {
+                        // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:153:10: ^( BOOLEAN_VALUE FALSE )
+                        {
+                        AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                        root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(BOOLEAN_VALUE, "BOOLEAN_VALUE"), root_1);
+
+                        adaptor.addChild(root_1, stream_FALSE.nextNode());
+
+                        adaptor.addChild(root_0, root_1);
+                        }
+
+                    }
+
+                    retval.tree = root_0;
+                    }
+                    break;
+
+            }
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "booleanValue"
+
+    public static class nullValue_return extends ParserRuleReturnScope {
+        AnnotationCommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "nullValue"
+    // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:156:1: nullValue : NULL -> ^( NULL_VALUE NULL ) ;
+    public final AnnotationParser.nullValue_return nullValue() throws RecognitionException {
+        AnnotationParser.nullValue_return retval = new AnnotationParser.nullValue_return();
+        retval.start = input.LT(1);
+
+        AnnotationCommonTree root_0 = null;
+
+        Token NULL27=null;
+
+        AnnotationCommonTree NULL27_tree=null;
+        RewriteRuleTokenStream stream_NULL=new RewriteRuleTokenStream(adaptor,"token NULL");
+
+        try {
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:157:3: ( NULL -> ^( NULL_VALUE NULL ) )
+            // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:157:5: NULL
+            {
+            NULL27=(Token)match(input,NULL,FOLLOW_NULL_in_nullValue739);  
+            stream_NULL.add(NULL27);
+
+
+
+            // AST REWRITE
+            // elements: NULL
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+            root_0 = (AnnotationCommonTree)adaptor.nil();
+            // 158:7: -> ^( NULL_VALUE NULL )
+            {
+                // C:\\Dev\\Symfony-2-Eclipse-Plugin\\com.dubture.symfony.annotation\\Resources\\AnnotationParser.g:158:10: ^( NULL_VALUE NULL )
+                {
+                AnnotationCommonTree root_1 = (AnnotationCommonTree)adaptor.nil();
+                root_1 = (AnnotationCommonTree)adaptor.becomeRoot((AnnotationCommonTree)adaptor.create(NULL_VALUE, "NULL_VALUE"), root_1);
+
+                adaptor.addChild(root_1, stream_NULL.nextNode());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;
+            }
+
+            retval.stop = input.LT(-1);
+
+            retval.tree = (AnnotationCommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (AnnotationCommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "nullValue"
 
     // Delegated rules
 
 
+    protected DFA5 dfa5 = new DFA5(this);
+    static final String DFA5_eotS =
+        "\12\uffff";
+    static final String DFA5_eofS =
+        "\12\uffff";
+    static final String DFA5_minS =
+        "\1\27\1\uffff\1\26\4\uffff\1\25\2\uffff";
+    static final String DFA5_maxS =
+        "\1\40\1\uffff\1\40\4\uffff\1\30\2\uffff";
+    static final String DFA5_acceptS =
+        "\1\uffff\1\1\1\uffff\1\4\1\5\1\6\1\7\1\uffff\1\3\1\2";
+    static final String DFA5_specialS =
+        "\12\uffff}>";
+    static final String[] DFA5_transitionS = {
+            "\1\2\1\uffff\2\5\1\6\1\1\1\uffff\1\3\2\4",
+            "",
+            "\7\10\1\uffff\1\7\2\10",
+            "",
+            "",
+            "",
+            "",
+            "\1\11\1\10\1\uffff\1\10",
+            "",
+            ""
+    };
+
+    static final short[] DFA5_eot = DFA.unpackEncodedString(DFA5_eotS);
+    static final short[] DFA5_eof = DFA.unpackEncodedString(DFA5_eofS);
+    static final char[] DFA5_min = DFA.unpackEncodedStringToUnsignedChars(DFA5_minS);
+    static final char[] DFA5_max = DFA.unpackEncodedStringToUnsignedChars(DFA5_maxS);
+    static final short[] DFA5_accept = DFA.unpackEncodedString(DFA5_acceptS);
+    static final short[] DFA5_special = DFA.unpackEncodedString(DFA5_specialS);
+    static final short[][] DFA5_transition;
+
+    static {
+        int numStates = DFA5_transitionS.length;
+        DFA5_transition = new short[numStates][];
+        for (int i=0; i<numStates; i++) {
+            DFA5_transition[i] = DFA.unpackEncodedString(DFA5_transitionS[i]);
+        }
+    }
+
+    class DFA5 extends DFA {
+
+        public DFA5(BaseRecognizer recognizer) {
+            this.recognizer = recognizer;
+            this.decisionNumber = 5;
+            this.eot = DFA5_eot;
+            this.eof = DFA5_eof;
+            this.min = DFA5_min;
+            this.max = DFA5_max;
+            this.accept = DFA5_accept;
+            this.special = DFA5_special;
+            this.transition = DFA5_transition;
+        }
+        public String getDescription() {
+            return "106:1: value : ( annotationValue | objectValue | arrayValue | stringValue | numberValue | booleanValue | nullValue );";
+        }
+    }
  
 
-    public static final BitSet FOLLOW_AT_in_annotation90 = new BitSet(new long[]{0x0000000000002000L});
-    public static final BitSet FOLLOW_ann_class_in_annotation92 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_argument_list_in_annotation94 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_PARAM_START_in_argument_list122 = new BitSet(new long[]{0x000000000000A440L});
-    public static final BitSet FOLLOW_arguments_in_argument_list124 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_PARAM_END_in_argument_list127 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_namespace_in_ann_class155 = new BitSet(new long[]{0x0000000000002000L});
-    public static final BitSet FOLLOW_classname_in_ann_class158 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_in_namespace175 = new BitSet(new long[]{0x0000000000000200L});
-    public static final BitSet FOLLOW_BSLASH_in_namespace177 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_in_classname205 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_argument_in_arguments230 = new BitSet(new long[]{0x0000000000000102L});
-    public static final BitSet FOLLOW_COMMA_in_arguments234 = new BitSet(new long[]{0x000000000000A400L});
-    public static final BitSet FOLLOW_arguments_in_arguments236 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_literal_argument_in_argument260 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_named_argument_in_argument264 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_json_in_argument268 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_literal_argument282 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_in_named_argument310 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_ASIG_in_named_argument312 = new BitSet(new long[]{0x000000000000A400L});
-    public static final BitSet FOLLOW_rhtype_in_named_argument314 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_JSON_START_in_json342 = new BitSet(new long[]{0x0000000000008800L});
-    public static final BitSet FOLLOW_json_arguments_in_json344 = new BitSet(new long[]{0x0000000000000800L});
-    public static final BitSet FOLLOW_JSON_END_in_json347 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_json_argument_in_json_arguments362 = new BitSet(new long[]{0x0000000000000102L});
-    public static final BitSet FOLLOW_COMMA_in_json_arguments365 = new BitSet(new long[]{0x0000000000008000L});
-    public static final BitSet FOLLOW_json_argument_in_json_arguments368 = new BitSet(new long[]{0x0000000000000102L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_json_argument386 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_ASIG_in_json_argument388 = new BitSet(new long[]{0x000000000000A000L});
-    public static final BitSet FOLLOW_set_in_json_argument390 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_in_rhtype411 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_rhtype432 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_json_in_rhtype451 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ANNOTATION_in_annotation159 = new BitSet(new long[]{0x0000000000080002L});
+    public static final BitSet FOLLOW_declaration_in_annotation161 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_PARAM_START_in_declaration193 = new BitSet(new long[]{0x00000001FED00000L});
+    public static final BitSet FOLLOW_statement_in_declaration197 = new BitSet(new long[]{0x0000000000500000L});
+    public static final BitSet FOLLOW_COMMA_in_declaration201 = new BitSet(new long[]{0x00000001FE800000L});
+    public static final BitSet FOLLOW_statement_in_declaration205 = new BitSet(new long[]{0x0000000000500000L});
+    public static final BitSet FOLLOW_PARAM_END_in_declaration209 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_argument_in_statement242 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_namedArgument_in_statement246 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_value_in_argument261 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_argumentName_in_namedArgument291 = new BitSet(new long[]{0x0000000000200000L});
+    public static final BitSet FOLLOW_EQUAL_in_namedArgument293 = new BitSet(new long[]{0x00000001DE800000L});
+    public static final BitSet FOLLOW_argumentValue_in_namedArgument297 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_argumentName330 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_value_in_argumentValue358 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_annotationValue_in_value385 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_objectValue_in_value391 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_arrayValue_in_value397 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_stringValue_in_value403 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_numberValue_in_value409 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_booleanValue_in_value415 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_nullValue_in_value421 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ANNOTATION_in_annotationValue441 = new BitSet(new long[]{0x0000000000080002L});
+    public static final BitSet FOLLOW_declaration_in_annotationValue443 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_CURLY_START_in_objectValue476 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_pair_in_objectValue480 = new BitSet(new long[]{0x0000000001400000L});
+    public static final BitSet FOLLOW_COMMA_in_objectValue483 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_pair_in_objectValue487 = new BitSet(new long[]{0x0000000001400000L});
+    public static final BitSet FOLLOW_CURLY_END_in_objectValue491 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_stringValue_in_pair526 = new BitSet(new long[]{0x0000000000200000L});
+    public static final BitSet FOLLOW_EQUAL_in_pair528 = new BitSet(new long[]{0x00000001DE800000L});
+    public static final BitSet FOLLOW_value_in_pair530 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_CURLY_START_in_arrayValue560 = new BitSet(new long[]{0x00000001DFC00000L});
+    public static final BitSet FOLLOW_value_in_arrayValue564 = new BitSet(new long[]{0x0000000001400000L});
+    public static final BitSet FOLLOW_COMMA_in_arrayValue568 = new BitSet(new long[]{0x00000001DE800000L});
+    public static final BitSet FOLLOW_value_in_arrayValue572 = new BitSet(new long[]{0x0000000001400000L});
+    public static final BitSet FOLLOW_CURLY_END_in_arrayValue576 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_LITERAL_in_stringValue611 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_INTEGER_LITERAL_in_numberValue641 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_FLOAT_LITERAL_in_numberValue664 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TRUE_in_booleanValue692 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_FALSE_in_booleanValue712 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NULL_in_nullValue739 = new BitSet(new long[]{0x0000000000000002L});
 
 }
