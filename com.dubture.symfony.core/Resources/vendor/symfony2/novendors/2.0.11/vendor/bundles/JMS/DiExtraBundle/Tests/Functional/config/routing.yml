@@ -1,3 +1,0 @@
-TestBundle:
-    type: annotation
-    resource: @JMSDiExtraTestBundle/Controller/
