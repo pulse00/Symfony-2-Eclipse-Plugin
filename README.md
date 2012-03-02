@@ -19,7 +19,7 @@ The plugin is still beta.
 For more info visit [http://symfony.dubture.com/](http://symfony.dubture.com/)
 
 
-### [INSTALLATION](http://symfony.dubture.com/installation)
+### INSTALLATION
 
 [http://symfony.dubture.com/installation/](http://symfony.dubture.com/installation)
 
