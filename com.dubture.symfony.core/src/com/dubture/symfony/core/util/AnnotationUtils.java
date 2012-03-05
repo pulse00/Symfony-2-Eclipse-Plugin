@@ -28,26 +28,25 @@ import com.dubture.symfony.index.dao.Route;
 @SuppressWarnings("restriction")
 public class AnnotationUtils {
 
+    protected static String[] PHPDOC_TAGS_EXTRA = {"api", "inheritdoc"};
+    protected static final List<Annotation> EMPTY_ANNOTATIONS = new LinkedList<Annotation>();
+
     public static List<Annotation> extractAnnotations(Comment comment, ISourceModule sourceModule) {
         if (comment.getCommentType() != Comment.TYPE_PHPDOC) {
-            return new LinkedList<Annotation>();
+            return EMPTY_ANNOTATIONS;
         }
 
         try {
             int commentStartOffset = comment.getStart();
             int commentEndOffset = comment.getStart() + comment.getLength();
             String source = sourceModule.getSource();
-            String commentSource = source.substring(commentStartOffset,
-                    commentEndOffset);
-
-            AnnotationCommentParser parser = new AnnotationCommentParser(
-                    commentSource, commentStartOffset);
-            parser.setExcludedClassNames(PHPDocTagStrategy.PHPDOC_TAGS);
+            String commentSource = source.substring(commentStartOffset, commentEndOffset);
+            AnnotationCommentParser parser = createParser(commentSource, commentStartOffset);
 
             return parser.parse();
         } catch (ModelException exception) {
             Logger.logException("Unable to extract annotations from comment", exception);
-            return new LinkedList<Annotation>();
+            return EMPTY_ANNOTATIONS;
         }
     }
 
@@ -55,26 +54,22 @@ public class AnnotationUtils {
         return extractAnnotations(methodDeclaration, null);
     }
 
-    public static List<Annotation> extractAnnotations(PHPMethodDeclaration methodDeclaration, String[] includedClassNames) {
+    public static List<Annotation> extractAnnotations(PHPMethodDeclaration methodDeclaration,
+                                                      String[] includedClassNames) {
         try {
             PHPDocBlock comment = methodDeclaration.getPHPDoc();
             if (comment == null || comment.getCommentType() != Comment.TYPE_PHPDOC) {
-                return new LinkedList<Annotation>();
+                return EMPTY_ANNOTATIONS;
             }
 
             int commentStartOffset = comment.sourceStart();
-
             String commentSource = comment.getShortDescription();
-            AnnotationCommentParser parser = new AnnotationCommentParser(commentSource, commentStartOffset);
-            parser.setExcludedClassNames(PHPDocTagStrategy.PHPDOC_TAGS);
-            if (includedClassNames != null) {
-                parser.setIncludedClassNames(includedClassNames);
-            }
+            AnnotationCommentParser parser = createParser(commentSource, commentStartOffset, includedClassNames);
 
             return parser.parse();
         } catch (Exception exception) {
             Logger.logException("Unable to extract annotations from method " + methodDeclaration.getName(), exception);
-            return new LinkedList<Annotation>();
+            return EMPTY_ANNOTATIONS;
         }
     }
 
@@ -95,16 +90,12 @@ public class AnnotationUtils {
                 commentSource = comment.getShortDescription();
             }
 
-            AnnotationCommentParser parser = new AnnotationCommentParser(commentSource, commentStartOffset);
-            parser.setExcludedClassNames(PHPDocTagStrategy.PHPDOC_TAGS);
-            if (includedClassNames != null) {
-                parser.setIncludedClassNames(includedClassNames);
-            }
+            AnnotationCommentParser parser = createParser(commentSource, commentStartOffset, includedClassNames);
 
             return parser.parse();
         } catch (Exception exception) {
             Logger.logException("Unable to extract annotations from  class " + classDeclaration.getName(), exception);
-            return new LinkedList<Annotation>();
+            return EMPTY_ANNOTATIONS;
         }
     }
 
@@ -117,7 +108,10 @@ public class AnnotationUtils {
         return new Route(bundle, controller, action, name, pattern);
     }
 
-    public static String extractTemplate(Annotation templateAnnotation, String bundle, String controller, String action) {
+    public static String extractTemplate(Annotation templateAnnotation,
+                                         String bundle,
+                                         String controller,
+                                         String action) {
         assert(templateAnnotation.getClassName().startsWith(SymfonyCoreConstants.TEMPLATE_ANNOTATION));
 
         String defaultViewPath = bundle + ":" + controller + ":" + action;
@@ -127,5 +121,22 @@ public class AnnotationUtils {
         }
 
         return PathUtils.createViewPath(viewPath);
+    }
+
+    protected static AnnotationCommentParser createParser(String source, int sourceStartOffset) {
+        return createParser(source, sourceStartOffset, null);
+    }
+
+    protected static AnnotationCommentParser createParser(String source,
+                                                          int sourceStartOffset,
+                                                          String[] includedClassNames) {
+        AnnotationCommentParser parser = new AnnotationCommentParser(source, sourceStartOffset);
+        parser.addExcludedClassNames(PHPDocTagStrategy.PHPDOC_TAGS);
+        parser.addExcludedClassNames(PHPDOC_TAGS_EXTRA);
+        if (includedClassNames != null) {
+            parser.addIncludedClassNames(includedClassNames);
+        }
+
+        return parser;
     }
 }
