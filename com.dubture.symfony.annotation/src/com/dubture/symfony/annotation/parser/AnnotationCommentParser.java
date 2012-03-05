@@ -69,6 +69,7 @@ public class AnnotationCommentParser {
     public AnnotationCommentParser(String comment, int commentCharOffset, List<String> excludedClassNames) {
         this.buffer = new StringBuffer(comment);
         this.excludedClassNames = excludedClassNames;
+        this.includedClassNames = new LinkedList<String>();
 
         this.lineOffset = 0;
         this.columnOffset = 0;
@@ -76,10 +77,65 @@ public class AnnotationCommentParser {
         this.commentCharOffset = commentCharOffset;
     }
 
+    /**
+     * Add a class name that should be included when parsing a
+     * comment.
+     *
+     * @param className The class name to include
+     */
+    public void addIncludedClassName(String className) {
+        includedClassNames.add(className);
+    }
+
+    /**
+     * Add multiple class names that should be included when parsing a
+     * comment.
+     *
+     * @param classNames The class names to include
+     */
+    public void addIncludedClassNames(String[] classNames) {
+        includedClassNames.addAll(Arrays.asList(classNames));
+    }
+
+    /**
+     * Add a class name that should be excluded when parsing a
+     * comment. Excluded class name always has higher priority
+     * than included class name.
+     *
+     * @param className The class name to exclude
+     */
+    public void addExcludedClassName(String className) {
+        excludedClassNames.add(className);
+    }
+
+    /**
+     * Add multiple class names that should be excluded when parsing a
+     * comment. Excluded class names always have higher priority
+     * than included class name.
+     *
+     * @param classNames The class names to exclude
+     */
+    public void addExcludedClassNames(String[] classNames) {
+        excludedClassNames.addAll(Arrays.asList(classNames));
+    }
+
+    /**
+     * Set the class names that should be included when parsing
+     * a comment.
+     *
+     * @param classNames The new included class names
+     */
     public void setIncludedClassNames(String[] classNames) {
         includedClassNames = Arrays.asList(classNames);
     }
 
+    /**
+     * Set the class names that should be excluded when parsing
+     * a comment. Excluded class names always have higher priority
+     * than included class names.
+     *
+     * @param classNames The new excluded class names
+     */
     public void setExcludedClassNames(String[] classNames) {
         excludedClassNames = Arrays.asList(classNames);
     }
@@ -122,13 +178,16 @@ public class AnnotationCommentParser {
         while (iterator.hasNext()) {
             Annotation annotation = iterator.next();
             String fullyQualifiedName = annotation.getFullyQualifiedName();
+            boolean excluded = false;
 
             if (hasExcludeRestriction && excludedClassNames.contains(fullyQualifiedName)) {
                 iterator.remove();
+                excluded = true;
             }
 
-            if (hasIncludeRestriction && !includedClassNames.contains(fullyQualifiedName)) {
+            if (!excluded && hasIncludeRestriction && !includedClassNames.contains(fullyQualifiedName)) {
                 iterator.remove();
+                excluded = true;
             }
         }
 
