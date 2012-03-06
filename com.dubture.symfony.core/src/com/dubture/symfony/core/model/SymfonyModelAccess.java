@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of the Symfony eclipse plugin.
- * 
+ *
  * (c) Robert Gruendler <r.gruendler@gmail.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
@@ -61,12 +61,12 @@ import com.dubture.symfony.index.dao.Route;
 import com.dubture.symfony.index.dao.TransUnit;
 
 /**
- * 
+ *
  * The {@link SymfonyModelAccess} is an extension to the
  * {@link PhpModelAccess} and provides additional helper
  * methods to find Symfony2 model elements.
- * 
- * 
+ *
+ *
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
@@ -74,1167 +74,1133 @@ import com.dubture.symfony.index.dao.TransUnit;
 public class SymfonyModelAccess extends PhpModelAccess {
 
 
-	private static SymfonyModelAccess modelInstance = null;		
-	private SymfonyIndexer index;	
-	private Map<Service, IType[]> serviceCache = new HashMap<Service, IType[]>();
+    private static SymfonyModelAccess modelInstance = null;
+    private SymfonyIndexer index;
+    private Map<Service, IType[]> serviceCache = new HashMap<Service, IType[]>();
 
-	private static final IModelElement[] EMPTY = {};	
+    private static final IModelElement[] EMPTY = {};
+    private static final Map<String, String> EMPTY_ANNOTATIONS = new HashMap<String, String>();
 
 
-	private LRUCache controllerCache = new LRUCache();
-	private LRUCache serviceCache2 = new LRUCache();
-	private LRUCache entityCache = new LRUCache();
-	private LRUCache bundleCache = new LRUCache();
+    private LRUCache controllerCache = new LRUCache();
+    private LRUCache serviceCache2 = new LRUCache();
+    private LRUCache entityCache = new LRUCache();
+    private LRUCache bundleCache = new LRUCache();
 
-	private SymfonyModelAccess() {
+    private SymfonyModelAccess() {
 
-		try {
-			index = SymfonyIndexer.getInstance();
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-	}
+        try {
+            index = SymfonyIndexer.getInstance();
+        } catch (Exception e) {
+            Logger.logException(e);
+        }
+    }
 
-	public static SymfonyModelAccess getDefault() {
+    public static SymfonyModelAccess getDefault() {
 
-		if (modelInstance == null)
-			modelInstance = new SymfonyModelAccess();
+        if (modelInstance == null)
+            modelInstance = new SymfonyModelAccess();
 
-		return modelInstance;
-	}
+        return modelInstance;
+    }
 
 
-	public TemplateVariable createTemplateVariableByReturnType(PHPMethodDeclaration controllerMethod, SimpleReference callName, 
-			String className, String namespace, String variableName) {
+    public TemplateVariable createTemplateVariableByReturnType(PHPMethodDeclaration controllerMethod, SimpleReference callName,
+            String className, String namespace, String variableName) {
 
-		IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
+        IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
 
-		if (scope == null)
-			return null;
+        if (scope == null)
+            return null;
 
-		IType[] types = findTypes(namespace, className, MatchRule.EXACT, 0, 0, scope, null);
+        IType[] types = findTypes(namespace, className, MatchRule.EXACT, 0, 0, scope, null);
 
-		if (types.length != 1)
-			return null;
+        if (types.length != 1)
+            return null;
 
-		IType type = types[0];
+        IType type = types[0];
 
-		final IMethod method = type.getMethod(callName.getName());
+        final IMethod method = type.getMethod(callName.getName());
 
-		if (method == null)
-			return null;
+        if (method == null)
+            return null;
 
 
-		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(method.getSourceModule());
-		ReturnTypeVisitor visitor = new ReturnTypeVisitor(method.getElementName());
-		try {
-			module.traverse(visitor);
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
+        ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(method.getSourceModule());
+        ReturnTypeVisitor visitor = new ReturnTypeVisitor(method.getElementName());
+        try {
+            module.traverse(visitor);
+        } catch (Exception e) {
+            Logger.logException(e);
+        }
 
-		if (visitor.className == null || visitor.namespace == null)
-			return null;
+        if (visitor.className == null || visitor.namespace == null)
+            return null;
 
-		return new TemplateVariable(controllerMethod, variableName, callName.sourceStart(), callName.sourceEnd(), visitor.namespace, visitor.className);
+        return new TemplateVariable(controllerMethod, variableName, callName.sourceStart(), callName.sourceEnd(), visitor.namespace, visitor.className);
 
-	}
+    }
 
-	protected IDLTKSearchScope createSearchScope(ISourceModule module) {
+    protected IDLTKSearchScope createSearchScope(ISourceModule module) {
 
-		IScriptProject scriptProject = module.getScriptProject();
-		if (scriptProject != null) {
-			return SearchEngine.createSearchScope(scriptProject);
-		}
+        IScriptProject scriptProject = module.getScriptProject();
+        if (scriptProject != null) {
+            return SearchEngine.createSearchScope(scriptProject);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private class ReturnTypeVisitor extends PHPASTVisitor {
+    private class ReturnTypeVisitor extends PHPASTVisitor {
 
 
-		public String namespace;
-		public String className;
-		private String method;
+        public String namespace;
+        public String className;
+        private String method;
 
-		public ReturnTypeVisitor(String method) {			
-			this.method = method;			
-		}
+        public ReturnTypeVisitor(String method) {
+            this.method = method;
+        }
 
-		@Override
-		public boolean visit(NamespaceDeclaration s) throws Exception {
-			namespace = s.getName();
-			return true;
-		}
+        @Override
+        public boolean visit(NamespaceDeclaration s) throws Exception {
+            namespace = s.getName();
+            return true;
+        }
 
-		@Override
-		public boolean visit(PHPMethodDeclaration s) throws Exception {
-			if (s.getName().equals(method)) {						
-				PHPDocBlock docs = s.getPHPDoc();
-				PHPDocTag[] returnTags = docs.getTags(PHPDocTagKinds.RETURN);						
-				if (returnTags.length == 1) {							
-					PHPDocTag tag = returnTags[0];
+        @Override
+        public boolean visit(PHPMethodDeclaration s) throws Exception {
+            if (s.getName().equals(method)) {
+                PHPDocBlock docs = s.getPHPDoc();
+                PHPDocTag[] returnTags = docs.getTags(PHPDocTagKinds.RETURN);
+                if (returnTags.length == 1) {
+                    PHPDocTag tag = returnTags[0];
+
+                    if (tag.getReferences().length == 1) {
+                        SimpleReference ref = tag.getReferences()[0];
+                        className = ref.getName();
+                        return false;
+                    }
+                }
+
+            }
+            return true;
+        }
+
+    }
+
+
+    /**
+    *
+    * Resolve TemplateVariables for a controller.
+    *
+    *
+    * @param controller
+    * @return
+    */
+    public List<TemplateField> findTemplateVariables(IType controller) {
+        if (controller == null) {
+            return new ArrayList<TemplateField>();
+        }
+
+        // create a searchscope for the whole ScriptProject,
+        // as view variables can be declared across controllers
+        IDLTKSearchScope scope = SearchEngine.createSearchScope(controller.getScriptProject());
+        ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());
+        final List<TemplateField> variables = new ArrayList<TemplateField>();
+        if (scope == null || engine == null) {
+            return variables;
+        }
+
+        final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
+        engine.search(ISymfonyModelElement.TEMPLATE_VARIABLE, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+            @Override
+            public void match(int elementType, int flags, int offset, int length,
+                    int nameOffset, int nameLength, String elementName,
+                    String metadata, String doc, String qualifier, String parent,
+                    ISourceModule sourceModule, boolean isReference) {
+                IModelElement element = resolver.resolve(elementType, flags, offset, length, nameOffset, nameLength, elementName, metadata, doc, qualifier, parent, sourceModule);
+
+                if (element != null) {
+                    if (element instanceof TemplateField)
+                        variables.add((TemplateField) element);
+                }
+            }
+        }, null);
+
+        return variables;
+    }
+
+
+    /**
+    * Try to find the corresponding controller IType for
+    * a given template.
+    *
+    * @param module
+    * @return
+    */
+    public IType findControllerByTemplate(ISourceModule module) {
+
+        // get the name of the Controller to search for
+        String controller = PathUtils.getControllerFromTemplatePath(module.getPath());
+
+        if (controller == null) {
+            return null;
+        }
+
+        // find the type
+        IType types[] = PhpModelAccess.getDefault().findTypes(controller,
+                MatchRule.EXACT, 0, 0,
+                SearchEngine.createSearchScope(module.getScriptProject()), null);
+
+        // type is ambigous
+        if (types.length != 1)
+            return null;
+
+
+        return types[0];
+
+
+    }
+
+
+    /**
+    *
+    *
+    *
+    * @param variableName
+    * @param sourceModule
+    * @return
+    */
+    public TemplateField findTemplateVariableType(String variableName, ISourceModule sourceModule) {
+        // find the corresponding controller for the template
+        IType controller = findControllerByTemplate(sourceModule);
+        if (controller == null) {
+            return null;
+        }
+
+        // create a searchscope for the Controller class only
+        IDLTKSearchScope scope = SearchEngine.createSearchScope(controller);
+        ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());
+        if (scope == null || engine == null) {
+            return null;
+        }
+
+        final List<TemplateField> variables = new ArrayList<TemplateField>();
+        final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
+
+        engine.search(ISymfonyModelElement.TEMPLATE_VARIABLE, null, variableName, 0, 0, 100, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
+            @Override
+            public void match(int elementType, int flags, int offset, int length,
+                    int nameOffset, int nameLength, String elementName,
+                    String metadata, String doc, String qualifier, String parent,
+                    ISourceModule sourceModule, boolean isReference) {
+                IModelElement element = resolver.resolve(elementType, flags, offset, length, nameOffset, nameLength, elementName, metadata, doc, qualifier, parent, sourceModule);
+
+                if (element != null && element instanceof TemplateField) {
+                    variables.add((TemplateField) element);
+                }
+            }
+        }, null);
+
+        if (variables.size() > 0)
+            return variables.get(0);
+
+        return null;
+    }
+
+    /**
+    *
+    * Return a List of all Routes for a given project.
+    *
+    * @param project
+    * @return
+    */
+    public List<Route> findRoutes(IScriptProject project) {
+
+        if (index == null) {
+            Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
+            return new ArrayList<Route>();
+        }
+
+
+        return index.findRoutes(project.getPath());
+
+    }
+
+    /**
+    * Find routes by prefix.
+    *
+    * @param project
+    * @param prefix
+    * @return
+    */
+    public List<Route> findRoutes(IScriptProject project, String prefix) {
+
+
+        if (index == null) {
+            Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
+            return new ArrayList<Route>();
+        }
+
+
+        return index.findRoutes(project.getPath(), prefix);
+
+    }
+
+
+    public Map<String, String> findAnnotationClasses(IScriptProject project) {
+        IDLTKSearchScope scope = SearchEngine.createSearchScope(project.getScriptProject());
+        ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
+
+        final Map<String, String> annotations = new HashMap<String, String>();
+        if (scope == null || engine == null) {
+            return annotations;
+        }
+
+        engine.search(ISymfonyModelElement.ANNOTATION, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+            @Override
+            public void match(int elementType, int flags, int offset, int length,
+                    int nameOffset, int nameLength, String elementName,
+                    String metadata, String doc, String qualifier, String parent,
+                    ISourceModule sourceModule, boolean isReference) {
+                annotations.put(elementName, qualifier);
+            }
+        }, null);
+
+        return annotations;
+    }
+
+    /**
+    *
+    * Retrieve all bundles inside a Project.
+    *
+    * @param project
+    * @return
+    */
+    public List<Bundle> findBundles(IScriptProject project) {
+        IDLTKSearchScope scope = SearchEngine.createSearchScope(project.getScriptProject());
+        ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
+        final List<Bundle> bundles = new ArrayList<Bundle>();
+        if (scope == null || engine == null) {
+            return bundles;
+        }
+
+        engine.search(ISymfonyModelElement.BUNDLE, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+            @Override
+            public void match(int elementType, int flags, int offset, int length,
+                    int nameOffset, int nameLength, String elementName,
+                    String metadata, String doc, String qualifier, String parent,
+                    ISourceModule sourceModule, boolean isReference) {
+                bundles.add(JsonUtils.unpackBundle(metadata));
+            }
+        }, null);
+
+        return bundles;
+    }
+
+
+    /**
+    * Finds the {@link ScriptFolder} of corresponding bundle inside the project.
+    *
+    * @param bundle
+    * @param project
+    * @return
+    */
+    public ScriptFolder findBundleFolder(String bundle, IScriptProject project) {
+
+        IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
+
+        IType[] types = findTypes(bundle, MatchRule.EXACT, 0, 0, scope, null);
+
+        if (types.length != 1)
+            return null;
+
+        IType bundleType = types[0];
+        return  (ScriptFolder) bundleType.getSourceModule().getParent();
+
+    }
+
+    /**
+    *
+    * Find all controllers in a given bundle.
+    *
+    * @param bundle
+    * @param project
+    * @return
+    */
+    public IType[] findBundleControllers(String bundle, IScriptProject project) {
+
+
+        ScriptFolder bundleFolder = findBundleFolder(bundle, project);
+        if(bundleFolder == null)
+            return null;
+
+        ISourceModule controllerSource = bundleFolder.getSourceModule("Controller");
+
+        if (controllerSource == null)
+            return null;
+
+        IDLTKSearchScope controllerScope = SearchEngine.createSearchScope(controllerSource);
+
+
+        return findTypes("", MatchRule.PREFIX, 0, 0, controllerScope, null);
+
+    }
+
+
+    /**
+    * Retrieve templates for a given bundle and controller path inside
+    * the ScriptProject.
+    *
+    * Returns an empty array if nothing found.
+    *
+    *
+    * @param bundle
+    * @param controller
+    * @param project
+    * @return
+    */
+    public IModelElement[] findTemplates(String bundle, String controller, IScriptProject project) {
+
+        try {
+
+            ScriptFolder bundleFolder = findBundleFolder(bundle, project);
+            IPath relative = new Path("Resources/views/" + controller.replace("Controller", ""));
+            IPath path = bundleFolder.getPath().append(relative);
+            IScriptFolder sfolder = project.findScriptFolder(path);
+
+            if (sfolder != null && sfolder.exists() && sfolder.hasChildren()) {
+                return sfolder.getChildren();
+            }
+
+        } catch (Exception e) {
+            Logger.logException(e);
+        }
+
+        return new IModelElement[] {};
+    }
+
+    /**
+    * Check if the {@link ScriptProject} has a PHPMethod
+    * named "method" which accepts viewPaths as parameter.
+    *
+    * @param method
+    * @param project
+    * @return
+    */
+    public boolean hasViewMethod(final String method, IScriptProject project) {
+        IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
+        ISearchEngine engine = getSearchEngine(PHPLanguageToolkit.getDefault());
+        if (scope == null || engine == null) {
+            return false;
+        }
+
+        final List<String> methods = new ArrayList<String>();
+        engine.search(ISymfonyModelElement.VIEW_METHOD, null, method, 0, 0, 10, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
+
+            @Override
+            public void match(int elementType, int flags, int offset, int length,
+                    int nameOffset, int nameLength, String elementName,
+                    String metadata, String doc, String qualifier, String parent,
+                    ISourceModule sourceModule, boolean isReference) {
+
+                methods.add(elementName);
+
+            }
+        }, null);
+
+        return methods.size() > 0;
+    }
+
+    /**
+    * Find ITypes of a service
+    *
+    *
+    * @param service
+    * @param project
+    * @return
+    */
+    public IType[] findServiceTypes(Service service, IScriptProject project) {
+
+        if (serviceCache.containsKey(service))
+            return serviceCache.get(service);
+
+        try {
+            IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
+            String namespace = service.getNamespace() != null ? service.getNamespace().getQualifiedName() : null;
+            IType[] types = findTypes(namespace, service.getClassName(), MatchRule.EXACT, 0, 0, scope, null);
+            serviceCache.put(service, types);
+            return types;
+
+        } catch (Exception e) {
+            Logger.logException(e);
+
+        }
+
+        if (service != null)
+            Logger.debugMSG("No types found for service: " + service.getId());
+        else Logger.debugMSG("Cannot find service type, service is null");
+
+        return new IType[] {};
+
+    }
+
+
+    public IType findServiceType(Service service, IScriptProject project) {
+
+
+        IType[] types = findServiceTypes(service, project);
+
+        if (types.length > 0)
+            return types[0];
+
+        return null;
+
+    }
+
+    /**
+    *
+    * @param Retrieve a single service by service id
+    *
+    *
+    * @return
+    */
+    public Service findService(final String id, IPath path) {
+
+        if (path == null) {
+
+            Logger.debugMSG("cannot find service without path: " + id);
+            return null;
+        }
+        String key = id + path.toString();
+
+        if (serviceCache2.get(key) != null) {
+            return (Service) serviceCache2.get(key);
+        }
+
+        final List<Service> services = new ArrayList<Service>();
+
+        if (index == null) {
+            Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
+            return null;
+        }
+
+        String pathString = path == null ? "" : path.toString();
+
+        index.findService(id, pathString, new IServiceHandler() {
+
+            @Override
+            public void handle(String id, String phpClass, String path, String _public, String tags) {
+                Service s = new Service(id, phpClass, path, null);
+                s.setTags(tags);
+                s.setPublic(_public);
+                services.add(s);
+            }
+        });
+
+
+        if (services.size() == 1) {
+
+            Service service = services.get(0);
+            String fqcn = service.getFullyQualifiedName();
+
+            if (fqcn.startsWith("alias_")) {
+
+                String alias = fqcn.substring(fqcn.indexOf("_")+1);
+                Service reference = SymfonyModelAccess.getDefault().findService(alias, service.getPath());
+
+                if (reference != null) {
+                    serviceCache2.put(key, reference);
+                    return reference;
+                }
+
+            }
+
+            serviceCache2.put(key, service);
+            return service;
+        }
+
+        return null;
+    }
 
-					if (tag.getReferences().length == 1) {								
-						SimpleReference ref = tag.getReferences()[0];
-						className = ref.getName();
-						return false;
-					}
-				}
+    /**
+    * Return all services of a {@link Project} or null if the
+    * project hasn't been found.
+    *
+    * @param path
+    * @return
+    */
+    public List<Service> findServices(IPath path) {
 
-			}
-			return true;
-		}				
+        final List<Service> services = new ArrayList<Service>();
 
-	}
+        if (index == null) {
+            Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
+            return null;
+        }
 
+        index.findServices(path.toString(), new IServiceHandler() {
 
-	/**
-	 * 
-	 * Resolve TemplateVariables for a controller.
-	 * 
-	 * 
-	 * @param controller
-	 * @return
-	 */
-	public List<TemplateField> findTemplateVariables(IType controller) {
+            @Override
+            public void handle(String id, String phpClass, String path, String _public, String tags) {
+
+                Service s = new Service(id, phpClass, path);
+                s.setTags(tags);
+                s.setPublic(_public);
+                services.add(s);
 
-		if (controller == null)
-			return new ArrayList<TemplateField>();
+            }
+        });
 
-		// create a searchscope for the whole ScriptProject,
-		// as view variables can be declared across controllers
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(controller.getScriptProject());
+        return services;
 
-		if(scope == null) {
-			return null;
-		}
+    }
 
-		final List<TemplateField> variables = new ArrayList<TemplateField>();
-		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());		
-		final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
 
-		engine.search(ISymfonyModelElement.TEMPLATE_VARIABLE, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+    public List<String> findServiceTags(IPath path) {
 
-			@Override
-			public void match(int elementType, int flags, int offset, int length,
-					int nameOffset, int nameLength, String elementName,
-					String metadata, String doc, String qualifier, String parent,
-					ISourceModule sourceModule, boolean isReference) {
+        try {
+            return index.findTags(path);
+        } catch (Exception e) {
+            return null;
+        }
 
-				IModelElement element = resolver.resolve(elementType, flags, offset, length, nameOffset, nameLength, elementName, metadata, doc, qualifier, parent, sourceModule);
+    }
 
-				if (element != null) {
-					if (element instanceof TemplateField)
-						variables.add((TemplateField) element);
-				}
-			}
-		}, null);
+    public boolean hasRouteMethod(String method, IScriptProject project) {
+        IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
+        ISearchEngine engine = getSearchEngine(PHPLanguageToolkit.getDefault());
+        if (scope == null || engine == null) {
+            return false;
+        }
+
+        final List<String> methods = new ArrayList<String>();
+        engine.search(ISymfonyModelElement.ROUTE_METHOD, null, method, 0, 0, 10, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
+            @Override
+            public void match(int elementType, int flags, int offset, int length,
+                    int nameOffset, int nameLength, String elementName,
+                    String metadata, String doc, String qualifier, String parent,
+                    ISourceModule sourceModule, boolean isReference) {
+                methods.add(elementName);
+            }
+        }, null);
+
+        return methods.size() > 0;
+    }
+
+    public Route findRoute(String route, IScriptProject scriptProject) {
 
-		return variables;
+        if (index == null) {
+            Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
+            return null;
+        }
 
 
-	}
+        return index.findRoute(route, scriptProject.getPath());
 
+
+    }
+
+    public IType findController(String bundle, String controller,
+            IScriptProject scriptProject) {
+
+        String name = scriptProject.getElementName();
+        String key = bundle + controller + name;
+
+        if ( (controllerCache.get(key)) != null) {
+            return (IType) controllerCache.get(key);
+        }
+
+        ScriptFolder bundleFolder = findBundleFolder(bundle, scriptProject);
+        if(bundleFolder == null)
+            return null;
 
-	/**
-	 * Try to find the corresponding controller IType for 
-	 * a given template.
-	 * 
-	 * @param module
-	 * @return
-	 */
-	public IType findControllerByTemplate(ISourceModule module) {
+        ISourceModule controllerSource = bundleFolder.getSourceModule("Controller");
 
-		// get the name of the Controller to search for
-		String controller = PathUtils.getControllerFromTemplatePath(module.getPath());
+        if (controllerSource == null)
+            return null;
 
-		if (controller == null) {
-			return null;
-		}
+        IDLTKSearchScope controllerScope = SearchEngine.createSearchScope(controllerSource);
 
-		// find the type
-		IType types[] = PhpModelAccess.getDefault().findTypes(controller, 
-				MatchRule.EXACT, 0, 0, 
-				SearchEngine.createSearchScope(module.getScriptProject()), null);
+        IType[] controllers = findTypes(controller, MatchRule.PREFIX, 0, 0, controllerScope, null);
 
-		// type is ambigous
-		if (types.length != 1)
-			return null;
+        if(controllers.length == 1) {
+            controllerCache.put(key, controllers[0]);
+            return controllers[0];
+        }
 
+        return null;
 
-		return types[0];
+    }
 
+    /**
+    *
+    * Find the templates in the projects' root view path.
+    *
+    * FIXME: find a way to not hardcode the path to app/Resource/views
+    *
+    * @param scriptProject
+    * @return
+    */
+    public IModelElement[] findRootTemplates(IScriptProject scriptProject) {
 
-	}
+        try {
 
+            IPath path = scriptProject.getPath().append(new Path("app/Resources/views"));
+            IScriptFolder sfolder = scriptProject.findScriptFolder(path);
 
-	/**
-	 * 
-	 * 
-	 * 
-	 * @param variableName
-	 * @param sourceModule
-	 * @return
-	 */
-	public TemplateField findTemplateVariableType(String variableName, ISourceModule sourceModule) {
+            if (sfolder != null && sfolder.exists() && sfolder.hasChildren()) {
+                return sfolder.getChildren();
+            }
 
+        } catch (Exception e) {
+            Logger.logException(e);
+        }
 
-		// find the corresponding controller for the template
-		IType controller = findControllerByTemplate(sourceModule);
+        return new IModelElement[] {};
 
-		if (controller == null)
-			return null;
+    }
 
-		// create a searchscope for the Controller class only		
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(controller);
+    /**
+    *
+    * Return the templates inside the bundles root viewpath:
+    *
+    * Bundle/Resources/views/*
+    *
+    * @param bundle
+    * @param project
+    * @return
+    */
+    public IModelElement[] findBundleRootTemplates(String bundle,
+            IScriptProject project) {
 
-		if(scope == null) {
-			return null;
-		}
+        try {
 
-		final List<TemplateField> variables = new ArrayList<TemplateField>();
-		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());		
-		final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
+            ScriptFolder bundleFolder = findBundleFolder(bundle, project);
+            IPath path = new Path("Resources/views/");
+            IPath viewPath = bundleFolder.getPath().append(path);
+            IScriptFolder sfolder = project.findScriptFolder(viewPath);
 
-		engine.search(ISymfonyModelElement.TEMPLATE_VARIABLE, null, variableName, 0, 0, 100, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
+            if (sfolder != null && sfolder.exists() && sfolder.hasChildren()) {
+                return sfolder.getChildren();
+            }
 
-			@Override
-			public void match(int elementType, int flags, int offset, int length,
-					int nameOffset, int nameLength, String elementName,
-					String metadata, String doc, String qualifier, String parent,
-					ISourceModule sourceModule, boolean isReference) {
+        } catch (Exception e) {
+            Logger.logException(e);
+        }
 
-				IModelElement element = resolver.resolve(elementType, flags, offset, length, nameOffset, nameLength, elementName, metadata, doc, qualifier, parent, sourceModule);
+        return new IModelElement[] {};
 
-				if (element != null && element instanceof TemplateField) {
-					variables.add((TemplateField) element);					
-				} 
-			}
-		}, null);
+    }
 
+    /**
+    * Find the template for the given viewpath.
+    *
+    *
+    * @param viewPath
+    * @param scriptProject
+    * @return
+    */
+    public IModelElement findTemplate(ViewPath viewPath,
+            IScriptProject project) {
 
-		if (variables.size() > 0)
-			return variables.get(0);
+        try {
 
-		return null;
+            String bundle = viewPath.getBundle();
+            String controller = viewPath.getController();
+            String template = viewPath.getTemplate();
 
-	}
 
-	/**
-	 * 
-	 * Return a List of all Routes for a given project. 
-	 * 
-	 * @param project
-	 * @return
-	 */
-	public List<Route> findRoutes(IScriptProject project) {
+            if (viewPath.isRoot()) {
 
-		if (index == null) {
-			Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
-			return new ArrayList<Route>();
-		}
+                IPath path = project.getPath().append(new Path("app/Resources/views"));
+                IScriptFolder sfolder = project.findScriptFolder(path);
 
+                if (sfolder != null) {
+                    return sfolder.getSourceModule(template);
+                }
+            } else if (viewPath.isBundleBasePath()) {
 
-		return index.findRoutes(project.getPath());
+                ScriptFolder bundleFolder = findBundleFolder(bundle, project);
 
-	}
-	
-	/**
-	 * Find routes by prefix.
-	 * 
-	 * @param project
-	 * @param prefix
-	 * @return
-	 */
-	public List<Route> findRoutes(IScriptProject project, String prefix) {
-		
-		
-		if (index == null) {
-			Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
-			return new ArrayList<Route>();
-		}
+                if (bundleFolder == null)
+                    return null;
 
+                IScriptFolder viewFolder = project.findScriptFolder(bundleFolder.getPath().append(new Path("Resources/views")));
 
-		return index.findRoutes(project.getPath(), prefix);
-		
-	}
+                if (viewFolder != null) {
+                    return viewFolder.getSourceModule(template);
+                }
 
+            } else {
 
-	public Map<String, String> findAnnotationClasses(IScriptProject project) {
+                if (bundle == null || controller == null)
+                    return null;
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(project.getScriptProject());			 		 
-		ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());		 
-		final Map<String, String> annotations = new HashMap<String, String>();
+                ScriptFolder bundleFolder = findBundleFolder(bundle, project);
+                IPath path = new Path("Resources/views/" + controller.replace("Controller", ""));
+                IPath iPath = bundleFolder.getPath().append(path);
+                IScriptFolder sfolder = project.findScriptFolder(iPath);
 
-		engine.search(ISymfonyModelElement.ANNOTATION, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+                if (sfolder != null) {
+                    return sfolder.getSourceModule(template);
+                }
+            }
 
-			@Override
-			public void match(int elementType, int flags, int offset, int length,
-					int nameOffset, int nameLength, String elementName,
-					String metadata, String doc, String qualifier, String parent,
-					ISourceModule sourceModule, boolean isReference) {
 
-				annotations.put(elementName, qualifier);				
+        } catch (Exception e) {
+            Logger.logException(e);
+        }
 
-			}
-		}, null);
+        return null;
 
+    }
 
-		return annotations;
 
-	}
+    /**
+    * Find the corresponding {@link IMethod} to a {@link Route}.
+    *
+    * @param route
+    * @param project
+    * @return
+    */
+    public IMethod findAction(Route route, IScriptProject project) {
 
-	/**
-	 * 
-	 * Retrieve all bundles inside a Project.
-	 * 
-	 * @param project
-	 * @return
-	 */
-	public List<Bundle> findBundles(IScriptProject project) {
+        ViewPath vPath = new ViewPath(route.getViewPath());
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(project.getScriptProject());			 		 
-		ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());		 
-		final List<Bundle> bundles = new ArrayList<Bundle>();
+        if (!vPath.isValid())
+            return null;
 
-		engine.search(ISymfonyModelElement.BUNDLE, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+        IType type = null;
 
-			@Override
-			public void match(int elementType, int flags, int offset, int length,
-					int nameOffset, int nameLength, String elementName,
-					String metadata, String doc, String qualifier, String parent,
-					ISourceModule sourceModule, boolean isReference) {
+        IType[] controllers = findBundleControllers(vPath.getBundle(), project);
 
-				bundles.add(JsonUtils.unpackBundle(metadata));				
+        if (controllers == null) {
+            String msg = "Unable to find bundle controllers ";
+            if (vPath != null)
+                msg += vPath.getBundle();
 
-			}
-		}, null);
+            if (project != null) {
+                msg += " project: " + project.getElementName();
+            }
+            Logger.debugMSG(msg);
+            return null;
+        }
 
+        String ctrl = vPath.getController() + "Controller";
 
-		return bundles;
-	}
+        for (IType t : controllers) {
 
+            if (t.getElementName().equals(ctrl)) {
+                type = t;
+                break;
+            }
+        }
 
-	/**
-	 * Finds the {@link ScriptFolder} of corresponding bundle inside the project.
-	 * 
-	 * @param bundle
-	 * @param project
-	 * @return
-	 */
-	public ScriptFolder findBundleFolder(String bundle, IScriptProject project) {
+        if (type == null) {
+            return null;
+        }
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
+        IMethod method = type.getMethod(vPath.getTemplate() + "Action");
 
-		IType[] types = findTypes(bundle, MatchRule.EXACT, 0, 0, scope, null);
+        if (method != null)
+            return method;
 
-		if (types.length != 1)
-			return null;
+        return type.getMethod(vPath.getTemplate());
 
-		IType bundleType = types[0];
-		return  (ScriptFolder) bundleType.getSourceModule().getParent(); 		
 
-	}
+    }
 
-	/**
-	 * 
-	 * Find all controllers in a given bundle.
-	 * 
-	 * @param bundle
-	 * @param project
-	 * @return
-	 */
-	public IType[] findBundleControllers(String bundle, IScriptProject project) {
+    public String findNameSpace(IScriptProject iScriptProject, final IPath path) {
+        IDLTKSearchScope scope = SearchEngine.createSearchScope(iScriptProject);
+        ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
+        if (scope == null || engine == null) {
+            return null;
+        }
 
+        final List<String> namespaces = new ArrayList<String>();
+        engine.search(ISymfonyModelElement.NAMESPACE, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+            @Override
+            public void match(int elementType, int flags, int offset, int length,
+                    int nameOffset, int nameLength, String elementName,
+                    String metadata, String doc, String qualifier, String parent,
+                    ISourceModule sourceModule, boolean isReference) {
 
-		ScriptFolder bundleFolder = findBundleFolder(bundle, project);
-		if(bundleFolder == null)
-			return null;
 
-		ISourceModule controllerSource = bundleFolder.getSourceModule("Controller");
+                if (path.toString().startsWith(elementName)) {
+                    namespaces.add(path.toString().replace(elementName, ""));
+                }
+            }
+        }, null);
 
-		if (controllerSource == null)
-			return null;
+        if (namespaces.size() > 0) {
+            String namespace = namespaces.get(0);
+            if (namespace.startsWith("/")) {
+                namespace = namespace.replaceFirst("/", "");
+            }
 
-		IDLTKSearchScope controllerScope = SearchEngine.createSearchScope(controllerSource);
+            return namespace.replace("/", "\\");
+        }
 
+        return null;
+    }
 
-		return findTypes("", MatchRule.PREFIX, 0, 0, controllerScope, null);
 
-	}
+    public List<String> getNameSpaces(IScriptProject project) {
+        IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
+        ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
+        final List<String> namespaces = new ArrayList<String>();
+        if (scope == null || engine == null) {
+            return namespaces;
+        }
 
+        engine.search(ISymfonyModelElement.NAMESPACE, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
+            @Override
+            public void match(int elementType, int flags, int offset, int length,
+                    int nameOffset, int nameLength, String elementName,
+                    String metadata, String doc, String qualifier, String parent,
+                    ISourceModule sourceModule, boolean isReference) {
+                namespaces.add(elementName);
+            }
+        }, null);
 
-	/**
-	 * Retrieve templates for a given bundle and controller path inside
-	 * the ScriptProject. 
-	 * 
-	 * Returns an empty array if nothing found. 
-	 * 
-	 * 
-	 * @param bundle
-	 * @param controller
-	 * @param project
-	 * @return
-	 */
-	public IModelElement[] findTemplates(String bundle, String controller, IScriptProject project) {
+        return namespaces;
+    }
 
-		try {
+    public IPath resolveBundleShortcut(String string, IScriptProject project) {
 
-			ScriptFolder bundleFolder = findBundleFolder(bundle, project);
-			IPath relative = new Path("Resources/views/" + controller.replace("Controller", ""));
-			IPath path = bundleFolder.getPath().append(relative);
-			IScriptFolder sfolder = project.findScriptFolder(path);
+        String bundle = string.replace("@", "");
+        // split at camelcase
+        //        String[] parts = bundle.split("(?<!^)(?=[A-Z])");
 
-			if (sfolder != null && sfolder.exists() && sfolder.hasChildren()) {				
-				return sfolder.getChildren();
-			}			
+        IScriptFolder folder = findBundleFolder(bundle, project);
 
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
 
-		return new IModelElement[] {};
-	}
+        if (folder != null)
+            return folder.getPath();
 
-	/**
-	 * Check if the {@link ScriptProject} has a PHPMethod
-	 * named "method" which accepts viewPaths as parameter. 
-	 * 
-	 * @param method
-	 * @param project
-	 * @return
-	 */
-	public boolean hasViewMethod(final String method, IScriptProject project) {
+        return null;
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(project);		
-		ISearchEngine engine = getSearchEngine(PHPLanguageToolkit.getDefault());		
-		final List<String> methods = new ArrayList<String>();
+    }
 
-		engine.search(ISymfonyModelElement.VIEW_METHOD, null, method, 0, 0, 10, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
+    /**
+    * Search for a specific {@link Bundle} by alias, ie 'AcmeDemoBundle';
+    *
+    * @param bundleAlias
+    * @param scriptProject
+    * @return {@link Bundle}
+    */
+    public Bundle findBundle(String bundleAlias, IScriptProject scriptProject) {
+        String key = bundleAlias + scriptProject.getElementName();
+        if (bundleCache.get(key) != null) {
+            return (Bundle) bundleCache.get(key);
+        }
 
-			@Override
-			public void match(int elementType, int flags, int offset, int length,
-					int nameOffset, int nameLength, String elementName,
-					String metadata, String doc, String qualifier, String parent,
-					ISourceModule sourceModule, boolean isReference) {
+        IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+        ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
+        if (scope == null || engine == null) {
+            return null;
+        }
 
-				methods.add(elementName);
+        final List<Bundle> bundles = new ArrayList<Bundle>();
+        engine.search(ISymfonyModelElement.BUNDLE, null, bundleAlias, 0, 0, 100, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
+            @Override
+            public void match(int elementType, int flags, int offset, int length,
+                    int nameOffset, int nameLength, String elementName,
+                    String metadata, String doc, String qualifier, String parent,
+                    ISourceModule sourceModule, boolean isReference) {
+                bundles.add(JsonUtils.unpackBundle(metadata));
+            }
+        }, null);
 
-			}
-		}, null);
+        if (bundles.size() == 1) {
+            Bundle b = bundles.get(0);
+            bundleCache.put(key, b);
+            return b;
+        }
 
+        return null;
+    }
 
-		return methods.size() > 0;
+    /**
+    * Search for a specific {@link IType} by an {@link EntityAlias} like 'AcmeDemoBundle:SomeEntityClass'
+    *
+    * @param alias
+    * @param scriptProject
+    * @return {@link IType} or null
+    */
+    public IType findEntity(EntityAlias alias, IScriptProject scriptProject) {
 
-	}
+        String key = alias + scriptProject.getElementName();
 
-	/**
-	 * Find ITypes of a service
-	 * 
-	 * 
-	 * @param service
-	 * @param project
-	 * @return
-	 */
-	public IType[] findServiceTypes(Service service, IScriptProject project) {
+        if (entityCache.get(key) != null) {
+            return (IType) entityCache.get(key);
+        }
 
-		if (serviceCache.containsKey(service))
-			return serviceCache.get(service);
+        Bundle bundle = findBundle(alias.getBundleAlias(), scriptProject);
 
-		try {
-			IDLTKSearchScope scope = SearchEngine.createSearchScope(project);			
-			String namespace = service.getNamespace() != null ? service.getNamespace().getQualifiedName() : null;
-			IType[] types = findTypes(namespace, service.getClassName(), MatchRule.EXACT, 0, 0, scope, null);
-			serviceCache.put(service, types);
-			return types;
+        if (bundle == null) {
+            return null;
+        }
 
-		} catch (Exception e) {
-			Logger.logException(e);
+        INamespace ns;
 
-		}
+        try {
+            ns = bundle.getNamespace();
+        } catch (ModelException e) {
+            return null;
+        }
 
-		if (service != null)
-			Logger.debugMSG("No types found for service: " + service.getId());
-		else Logger.debugMSG("Cannot find service type, service is null");
+        if (ns == null)
+            return null;
 
-		return new IType[] {};		
 
-	}
+        String[] entityNS = new String[ns.getStrings().length + 1];
 
+        System.arraycopy(ns.getStrings(), 0, entityNS, 0, ns.getStrings().length);
+        entityNS[ns.getStrings().length] = "Entity";
+        IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
-	public IType findServiceType(Service service, IScriptProject project) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(entityNS[0]);
 
+        for (int i=1; i<entityNS.length; i++) {
+            sb.append("\\");
+            sb.append(entityNS[i]);
+        }
 
-		IType[] types = findServiceTypes(service, project);
+        String entity = alias.getEntity();
 
-		if (types.length > 0)
-			return types[0];
+        if (entity.contains("\\")) {
+            String[] strings = entity.split("\\\\");
+            for(int i=0; i < strings.length; i++) {
 
-		return null;
+                if (i < strings.length-1) {
+                    sb.append("\\");
+                    sb.append(strings[i]);
+                } else {
+                    entity = strings[i];
+                }
+            }
 
-	}
+        }
 
-	/**
-	 * 
-	 * @param Retrieve a single service by service id
-	 * 
-	 * 
-	 * @return
-	 */
-	public Service findService(final String id, IPath path) {
+        IType[] types = findTypes(sb.toString(), entity, MatchRule.EXACT, 0, 0, scope, null);
 
-		if (path == null) {
+        if (types.length == 1) {
+            IType t = types[0];
+            entityCache.put(key, t);
+            return t;
+        }
 
-			Logger.debugMSG("cannot find service without path: " + id);
-			return null;
-		}
-		String key = id + path.toString();
+        return null;
+    }
 
-		if (serviceCache2.get(key) != null) {
-			return (Service) serviceCache2.get(key);
-		}
+    public List<TransUnit> findTranslations(IPath path) {
 
-		final List<Service> services = new ArrayList<Service>();
 
-		if (index == null) {
-			Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
-			return null;
-		}
+        final List<TransUnit> translations = new ArrayList<TransUnit>();
 
-		String pathString = path == null ? "" : path.toString();
+        if (index == null) {
+            Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
+            return null;
+        }
 
-		index.findService(id, pathString, new IServiceHandler() {
+        index.findTranslations(path.toString(), new ITranslationHandler() {
 
-			@Override
-			public void handle(String id, String phpClass, String path, String _public, String tags) {
-				Service s = new Service(id, phpClass, path, null);
-				s.setTags(tags);
-				s.setPublic(_public);
-				services.add(s);				
-			}
-		});
+            @Override
+            public void handle(String name, String value, String language, String path) {
 
+                TransUnit trans = new TransUnit(name, value, language, path);
+                translations.add(trans);
 
-		if (services.size() == 1) {
+            }
+        });
 
-			Service service = services.get(0);
-			String fqcn = service.getFullyQualifiedName();
+        return translations;
 
-			if (fqcn.startsWith("alias_")) {
+    }
 
-				String alias = fqcn.substring(fqcn.indexOf("_")+1);
-				Service reference = SymfonyModelAccess.getDefault().findService(alias, service.getPath());
+    public List<TransUnit> findTranslations(Translation translation) {
 
-				if (reference != null) {
-					serviceCache2.put(key, reference);
-					return reference;
-				}
+        final List<TransUnit> units = new ArrayList<TransUnit>();
 
-			}			
+        index.findTranslations(translation.getElementName(), translation.getPath().toString(), new ITranslationHandler() {
 
-			serviceCache2.put(key, service);
-			return service;
-		}
+            @Override
+            public void handle(String name, String value, String language, String path) {
 
-		return null;
-	}
+                TransUnit unit = new TransUnit(name, value, language);
+                units.add(unit);
 
-	/**
-	 * Return all services of a {@link Project} or null if the
-	 * project hasn't been found.
-	 * 
-	 * @param path
-	 * @return
-	 */
-	public List<Service> findServices(IPath path) {
+            }
+        });
 
-		final List<Service> services = new ArrayList<Service>();
+        return units;
+    }
 
-		if (index == null) {
-			Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
-			return null;			
-		}
+    public Route getRoute(IType type, IMethod method) {
 
-		index.findServices(path.toString(), new IServiceHandler() {
+        IScriptProject project = type.getScriptProject();
 
-			@Override
-			public void handle(String id, String phpClass, String path, String _public, String tags) {
-				
-				Service s = new Service(id, phpClass, path);
-				s.setTags(tags);
-				s.setPublic(_public);
-				services.add(s);
+        String bundleAlias = ModelUtils.extractBundleName(type.getFullyQualifiedName("\\"));
+        Bundle bundle = findBundle(bundleAlias, project);
 
-			}
-		});
+        String controller = ModelUtils.getControllerName(type);
 
-		return services;
+        List<Route> routes = index.findRoutesByController(bundleAlias, controller, project.getPath());
 
-	}
-	
-	
-	public List<String> findServiceTags(IPath path) {
-		
-		try {
-			return index.findTags(path);	
-		} catch (Exception e) {
-			return null;
-		}
-		
-	}
+        String action = method.getElementName().endsWith(SymfonyCoreConstants.ACTION_SUFFIX) ?
+                method.getElementName().replace(SymfonyCoreConstants.ACTION_SUFFIX, "") : method.getElementName();
 
-	public boolean hasRouteMethod(String method, IScriptProject project) {
+        for (Route route : routes) {
+            if (route.getAction().equals(action)) {
+                return route;
+            }
+        }
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(project);		
-		ISearchEngine engine = getSearchEngine(PHPLanguageToolkit.getDefault());		
-		final List<String> methods = new ArrayList<String>();
+        return null;
+    }
 
-		engine.search(ISymfonyModelElement.ROUTE_METHOD, null, method, 0, 0, 10, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
+    /**
+    * Retrieve all templateVariables for the given sourceModule, given the sourceModule is
+    * a template (php or twig).
+    *
+    * @param sourceModule
+    */
+    public List<TemplateField> findTemplateVariables(ISourceModule sourceModule, String varName) {
+        String viewPath = PathUtils.createViewPathFromTemplate(sourceModule, false);
+        IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
+        ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());
+        if (scope == null || engine == null) {
+            return null;
+        }
 
-			@Override
-			public void match(int elementType, int flags, int offset, int length,
-					int nameOffset, int nameLength, String elementName,
-					String metadata, String doc, String qualifier, String parent,
-					ISourceModule sourceModule, boolean isReference) {
+        final List<TemplateField> variables = new ArrayList<TemplateField>();
+        final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
 
-				methods.add(elementName);
+        // handle twig variables
+        if (!varName.startsWith("$")) {
+            varName = "$" + varName;
+        }
 
-			}
-		}, null);
+        engine.search(ISymfonyModelElement.TEMPLATE_VARIABLE, viewPath, varName, 0, 0, 100, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
+            @Override
+            public void match(int elementType, int flags, int offset, int length,
+                    int nameOffset, int nameLength, String elementName,
+                    String metadata, String doc, String qualifier, String parent,
+                    ISourceModule sourceModule, boolean isReference) {
+                IModelElement element = resolver.resolve(elementType, flags, offset, length, nameOffset, nameLength, elementName, metadata, doc, qualifier, parent, sourceModule);
 
+                if (element != null) {
+                    if (element instanceof TemplateField)
+                        variables.add((TemplateField) element);
+                }
+            }
+        }, null);
 
-		return methods.size() > 0;
-
-
-	}
-
-	public Route findRoute(String route, IScriptProject scriptProject) {
-
-		if (index == null) {
-			Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
-			return null;
-		}
-
-
-		return index.findRoute(route, scriptProject.getPath());
-
-
-	}
-
-	public IType findController(String bundle, String controller,
-			IScriptProject scriptProject) {
-
-		String name = scriptProject.getElementName();
-		String key = bundle + controller + name;
-
-		if ( (controllerCache.get(key)) != null) {
-			return (IType) controllerCache.get(key);
-		}
-
-		ScriptFolder bundleFolder = findBundleFolder(bundle, scriptProject);
-		if(bundleFolder == null)
-			return null;
-
-		ISourceModule controllerSource = bundleFolder.getSourceModule("Controller");
-
-		if (controllerSource == null)
-			return null;
-
-		IDLTKSearchScope controllerScope = SearchEngine.createSearchScope(controllerSource);
-
-		IType[] controllers = findTypes(controller, MatchRule.PREFIX, 0, 0, controllerScope, null); 
-
-		if(controllers.length == 1) {			
-			controllerCache.put(key, controllers[0]);
-			return controllers[0];
-		}
-
-		return null;
-
-	}
-
-	/**
-	 * 
-	 * Find the templates in the projects' root view path.
-	 * 
-	 * FIXME: find a way to not hardcode the path to app/Resource/views
-	 * 
-	 * @param scriptProject
-	 * @return
-	 */
-	public IModelElement[] findRootTemplates(IScriptProject scriptProject) {
-
-		try {
-
-			IPath path = scriptProject.getPath().append(new Path("app/Resources/views"));
-			IScriptFolder sfolder = scriptProject.findScriptFolder(path);
-
-			if (sfolder != null && sfolder.exists() && sfolder.hasChildren()) {				
-				return sfolder.getChildren();
-			}			
-
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-
-		return new IModelElement[] {};
-
-	}
-
-	/**
-	 * 
-	 * Return the templates inside the bundles root viewpath:
-	 * 
-	 * Bundle/Resources/views/*
-	 * 
-	 * @param bundle
-	 * @param project
-	 * @return
-	 */
-	public IModelElement[] findBundleRootTemplates(String bundle,
-			IScriptProject project) {
-
-		try {
-
-			ScriptFolder bundleFolder = findBundleFolder(bundle, project);
-			IPath path = new Path("Resources/views/");			
-			IPath viewPath = bundleFolder.getPath().append(path);			
-			IScriptFolder sfolder = project.findScriptFolder(viewPath);
-
-			if (sfolder != null && sfolder.exists() && sfolder.hasChildren()) {				
-				return sfolder.getChildren();
-			}			
-
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-
-		return new IModelElement[] {};
-
-	}
-
-	/**
-	 * Find the template for the given viewpath.
-	 * 
-	 * 
-	 * @param viewPath
-	 * @param scriptProject
-	 * @return
-	 */
-	public IModelElement findTemplate(ViewPath viewPath,
-			IScriptProject project) {
-
-		try {
-
-			String bundle = viewPath.getBundle();
-			String controller = viewPath.getController();
-			String template = viewPath.getTemplate();			
-
-
-			if (viewPath.isRoot()) {
-
-				IPath path = project.getPath().append(new Path("app/Resources/views"));
-				IScriptFolder sfolder = project.findScriptFolder(path);
-
-				if (sfolder != null) {					
-					return sfolder.getSourceModule(template);
-				}
-			} else if (viewPath.isBundleBasePath()) {				
-
-				ScriptFolder bundleFolder = findBundleFolder(bundle, project);
-
-				if (bundleFolder == null)
-					return null;
-
-				IScriptFolder viewFolder = project.findScriptFolder(bundleFolder.getPath().append(new Path("Resources/views")));
-
-				if (viewFolder != null) {					
-					return viewFolder.getSourceModule(template);
-				}
-
-			} else {
-
-				if (bundle == null || controller == null)
-					return null;
-
-				ScriptFolder bundleFolder = findBundleFolder(bundle, project);
-				IPath path = new Path("Resources/views/" + controller.replace("Controller", ""));
-				IPath iPath = bundleFolder.getPath().append(path);
-				IScriptFolder sfolder = project.findScriptFolder(iPath);
-
-				if (sfolder != null) {
-					return sfolder.getSourceModule(template);
-				}
-			}
-
-
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-
-		return null;		
-
-	}
-
-
-	/**
-	 * Find the corresponding {@link IMethod} to a {@link Route}.
-	 * 
-	 * @param route
-	 * @param project
-	 * @return
-	 */
-	public IMethod findAction(Route route, IScriptProject project) {
-
-		ViewPath vPath = new ViewPath(route.getViewPath());
-
-		if (!vPath.isValid())
-			return null;
-
-		IType type = null;
-
-		IType[] controllers = findBundleControllers(vPath.getBundle(), project);
-
-		if (controllers == null) {			
-			String msg = "Unable to find bundle controllers ";
-			if (vPath != null)
-				msg += vPath.getBundle();
-
-			if (project != null) {
-				msg += " project: " + project.getElementName();
-			}
-			Logger.debugMSG(msg);
-			return null;
-		}
-
-		String ctrl = vPath.getController() + "Controller";
-
-		for (IType t : controllers) {
-
-			if (t.getElementName().equals(ctrl)) {
-				type = t;
-				break;
-			}
-		}
-
-		if (type == null) {
-			return null;
-		}
-
-		IMethod method = type.getMethod(vPath.getTemplate() + "Action");
-
-		if (method != null)
-			return method;
-
-		return type.getMethod(vPath.getTemplate());
-
-
-	}
-
-	public String findNameSpace(IScriptProject iScriptProject, final IPath path) {
-
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(iScriptProject);
-		ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
-		final List<String> namespaces = new ArrayList<String>();
-		
-		engine.search(ISymfonyModelElement.NAMESPACE, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
-
-			@Override
-			public void match(int elementType, int flags, int offset, int length,
-					int nameOffset, int nameLength, String elementName,
-					String metadata, String doc, String qualifier, String parent,
-					ISourceModule sourceModule, boolean isReference) {
-
-				
-				if (path.toString().startsWith(elementName)) {					
-					namespaces.add(path.toString().replace(elementName, ""));
-				}
-
-			}
-		}, null);
-
-		if (namespaces.size() > 0) {						
-			String namespace = namespaces.get(0);			
-			if (namespace.startsWith("/")) {
-				namespace = namespace.replaceFirst("/", "");
-			}
-			return namespace.replace("/", "\\");
-		}
-		return null;
-	}
-
-
-	public List<String> getNameSpaces(IScriptProject project) {
-
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
-		ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
-		final List<String> namespaces = new ArrayList<String>();
-
-
-		engine.search(ISymfonyModelElement.NAMESPACE, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
-
-			@Override
-			public void match(int elementType, int flags, int offset, int length,
-					int nameOffset, int nameLength, String elementName,
-					String metadata, String doc, String qualifier, String parent,
-					ISourceModule sourceModule, boolean isReference) {
-
-				namespaces.add(elementName);				
-
-			}
-		}, null);
-
-		return namespaces;
-
-	}
-
-	public IPath resolveBundleShortcut(String string, IScriptProject project) {
-
-		String bundle = string.replace("@", "");
-		// split at camelcase
-		//		String[] parts = bundle.split("(?<!^)(?=[A-Z])");
-
-		IScriptFolder folder = findBundleFolder(bundle, project);
-
-
-		if (folder != null)
-			return folder.getPath();
-
-		return null;
-
-	}
-
-	/**
-	 * Search for a specific {@link Bundle} by alias, ie 'AcmeDemoBundle';
-	 * 
-	 * @param bundleAlias
-	 * @param scriptProject
-	 * @return {@link Bundle}
-	 */
-	public Bundle findBundle(String bundleAlias, IScriptProject scriptProject) {
-
-		String key = bundleAlias + scriptProject.getElementName();
-		
-		if (bundleCache.get(key) != null) {
-			return (Bundle) bundleCache.get(key);
-		}
-
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);			 		 
-		ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());		 
-		final List<Bundle> bundles = new ArrayList<Bundle>();
-
-		engine.search(ISymfonyModelElement.BUNDLE, null, bundleAlias, 0, 0, 100, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
-
-			@Override
-			public void match(int elementType, int flags, int offset, int length,
-					int nameOffset, int nameLength, String elementName,
-					String metadata, String doc, String qualifier, String parent,
-					ISourceModule sourceModule, boolean isReference) {
-
-				bundles.add(JsonUtils.unpackBundle(metadata));				
-
-			}
-		}, null);
-
-		if (bundles.size() == 1) {
-			
-			Bundle b = bundles.get(0);
-			bundleCache.put(key, b);
-			return b;
-		}
-		
-		return null;
-
-
-	}
-
-	/**
-	 * Search for a specific {@link IType} by an {@link EntityAlias} like 'AcmeDemoBundle:SomeEntityClass'
-	 * 
-	 * @param alias
-	 * @param scriptProject
-	 * @return {@link IType} or null
-	 */
-	public IType findEntity(EntityAlias alias, IScriptProject scriptProject) {
-		
-		String key = alias + scriptProject.getElementName();
-		
-		if (entityCache.get(key) != null) {
-			return (IType) entityCache.get(key);
-		}
-		
-		Bundle bundle = findBundle(alias.getBundleAlias(), scriptProject);
-		
-		if (bundle == null) {
-			return null;
-		}
-		
-		INamespace ns;
-		
-		try {
-			ns = bundle.getNamespace();
-		} catch (ModelException e) {
-			return null;
-		}		
-		
-		if (ns == null)
-			return null;
-		
-		
-		String[] entityNS = new String[ns.getStrings().length + 1];
-		
-		System.arraycopy(ns.getStrings(), 0, entityNS, 0, ns.getStrings().length);		
-		entityNS[ns.getStrings().length] = "Entity";		
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);		
-				
-		StringBuilder sb = new StringBuilder();
-		sb.append(entityNS[0]);
-
-		for (int i=1; i<entityNS.length; i++) {
-			sb.append("\\");
-			sb.append(entityNS[i]);
-		}			
-		
-		String entity = alias.getEntity();
-		
-		if (entity.contains("\\")) {
-		    String[] strings = entity.split("\\\\");
-		    for(int i=0; i < strings.length; i++) {
-		        
-		        if (i < strings.length-1) {
-		            sb.append("\\");
-		            sb.append(strings[i]);
-		        } else {
-		            entity = strings[i];
-		        }
-		    }
-		    
-		}
-
-		IType[] types = findTypes(sb.toString(), entity, MatchRule.EXACT, 0, 0, scope, null);
-
-		if (types.length == 1) {
-			IType t = types[0];
-			entityCache.put(key, t);
-			return t;
-		}
-				
-		return null;
-	}
-
-	public List<TransUnit> findTranslations(IPath path) {
-
-
-		final List<TransUnit> translations = new ArrayList<TransUnit>();
-
-		if (index == null) {
-			Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
-			return null;			
-		}
-
-		index.findTranslations(path.toString(), new ITranslationHandler() {
-			
-			@Override
-			public void handle(String name, String value, String language, String path) {
-
-				TransUnit trans = new TransUnit(name, value, language, path);
-				translations.add(trans);
-				
-			}
-		});
-
-		return translations;
-		
-	}
-
-	public List<TransUnit> findTranslations(Translation translation) {
-
-		final List<TransUnit> units = new ArrayList<TransUnit>();
-		
-		index.findTranslations(translation.getElementName(), translation.getPath().toString(), new ITranslationHandler() {
-			
-			@Override
-			public void handle(String name, String value, String language, String path) {
-
-				TransUnit unit = new TransUnit(name, value, language);				
-				units.add(unit);
-				
-			}
-		});
-		
-		return units;
-	}
-
-	public Route getRoute(IType type, IMethod method) {
-
-		IScriptProject project = type.getScriptProject();
-		
-		String bundleAlias = ModelUtils.extractBundleName(type.getFullyQualifiedName("\\"));		
-		Bundle bundle = findBundle(bundleAlias, project);
-
-		String controller = ModelUtils.getControllerName(type);
-		
-		List<Route> routes = index.findRoutesByController(bundleAlias, controller, project.getPath());
-
-		String action = method.getElementName().endsWith(SymfonyCoreConstants.ACTION_SUFFIX) ? 
-				method.getElementName().replace(SymfonyCoreConstants.ACTION_SUFFIX, "") : method.getElementName();
-				
-		for (Route route : routes) {			
-			if (route.getAction().equals(action)) {
-				return route;
-			}
-		}
-		
-		return null;
-	}
-
-	/**
-	 * Retrieve all templateVariables for the given sourceModule, given the sourceModule is
-	 * a template (php or twig).
-	 * 
-	 * @param sourceModule
-	 */
-	public List<TemplateField> findTemplateVariables(ISourceModule sourceModule, String varName) {
-
-		String viewPath = PathUtils.createViewPathFromTemplate(sourceModule, false);
-		
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
-
-		if(scope == null) {
-			return null;
-		}
-
-
-		// handle twig variables
-		if (!varName.startsWith("$"))
-			varName = "$" + varName;
-		
-		final List<TemplateField> variables = new ArrayList<TemplateField>();
-		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());		
-		final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
-
-		engine.search(ISymfonyModelElement.TEMPLATE_VARIABLE, viewPath, varName, 0, 0, 100, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
-
-			@Override
-			public void match(int elementType, int flags, int offset, int length,
-					int nameOffset, int nameLength, String elementName,
-					String metadata, String doc, String qualifier, String parent,
-					ISourceModule sourceModule, boolean isReference) {
-
-
-				IModelElement element = resolver.resolve(elementType, flags, offset, length, nameOffset, nameLength, elementName, metadata, doc, qualifier, parent, sourceModule);
-
-				if (element != null) {
-					if (element instanceof TemplateField)
-						variables.add((TemplateField) element);
-				}
-			}
-		}, null);
-
-		
-		return variables;
-		
-	}
+        return variables;
+    }
 
 }
