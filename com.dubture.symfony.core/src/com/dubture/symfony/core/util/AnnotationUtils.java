@@ -29,7 +29,7 @@ import com.dubture.symfony.index.dao.Route;
 @SuppressWarnings("restriction")
 public class AnnotationUtils {
 
-    protected static String[] PHPDOC_TAGS_EXTRA = {"api", "inheritdoc"};
+    protected static final String[] PHPDOC_TAGS_EXTRA = {"api", "inheritdoc"};
     protected static final List<Annotation> EMPTY_ANNOTATIONS = new LinkedList<Annotation>();
 
     /**
@@ -42,23 +42,7 @@ public class AnnotationUtils {
      * @return A list of valid annotations
      */
     public static List<Annotation> extractAnnotations(Comment comment, ISourceModule sourceModule) {
-        return extractAnnotations(comment, sourceModule, null);
-    }
-
-    /**
-     * See {@link #extractAnnotations(AnnotationCommentParser, Comment, ISourceModule)} for
-     * a more detailed description.
-     *
-     * @param comment The comment node to parse the comment from
-     * @param sourceModule The source module where the comment is located
-     * @param includedClassNames The array of included class names
-     *
-     * @return A list of valid annotations
-     */
-    public static List<Annotation> extractAnnotations(Comment comment,
-                                                      ISourceModule sourceModule,
-                                                      String[] includedClassNames) {
-        return extractAnnotations(createParser(includedClassNames), comment, sourceModule);
+        return extractAnnotations(createParser(), comment, sourceModule);
     }
 
     /**
@@ -80,20 +64,27 @@ public class AnnotationUtils {
 
         try {
             int commentStartOffset = comment.getStart();
-            int commentEndOffset = comment.getStart() + comment.getLength();
-            String source = sourceModule.getSource();
-            String commentSource = source.substring(commentStartOffset, commentEndOffset);
+            int commentEndOffset = comment.getEnd();
+            String commentSource = getCommentSource(sourceModule, commentStartOffset, commentEndOffset);
 
             return parser.parse(commentSource, commentStartOffset);
-        } catch (ModelException exception) {
+        } catch (Exception exception) {
             Logger.logException("Unable to extract annotations from comment", exception);
             return EMPTY_ANNOTATIONS;
         }
     }
 
     /**
-     * See {@link #extractAnnotations(AnnotationCommentParser, IPHPDocAwareDeclaration)} for
-     * a more detailed description.
+     * Parse a comment from a PHP doc aware declaration. This is not the most accurate
+     * way to extract annotations from a comment since the comment source returned by
+     * the declaration is not really the same as the one found in the PHP file. Mainly,
+     * some line endings and some formatting is lost when using this method.
+     *
+     * <p>
+     * To get a more accurate extraction, provide the source module associated with
+     * this declaration. Use {@link #extractAnnotations(IPHPDocAwareDeclaration, ISourceModule)}
+     * to do this.
+     * </p>
      *
      * @param declaration The declaration to parse the comment from
      *
@@ -104,26 +95,30 @@ public class AnnotationUtils {
     }
 
     /**
-     * See {@link #extractAnnotations(AnnotationCommentParser, IPHPDocAwareDeclaration)} for
-     * a more detailed description.
+     * See {@link #extractAnnotations(AnnotationCommentParser, IPHPDocAwareDeclaration,
+     * ISourceModule)} for a more detailed description.
      *
      * @param declaration The declaration to parse the comment from
-     * @param includedClassNames The array of included class names
+     * @param sourceModule The source module to extract the comment from
      *
      * @return A list of valid annotations
      */
     public static List<Annotation> extractAnnotations(IPHPDocAwareDeclaration declaration,
-                                                      String[] includedClassNames) {
-        return extractAnnotations(createParser(includedClassNames), declaration);
+                                                      ISourceModule sourceModule) {
+        return extractAnnotations(declaration, null);
     }
 
     /**
-     * Parse a comment from a PHP doc aware declaration. For now, this not the best way to
-     * extract annotations from a comment since there is no way to retrieve the exact
-     * comment as it appears in the source. To do extraction on the exact comment source,
-     * refer to {@link #extractAnnotations(Comment, ISourceModule)} or
-     * {@link #extractAnnotations(AnnotationCommentParser, Comment, ISourceModule)} for a
-     * more accurate extraction method.
+     * Parse a comment from a PHP doc aware declaration. This is not the most accurate
+     * way to extract annotations from a comment since the comment source returned by
+     * the declaration is not really the same as the one found in the PHP file. Mainly,
+     * some line endings and some formatting is lost when using this method.
+     *
+     * <p>
+     * To get a more accurate extraction, provide the source module associated with
+     * this declaration. Use {@link #extractAnnotations(AnnotationCommentParser,
+     * IPHPDocAwareDeclaration, ISourceModule)} to do this.
+     * </p>
      *
      * @param parser The parser used to parse a comment
      * @param declaration The declaration to parse the comment from
@@ -132,6 +127,23 @@ public class AnnotationUtils {
      */
     public static List<Annotation> extractAnnotations(AnnotationCommentParser parser,
                                                       IPHPDocAwareDeclaration declaration) {
+        return extractAnnotations(parser, declaration, null);
+    }
+
+    /**
+     * Parse a comment from a PHP doc aware declaration. By using the source module,
+     * you ensure that source positions of the annotations will be set correctly
+     * relative to the PHP file.
+     *
+     * @param parser The parser used to parse a comment
+     * @param declaration The declaration to parse the comment from
+     * @param sourceModule The source module to extract the comment from
+     *
+     * @return A list of valid annotations according to the parser
+     */
+    public static List<Annotation> extractAnnotations(AnnotationCommentParser parser,
+                                                      IPHPDocAwareDeclaration declaration,
+                                                      ISourceModule sourceModule) {
         try {
             PHPDocBlock comment = declaration.getPHPDoc();
             if (comment == null || comment.getCommentType() != Comment.TYPE_PHPDOC) {
@@ -139,7 +151,12 @@ public class AnnotationUtils {
             }
 
             int commentStartOffset = comment.sourceStart();
-            String commentSource = comment.getShortDescription() + comment.getLongDescription();
+            String commentSource;
+            if (sourceModule != null) {
+                commentSource = getCommentSource(sourceModule, commentStartOffset, comment.sourceEnd());
+            } else {
+                commentSource = comment.getShortDescription() + comment.getLongDescription();
+            }
 
             return parser.parse(commentSource, commentStartOffset);
         } catch (Exception exception) {
@@ -253,5 +270,23 @@ public class AnnotationUtils {
         }
 
         return "unknown";
+    }
+
+    /**
+     * Get the comment source from a source module. This will simply get the source
+     * and extract the substring representing the comment.
+     *
+     * @param sourceModule The source module to extract the comment from
+     * @param start The start offset of the comment
+     * @param end The end offset of the comment
+     *
+     * @return The comment source extracted from the source module
+     *
+     * @throws ModelException If an exception occurs while accessing the underlying resource
+     */
+    private static String getCommentSource(ISourceModule sourceModule, int start, int end) throws ModelException {
+        String source = sourceModule.getSource();
+
+        return source.substring(start, end);
     }
 }
