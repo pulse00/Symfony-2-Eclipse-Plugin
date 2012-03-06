@@ -77,25 +77,26 @@ import com.dubture.symfony.annotation.parser.tree.visitor.AnnotationNodeVisitor;
 public class AnnotationCommentParser {
 
     static public List<Annotation> parseFromString(String comment) {
-        AnnotationCommentParser parser = new AnnotationCommentParser(comment);
-
-        return parser.parse();
+        return parseFromString(comment, 0);
     }
 
-    static public List<Annotation> parseFromString(String comment, List<String> excludedAnnotationClassNames) {
-        AnnotationCommentParser parser = new AnnotationCommentParser(comment, 0, excludedAnnotationClassNames);
-
-        return parser.parse();
+    static public List<Annotation> parseFromString(String comment, int commentCharOffset) {
+        return parseFromString(comment, 0, new ArrayList<String>());
     }
 
     static public List<Annotation> parseFromString(String comment,
                                                    int commentCharOffset,
-                                                   List<String> excludedAnnotationClassNames) {
-        AnnotationCommentParser parser = new AnnotationCommentParser(comment,
-                                                                     commentCharOffset,
-                                                                     excludedAnnotationClassNames);
+                                                   List<String> excludedClassNames) {
+        return parseFromString(comment, commentCharOffset, excludedClassNames);
+    }
 
-        return parser.parse();
+    static public List<Annotation> parseFromString(String comment,
+                                                   int commentCharOffset,
+                                                   List<String> excludedClassNames,
+                                                   List<String> includedClassNames) {
+        AnnotationCommentParser parser = new AnnotationCommentParser(excludedClassNames, includedClassNames);
+
+        return parser.parse(comment, commentCharOffset);
     }
 
     protected StringBuffer buffer;
@@ -109,27 +110,18 @@ public class AnnotationCommentParser {
     protected int currentCharOffset;
     protected int commentCharOffset;
 
-    public AnnotationCommentParser(String comment) {
-        this(comment, 0, new ArrayList<String>());
+    public AnnotationCommentParser() {
+        this(new ArrayList<String>());
     }
 
-    public AnnotationCommentParser(String comment, int commentOffset) {
-        this(comment, commentOffset, new ArrayList<String>());
+
+    public AnnotationCommentParser(List<String> excludedClassNames) {
+        this(excludedClassNames, new ArrayList<String>());
     }
 
-    public AnnotationCommentParser(String comment, List<String> excludedClassNames) {
-        this(comment, 0, excludedClassNames);
-    }
-
-    public AnnotationCommentParser(String comment, int commentCharOffset, List<String> excludedClassNames) {
-        this.buffer = new StringBuffer(comment);
+    public AnnotationCommentParser(List<String> excludedClassNames, List<String> includedClassNames) {
         this.excludedClassNames = excludedClassNames;
         this.includedClassNames = new LinkedList<String>();
-
-        this.lineOffset = 0;
-        this.columnOffset = 0;
-        this.currentCharOffset = 0;
-        this.commentCharOffset = commentCharOffset;
     }
 
     /**
@@ -196,6 +188,34 @@ public class AnnotationCommentParser {
     }
 
     /**
+     * This method is used to reset the parser. The mainly purpose
+     * for this is to reuse a single parser across many comments. This
+     * way, we can cache a parser for an whole file or even an whole
+     * project.
+     */
+    protected void reset(String comment, int commentCharOffset) {
+        this.buffer = new StringBuffer(comment);
+
+        this.lineOffset = 0;
+        this.columnOffset = 0;
+        this.currentCharOffset = 0;
+        this.commentCharOffset = commentCharOffset;
+    }
+
+    /**
+     * See {@link AnnotationCommentParser#parse(String, int)} for
+     * a description of the method. This will pass 0 as the
+     * comment char offset.
+     *
+     * @param comment The comment to parse
+     *
+     * @return A filtered list of annotations.
+     */
+    public List<Annotation> parse(String comment) {
+        return parse(comment, 0);
+    }
+
+    /**
      * This method is used to parse a comment and returns a list of
      * annotations that were found in the comment. The annotation
      * that are returned are those considered as valid annotation.
@@ -205,9 +225,14 @@ public class AnnotationCommentParser {
      * and contain only included class names.
      * </p>
      *
+     * @param comment The comment to parse
+     * @param commentCharOffset The offset of the comment within the file
+     *
      * @return A filtered list of annotations.
      */
-    public List<Annotation> parse() {
+    public List<Annotation> parse(String comment, int commentCharOffset) {
+        reset(comment, commentCharOffset);
+
         List<Annotation> annotations = new LinkedList<Annotation>();
 
         while (hasMoreChunk()) {
@@ -241,8 +266,8 @@ public class AnnotationCommentParser {
         }
 
         int lastCharOffset = annotation.getSourcePosition().endOffset - currentCharOffset - commentCharOffset;
-        if (lastCharOffset < 0) {
-            // This is not normal, we should have a positive offset. Assume it's an invalid annotation
+        if (lastCharOffset < 0 || lastCharOffset + 1 > currentChunk.length()) {
+            // This is not normal, we should have a valid offset. Assume it's an invalid annotation
             return false;
         }
 

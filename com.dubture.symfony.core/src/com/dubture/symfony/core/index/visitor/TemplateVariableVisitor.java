@@ -35,6 +35,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
 import com.dubture.symfony.annotation.model.Annotation;
+import com.dubture.symfony.annotation.parser.AnnotationCommentParser;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
@@ -81,29 +82,28 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 
     private ISourceModule source;
 
-    public TemplateVariableVisitor(List<UseStatement> useStatements, NamespaceDeclaration namespace, ISourceModule source) {
+    private AnnotationCommentParser parser;
 
+    public TemplateVariableVisitor(List<UseStatement> useStatements, NamespaceDeclaration namespace, ISourceModule source) {
         this.namespace = namespace;
         this.useStatements = useStatements;
 
         this.source = source;
+        this.parser = AnnotationUtils.createParser();
+
         bundle = ModelUtils.extractBundleName(namespace);
-
-
     }
-
 
     public Map<TemplateVariable, String> getTemplateVariables() {
         return templateVariables;
     }
 
-
     /**
-    *
-    * Visit a {@link PHPMethodDeclaration} and check
-    * if it's an Action.
-    *
-    */
+     *
+     * Visit a {@link PHPMethodDeclaration} and check
+     * if it's an Action.
+     *
+     */
     @Override
     public boolean visit(PHPMethodDeclaration methodDeclaration) throws Exception {
 
@@ -117,7 +117,7 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
         }
 
         String action = currentMethod.getName().replace(SymfonyCoreConstants.ACTION_SUFFIX, "");
-        List<Annotation> annotations = AnnotationUtils.extractAnnotations(methodDeclaration);
+        List<Annotation> annotations = AnnotationUtils.extractAnnotations(parser, methodDeclaration);
         for (Annotation annotation : annotations) {
             String className = annotation.getClassName();
 

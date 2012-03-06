@@ -25,6 +25,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 
 import com.dubture.symfony.annotation.model.Annotation;
+import com.dubture.symfony.annotation.parser.AnnotationCommentParser;
 import com.dubture.symfony.annotation.parser.antlr.SourcePosition;
 import com.dubture.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
@@ -56,8 +57,11 @@ public class AnnotationVisitor extends PHPASTVisitor {
 
     private Stack<UseStatement> useStatements = new Stack<UseStatement>();
 
+    private AnnotationCommentParser parser;
+
     public AnnotationVisitor(IBuildContext context) {
         this.context = context;
+        this.parser = AnnotationUtils.createParser();
     }
 
     @Override
@@ -100,7 +104,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
             return false;
         }
 
-        List<Annotation> annotations = AnnotationUtils.extractAnnotations(methodDeclaration);
+        List<Annotation> annotations = AnnotationUtils.extractAnnotations(parser, methodDeclaration);
         for (Annotation annotation : annotations) {
             reportUnresolvableAnnotation(annotation);
         }

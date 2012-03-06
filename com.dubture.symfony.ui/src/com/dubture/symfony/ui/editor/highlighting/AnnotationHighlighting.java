@@ -16,6 +16,7 @@ import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighti
 import org.eclipse.swt.graphics.RGB;
 
 import com.dubture.symfony.annotation.model.Annotation;
+import com.dubture.symfony.annotation.parser.AnnotationCommentParser;
 import com.dubture.symfony.annotation.parser.antlr.SourcePosition;
 import com.dubture.symfony.core.util.AnnotationUtils;
 
@@ -29,9 +30,15 @@ public class AnnotationHighlighting extends AbstractSemanticHighlighting {
 
     protected class AnnotationApply extends AbstractSemanticApply {
 
+        protected AnnotationCommentParser parser;
+
+        public AnnotationApply() {
+            this.parser = AnnotationUtils.createParser();
+        }
+
         @Override
         public boolean visit(Comment comment) {
-            List<Annotation> annotations = AnnotationUtils.extractAnnotations(comment, getSourceModule());
+            List<Annotation> annotations = AnnotationUtils.extractAnnotations(parser, comment, getSourceModule());
             for (Annotation annotation : annotations) {
                 SourcePosition sourcePosition = annotation.getSourcePosition();
                 highlight(sourcePosition.startOffset, sourcePosition.length);
