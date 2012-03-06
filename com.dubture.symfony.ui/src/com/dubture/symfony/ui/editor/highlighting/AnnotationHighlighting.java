@@ -10,6 +10,7 @@ package com.dubture.symfony.ui.editor.highlighting;
 
 import java.util.List;
 
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.ast.nodes.Comment;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
@@ -30,15 +31,17 @@ public class AnnotationHighlighting extends AbstractSemanticHighlighting {
 
     protected class AnnotationApply extends AbstractSemanticApply {
 
+        protected ISourceModule sourceModule;
         protected AnnotationCommentParser parser;
 
         public AnnotationApply() {
+            this.sourceModule = getSourceModule();
             this.parser = AnnotationUtils.createParser();
         }
 
         @Override
         public boolean visit(Comment comment) {
-            List<Annotation> annotations = AnnotationUtils.extractAnnotations(parser, comment, getSourceModule());
+            List<Annotation> annotations = AnnotationUtils.extractAnnotations(parser, comment, sourceModule);
             for (Annotation annotation : annotations) {
                 SourcePosition sourcePosition = annotation.getSourcePosition();
                 highlight(sourcePosition.startOffset, sourcePosition.length);

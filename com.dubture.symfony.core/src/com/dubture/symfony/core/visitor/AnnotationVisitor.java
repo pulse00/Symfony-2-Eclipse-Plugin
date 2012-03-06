@@ -16,6 +16,7 @@ import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverity;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
@@ -54,6 +55,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
 
     private boolean isAction = false;
     private IBuildContext context;
+    private ISourceModule sourceModule;
 
     private Stack<UseStatement> useStatements = new Stack<UseStatement>();
 
@@ -61,6 +63,8 @@ public class AnnotationVisitor extends PHPASTVisitor {
 
     public AnnotationVisitor(IBuildContext context) {
         this.context = context;
+        this.sourceModule = context.getSourceModule();
+
         this.parser = AnnotationUtils.createParser();
     }
 
@@ -104,7 +108,7 @@ public class AnnotationVisitor extends PHPASTVisitor {
             return false;
         }
 
-        List<Annotation> annotations = AnnotationUtils.extractAnnotations(parser, methodDeclaration);
+        List<Annotation> annotations = AnnotationUtils.extractAnnotations(parser, methodDeclaration, sourceModule);
         for (Annotation annotation : annotations) {
             reportUnresolvableAnnotation(annotation);
         }

@@ -117,7 +117,7 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
         }
 
         String action = currentMethod.getName().replace(SymfonyCoreConstants.ACTION_SUFFIX, "");
-        List<Annotation> annotations = AnnotationUtils.extractAnnotations(parser, methodDeclaration);
+        List<Annotation> annotations = AnnotationUtils.extractAnnotations(parser, methodDeclaration, source);
         for (Annotation annotation : annotations) {
             String className = annotation.getClassName();
 
