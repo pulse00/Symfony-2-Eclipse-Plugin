@@ -21,6 +21,59 @@ import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
 import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTreeAdaptor;
 import com.dubture.symfony.annotation.parser.tree.visitor.AnnotationNodeVisitor;
 
+/**
+ * This is the {@link AnnotationCommentParser}. This is able to parse
+ * a comment and returns every annotation found within it.
+ *
+ * <p>
+ * For a better understanding of this class, here a small description
+ * of how it works internally. First of all, the class is instantiated.
+ * At this point, it is possible for the user of this class to set
+ * the excluded class names and also the included class names. The class
+ * names is the annotation fully qualified class name. For example, assume
+ * we have an annotation {@literal @Orm\Entity(...)}, then to exclude only
+ * this annotation, you need to add {@literal "Orm\Entity"} in the exluced
+ * class names list. This is the same for includec class names.
+ * </p>
+ *
+ * <p>
+ * Excluded class names have priority over included class names. That means
+ * that if you have an included class names {@literal "Orm\Entity"} but the
+ * you also specified, maybe by mistake, an excluded class name
+ * {@literal "Orm\Entity"}, then the returned list will NOT contain
+ * {@literal "Orm\Entity"} annotations even if it is found in the included
+ * class names.
+ * </p>
+ *
+ * <p>
+ * When it has been instantiated, you can now parse a comment by using the
+ * method {@link AnnotationCommentParser::parse}. You pass to this method
+ * the comment source as a string and a comment start offset value. This
+ * start offset is used to adjust source position so positions are relative
+ * to the file and not to the comment.
+ * </p>
+ *
+ * <p>
+ * Then, the parsing starts. It will begin by finding the first occurrence
+ * of the {@literal @} character. It will then create a chunk ranging from
+ * the position of the at sign to the end of the comment source. The
+ * {@link AnnotationParser} will be run on this chunk.
+ * </p>
+ *
+ * <p>
+ * The {@link AnnotationParser} will parse the annotation. If it is valid,
+ * the current offset of the parser is set at the end of the parsed annotation.
+ * This will enable to parse multiple annotations. If the annotation is
+ * invalid, the offset is incremented by one and we restart the process of
+ * finding an {@literal @} sign.
+ * </p>
+ *
+ * <p>
+ * This process is then repeated until we have read the whole comment.
+ * </p>
+ *
+ * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
+ */
 public class AnnotationCommentParser {
 
     static public List<Annotation> parseFromString(String comment) {
@@ -48,6 +101,8 @@ public class AnnotationCommentParser {
     protected StringBuffer buffer;
     protected List<String> includedClassNames;
     protected List<String> excludedClassNames;
+
+    protected String currentChunk;
 
     protected int lineOffset;
     protected int columnOffset;
@@ -140,15 +195,27 @@ public class AnnotationCommentParser {
         excludedClassNames = Arrays.asList(classNames);
     }
 
+    /**
+     * This method is used to parse a comment and returns a list of
+     * annotations that were found in the comment. The annotation
+     * that are returned are those considered as valid annotation.
+     *
+     * <p>
+     * The list returned does not contain any excluded class names
+     * and contain only included class names.
+     * </p>
+     *
+     * @return A filtered list of annotations.
+     */
     public List<Annotation> parse() {
         List<Annotation> annotations = new LinkedList<Annotation>();
 
         while (hasMoreChunk()) {
-            String chunk = getNextChunk();
-            Annotation annotation = parseChunk(chunk);
+            currentChunk = getNextChunk();
+            Annotation annotation = parseChunk(currentChunk);
 
-            if (annotation == null || annotation.getSourcePosition().endOffset == -1) {
-                // If we couldn't get an annotation or it is not ended, increase offset an try at the next @
+            if (!isValidAnnotation(annotation)) {
+                // The annotation parser is invalid, increase offset an try with the next chunk
                 currentCharOffset++;
                 continue;
             }
@@ -158,6 +225,38 @@ public class AnnotationCommentParser {
         }
 
         return postProcess(annotations);
+    }
+
+    /**
+     * This method determines if the annotation received is a valid annotation.
+     * We say that an annotation is valid if it is not null, if it has an
+     * endOffset and if the character following the closing parenthesis is
+     * a whitespace character.
+     *
+     * @return true if the annotation is valid, false otherwise
+     */
+    protected boolean isValidAnnotation(Annotation annotation) {
+        if (annotation == null || annotation.getSourcePosition().endOffset == -1) {
+            return false;
+        }
+
+        int lastCharOffset = annotation.getSourcePosition().endOffset - currentCharOffset - commentCharOffset;
+        if (lastCharOffset < 0) {
+            // This is not normal, we should have a positive offset. Assume it's an invalid annotation
+            return false;
+        }
+
+        if (lastCharOffset + 1 == currentChunk.length()) {
+            // The last char is also the last char in the chunk, it's a valid annotation
+            return true;
+        }
+
+        if (!Character.isWhitespace(currentChunk.codePointAt(lastCharOffset + 1))) {
+            // An annotation must be followed by a whitespace character, it is not case here
+            return false;
+        }
+
+        return true;
     }
 
     /**
