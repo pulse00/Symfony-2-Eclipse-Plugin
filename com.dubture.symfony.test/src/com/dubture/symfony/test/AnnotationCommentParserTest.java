@@ -165,10 +165,10 @@ public class AnnotationCommentParserTest extends TestCase {
 "     * @Template()\r\n" +
 "     */";
 
-        AnnotationCommentParser parser = new AnnotationCommentParser(comment, 1568);
+        AnnotationCommentParser parser = new AnnotationCommentParser();
         parser.setIncludedClassNames(new String[]{"Template"});
 
-        List<Annotation> annotations = parser.parse();
+        List<Annotation> annotations = parser.parse(comment, 1568);
 
         assertEquals(1, annotations.size());
 
@@ -198,14 +198,35 @@ public class AnnotationCommentParserTest extends TestCase {
         assertEquals(7, annotation.getSourcePosition().endOffset);
     }
 
+    @Test
+    public void testAnnotationEmail() {
+        String comment = "/** @A\\B\n" +
+"     *\n" +
+"     * Licensed to <user@email.com>\n" +
+"     */";
+
+        List<Annotation> annotations = getCommentAnnotations(comment, true);
+
+        assertEquals(1, annotations.size());
+    }
+
+    @Test
+    public void testAnnotationEndsAtEndOfChunk() {
+        String comment = "/** @A\\B";
+
+        List<Annotation> annotations = getCommentAnnotations(comment, true);
+
+        assertEquals(1, annotations.size());
+    }
+
     protected List<Annotation> getCommentAnnotations(String comment) {
         return getCommentAnnotations(comment, 0);
     }
 
     protected List<Annotation> getCommentAnnotations(String comment, int commentOffset) {
-        AnnotationCommentParser parser = new AnnotationCommentParser(comment, commentOffset);
+        AnnotationCommentParser parser = new AnnotationCommentParser();
 
-        return parser.parse();
+        return parser.parse(comment, commentOffset);
     }
 
     protected List<Annotation> getCommentAnnotations(String comment, boolean excludePhpDocBlock) {
@@ -222,8 +243,8 @@ public class AnnotationCommentParserTest extends TestCase {
             excludedClassNames.add("var");
         }
 
-        AnnotationCommentParser parser = new AnnotationCommentParser(comment, commentOffset, excludedClassNames);
+        AnnotationCommentParser parser = new AnnotationCommentParser(excludedClassNames);
 
-        return parser.parse();
+        return parser.parse(comment, commentOffset);
     }
 }
