@@ -25,6 +25,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 
 import com.dubture.symfony.annotation.model.Annotation;
+import com.dubture.symfony.annotation.parser.AnnotationCommentParser;
 import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.ViewPath;
@@ -140,23 +141,28 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
     }
 
     /**
-    *
-    * Parses @Template annotations in controllers to link to the corresponding template.
-    *
-    *
-    * @author Robert Gruendler <r.gruendler@gmail.com>
-    *
-    */
-    private class AnnotationPathVisitor extends PHPASTVisitor {
+     *
+     * Parses @Template annotations in controllers to link to the corresponding template.
+     *
+     *
+     * @author Robert Gruendler <r.gruendler@gmail.com>
+     *
+     */
+    private static class AnnotationPathVisitor extends PHPASTVisitor {
+
+        private static final String[] TEMPLATE_CLASS_NAMES = new String[]{"Template"};
 
         private IScriptProject project;
         private NamespaceDeclaration namespaceDeclaration;
         private ClassDeclaration classDeclaration;
 
+        private AnnotationCommentParser parser;
+
         private IModelElement template = null;
 
         public AnnotationPathVisitor(IScriptProject project) {
             this.project = project;
+            this.parser = AnnotationUtils.createParser(TEMPLATE_CLASS_NAMES);
         }
 
         public IModelElement getTemplate() {
@@ -181,8 +187,7 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
                 return false;
             }
 
-            String[] includedClassNames = new String[]{"Template"};
-            List<Annotation> annotations = AnnotationUtils.extractAnnotations(methodDeclaration, includedClassNames);
+            List<Annotation> annotations = AnnotationUtils.extractAnnotations(parser, methodDeclaration);
             if (annotations.size() < 1) {
                 return false;
             }
@@ -197,7 +202,6 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
                 return false;
             }
 
-            System.out.println("Just before requesting templates");
             IModelElement[] templates = SymfonyModelAccess.getDefault().findTemplates(bundle, controller, project);
             for (IModelElement template : templates) {
                 if (template.getElementName().startsWith(action)) {
