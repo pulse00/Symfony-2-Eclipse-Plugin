@@ -34,21 +34,7 @@ title: Symfony2 Eclipse Plugin - FAQ
 			<h3>DLTK Problem (2)</h3>
 			<p>Some vendor bundles/libraries contain skeleton php files or tests for syntax errors. When these files end with .php Eclipse will try to parse them and throw syntax errors obviously, because it cannot know that these are skeleton/test files. To remove those errors, right-click the parent folder and select Build-Path -> Exclude from build path. This will exclude the folder and all its contents from the build. Clean your project after doing this ( Project -> Clean).</p>
 			
-  	</div>
-	<div class="faq">					
-		<h2 class="question"><a href="#pdt">When will the plugin work with the stable PDT version?</a></h2>
-		<p class="answer">According to the <a href="http://dev.eclipse.org/mhonarc/lists/pdt-dev/msg02006.html">PDT developers mailing-list</a> the next PDT maintenance release will be shipped in March 2012. This release will contain the commits required by the Symfony plugin. Until then you need to use the build provided by this updatesite.</p>				
-	</div>
-  
-	<div class="faq">
-		<h2 class="question"><a href="#pdt2">What does the PDT development build contain?</a></h2>
-		<p class="answer">It's simply a build of the current PHP Development tools' HEAD. You can consider it as a nightly build. No modifications made.</p>
-	</div>
-	
-	<div class="faq">
-		<h2 class="question"><a href="#pdt2">How do i know if i have the correct PDT version installed?</a></h2>
-		<p class="answer">Go to <span class="eclipsehint">Eclipse(Mac) / Help(Windows/Linux) -> About Eclipse -> SDK -> Installation Details -> Installed Software </span>. The version number of the PDT development build ends with <strong>-DEV</strong>. The current version is <span class="code">3.0.0.v20111227-2200-97--104_33JBVgSVXO7XGJz0VLa9O-DEV</span></p>
-	</div>	
+  	</div>  
 	
 	<div class="faq">					
 		<h2 class="question"><a href="#symfony-aware">How do i know a PHP project is symfony-aware?</a></h2>
