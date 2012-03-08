@@ -4,13 +4,10 @@
 
 [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=pulse00&url=https://github.com/pulse00/Symfony-2-Eclipse-Plugin&title=Symfony Eclipse Plugin&language=en_GB&tags=github&category=software)
 
-The plugin is still beta.
-
 ### Requirements
 
-- Eclipse >= 3.7 (aka Indigo)
+- Eclipse >= 3.7.2 (aka Indigo SR2)
 - Java >= 6
-- PHP Development Tools - Development build (available in the updatesite)
 
 ### Updatesite
 
