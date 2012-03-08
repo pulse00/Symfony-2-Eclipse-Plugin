@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.dubture.symfony.ui;singleton:=true
-Bundle-Version: 1.0.59.qualifier
+Bundle-Version: 1.0.60.qualifier
 Bundle-Activator: com.dubture.symfony.ui.SymfonyUiPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
