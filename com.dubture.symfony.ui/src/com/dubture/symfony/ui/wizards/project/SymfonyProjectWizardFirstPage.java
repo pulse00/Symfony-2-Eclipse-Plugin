@@ -8,7 +8,6 @@
  ******************************************************************************/
 package com.dubture.symfony.ui.wizards.project;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +55,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.osgi.framework.Bundle;
 
@@ -88,10 +86,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
         fInitialName = ""; //$NON-NLS-1$$
     }
 
-
-
     public void createControl(Composite parent) {
-
         initializeDialogUnits(parent);
         final Composite composite = new Composite(parent, SWT.NULL);
         composite.setFont(parent.getFont());
@@ -102,7 +97,6 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
         fPHPLocationGroup = new LocationGroup(composite, fNameGroup, getShell());
 
         fPHPLocationGroup.addObserver(new Observer() {
-
             @Override
             public void update(Observable arg0, Object arg1) {
                 fSymfonyLayoutGroup.setEnabled(!fPHPLocationGroup.isExistingLocation());
@@ -114,10 +108,11 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
         data.setSettings(getDialogSettings());
         data.setObserver(fPHPLocationGroup);
         fragment = (WizardFragment) Platform.getAdapterManager().loadAdapter(
-                data, PHPProjectWizardFirstPage.class.getName());
+                                                                             data,
+                                                                             PHPProjectWizardFirstPage.class.getName());
 
         // don't really have a choice with Symfony2 ;)
-//        fVersionGroup = new VersionGroup(composite);
+        // fVersionGroup = new VersionGroup(composite);
 
         fSymfonyLayoutGroup = new SymfonyLayoutGroup(composite);
         fJavaScriptSupportGroup = new JavaScriptSupportGroup(composite, this);
@@ -139,7 +134,6 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
         fPHPLocationGroup.addObserver(validator);
         fSymfonyLayoutGroup.addObserver(validator);
 
-
         setControl(composite);
         Dialog.applyDialogFont(composite);
 
@@ -150,16 +144,12 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
     }
 
     public boolean hasTwigSupport() {
-
         return symfonySupportGroup.getSelection();
     }
 
     public List<ISymfonyProjectWizardExtension> getExtensions() {
-
         return extensions;
-
     }
-
 
     public class SymfonySupportGroup implements SelectionListener {
 
@@ -167,24 +157,23 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
         protected Button fEnableJavaScriptSupport;
 
         public boolean shouldSupportJavaScript() {
-            return PHPUiPlugin.getDefault().getPreferenceStore()
-                    .getBoolean((PreferenceConstants.JavaScriptSupportEnable));
+            return PHPUiPlugin.getDefault()
+                              .getPreferenceStore()
+                              .getBoolean((PreferenceConstants.JavaScriptSupportEnable));
         }
 
-
-
-        public SymfonySupportGroup(Composite composite,
-                WizardPage projectWizardFirstPage) {
+        public SymfonySupportGroup(Composite composite, WizardPage projectWizardFirstPage) {
             final int numColumns = 1;
             fGroup = new Group(composite, SWT.NONE);
             fGroup.setFont(composite.getFont());
 
             fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
-                    true));
+                                            true));
             fGroup.setText("Symfony"); //$NON-NLS-1$
 
-            IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(WIZARDEXTENSION_ID);
+            IConfigurationElement[] config = Platform.getExtensionRegistry()
+                                                     .getConfigurationElementsFor(WIZARDEXTENSION_ID);
             extensions = new ArrayList<ISymfonyProjectWizardExtension>();
 
             try {
@@ -203,34 +192,29 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
             // hide the symfony group if no extensions is filling it up
             if (config.length == 0)
                 fGroup.setVisible(false);
-
-
         }
 
         public void widgetDefaultSelected(SelectionEvent e) {
         }
 
         public void widgetSelected(SelectionEvent e) {
-            PHPUiPlugin.getDefault().getPreferenceStore().setValue(
-            (PreferenceConstants.JavaScriptSupportEnable),
-            fEnableJavaScriptSupport.getSelection());
+            PHPUiPlugin.getDefault().getPreferenceStore().setValue((PreferenceConstants.JavaScriptSupportEnable),
+                                                                   fEnableJavaScriptSupport.getSelection());
         }
 
         public boolean getSelection() {
             return fEnableJavaScriptSupport.getSelection();
         }
-
     }
 
     /**
-    * Request a project layout.
-    */
-    public class SymfonyLayoutGroup extends Observable implements Observer, SelectionListener,
-            IDialogFieldListener {
+     * Request a project layout.
+     */
+    public class SymfonyLayoutGroup extends Observable implements Observer, SelectionListener, IDialogFieldListener {
 
         private Group fGroup;
-        //TODO: link to preference page
-//        private Link fPreferenceLink;
+        // TODO: link to preference page
+        // private Link fPreferenceLink;
         private ComboDialogField versionSelector;
         private ComboDialogField layoutSelector;
 
@@ -242,22 +226,14 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
         public SymfonyLayoutGroup(Composite composite) {
             final int numColumns = 4;
 
-            String[] layouts = new String[] {
-                    "Standard Edition (vendors)",
-                    "Standard Edition (no vendors)",
-                    "Custom project layout"
-                    };
+            String[] layouts = new String[] {"Standard Edition (vendors)",
+                                             "Standard Edition (no vendors)",
+                                             "Custom project layout"};
 
             final Map<String, String[]> available = new HashMap<String, String[]>();
 
-
-            available.put(layouts[0], new String[]
-                    {SymfonyVersion.Symfony2_0_11.getAlias()}
-                    );
-
-            available.put(layouts[1], new String[]
-                    {SymfonyVersion.Symfony2_0_11.getAlias()}
-                    );
+            available.put(layouts[0], new String[] {SymfonyVersion.Symfony2_0_11.getAlias()});
+            available.put(layouts[1], new String[] {SymfonyVersion.Symfony2_0_11.getAlias()});
 
             IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
 
@@ -270,17 +246,13 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
             versionSelector.setLabelText("");
             versionSelector.setItems(layouts);
 
-
             layoutSelector = new ComboDialogField(SWT.READ_ONLY);
             layoutSelector.setLabelText("Select layout:");
             layoutSelector.setItems(layouts);
 
             layoutSelector.setDialogFieldListener(new org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener() {
-
                 @Override
-                public void dialogFieldChanged(
-                        org.eclipse.php.internal.ui.wizards.fields.DialogField field) {
-
+                public void dialogFieldChanged(org.eclipse.php.internal.ui.wizards.fields.DialogField field) {
                     String[] items = layoutSelector.getItems();
 
                     String index = items[layoutSelector.getSelectionIndex()];
@@ -290,17 +262,13 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
                     versionSelector.selectItem(0);
 
                     fireEvent();
-
                 }
             });
 
             versionSelector.setDialogFieldListener(new org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener() {
-
                 @Override
-                public void dialogFieldChanged(
-                        org.eclipse.php.internal.ui.wizards.fields.DialogField field) {
-
-                        fireEvent();
+                public void dialogFieldChanged(org.eclipse.php.internal.ui.wizards.fields.DialogField field) {
+                    fireEvent();
                 }
             });
 
@@ -308,8 +276,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
             fGroup = new Group(composite, SWT.NONE);
             fGroup.setFont(composite.getFont());
             fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
-                    true));
+            fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
             fGroup.setText(PHPUIMessages.LayoutGroup_OptionBlock_Title); //$NON-NLS-1$
 
             layoutSelector.doFillIntoGrid(fGroup, 2);
@@ -318,53 +285,43 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
             layoutSelector.selectItem(0);
             versionSelector.selectItem(0);
 
-
-//            fPreferenceLink = new Link(fGroup, SWT.NONE);
-//            fPreferenceLink
-//                    .setText(PHPUIMessages.ToggleLinkingAction_link_description); //$NON-NLS-1$
-//            fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING,
-//                    true, false));
-//            fPreferenceLink.addSelectionListener(this);
-//            fPreferenceLink.setEnabled(true);
-
+            // fPreferenceLink = new Link(fGroup, SWT.NONE);
+            // fPreferenceLink
+            //                    .setText(PHPUIMessages.ToggleLinkingAction_link_description); //$NON-NLS-1$
+            // fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING,
+            // true, false));
+            // fPreferenceLink.addSelectionListener(this);
+            // fPreferenceLink.setEnabled(true);
         }
 
         public void setEnabled(boolean b) {
-
             layoutSelector.setEnabled(b);
             versionSelector.setEnabled(b);
-
         }
 
         /*
-        * (non-Javadoc)
-        *
-        * @see
-        * org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse
-        * .swt.events.SelectionEvent)
-        */
+         * (non-Javadoc)
+         *
+         * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse
+         * .swt.events.SelectionEvent)
+         */
         public void widgetSelected(SelectionEvent e) {
             widgetDefaultSelected(e);
         }
 
-
         public void widgetDefaultSelected(SelectionEvent e) {
-
             String prefID = PHPProjectLayoutPreferencePage.PREF_ID;
 
             Object data = null;
             PreferencesUtil.createPreferenceDialogOn(getShell(), prefID,
-                    new String[] { prefID }, data).open();
+                                                     new String[] {prefID}, data).open();
         }
 
         public boolean hasSymfonyStandardEdition() {
-
             return layoutSelector.getSelectionIndex() <= 2;
-
         }
 
         public SymfonyVersion getSymfonyVersion() {
-
             if (versionSelector.getSelectionIndex() == 0) {
                 return SymfonyVersion.Symfony2_0_11;
             }
@@ -374,42 +331,30 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
         @Override
         public void dialogFieldChanged(DialogField field) {
-            // TODO Auto-generated method stub
-
+            // Do nothing
         }
 
         @Override
         public void update(Observable o, Object arg) {
-            // TODO Auto-generated method stub
-
+            // Do nothing
         }
     }
 
-
     public boolean shouldSupportJavascript() {
-
         return fJavaScriptSupportGroup.shouldSupportJavaScript();
-
     }
 
     // Symfony requires php 5.3
     public PHPVersion getPHPVersionValue() {
-
         return PHPVersion.PHP5_3;
-
     }
 
-
     public boolean hasSymfonyStandardEdition() {
-
         return fSymfonyLayoutGroup.hasSymfonyStandardEdition();
-
     }
 
     public SymfonyVersion getSymfonyVersion() {
-
         return fSymfonyLayoutGroup.getSymfonyVersion();
-
     }
 
     public String getLibraryPath() throws Exception {
@@ -417,7 +362,6 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
         String path = null;
 
         try {
-
             // built in standard edition is selected
             if (hasSymfonyStandardEdition()) {
 
@@ -430,9 +374,9 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
                 int index = fSymfonyLayoutGroup.layoutSelector.getSelectionIndex();
 
                 if (index == 0) {
-                    entry += version + "/" + SymfonyCoreConstants.BUILTIN_VENDOR + ".zip";
+                    entry += version + "/" + SymfonyCoreConstants.BUILTIN_VENDOR + ".tgz";
                 } else if (index == 1) {
-                    entry += version + "/" + SymfonyCoreConstants.BUILTIN_NO_VENDOR + ".zip";
+                    entry += version + "/" + SymfonyCoreConstants.BUILTIN_NO_VENDOR + ".tgz";
                 } else {
                     throw new Exception("Invalid library selection");
                 }
@@ -445,7 +389,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
                 URL fileURL = bundle.getEntry(entry);
                 path = FileLocator.toFileURL(fileURL).getPath().toString();
 
-            // custom symfony installation is selected
+                // custom symfony installation is selected
             } else {
                 path = fSymfonyLayoutGroup.versionSelector.getText();
             }
@@ -464,24 +408,24 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
             final IWorkspace workspace = DLTKUIPlugin.getWorkspace();
             final String name = fNameGroup.getName();
-            // check whether the project name field is empty
+            // Check whether the project name field is empty
             if (name.length() == 0) {
                 setErrorMessage(null);
                 setMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_enterProjectName);
                 setPageComplete(false);
                 return;
             }
-            // check whether the project name is valid
-            final IStatus nameStatus = workspace.validateName(name,
-                    IResource.PROJECT);
+
+            // Check whether the project name is valid
+            final IStatus nameStatus = workspace.validateName(name, IResource.PROJECT);
             if (!nameStatus.isOK()) {
                 setErrorMessage(nameStatus.getMessage());
                 setPageComplete(false);
                 return;
             }
-            // check whether project already exists
-            final IProject handle = getProjectHandle();
 
+            // Check whether project already exists
+            final IProject handle = getProjectHandle();
             if (!isInLocalServer()) {
                 if (handle.exists()) {
                     setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_projectAlreadyExists);
@@ -490,105 +434,102 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
                 }
             }
 
-            IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
-                    .getProjects();
+            IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
             String newProjectNameLowerCase = name.toLowerCase();
             for (IProject currentProject : projects) {
                 String existingProjectName = currentProject.getName();
                 if (existingProjectName.toLowerCase().equals(
-                        newProjectNameLowerCase)) {
+                                                             newProjectNameLowerCase)) {
                     setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_projectAlreadyExists);
                     setPageComplete(false);
                     return;
                 }
             }
 
-            final String location = fPHPLocationGroup.getLocation()
-                    .toOSString();
-            // check whether location is empty
+            // Check whether location is empty
+            final String location = fPHPLocationGroup.getLocation().toOSString();
             if (location.length() == 0) {
                 setErrorMessage(null);
                 setMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_enterLocation);
                 setPageComplete(false);
                 return;
             }
-            // check whether the location is a syntactically correct path
+
+            // Check whether the location is a syntactically correct path
             if (!Path.EMPTY.isValidPath(location)) {
                 setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_invalidDirectory);
                 setPageComplete(false);
                 return;
             }
-            // check whether the location has the workspace as prefix
+
+            // Check whether the location has the workspace as prefix
             IPath projectPath = Path.fromOSString(location);
             if (!fPHPLocationGroup.isInWorkspace()
-                    && Platform.getLocation().isPrefixOf(projectPath)) {
+                && Platform.getLocation().isPrefixOf(projectPath)) {
                 setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_cannotCreateInWorkspace);
                 setPageComplete(false);
                 return;
             }
-            // If we do not place the contents in the workspace validate the
-            // location.
+
+            // If we do not place the contents in the workspace validate the location.
             if (!fPHPLocationGroup.isInWorkspace()) {
                 IEnvironment environment = getEnvironment();
                 if (EnvironmentManager.isLocal(environment)) {
                     final IStatus locationStatus = workspace
-                            .validateProjectLocation(handle, projectPath);
-                    File file = projectPath.toFile();
+                                                            .validateProjectLocation(handle, projectPath);
+
                     if (!locationStatus.isOK()) {
                         setErrorMessage(locationStatus.getMessage());
                         setPageComplete(false);
                         return;
                     }
 
-//                    if (!canCreate(projectPath.toFile())) {
-//                        setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_invalidDirectory);
-//                        setPageComplete(false);
-//                        return;
-//                    }
+                    // File file = projectPath.toFile();
+                    // if (!canCreate(projectPath.toFile())) {
+                    // setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_invalidDirectory);
+                    // setPageComplete(false);
+                    // return;
+                    // }
                 }
             }
 
             if (fragment != null) {
-                fragment.getWizardModel().putObject("ProjectName",
-                        fNameGroup.getName());
+                fragment.getWizardModel().putObject("ProjectName", fNameGroup.getName());
                 if (!fragment.isComplete()) {
-                    setErrorMessage((String) fragment.getWizardModel()
-                            .getObject(ERROR_MESSAGE));
+                    setErrorMessage((String) fragment.getWizardModel().getObject(ERROR_MESSAGE));
                     setPageComplete(false);
                     return;
                 }
             }
 
             // TODO: This check never works because when layoutSelector == 2,
-            //       returned LibraryPath is always null, hence the test
-            //       will never by true. Don't know what is is suppose to
-            //       check ...
-//            if (fSymfonyLayoutGroup.layoutSelector.getSelectionIndex() == 2) {
-//
-//                String path;
-//                try {
-//                    path = getLibraryPath();
-//                    File file = new File(path);
-//
-//                    if (!file.exists()) {
-//                        setErrorMessage("Directory for custom project layout does not exist.");
-//                        setPageComplete(false);
-//                        return;
-//                    }
-//                } catch (Exception e) {
-//                    Logger.logException(e);
-//                    setErrorMessage("Directory for custom project layout does not exist.");
-//                    setPageComplete(false);
-//                    return;
-//                }
-//
-//            }
+            // returned LibraryPath is always null, hence the test
+            // will never by true. Don't know what is is suppose to
+            // check ...
+            // if (fSymfonyLayoutGroup.layoutSelector.getSelectionIndex() == 2) {
+            //
+            // String path;
+            // try {
+            // path = getLibraryPath();
+            // File file = new File(path);
+            //
+            // if (!file.exists()) {
+            // setErrorMessage("Directory for custom project layout does not exist.");
+            // setPageComplete(false);
+            // return;
+            // }
+            // } catch (Exception e) {
+            // Logger.logException(e);
+            // setErrorMessage("Directory for custom project layout does not exist.");
+            // setPageComplete(false);
+            // return;
+            // }
+            //
+            // }
 
             setPageComplete(true);
             setErrorMessage(null);
             setMessage(null);
-
-
         }
     }
 }

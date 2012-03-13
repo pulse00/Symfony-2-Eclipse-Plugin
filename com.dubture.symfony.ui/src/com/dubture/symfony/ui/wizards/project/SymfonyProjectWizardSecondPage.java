@@ -8,18 +8,11 @@
  ******************************************************************************/
 package com.dubture.symfony.ui.wizards.project;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -52,6 +45,7 @@ import org.eclipse.php.internal.ui.wizards.PHPProjectWizardSecondPage;
 
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
+import com.dubture.symfony.core.util.UncompressUtils;
 
 /**
  *
@@ -62,8 +56,6 @@ import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
  */
 @SuppressWarnings("restriction")
 public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
-
-    private static final int ZIP_BUFFER = 8 * 1024;
 
     public SymfonyProjectWizardSecondPage(PHPProjectWizardFirstPage mainPage) {
         super(mainPage);
@@ -326,7 +318,7 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
             final File symfonyArchiveFile = symfonyLibraryPath.toFile();
             final File outputDirectory = scriptProject.getProject().getLocation().toFile();
 
-            unzippSymfonyLibrary(symfonyArchiveFile, outputDirectory);
+            uncompressSymfonyLibrary(symfonyArchiveFile, outputDirectory);
             monitor.worked(70);
 
             if (!scriptProject.isOpen()) {
@@ -346,69 +338,22 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
         }
     }
 
-    public void unzippSymfonyLibrary(File symfonyArchiveFile, File outputDirectory) {
+    /**
+     * Uncompress the Symfony library to the specified output directory
+     *
+     * @param symfonyArchiveFile The Symfony library archive file
+     * @param outputDirectory The output directory where to put the extracted files
+     */
+    public void uncompressSymfonyLibrary(File symfonyArchiveFile, File outputDirectory) {
         try {
-            ZipFile zipfile = new ZipFile(symfonyArchiveFile);
-            for (Enumeration<? extends ZipEntry> entries = zipfile.entries(); entries.hasMoreElements(); ) {
-                ZipEntry entry = (ZipEntry) entries.nextElement();
-                unzipEntry(zipfile, entry, outputDirectory);
-            }
+            File tarArchiveFile = UncompressUtils.uncompressGzipArchive(symfonyArchiveFile, outputDirectory);
+            UncompressUtils.uncompressTarArchive(tarArchiveFile, outputDirectory);
+
+            // Delete the tar archive, it is not required anymore
+            tarArchiveFile.delete();
         } catch (Exception exception) {
             exception.printStackTrace();
             Logger.logException("Error while extracting symfony library " + symfonyArchiveFile, exception);
         }
-    }
-
-    private void unzipEntry(ZipFile zipfile, ZipEntry entry, File outputDir) throws IOException {
-        String entryName = stripEntryNamePrefix(entry.getName());
-
-        if (entry.isDirectory()) {
-            createDir(new File(outputDir, entryName));
-            return;
-        }
-
-        File outputFile = new File(outputDir, entryName);
-        if (!outputFile.getParentFile().exists()){
-            createDir(outputFile.getParentFile());
-        }
-
-        int count = -1;
-        byte data[] = new byte[ZIP_BUFFER];
-
-        BufferedInputStream inputStream = new BufferedInputStream(zipfile.getInputStream(entry));
-        BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outputFile));
-
-        try {
-            while ((count = inputStream.read(data, 0, ZIP_BUFFER)) != -1) {
-                outputStream.write(data, 0, count);
-            }
-        } finally {
-            outputStream.close();
-            inputStream.close();
-        }
-    }
-
-    private void createDir(File directory) {
-        if (directory.exists()) {
-            // Directory already exists, no need to do anything
-            return;
-        }
-
-        if (!directory.mkdirs()) {
-            throw new RuntimeException("Cannot create directory " + directory);
-        }
-    }
-
-    /**
-     * This method will remove the Symfony prefix from the zip entry.
-     *
-     * @return An entry name with the Symfony prefix removed if present
-     */
-    private String stripEntryNamePrefix(String entryName) {
-        if (entryName.startsWith("Symfony")) {
-            entryName = entryName.replace("Symfony", "");
-        }
-
-        return entryName;
     }
 }

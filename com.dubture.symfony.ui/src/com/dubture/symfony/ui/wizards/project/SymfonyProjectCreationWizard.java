@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of the Symfony eclipse plugin.
- * 
+ *
  * (c) Robert Gruendler <r.gruendler@gmail.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
@@ -24,100 +24,84 @@ import com.dubture.symfony.ui.SymfonyPluginImages;
 import com.dubture.symfony.ui.wizards.ISymfonyProjectWizardExtension;
 
 /**
+ * Simple extension of the {@link PHPProjectCreationWizard} to add the symfony nature after the project is
+ * created.
  *
- * Simple extension of the {@link PHPProjectCreationWizard} to add
- * the symfony nature after the project is created.
- * 
- * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
- *
  */
 @SuppressWarnings("restriction")
 public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 
+    public SymfonyProjectCreationWizard() {
+        setDefaultPageImageDescriptor(SymfonyPluginImages.DESC_WIZBAN_ADD_SYMFONY_FILE);
+        setDialogSettings(DLTKUIPlugin.getDefault().getDialogSettings());
+        setWindowTitle("New Symfony Project");
+    }
 
+    public void addPages() {
+        fFirstPage = new SymfonyProjectWizardFirstPage();
 
-	public SymfonyProjectCreationWizard() {
+        // First page
+        fFirstPage.setTitle("New Symfony project");
+        fFirstPage.setDescription("Create a Symfony project in the workspace or in an external location.");
+        addPage(fFirstPage);
 
-		setDefaultPageImageDescriptor(SymfonyPluginImages.DESC_WIZBAN_ADD_SYMFONY_FILE);
-		setDialogSettings(DLTKUIPlugin.getDefault().getDialogSettings());
-		setWindowTitle("New Symfony Project");
+        // Second page (Include Path)
+        fSecondPage = new SymfonyProjectWizardSecondPage(fFirstPage);
+        fSecondPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page2Title);
+        fSecondPage.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page2Description);
+        addPage(fSecondPage);
 
-	}
+        // Third page (Include Path)
+        fThirdPage = new SymfonyProjectWizardThirdPage(fFirstPage);
+        fThirdPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page3Title);
+        fThirdPage.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page3Description);
+        addPage(fThirdPage);
 
-	public void addPages() {
+        fLastPage = fSecondPage;
+    }
 
-		fFirstPage = new SymfonyProjectWizardFirstPage();
+    @Override
+    public boolean performFinish() {
 
-		// First page
-		fFirstPage.setTitle("New Symfony project");
-		fFirstPage
-		.setDescription("Create a Symfony project in the workspace or in an external location.");
-		addPage(fFirstPage);
+        boolean res = super.performFinish();
 
-		// Second page (Include Path)
-		fSecondPage = new SymfonyProjectWizardSecondPage(fFirstPage);
-		fSecondPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page2Title);
-		fSecondPage
-		.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page2Description);
-		addPage(fSecondPage);
+        try {
+            IProject project = fFirstPage.getProjectHandle();
+            SymfonyProjectWizardFirstPage firstPage = (SymfonyProjectWizardFirstPage) fFirstPage;
 
-		// Third page (Include Path)
-		fThirdPage = new SymfonyProjectWizardThirdPage(fFirstPage);
-		fThirdPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page3Title);
-		fThirdPage
-		.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page3Description);
-		addPage(fThirdPage);
+            List<String> extensionNatures = new ArrayList<String>();
 
-		fLastPage = fSecondPage;
-	}
+            // let extensions handle the project first
+            for (ISymfonyProjectWizardExtension e : firstPage.getExtensions()) {
 
+                ISymfonyProjectWizardExtension extension = (ISymfonyProjectWizardExtension) e;
+                String nature = extension.getNature();
 
-	@Override
-	public boolean performFinish() {
+                if (nature != null && extension.isActivated())
+                    extensionNatures.add(nature);
 
-		boolean res = super.performFinish();
+            }
 
-		try {			
+            IProjectDescription description = project.getDescription();
+            String[] natures = description.getNatureIds();
 
-		    System.err.println("perform finish symfony");
-			IProject project = fFirstPage.getProjectHandle();
-			SymfonyProjectWizardFirstPage firstPage = (SymfonyProjectWizardFirstPage) fFirstPage;
+            String[] newNatures = new String[natures.length + extensionNatures.size() + 1];
+            System.arraycopy(natures, 0, newNatures, 1, natures.length);
 
-			List<String> extensionNatures = new ArrayList<String>();
-			
-			// let extensions handle the project first
-			for (ISymfonyProjectWizardExtension e : firstPage.getExtensions()) {
+            newNatures[0] = SymfonyNature.NATURE_ID;
 
-				ISymfonyProjectWizardExtension extension = (ISymfonyProjectWizardExtension) e;				
-				String nature = extension.getNature();
-				
-				if (nature != null && extension.isActivated())
-					extensionNatures.add(nature);
+            for (int i = 0; i < extensionNatures.size(); i++) {
+                newNatures[natures.length + 1 + i] = extensionNatures.get(i);
+            }
 
-			}
+            description.setNatureIds(newNatures);
+            project.setDescription(description, null);
 
-			IProjectDescription description = project.getDescription();
-			String[] natures = description.getNatureIds();
+        } catch (CoreException exception) {
+            Logger.logException(exception);
+        }
 
-			String[] newNatures = new String[natures.length + extensionNatures.size() + 1];
-			System.arraycopy(natures, 0, newNatures, 1, natures.length);			
-			
-			newNatures[0] = SymfonyNature.NATURE_ID;
-						
-			for (int i=0; i < extensionNatures.size(); i++) {			
-				newNatures[natures.length + 1 + i] = extensionNatures.get(i);				
-			}
-			
-			description.setNatureIds(newNatures);
-			project.setDescription(description, null);
-
-
-		} catch (CoreException e) {
-			Logger.logException(e);			
-		}
-
-		return res;
-
-	}
+        return res;
+    }
 }
