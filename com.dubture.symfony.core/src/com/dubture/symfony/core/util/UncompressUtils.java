@@ -16,6 +16,12 @@ import org.apache.commons.compress.utils.IOUtils;
 public final class UncompressUtils {
 
     private static final int BUFFER_SIZE = 8 * 1024;
+    private static final EntryNameTranslator IDENTITY_TRANSLATOR = new EntryNameTranslator() {
+        @Override
+        public String translate(String entryName) {
+            return entryName;
+        }
+    };
 
     private UncompressUtils() {
         // Cannot instantiate
@@ -66,6 +72,23 @@ public final class UncompressUtils {
      * @throws IOException When an error occurs while uncompressing the tar archive
      */
     public static void uncompressTarArchive(File archiveFile, File outputDirectory) throws IOException {
+        uncompressTarArchive(archiveFile, outputDirectory, IDENTITY_TRANSLATOR);
+    }
+
+    /**
+     * Uncompress all entries found in a tar archive file into the given output
+     * directory. Entry names are translated using the translator before being
+     * put on the file system.
+     *
+     * @param archiveFile The tar archive file to uncompress
+     * @param outputDirectory The output directory where to put uncompressed entries
+     * @param entryNameTranslator The entry name translator to use
+     *
+     * @throws IOException When an error occurs while uncompressing the tar archive
+     */
+    public static void uncompressTarArchive(File archiveFile,
+                                            File outputDirectory,
+                                            EntryNameTranslator entryNameTranslator) throws IOException {
         FileInputStream fileInputStream = new FileInputStream(archiveFile);
         BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
         TarArchiveInputStream tarInputStream = new TarArchiveInputStream(bufferedInputStream);
@@ -73,11 +96,28 @@ public final class UncompressUtils {
         try {
             TarArchiveEntry tarEntry = null;
             while ((tarEntry = tarInputStream.getNextTarEntry()) != null) {
-                uncompressTarArchiveEntry(tarInputStream, tarEntry, outputDirectory);
+                uncompressTarArchiveEntry(tarInputStream, tarEntry, outputDirectory, entryNameTranslator);
             }
         } finally {
             tarInputStream.close();
         }
+    }
+
+    /**
+     * Uncompress a tar archive entry to the specified output directory. Entry names are
+     * translated using the translator before being put on the file system.
+     *
+     * @param tarInputStream The tar input stream associated with the entry
+     * @param entry The tar archive entry to uncompress
+     * @param outputDirectory The output directory where to put the uncompressed entry
+     * @param entryNameTranslator The entry name translator to use
+     *
+     * @throws IOException If an error occurs within the input or output stream
+     */
+    public static void uncompressTarArchiveEntry(TarArchiveInputStream tarInputStream,
+                                                 TarArchiveEntry entry,
+                                                 File outputDirectory) throws IOException {
+        uncompressTarArchiveEntry(tarInputStream, entry, outputDirectory, IDENTITY_TRANSLATOR);
     }
 
     /**
@@ -91,14 +131,11 @@ public final class UncompressUtils {
      */
     public static void uncompressTarArchiveEntry(TarArchiveInputStream tarInputStream,
                                                  TarArchiveEntry entry,
-                                                 File outputDirectory) throws IOException {
-        // TODO: This is specific to the symfony library archive, should be made
-        //       fully generic.
-        String entryName = stripEntryNamePrefix(entry.getName());
-
+                                                 File outputDirectory,
+                                                 EntryNameTranslator entryNameTranslator) throws IOException {
+        String entryName = entryNameTranslator.translate(entry.getName());
         if (entry.isDirectory()) {
             createDirectory(new File(outputDirectory, entryName));
-
             return;
         }
 
@@ -163,16 +200,21 @@ public final class UncompressUtils {
     }
 
     /**
-     * This method will remove the Symfony prefix from the zip entry.
+     * A simple interface used to translate an entry name to something
+     * else. This is used by the uncompress utils to let the end user
+     * of the utility class change the value of an entry name.
      *
-     * @return An entry name with the Symfony prefix removed if present
+     * @author Matthieu Vachon <matthieu.o.vachon@gmail.com>
      */
-    private static String stripEntryNamePrefix(String entryName) {
-        if (entryName.startsWith("Symfony")) {
-            entryName = entryName.replace("Symfony", "");
-        }
-
-        return entryName;
+    public static interface EntryNameTranslator {
+        /**
+         * Translate the entry name to something else. This is useful
+         * for example to remove the prefix of the entry.
+         *
+         * @param entryName The original entry name
+         * @return The translated entry name
+         */
+        String translate(String entryName);
     }
 
     /**

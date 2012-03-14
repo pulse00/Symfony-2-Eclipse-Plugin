@@ -347,13 +347,26 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
     public void uncompressSymfonyLibrary(File symfonyArchiveFile, File outputDirectory) {
         try {
             File tarArchiveFile = UncompressUtils.uncompressGzipArchive(symfonyArchiveFile, outputDirectory);
-            UncompressUtils.uncompressTarArchive(tarArchiveFile, outputDirectory);
+            UncompressUtils.uncompressTarArchive(tarArchiveFile, outputDirectory, new SymfonyEntryNameTranslator());
 
             // Delete the tar archive, it is not required anymore
             tarArchiveFile.delete();
         } catch (Exception exception) {
             exception.printStackTrace();
             Logger.logException("Error while extracting symfony library " + symfonyArchiveFile, exception);
+        }
+    }
+
+    private static class SymfonyEntryNameTranslator implements UncompressUtils.EntryNameTranslator{
+        private static final String SYMFONY_PREFIX = "Symfony";
+
+        @Override
+        public String translate(String entryName) {
+            if (entryName.startsWith(SYMFONY_PREFIX)) {
+                entryName = entryName.substring(SYMFONY_PREFIX.length() + 1);
+            }
+
+            return entryName;
         }
     }
 }
