@@ -8,21 +8,13 @@
       <objectContribution
             adaptable="true"
             id="com.dubture.symfony.ui.addnature"
-            objectClass="org.eclipse.core.resources.IProject">
-         <menu
-               id="com.dubture.symfony.ui.menu1"
-               label="%menu.label"
-               path="additions">
-            <separator
-                  name="project">
-            </separator>
-         </menu>
+            objectClass="org.eclipse.dltk.core.IScriptProject">
          <action
                class="com.dubture.symfony.ui.popup.actions.AddSymfonyNature"
                enablesFor="1"
                id="com.dubture.symfony.ui.newAction"
                label="%action.label"
-               menubarPath="com.dubture.symfony.ui.menu1/project">
+               menubarPath="org.eclipse.ui.projectConfigure/additions">
          </action>
       </objectContribution>
    </extension>
