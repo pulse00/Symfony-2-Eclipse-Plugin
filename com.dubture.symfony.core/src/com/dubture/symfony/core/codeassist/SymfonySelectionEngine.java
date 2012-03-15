@@ -183,7 +183,8 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
 
         @Override
         public boolean visit(PHPMethodDeclaration methodDeclaration) throws Exception {
-            if (!namespaceDeclaration.getName().endsWith("\\Controller")) {
+            
+            if (namespaceDeclaration == null || !namespaceDeclaration.getName().endsWith("\\Controller")) {
                 return false;
             }
 
