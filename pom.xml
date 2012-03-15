@@ -10,8 +10,10 @@
     <module>com.dubture.symfony.annotation</module>
     <module>com.dubture.symfony.debug</module>
     <module>com.dubture.symfony.index</module>		
+    <module>com.dubture.symfony.twig</module>
     <module>com.dubture.symfony.ui</module>
     <module>com.dubture.symfony.test</module>
+    <module>com.dubture.symfony.feature</module>
   </modules>
 
   <properties>
@@ -19,11 +21,6 @@
   </properties>
 
   <repositories>
-   <repository>
-     <id>github</id>
-     <layout>p2</layout>
-     <url>http://pulse00.github.com/p2/</url>
-   </repository>	
    <repository>
      <id>indigo</id>
      <layout>p2</layout>
@@ -38,6 +35,15 @@
         <artifactId>tycho-maven-plugin</artifactId>
         <version>${tycho-version}</version>
         <extensions>true</extensions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.tycho</groupId>
+        <artifactId>maven-osgi-compiler-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+                <source>1.6</source>
+                <target>1.6</target>
+        </configuration>
       </plugin>
     </plugins>
   </build>

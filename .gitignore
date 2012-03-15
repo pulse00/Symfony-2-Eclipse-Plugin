@@ -14,5 +14,6 @@ com.dubture.symfony.twig/target/*
 com.dubture.symfony.test/target/*
 com.dubture.symfony.index/target/*
 com.dubture.symfony.debug/target/*
+com.dubture.symfony.feature/target/*
 
 
