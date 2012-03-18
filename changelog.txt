@@ -1,3 +1,7 @@
+1.0.61
+
+* tycho p2 build integration
+
 1.0.59
 * removed beta flag
 * removed pdt-dev dependency
