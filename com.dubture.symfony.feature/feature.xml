@@ -31,6 +31,10 @@ THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRES
          id="com.dubture.doctrine.feature"
          version="0.0.0"/>
 
+   <includes
+         id="com.dubture.composer.feature"
+         version="0.0.0"/>
+
    <requires>
       <import feature="org.eclipse.php" version="3.0.0" match="greaterOrEqual"/>
       <import feature="com.dubture.twig.feature"/>
