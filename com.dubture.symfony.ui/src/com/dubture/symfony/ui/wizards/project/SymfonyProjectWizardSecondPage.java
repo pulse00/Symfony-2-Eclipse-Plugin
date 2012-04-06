@@ -321,7 +321,6 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
             final File outputDirectory = scriptProject.getProject().getLocation().toFile();
 
             uncompressSymfonyLibrary(symfonyArchiveFile, outputDirectory);
-//            scriptProject.set
             monitor.worked(70);
 
             if (!scriptProject.isOpen()) {

@@ -300,6 +300,9 @@
     <wizardextension
           class="com.dubture.symfony.ui.wizards.project.DoctrineProjectWizardExtension">
     </wizardextension>
+    <wizardextension
+          class="com.dubture.symfony.ui.wizards.project.ComposerProjectWizardExtension">
+    </wizardextension>
  </extension>
  <extension
        point="com.dubture.pdt.ui.namespaceresolver">

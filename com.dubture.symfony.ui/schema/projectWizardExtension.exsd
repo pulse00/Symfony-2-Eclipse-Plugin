@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <choice>
-            <element ref="wizardextension"/>
+            <element ref="wizardextension" minOccurs="1" maxOccurs="unbounded"/>
          </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
