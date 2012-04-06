@@ -928,7 +928,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
                     ISourceModule sourceModule, boolean isReference) {
 
 
-                if (path.toString().startsWith(elementName)) {
+                if (path != null && path.toString().startsWith(elementName)) {
                     namespaces.add(path.toString().replace(elementName, ""));
                 }
             }

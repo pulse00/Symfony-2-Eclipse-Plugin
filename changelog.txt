@@ -1,3 +1,7 @@
+1.0.62
+
+* added composer (autoloading support)
+
 1.0.61
 
 * tycho p2 build integration

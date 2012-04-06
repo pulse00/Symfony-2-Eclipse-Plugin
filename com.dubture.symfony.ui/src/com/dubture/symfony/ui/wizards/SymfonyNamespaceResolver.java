@@ -13,12 +13,14 @@ import org.eclipse.dltk.core.IScriptFolder;
 
 import com.dubture.composer.core.model.ModelAccess;
 import com.dubture.pdt.ui.extension.INamespaceResolver;
+import com.dubture.symfony.core.model.SymfonyModelAccess;
 
 public class SymfonyNamespaceResolver implements INamespaceResolver {
 
 	@Override
 	public String resolve(IScriptFolder container) {
 
+	    // Try composer first - Symfony 2.1
 		IPath path = ModelAccess.getInstance()
 	            .resolve(container.getResource());
 		
@@ -26,7 +28,8 @@ public class SymfonyNamespaceResolver implements INamespaceResolver {
 		    return path.toString().replace("/", "\\");
 		}
 		
-		return null;
+		// fallback to Symfony 2.0
+		return SymfonyModelAccess.getDefault().findNameSpace(container.getScriptProject(), container.getPath());
 		
 	}
 }

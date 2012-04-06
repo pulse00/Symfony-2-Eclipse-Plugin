@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Symfony Index Plugin
 Bundle-SymbolicName: com.dubture.symfony.index;singleton:=true
-Bundle-Version: 1.0.61
+Bundle-Version: 1.0.62
 Bundle-Activator: com.dubture.symfony.index.SymfonyIndex
 Require-Bundle: org.eclipse.core.runtime,
  org.h2
