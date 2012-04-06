@@ -251,7 +251,9 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
         IPath vendorPath = getSymfonyFolderPath(project, SymfonyCoreConstants.VENDOR_PATH);
         if (vendorPath != null) {
             entries.add(DLTKCore.newSourceEntry(vendorPath, new IPath[] {
-                new Path(SymfonyCoreConstants.SKELETON_PATH)
+                new Path(SymfonyCoreConstants.SKELETON_PATH),
+                new Path(SymfonyCoreConstants.TEST_PATH),
+                new Path(SymfonyCoreConstants.CG_FIXTURE_PATH)
             }));
         }
 
@@ -319,6 +321,7 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
             final File outputDirectory = scriptProject.getProject().getLocation().toFile();
 
             uncompressSymfonyLibrary(symfonyArchiveFile, outputDirectory);
+//            scriptProject.set
             monitor.worked(70);
 
             if (!scriptProject.isOpen()) {
