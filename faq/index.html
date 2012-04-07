@@ -9,30 +9,24 @@ title: Symfony2 Eclipse Plugin - FAQ
   	<div class="faq">  		
 		<h2 class="question">I'm getting a lot of errors/warnings after installation. What's up with that?</h2>
 		<p class="answer">
+
+			The Symfony2 standard edition comes with various vendor libraries. Those libraries contain php files which cause PHP Syntax errors when indexed
+			by the PDT plugin - for example because they are solely test files that should trigger those errors or skeleton files with placeholders inside.
 			
-			There are a couple of different sources for errors and warnings which can show up in a fresh project. Some of them are outside of the scope of the plugin though. To determine the
-			plugin which issues the error, open the "Problems" view and check the "Type" column. 
-		
-		    This is a list of possible error types:</p><br />
-			<h3>XML Problem</h3>
-			<p>The XML Problem indicates that the XML validator (<span class="warning">NOT</span> part of this plugin!!) found a problem in an XML file or an XSD schema. Some of the schemas in Symfony core contain invalid complex types for example, 
-			which is a known issue and will not be resolved (see <a href="https://github.com/symfony/symfony/issues/2122">this thread</a> for more info). To hide those errors, you need to disable XML/XSD validation from the 
+			The Symfony plugin creates initial exclusion patterns for the standard edition, which should avoid those syntax errors for Tests, skeleton files and
+			fixtures in the vendor folder.
+			
+			However, in a default eclipse installation, you'll see exact 9 errors in a fresh Symfony project, which are out of the scope of the plugin to solve though:<br/><br/>
+						
+			<h4>XML Problem</h4>
+			<p>The XML Problem indicates that the XML validator (<span class="warning">NOT</span> part of this plugin!!) found a problem in an XML file or an XSD schema. Some of the schemas in Symfony core contain invalid complex types, 
+			which is a known issue and will not be resolved (see <a target="_blank" href="https://github.com/symfony/symfony/issues/2122">this thread</a> for more info). To hide those errors, you need to disable XML/XSD validation from the 
 			Eclipse preferences` "validation" tab. If you don't see this tab, you need to install the "Eclipse Web Development Tools" plugin from the standard updatesite.</p>
 			<div class="centered">
 				<a class="lightbox" href="/images/screenshots/validation.png"><img src="/images/screenshots/validation_thumb.png"></img></a>
 			</div>
 			
-			<h3>DLTK Problem (1)</h3>
-			
-			<p>DLTK Problems are issued by the "Dynamic Languages Toolkit", which is used by the Twig engine. If you get these errors in twig files, it's possible a false positive validation error by the Twig plugin. I'm currently in the process
-			of completely rewriting the parser, which should get rid of these bugs in the future. To remove these warnings, set the "Validation errors" Twig preferences to "Ignore":</p>
-			
-			<div class="centered">
-				<a class="lightbox" href="/images/screenshots/twig.png"><img src="/images/screenshots/twig_thumb.png"></img></a>
-			</div>
-			
-			<h3>DLTK Problem (2)</h3>
-			<p>Some vendor bundles/libraries contain skeleton php files or tests for syntax errors. When these files end with .php Eclipse will try to parse them and throw syntax errors obviously, because it cannot know that these are skeleton/test files. To remove those errors, right-click the parent folder and select Build-Path -> Exclude from build path. This will exclude the folder and all its contents from the build. Clean your project after doing this ( Project -> Clean).</p>
+
 			
   	</div>  
 	
