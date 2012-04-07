@@ -183,4 +183,21 @@ public class ModelUtils {
 		return null;
 	}
 	
+	public static IPath webToBundlePath(IPath webpath, IScriptProject project)
+	{
+
+	    SymfonyModelAccess modelAccess = SymfonyModelAccess.getDefault();
+	    IPath truncated = webpath.removeFirstSegments(2);
+	    String bundleName = truncated.segment(0) + "bundle";
+	    Bundle bundle = modelAccess.findBundle(bundleName, project);
+	    
+	    if (bundle == null) {
+	        return null;
+	    }
+	    
+	    IPath bundlePath = bundle.getPath();
+	    IPath resourcePath = bundlePath.append("Resources").append("public").append(truncated.removeFirstSegments(1));
+	    return resourcePath.removeFirstSegments(1);
+	    
+	}
 }

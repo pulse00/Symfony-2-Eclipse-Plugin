@@ -23,6 +23,7 @@ import org.eclipse.php.internal.ui.util.EditorUtility;
 
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
+import com.dubture.symfony.core.util.ModelUtils;
 
 
 /**
@@ -101,8 +102,21 @@ public class AssetHyperlinkDetector extends StringHyperlinkDetector {
 									
 			if (filePath == null)
 				return null;
+
+			IPath bundlePath = ModelUtils.webToBundlePath(filePath, sourceModule.getScriptProject());
 			
-			IFile file = project.getFile(filePath);			
+			IFile file = null;
+			
+			// try to link into the Resources/public folder first
+			if (bundlePath != null) {
+			    file = project.getFile(bundlePath);
+			    if (file != null && file.exists()) {
+			        return new IHyperlink[] { new AssetHyperlink(wordRegion, file) };
+			    }
+			}
+			
+			// bundle linkage failed, link to the web/bundles/... file
+			file = project.getFile(filePath);			
 			
 			if (!file.exists()) {
 				return null;
