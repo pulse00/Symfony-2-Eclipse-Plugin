@@ -20,6 +20,7 @@ import org.eclipse.wst.xml.core.internal.text.XMLStructuredDocumentRegion;
 
 import com.dubture.symfony.twig.log.Logger;
 import com.dubture.twig.core.documentModel.parser.TwigRegionContext;
+import com.dubture.twig.core.util.TwigModelUtils;
 
 /**
  * 
@@ -47,19 +48,19 @@ public class TranslationCompletionContext extends AbstractCompletionContext {
 			CompletionRequestor requestor) {
 
 		try {
-			if (sourceModule.getUnderlyingResource().getFileExtension().equals("php"))
-				return false;
+		    if (TwigModelUtils.isTwigTemplate(sourceModule.getUnderlyingResource().getName()) == false) {
+		        return false;
+		    }
 		} catch (ModelException e) {
 			Logger.logException(e);
 			return false;
 		}
-		
+
 		super.isValid(sourceModule, offset, requestor);
 		
         if (!requestor.getClass().getName().contains("Twig")) {
             return false;
         }
-		
 		
 		IStructuredDocument doc = getDocument();		
 		ITextRegion region = doc.getRegionAtCharacterOffset(offset);
