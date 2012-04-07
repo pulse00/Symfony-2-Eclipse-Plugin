@@ -16,8 +16,14 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -29,6 +35,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
@@ -80,6 +87,7 @@ public class ServicePart extends ViewPart {
 
         parent.setLayout(new GridLayout(1, true));
         PatternFilter filter = new PatternFilter();
+        filter.setIncludeLeadingWildcard(true);
         FilteredTree tree = new FilteredTree(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL, filter, true);
 
         viewer = tree.getViewer();
@@ -87,6 +95,67 @@ public class ServicePart extends ViewPart {
         viewer.setContentProvider(new ServiceContentProviderFlatView());
         viewer.setLabelProvider(new ServiceLabelProvider());
         viewer.setSorter(sorter);
+        
+        Action openImplementation = new Action("Open implementation")
+        {
+            @Override
+            public void run()
+            {
+                if(viewer.getSelection().isEmpty()) {
+                    return;
+                }
+                
+                if (viewer.getSelection() instanceof IStructuredSelection) {
+                    IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+                    if (selection.getFirstElement() instanceof Service) {
+                        Service service = (Service) selection.getFirstElement();
+                        if (service.getSourceModule() != null) {
+                            openServiceImplementation(service);
+                        }
+                    }                        
+                }
+            }
+        };
+        
+        Action openDefinition = new Action("Open definition")
+        {
+            @Override
+            public void run()
+            {
+                if(viewer.getSelection().isEmpty()) {
+                    return;
+                }
+                
+                if (viewer.getSelection() instanceof IStructuredSelection) {
+                    IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+                    if (selection.getFirstElement() instanceof Service) {
+                        Service service = (Service) selection.getFirstElement();
+                        if (service.getSourceModule() != null) {
+                            openServiceDefinition(service);
+                        }
+                    }                        
+                }
+            }
+        };
+        
+        MenuManager mgr = new MenuManager();
+        mgr.add(openImplementation);
+        mgr.add(openDefinition);
+        Menu menu = mgr.createContextMenu(viewer.getControl());
+        
+        mgr.addMenuListener(new IMenuListener()
+        {
+            
+            @Override
+            public void menuAboutToShow(IMenuManager manager)
+            {
+                if(viewer.getSelection().isEmpty()) {
+                    return;
+                }
+            }
+        });
+        
+        viewer.getControl().setMenu(menu);
 
 //        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 //            @Override
@@ -113,20 +182,7 @@ public class ServicePart extends ViewPart {
                     if (selection.getFirstElement() instanceof Service) {
                         Service service = (Service) selection.getFirstElement();
                         if (service.getSourceModule() != null) {
-                            try {
-                                IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                                IFile file = (IFile) service.getSourceModule().getUnderlyingResource();
-                                if (file.exists()) {
-                                    IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getName());
-                                    page.openEditor(new FileEditorInput(file), desc.getId());
-                                }
-                            } catch (PartInitException e) {
-                                e.printStackTrace();
-                            } catch (ModelException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            Logger.debugMSG("couldnt determint sourcemodule for service " + service.getElementName());
+                            openServiceImplementation(service);
                         }
                     }
                 }
@@ -144,6 +200,41 @@ public class ServicePart extends ViewPart {
         ResourcesPlugin.getWorkspace().addResourceChangeListener(changeListener);
 
 
+    }
+    
+    protected void openServiceDefinition(Service service) 
+    {
+        ISourceModule source = service.getSourceModule();
+        IPath path = service.getPath();
+        
+        if (source == null || path == null) {
+            Logger.log(Logger.WARNING, "Unable to open service definition " + service.getId());
+            return;
+        }
+        
+        openFile((IFile) source.getScriptProject().getProject().getFile(service.getPath().removeFirstSegments(1)));
+    }
+    
+    protected void openFile(IFile file)
+    {
+        if (file.exists()) {
+            try {
+                IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getName());
+                page.openEditor(new FileEditorInput(file), desc.getId());
+            } catch (PartInitException e) {
+                Logger.logException(e);
+            }
+        }
+    }
+    
+    protected void openServiceImplementation(Service service)
+    {
+        try {
+            openFile((IFile) service.getSourceModule().getUnderlyingResource());
+        } catch (ModelException e) {
+            Logger.logException(e);
+        }
     }
 
     protected void updateTags() {
@@ -180,18 +271,11 @@ public class ServicePart extends ViewPart {
         updateViewer();
     }
 
-
-
     @Override
     public void setFocus()
     {
-
         viewer.getControl().setFocus();
-
     }
-
-
-
 
     @Override
     public void dispose()
