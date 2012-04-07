@@ -25,6 +25,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXParseException;
 
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.index.dao.Route;
@@ -52,7 +53,12 @@ public class XMLConfigParser implements IConfigParser {
 	public XMLConfigParser(InputStream file) throws Exception {
 
 		xPath = XPathFactory.newInstance().newXPath();
-		doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+		try {
+		    doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+        } catch (SAXParseException e) {
+            doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse("<dummy></dummy>");
+            Logger.log(Logger.WARNING, "Error parsing xml ");
+        }
 		parameters = new HashMap<String, String>();
 		services = new HashMap<String, Service>();
 
@@ -227,7 +233,6 @@ public class XMLConfigParser implements IConfigParser {
 		for (int i = 0; i < serviceNodes.getLength(); i++) {
 
 			Element service = (Element) serviceNodes.item(i);
-
 			String id = service.getAttribute("id");
 			String alias = service.getAttribute("alias");
 
@@ -235,17 +240,18 @@ public class XMLConfigParser implements IConfigParser {
 
 				synchronized (services) {
 					Iterator it = services.keySet().iterator();
-
+					HashMap<String, Service> newServices = new HashMap<String, Service>();
 					while (it.hasNext()) {
-
 						String aliasID = (String) it.next();						
 						Service _s=  services.get(aliasID);
-						_s.addAlias(aliasID);
-
-						if (alias.equals(aliasID)) {
-							services.put(id, _s);
+						if (_s != null) {
+						    _s.addAlias(aliasID);
+						    if (alias.equals(aliasID)) {
+						        newServices.put(id, _s);
+						    }
 						}
-					}					
+					}
+					services.putAll(newServices);
 				}
 			}
 		}

@@ -648,8 +648,10 @@ public class SymfonyModelAccess extends PhpModelAccess {
                 Service s = new Service(id, phpClass, path);
                 s.setTags(tags);
                 s.setPublic(_public);
-                services.add(s);
-
+                
+                if (!services.contains(s)) {
+                    services.add(s);
+                }
             }
         });
 

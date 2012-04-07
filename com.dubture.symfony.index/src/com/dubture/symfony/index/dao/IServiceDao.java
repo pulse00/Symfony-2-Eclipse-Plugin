@@ -27,6 +27,8 @@ import com.dubture.symfony.index.IServiceHandler;
 public interface IServiceDao extends IDao {
 	
 	void insert(Connection connection, String id, String phpClass, String _public, List<String> tags, String path, int timestamp) throws SQLException;
+	
+	void delete(Connection connection, String id, String path);
 
 	void truncate(Connection connection);
 	

@@ -81,6 +81,11 @@ public class YamlRoutingParser {
 
 		Yaml yaml = new Yaml();
 		Map map = (Map) yaml.load(tokenString);
+		
+		if (map == null) {
+		    Logger.log(Logger.WARNING, "Unable to load yaml file " + tokenString);
+		    return;
+		}
 
 		Iterator it = map.keySet().iterator();
 

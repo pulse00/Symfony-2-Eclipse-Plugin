@@ -12,7 +12,6 @@
 package com.dubture.symfony.core.builder;
 
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +23,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.internal.core.util.Util;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.yaml.snakeyaml.scanner.ScannerException;
@@ -34,6 +36,7 @@ import com.dubture.symfony.core.parser.YamlConfigParser;
 import com.dubture.symfony.core.parser.YamlRoutingParser;
 import com.dubture.symfony.core.parser.YamlTranslationParser;
 import com.dubture.symfony.core.preferences.ProjectOptions;
+import com.dubture.symfony.core.util.BuildPathUtils;
 import com.dubture.symfony.core.util.TranslationUtils;
 import com.dubture.symfony.index.SymfonyIndexer;
 import com.dubture.symfony.index.dao.Route;
@@ -50,6 +53,7 @@ import com.dubture.symfony.index.dao.TransUnit;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
+@SuppressWarnings("restriction")
 public abstract class AbstractSymfonyVisitor {
 
 	protected IFile file;
@@ -57,7 +61,6 @@ public abstract class AbstractSymfonyVisitor {
 	protected SymfonyIndexer indexer;
 	protected int timestamp;
 	protected JSONArray syntheticServices;
-
 
 	protected boolean handleResource(IResource resource) {
 
@@ -77,12 +80,15 @@ public abstract class AbstractSymfonyVisitor {
 				resource.getParent();
 				timestamp = (int) resource.getLocalTimeStamp();
 				
-				if ("xml".equals(resource.getFileExtension()))
-				{				
+				IScriptProject scriptProject = DLTKCore.create(resource.getProject());
+				boolean doIndex = BuildPathUtils.isContainedInBuildpath(resource, scriptProject);
+				
+				if ("xml".equals(resource.getFileExtension()) && doIndex)
+				{
 					loadXML();
 					built = true;
 
-				} else if ("yml".equals(resource.getFileExtension())) {
+				} else if ("yml".equals(resource.getFileExtension()) && doIndex) {
 					
 					if ("services.yml".equals(resource.getName())) {					
 						loadYaml();
@@ -93,28 +99,20 @@ public abstract class AbstractSymfonyVisitor {
 					} else {
 						
 						if (resource.getFullPath().toString().contains("translations")) {
-	
-							
 							loadYamlTranslation();
 						}
-						
 					}
 				}
 			}
-
-
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
-
 		return built;
-
 	}
 	
 	
 	@SuppressWarnings("rawtypes")
 	protected void loadYamlTranslation() {
-		
 		
 		try {
 			
@@ -143,19 +141,16 @@ public abstract class AbstractSymfonyVisitor {
 			e.printStackTrace();
 			Logger.logException(e);
 		}
-		
 	}
-
 
 	protected JSONArray getSynthetics() {
 
 		if (syntheticServices == null)
 			syntheticServices = ProjectOptions.getSyntheticServices(file.getProject());;
 
-			return syntheticServices;
+		return syntheticServices;
 
 	}
-
 
 	protected void loadYamlRouting() {
 
@@ -266,7 +261,12 @@ public abstract class AbstractSymfonyVisitor {
 				String id = (String) it.next();
 				Service service = services.get(id);				
 
-				if(service.phpClass.equals(Service.SYNTHETIC)) {
+				if (service == null) {
+				    Logger.log(Logger.WARNING, "error parsing service " + id);
+				    continue;
+				}
+				
+				if(service.phpClass != null && Service.SYNTHETIC.equals(service.phpClass)) {
 					for (Object o : synths) {
 						JSONObject _s = (JSONObject) o;
 						if (_s.get(Service.NAME).equals(id)) {							

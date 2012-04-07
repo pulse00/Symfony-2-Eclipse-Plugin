@@ -253,6 +253,7 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
             entries.add(DLTKCore.newSourceEntry(vendorPath, new IPath[] {
                 new Path(SymfonyCoreConstants.SKELETON_PATH),
                 new Path(SymfonyCoreConstants.TEST_PATH),
+                new Path(SymfonyCoreConstants.TEST_PATH_LC),
                 new Path(SymfonyCoreConstants.CG_FIXTURE_PATH)
             }));
         }

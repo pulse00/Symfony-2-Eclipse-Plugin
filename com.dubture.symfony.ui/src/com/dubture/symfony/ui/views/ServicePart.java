@@ -116,8 +116,10 @@ public class ServicePart extends ViewPart {
                             try {
                                 IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                                 IFile file = (IFile) service.getSourceModule().getUnderlyingResource();
-                                IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getName());
-                                page.openEditor(new FileEditorInput(file), desc.getId());
+                                if (file.exists()) {
+                                    IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getName());
+                                    page.openEditor(new FileEditorInput(file), desc.getId());
+                                }
                             } catch (PartInitException e) {
                                 e.printStackTrace();
                             } catch (ModelException e) {

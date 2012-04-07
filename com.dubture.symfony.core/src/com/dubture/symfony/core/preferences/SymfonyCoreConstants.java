@@ -67,6 +67,7 @@ public class SymfonyCoreConstants {
     public static final String LOG_PATH              = APP_PATH + "/logs";
     public static final String SKELETON_PATH         = "**/skeleton/";
     public static final String TEST_PATH             = "**/Tests/";
+    public static final String TEST_PATH_LC          = "**/tests/";
     public static final String CG_FIXTURE_PATH       = "**/CG/**/Fixture/";
     public static final String SRC_PATH              = "src";
 

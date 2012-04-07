@@ -25,7 +25,7 @@ public class Service {
 	
 	public static final String NAME = "name";
 	public static final String CLASS = "class";
-	public static final Object SYNTHETIC = "synthetic";
+	public static final String SYNTHETIC = "synthetic";
 	
 	public String id;
 	public String phpClass;

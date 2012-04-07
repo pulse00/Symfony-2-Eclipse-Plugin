@@ -90,6 +90,7 @@ public class SymfonyIndexer {
 	public void addService(String id, String phpClass, String _public, List<String> tags, String path, int timestamp) {
 		
 		try {			
+		    serviceDao.delete(connection, id, path);
 			serviceDao.insert(connection, id, phpClass, _public, tags, path, timestamp);
 		} catch (Exception e) {
 			Logger.logException(e);

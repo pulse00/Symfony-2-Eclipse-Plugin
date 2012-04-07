@@ -8,8 +8,6 @@
  ******************************************************************************/
 package com.dubture.symfony.core.log;
 
-import java.util.StringTokenizer;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;

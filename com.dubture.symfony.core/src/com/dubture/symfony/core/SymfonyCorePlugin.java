@@ -8,11 +8,17 @@
  ******************************************************************************/
 package com.dubture.symfony.core;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.index.SymfonyIndexer;
 
 public class SymfonyCorePlugin extends Plugin {
 
@@ -25,9 +31,31 @@ public class SymfonyCorePlugin extends Plugin {
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
+	    
 		super.start(bundleContext);
-
 		plugin = this;
+		
+		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IResourceChangeListener listener = new IResourceChangeListener()
+        {
+            
+            @Override
+            public void resourceChanged(IResourceChangeEvent event)
+            {
+                final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+                SymfonyIndexer indexer;
+                try {
+                    indexer = SymfonyIndexer.getInstance();
+                    for (IProject project : workspace.getRoot().getProjects()) {
+                        indexer.deleteServices(project.getFullPath().toString());    
+                    }
+                } catch (Exception e) {
+                    Logger.logException(e);
+                }
+            }
+        };
+        
+        workspace.addResourceChangeListener(listener, IResourceChangeEvent.PRE_BUILD);
 
 	}
 

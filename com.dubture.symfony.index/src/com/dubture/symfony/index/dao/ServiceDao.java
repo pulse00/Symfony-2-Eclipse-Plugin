@@ -286,4 +286,16 @@ public class ServiceDao extends BaseDao implements IServiceDao {
 	}
 
 
+    @Override
+    public void delete(Connection connection, String id, String path)
+    {
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("DELETE FROM SERVICES WHERE NAME = '" + id +"' AND PATH = '" + path + "'");
+            connection.commit();
+        } catch (SQLException e) {
+
+            Logger.logException(e);
+        }
+    }
 }
