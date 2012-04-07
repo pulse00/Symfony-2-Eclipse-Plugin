@@ -1,3 +1,11 @@
+1.0.66
+
+* added right-click menu for services in service-view
+* added exclusion pattern for service indexing so test-services won't be indexed anymore
+* fixed bug where services where shown multiple times in service view
+* fixed asset hyperlinking to bundle folder instead of web/bundles/...
+* fixed a couple of NPEs during indexing
+
 1.0.63/1.0.64
 
 * added composer nature to project wizard
