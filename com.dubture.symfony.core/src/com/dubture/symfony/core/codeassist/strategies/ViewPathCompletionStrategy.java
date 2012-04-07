@@ -69,19 +69,6 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 		ViewPathArgumentContext context = (ViewPathArgumentContext) getContext();		
 		CompletionRequestor req = context.getCompletionRequestor();
 		
-//		if (req.getClass() == PHPCompletionProposalCollector.class) {
-//			return;			
-//		}
-
-//		if (workaroundCount == 0) {
-//			workaroundCount++;
-//			
-//		} else {
-//			workaroundCount = 0;
-//			return;
-//		}
-		
-		
 		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
 		ISourceModule module = context.getSourceModule();
 		ViewPath viewPath = context.getViewPath();
@@ -131,7 +118,7 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 			}
 
 		// complete template path: "Bundle:Controller:|
-		} else if (bundle != null && controller != null && template == null) {
+		} else if (bundle != null && controller != null) {
 
 			IModelElement[] templates = model.findTemplates(bundle, controller, module.getScriptProject());
 			

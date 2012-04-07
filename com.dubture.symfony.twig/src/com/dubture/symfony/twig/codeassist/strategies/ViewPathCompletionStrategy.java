@@ -109,7 +109,7 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 			}
 
 		// complete template path: "Bundle:Controller:|
-		} else if (bundle != null && controller != null && template == null) {
+		} else if (bundle != null && controller != null) {
 
 			IModelElement[] templates = model.findTemplates(bundle, controller, module.getScriptProject());
 			
