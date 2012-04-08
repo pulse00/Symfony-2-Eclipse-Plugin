@@ -259,7 +259,7 @@ public class SymfonyTextSequenceUtilities {
 		while (startPosition > 0) {
 
 			char ch = textSequence.charAt(startPosition - 1);
-			if (!Character.isLetterOrDigit(ch) && ch != ':' && ch != '.' && ch != '_') {
+			if (!Character.isLetterOrDigit(ch) && ch != ':' && ch != '.' && ch != '_' && ch !=  '/') {
 				break;
 			}
 			startPosition--;

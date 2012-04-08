@@ -10,10 +10,14 @@ package com.dubture.symfony.core.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.internal.resources.Project;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -446,6 +450,51 @@ public class SymfonyModelAccess extends PhpModelAccess {
 
         return findTypes("", MatchRule.PREFIX, 0, 0, controllerScope, null);
 
+    }
+    
+    public List<IPath> findBundleViewPaths(String bundle, IScriptProject project)
+    {
+        ScriptFolder folder = findBundleFolder(bundle, project);
+        List<IPath> viewPaths = new LinkedList<IPath>();
+        
+        if (folder == null) {
+            return viewPaths;
+        }
+        
+        try {
+            
+            IResource resource = folder.getUnderlyingResource();
+            List<IPath> structure = new LinkedList<IPath>();
+            IPath path = resource.getFullPath();
+            path = path.removeFirstSegments(1).append("Resources").append("views");
+            int num = path.segmentCount() + 1;
+            
+            IFolder viewFolder = project.getProject().getFolder(path);
+            getFolderStructure(viewFolder, structure);
+            
+            for (IPath p : structure) {
+                viewPaths.add(p.removeFirstSegments(num));
+            }
+            
+        } catch (ModelException e) {
+            Logger.logException(e);
+        } catch (CoreException e) {
+            Logger.logException(e);
+        }
+        
+        return viewPaths;
+        
+    }
+    
+    protected List<IPath> getFolderStructure(IFolder folder, List<IPath> structure) throws CoreException
+    {
+        for (IResource child : folder.members()) {
+            if (child instanceof IFolder) {
+                structure.add(child.getFullPath());
+                getFolderStructure((IFolder) child, structure);
+            }
+        }
+        return structure;
     }
 
 
