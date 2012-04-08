@@ -1,3 +1,7 @@
+1.0.67
+
+* added support for subpaths in viewpaths, e.g. MyBundle:Foo/Bar:index.html.twig
+
 1.0.66
 
 * added right-click menu for services in service-view
