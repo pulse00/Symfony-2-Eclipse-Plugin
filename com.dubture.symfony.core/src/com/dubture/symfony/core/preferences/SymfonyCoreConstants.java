@@ -63,8 +63,8 @@ public class SymfonyCoreConstants {
     // Paths
     public static final String APP_PATH              = "app";
     public static final String VENDOR_PATH           = "vendor";
-    public static final String CACHE_PATH            = APP_PATH + "/cache";
-    public static final String LOG_PATH              = APP_PATH + "/logs";
+    public static final String CACHE_PATH            = "**/cache/";
+    public static final String LOG_PATH              = "**/logs/";
     public static final String SKELETON_PATH         = "**/skeleton/";
     public static final String TEST_PATH             = "**/Tests/";
     public static final String TEST_PATH_LC          = "**/tests/";
