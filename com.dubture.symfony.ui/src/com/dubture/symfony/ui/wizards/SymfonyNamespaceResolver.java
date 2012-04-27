@@ -21,6 +21,11 @@ public class SymfonyNamespaceResolver implements INamespaceResolver {
 	@Override
 	public String resolve(IScriptFolder container) {
 
+	    if (container == null) {
+	        Logger.log(Logger.WARNING, "Unable to resolve namespace, no container available");
+	        return null;
+	    }
+	    
 	    // Try composer first - Symfony 2.1
 	    try {
 	        IPath path = ModelAccess.getInstance().resolve(container.getResource());

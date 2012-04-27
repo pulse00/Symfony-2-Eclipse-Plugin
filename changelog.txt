@@ -1,3 +1,9 @@
+1.0.68
+
+* updated to Symfony 2.0.12 
+* updated to composer-plugin 0.0.2
+* minor npe fixes in namespace resolver
+
 1.0.67
 
 * added support for subpaths in viewpaths, e.g. MyBundle:Foo/Bar:index.html.twig
