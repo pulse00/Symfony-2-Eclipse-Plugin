@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.IMethod;
@@ -34,6 +36,7 @@ import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.Template;
 import com.dubture.symfony.core.model.Translation;
 import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.dao.RouteParameter;
 import com.dubture.symfony.index.dao.TransUnit;
 import com.dubture.symfony.ui.SymfonyPluginImages;
 import com.dubture.symfony.ui.SymfonyUiPlugin;
@@ -283,7 +286,7 @@ public class HTMLUtils {
 			
 			StringBuffer header = new StringBuffer();
 			String imageName = imageUrl.toExternalForm();
-			addImageAndLabel(header, imageName, 16, 16, 2, 2, route.getViewPath(), 20, 2, true);
+			addImageAndLabel(header, imageName, 16, 16, 2, 2, route.getName(), 20, 2, true);
 			HTMLPrinter.addSmallHeader(info, header.toString());
 
 		}
@@ -291,13 +294,32 @@ public class HTMLUtils {
 		
 		StringBuffer content = new StringBuffer();
 
-		content.append("<b>Bundle:</b> ");
+		content.append("<b>Pattern:</b> ");
+		content.append(route.getPattern());
+		
+        content.append("<br/><br/><b>Parameters:</b><br/>");
+        
+        if (route.getParameters().size() > 0) {
+            Iterator<String> iterator = route.getParameters().keySet().iterator();
+//            Map<String, RouteParameter> parameters = route.getParameters();
+            content.append("<ul>");
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+//                RouteParameter param = parameters.get(key);
+                content.append(String.format("<li>%s</li>", key));
+            }
+            content.append("</ul>");
+        } else {
+            content.append("This route has no parameters<br/><br/>");
+        }
+		
+		content.append("<b>Bundle:</b>");
 		content.append(route.bundle);
 		content.append("<br/><b>Controller:</b> ");
 		content.append(route.controller);
 		content.append("<br/><b>Action:</b> ");
 		content.append(route.action);	
-
+		
 		HTMLPrinter.addParagraph(info, new StringReader(content.toString()));
 		HTMLPrinter.addPageEpilog(info);
 		
