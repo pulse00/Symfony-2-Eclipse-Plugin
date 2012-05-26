@@ -1,3 +1,13 @@
+1.0.69
+
+* added pattern and parameters to route completionproposal
+* added "insert service ID" and "insert route" dialogs
+* fixed selection-engine for controller annotations
+* fixed route proposals in twig templates
+* improved autocompletion in "new twig template" dialog
+* updated to Symfony 2.0.14
+
+
 1.0.68
 
 * updated to Symfony 2.0.12 

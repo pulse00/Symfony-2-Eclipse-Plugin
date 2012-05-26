@@ -96,6 +96,15 @@
   </command>
        
  </extension>
+ <extension
+       point="org.eclipse.ui.bindings">
+    <key
+          commandId="com.dubture.symfony.twig.command.insertRoute"
+          contextId="org.eclipse.ui.contexts.window"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+          sequence="Ctrl+K">
+    </key>
+ </extension>
    
 
 </plugin>

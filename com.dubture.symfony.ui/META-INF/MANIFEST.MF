@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.dubture.symfony.ui;singleton:=true
-Bundle-Version: 1.0.68
+Bundle-Version: 1.0.69
 Bundle-Activator: com.dubture.symfony.ui.SymfonyUiPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -30,6 +30,7 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dubture.symfony.ui,
+ com.dubture.symfony.ui.actions,
  com.dubture.symfony.ui.contentassist,
  com.dubture.symfony.ui.editor,
  com.dubture.symfony.ui.editor.highlighting;uses:="org.eclipse.php.internal.core.ast.nodes,org.eclipse.php.internal.ui.editor.highlighter",
