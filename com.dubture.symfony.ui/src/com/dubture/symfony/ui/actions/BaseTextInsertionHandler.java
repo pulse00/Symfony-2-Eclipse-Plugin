@@ -5,10 +5,11 @@ import java.util.List;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
@@ -20,8 +21,10 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.ui.actions.SelectionHandler;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -43,16 +46,28 @@ abstract public class BaseTextInsertionHandler extends SelectionHandler implemen
     abstract protected List<String[]> getInput();
     abstract protected String getTitle();
     
+    protected IScriptProject getProject()
+    {
+        IEditorPart  editorPart =PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+
+        if(editorPart  != null)
+        {
+            IFileEditorInput input = (IFileEditorInput)editorPart.getEditorInput() ;
+            IFile file = input.getFile();
+            IProject activeProject = file.getProject();
+            return DLTKCore.create(activeProject);
+        }
+        return null;
+    }
+    
+    
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        IModelElement modelElement = getCurrentModelElement(event);
-        Assert.isNotNull(modelElement);
-        
-        project = modelElement.getScriptProject();
+        project = getProject();
         Assert.isNotNull(project);
         
-        final Shell p = DLTKUIPlugin.getActiveWorkbenchShell();
+        final Shell p = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         ILabelProvider labelRenderer  = new ArrayLabelProvider();
         ElementListSelectionDialog dialog = new ElementListSelectionDialog(p, labelRenderer);
         
@@ -73,28 +88,39 @@ abstract public class BaseTextInsertionHandler extends SelectionHandler implemen
         return null;
     }
     
+    protected void doInsert(ITextEditor editor, String text)
+    {
+        ISelectionProvider selectionProvider = editor.getSelectionProvider();
+        ISelection selection = selectionProvider.getSelection();
+        
+        if (selection instanceof ITextSelection) {
+            ITextSelection textSelection = (ITextSelection) selection;
+            
+            
+            int offset = textSelection.getOffset();
+            IDocumentProvider dp = editor.getDocumentProvider();
+            IDocument doc = dp.getDocument(editor.getEditorInput());
+            try {
+                doc.replace(offset, 0, text);
+            } catch (BadLocationException e) {
+                Logger.logException(e);
+            }
+        }
+
+    }
+    
         
     protected void insertText(String text)
     {
         IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         
-        if (editor instanceof ITextEditor) {
-            
-            ITextEditor textEditor = (ITextEditor) editor;
-            ISelectionProvider selectionProvider = textEditor.getSelectionProvider();
-            ISelection selection = selectionProvider.getSelection();
-            
-            if (selection instanceof ITextSelection) {
-                ITextSelection textSelection = (ITextSelection) selection;
-                int offset = textSelection.getOffset();
-                IDocumentProvider dp = textEditor.getDocumentProvider();
-                IDocument doc = dp.getDocument(textEditor.getEditorInput());
-                try {
-                    doc.replace(offset, 0, text);
-                } catch (BadLocationException e) {
-                    Logger.logException(e);
-                }
+        if (editor instanceof MultiPageEditorPart) {
+            MultiPageEditorPart multiEditor = (MultiPageEditorPart) editor;
+            if (multiEditor.getSelectedPage() instanceof ITextEditor) {
+                doInsert((ITextEditor) multiEditor.getSelectedPage() , text);
             }
+        } else if (editor instanceof ITextEditor) {
+            doInsert((ITextEditor) editor, text);
         }
     }        
 }

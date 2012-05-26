@@ -338,30 +338,10 @@
     <handler
           class="com.dubture.symfony.ui.actions.InsertRouteHandler"
           commandId="com.dubture.symfony.ui.command.insertRoute">
-       <activeWhen>
-          <reference
-                definitionId="org.eclipse.php.ui.phpContentType.definition">
-          </reference>
-       </activeWhen>
-       <enabledWhen>
-          <reference
-                definitionId="org.eclipse.php.ui.phpContentType.definition">
-          </reference>
-       </enabledWhen>
     </handler>
     <handler
           class="com.dubture.symfony.ui.actions.InsertServiceHandler"
           commandId="com.dubture.symfony.ui.command.insertService">
-       <enabledWhen>
-          <reference
-                definitionId="org.eclipse.php.ui.phpContentType.definition">
-          </reference>
-       </enabledWhen>
-       <activeWhen>
-          <reference
-                definitionId="org.eclipse.php.ui.phpContentType.definition">
-          </reference>
-       </activeWhen>
     </handler>
  </extension>
  <extension
@@ -373,23 +353,11 @@
              commandId="com.dubture.symfony.ui.command.insertRoute"
              label="Insert route"
              style="push">
-          <visibleWhen
-                checkEnabled="false">
-             <reference
-                   definitionId="org.eclipse.php.ui.phpContentType.definition">
-             </reference>
-          </visibleWhen>
        </command>
        <command
              commandId="com.dubture.symfony.ui.command.insertService"
              label="Insert service ID"
              style="push">
-          <visibleWhen
-                checkEnabled="false">
-             <reference
-                   definitionId="org.eclipse.php.ui.phpContentType.definition">
-             </reference>
-          </visibleWhen>
        </command>
     </menuContribution>
  </extension>

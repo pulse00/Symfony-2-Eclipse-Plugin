@@ -51,60 +51,6 @@
       </proposalProvider>
    </extension>
    
- <extension
-       point="org.eclipse.ui.handlers">
-    <handler
-          class="com.dubture.symfony.ui.actions.InsertRouteHandler"
-          commandId="com.dubture.symfony.twig.command.insertRoute">
-       <activeWhen>
-          <reference
-                definitionId="com.dubture.ui.twigContentType.definition">
-          </reference>
-       </activeWhen>
-       <enabledWhen>
-          <reference
-                definitionId="com.dubture.ui.twigContentType.definition">
-          </reference>
-       </enabledWhen>
-    </handler>
- </extension>
- <extension
-       point="org.eclipse.ui.menus">
-    <menuContribution
-          allPopups="false"
-          locationURI="menu:sourceMenuId?before=sourceBegin">
-       <command
-             commandId="com.dubture.symfony.twig.command.insertRoute"
-             label="Insert route"
-             style="push">
-          <visibleWhen
-                checkEnabled="false">
-             <reference
-                   definitionId="com.dubture.ui.twigContentType.definition">
-             </reference>
-          </visibleWhen>
-       </command>
-    </menuContribution>
- </extension>
- <extension
-       point="org.eclipse.ui.commands">
-  <command
-        categoryId="org.eclipse.ui.category.edit"
-        description="Insert a routename at the current cursor position"
-        id="com.dubture.symfony.twig.command.insertRoute"
-        name="Insert Route">
-  </command>
-       
- </extension>
- <extension
-       point="org.eclipse.ui.bindings">
-    <key
-          commandId="com.dubture.symfony.twig.command.insertRoute"
-          contextId="org.eclipse.ui.contexts.window"
-          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="Ctrl+K">
-    </key>
- </extension>
    
 
 </plugin>
