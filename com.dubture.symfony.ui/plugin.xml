@@ -221,6 +221,12 @@
 			description="Switch context"
 			categoryId="org.eclipse.ui.category.navigate" id="com.dubture.symfony.ui.edit.text.switchContext">
 		</command>
+  <command
+        categoryId="org.eclipse.ui.category.dialogs"
+        description="Insert a routename at the current cursor position"
+        id="com.dubture.symfony.ui.command.insertRoute"
+        name="Insert Route">
+  </command>
 
  </extension>
  
@@ -320,6 +326,41 @@
        point="com.dubture.pdt.formatter.profileContributor">
     <contributor
           class="com.dubture.symfony.ui.formatter.FormatterProfileContributor"></contributor>
+ </extension>
+ <extension
+       point="org.eclipse.ui.handlers">
+    <handler
+          class="com.dubture.symfony.ui.actions.InsertRouteHandler"
+          commandId="com.dubture.symfony.ui.command.insertRoute">
+       <activeWhen>
+          <reference
+                definitionId="org.eclipse.php.ui.phpContentType.definition">
+          </reference>
+       </activeWhen>
+       <enabledWhen>
+          <reference
+                definitionId="org.eclipse.php.ui.phpContentType.definition">
+          </reference>
+       </enabledWhen>
+    </handler>
+ </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          allPopups="false"
+          locationURI="menu:sourceMenuId?before=sourceBegin">
+       <command
+             commandId="com.dubture.symfony.ui.command.insertRoute"
+             label="Insert route"
+             style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <reference
+                   definitionId="org.eclipse.php.ui.phpContentType.definition">
+             </reference>
+          </visibleWhen>
+       </command>
+    </menuContribution>
  </extension>
  
  <!-- TODO: finish implementation -->
