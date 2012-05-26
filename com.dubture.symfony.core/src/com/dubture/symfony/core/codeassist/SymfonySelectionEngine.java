@@ -21,6 +21,7 @@ import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.php.internal.core.codeassist.PHPSelectionEngine;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 
@@ -125,7 +126,7 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
             ModuleDeclaration parsedUnit = SourceParserUtil.getModuleDeclaration(
                     sourceModule, null);
 
-            AnnotationPathVisitor visitor = new AnnotationPathVisitor(project);
+            AnnotationPathVisitor visitor = new AnnotationPathVisitor(project, offset);
             parsedUnit.traverse(visitor);
 
             if (visitor.getTemplate() != null) {
@@ -159,10 +160,12 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
         private AnnotationCommentParser parser;
 
         private IModelElement template = null;
+        private int offset;
 
-        public AnnotationPathVisitor(IScriptProject project) {
+        public AnnotationPathVisitor(IScriptProject project, int offset) {
             this.project = project;
             this.parser = AnnotationUtils.createParser(TEMPLATE_CLASS_NAMES);
+            this.offset = offset;
         }
 
         public IModelElement getTemplate() {
@@ -187,7 +190,13 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
             if (namespaceDeclaration == null || !namespaceDeclaration.getName().endsWith("\\Controller")) {
                 return false;
             }
-
+            
+            PHPDocBlock phpDoc = methodDeclaration.getPHPDoc();
+            
+            if (phpDoc == null || (phpDoc.sourceStart() > offset || phpDoc.sourceEnd() < offset)) {
+                return false;
+            }
+            
             List<Annotation> annotations = AnnotationUtils.extractAnnotations(parser, methodDeclaration);
             if (annotations.size() < 1) {
                 return false;
@@ -199,20 +208,22 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
             String action = methodDeclaration.getName().replace("Action", "");
 
             ViewPath path = new ViewPath(String.format("%s:%s:%s", bundle, controller, action));
+            
             if (!path.isValid()) {
                 return false;
             }
 
             IModelElement[] templates = SymfonyModelAccess.getDefault().findTemplates(bundle, controller, project);
+            this.template = null;
+            
             for (IModelElement template : templates) {
                 if (template.getElementName().startsWith(action)) {
                     // We found a matching template, set template and return true
                     this.template = template;
-                    return true;
+                    return false;
                 }
             }
 
-            // We didn't find a matching template view, return false
             return false;
         }
     }
