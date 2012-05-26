@@ -22,19 +22,21 @@ public class EntityAlias {
 
 	public EntityAlias(String shortcut) {
 		
-		if (shortcut.contains(":") == false)
-			return;
-		
-		if (shortcut.endsWith(":")) {
-			bundleAlias = shortcut.replace(":", "");
-			entity = null;					
-		} else {
-			
-			String[] parts = shortcut.split(":");
-			
-			bundleAlias = parts[0];
-			entity = parts[1];
-		}
+	    if (shortcut != null) {
+	        if (shortcut.contains(":") == false)
+	            return;
+	        
+	        if (shortcut.endsWith(":")) {
+	            bundleAlias = shortcut.replace(":", "");
+	            entity = null;					
+	        } else {
+	            
+	            String[] parts = shortcut.split(":");
+	            
+	            bundleAlias = parts[0];
+	            entity = parts[1];
+	        }
+	    }
 	}
 
 	public String getEntity() {
