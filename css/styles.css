@@ -676,3 +676,10 @@ li.githubpanel {
 	margin-top: 10px;
  padding-bottom: 5px;	
 }
+
+
+.newIcon {
+   position: absolute;
+   right: -4px;
+   top: -20px;
+}
