@@ -227,6 +227,12 @@
         id="com.dubture.symfony.ui.command.insertRoute"
         name="Insert Route">
   </command>
+  <command
+        categoryId="org.eclipse.ui.category.dialogs"
+        description="Insert a service ID at the current cursor position"
+        id="com.dubture.symfony.ui.command.insertService"
+        name="Insert Service">
+  </command>
 
  </extension>
  
@@ -343,6 +349,20 @@
           </reference>
        </enabledWhen>
     </handler>
+    <handler
+          class="com.dubture.symfony.ui.actions.InsertServiceHandler"
+          commandId="com.dubture.symfony.ui.command.insertService">
+       <enabledWhen>
+          <reference
+                definitionId="org.eclipse.php.ui.phpContentType.definition">
+          </reference>
+       </enabledWhen>
+       <activeWhen>
+          <reference
+                definitionId="org.eclipse.php.ui.phpContentType.definition">
+          </reference>
+       </activeWhen>
+    </handler>
  </extension>
  <extension
        point="org.eclipse.ui.menus">
@@ -360,7 +380,33 @@
              </reference>
           </visibleWhen>
        </command>
+       <command
+             commandId="com.dubture.symfony.ui.command.insertService"
+             label="Insert service ID"
+             style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <reference
+                   definitionId="org.eclipse.php.ui.phpContentType.definition">
+             </reference>
+          </visibleWhen>
+       </command>
     </menuContribution>
+ </extension>
+ <extension
+       point="org.eclipse.ui.bindings">
+    <key
+          commandId="com.dubture.symfony.ui.command.insertRoute"
+          contextId="org.eclipse.php.core.phpsource"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+          sequence="Ctrl+K">
+    </key>
+    <key
+          commandId="com.dubture.symfony.ui.command.insertService"
+          contextId="org.eclipse.php.core.phpsource"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+          sequence="Ctrl+S">
+    </key>
  </extension>
  
  <!-- TODO: finish implementation -->

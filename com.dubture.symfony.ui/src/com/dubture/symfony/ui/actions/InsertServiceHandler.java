@@ -3,24 +3,23 @@ package com.dubture.symfony.ui.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
-import com.dubture.symfony.index.dao.Route;
 
-public class InsertRouteHandler extends BaseTextInsertionHandler
+public class InsertServiceHandler extends BaseTextInsertionHandler
 {
-    
+
     @Override
     protected List<String[]> getInput()
     {
         SymfonyModelAccess modelAccess = SymfonyModelAccess.getDefault();
-        
-        List<Route> routes = modelAccess.findRoutes(project);
+        List<Service> services = modelAccess.findServices(project.getPath());
         List<String[]> input = new ArrayList<String[]>();
         
-        for (Route route : routes) {
-            String display = route.getName() + " - " + route.getViewPath();
+        for (Service service : services) {
+            String display = service.getId() + " - " + service.getClassName();
             
-            input.add(new String[]{display, route.getName()});
+            input.add(new String[]{display, service.getId()});
         }
         
         return input;
@@ -29,6 +28,7 @@ public class InsertRouteHandler extends BaseTextInsertionHandler
     @Override
     protected String getTitle()
     {
-        return "Select a route to insert";
+        return "Select a service ID to insert";
     }
+
 }
