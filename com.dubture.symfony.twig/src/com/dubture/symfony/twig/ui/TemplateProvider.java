@@ -24,10 +24,8 @@ import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -197,16 +195,20 @@ public class TemplateProvider implements ITemplateProvider
                 }
             }
         }
-
+        
         try {
-            char[] autoActivationCharacters = new char[]{':'};
+            
             KeyStroke keyStroke = KeyStroke.getInstance("Ctrl+Space");
-
             SimpleContentProposalProvider provider = new SimpleContentProposalProvider(
                     (String[]) proposals.toArray(new String[proposals.size()]));
-
+            provider.setFiltering(true);
+            
             ContentProposalAdapter contentProposalAdapter = new ContentProposalAdapter(parentTemplate, new ViewpathProposalAdapter(),
-                    provider, keyStroke, autoActivationCharacters);
+                    provider, keyStroke, null);
+            
+            contentProposalAdapter.setFilterStyle(ContentProposalAdapter.FILTER_CHARACTER);
+            contentProposalAdapter.setAutoActivationDelay(10);
+            contentProposalAdapter.setPropagateKeys(true);
             
             contentProposalAdapter.addContentProposalListener(new IContentProposalListener()
             {
