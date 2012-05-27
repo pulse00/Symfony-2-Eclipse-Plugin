@@ -20,12 +20,19 @@ import java.util.Stack;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.internal.core.util.Util;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.dltk.internal.core.search.DLTKSearchScope;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.yaml.snakeyaml.scanner.ScannerException;
@@ -53,7 +60,6 @@ import com.dubture.symfony.index.dao.TransUnit;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractSymfonyVisitor {
 
 	protected IFile file;
@@ -85,7 +91,7 @@ public abstract class AbstractSymfonyVisitor {
 				
 				if ("xml".equals(resource.getFileExtension()) && doIndex)
 				{
-					loadXML();
+					loadXML(resource);
 					built = true;
 
 				} else if ("yml".equals(resource.getFileExtension()) && doIndex) {
@@ -223,16 +229,17 @@ public abstract class AbstractSymfonyVisitor {
 
 	}
 
-	protected void loadXML() {
+	protected void loadXML(IResource resource) {
 
 		try {
 
 			XMLConfigParser parser;					
-			parser = new XMLConfigParser(file.getContents());
+			parser = new XMLConfigParser(file.getLocation().toFile());
 			parser.parse();
 
 			if (parser.hasServices()) {
 				indexServices(parser.getServices());
+				setMarkers(resource, parser.getServices());
 			}
 
 			if (parser.hasRoutes()) {
@@ -241,6 +248,7 @@ public abstract class AbstractSymfonyVisitor {
 
 		} catch (Exception e) {
 
+		    e.printStackTrace();
 			Logger.logException(e);
 
 		}
@@ -285,5 +293,38 @@ public abstract class AbstractSymfonyVisitor {
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
-	}	
+	}
+	
+	public void setMarkers(IResource resource, HashMap<String,Service> hashMap) throws CoreException
+	{
+	    
+	    Iterator<String> iterator = hashMap.keySet().iterator();
+	    IScriptProject scriptProject = DLTKCore.create(resource.getProject());
+	    IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+	    
+	    PhpModelAccess model = PhpModelAccess.getDefault();
+	    
+	    while (iterator.hasNext()) {
+	        String next = iterator.next();
+	        Service service = hashMap.get(next);
+	        
+	        String phpClass = service.getPHPClass();
+	        
+	        
+//	        model.findTypes(phpClass, MatchRule.PATTERN, true, scopr, null);
+	        
+	        
+	    }
+	    
+	    
+        String markerType = "com.dubture.symfony.core.serviceWarning";
+        resource.deleteMarkers(markerType, true, 1);
+        
+        IMarker marker = resource.createMarker(markerType);
+        marker.setAttribute("serviceClass", "foobar");
+        marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
+        marker.setAttribute(IMarker.MESSAGE, "Class does not exist");
+        marker.setAttribute(IMarker.CHAR_START, 5);
+        marker.setAttribute(IMarker.CHAR_END, 10);
+	}
 }

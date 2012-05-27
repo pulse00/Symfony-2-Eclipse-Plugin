@@ -8,12 +8,16 @@
  ******************************************************************************/
 package com.dubture.symfony.core.parser;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -49,12 +53,18 @@ public class XMLConfigParser implements IConfigParser {
 	private HashMap<String, Service> services;
 	private Stack<Route> routes = new Stack<Route>();
 
+	public XMLConfigParser(File file) throws Exception {
 
-	public XMLConfigParser(InputStream file) throws Exception {
-
-		xPath = XPathFactory.newInstance().newXPath();
 		try {
-		    doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+//		    SAXParser sp = SAXParserFactory.newInstance().newSAXParser();
+		    
+		    FileInputStream is = new FileInputStream(file);
+		    doc = PositionalXMLReader.readXML(is);
+//		    doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+//		    sp.parse(file, new LocationRecordingHandler(doc));
+		    
+		    xPath = XPathFactory.newInstance().newXPath();
+		    
         } catch (SAXParseException e) {
             doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse("<dummy></dummy>");
             Logger.log(Logger.WARNING, "Error parsing xml ");
@@ -166,6 +176,71 @@ public class XMLConfigParser implements IConfigParser {
 	@SuppressWarnings("rawtypes")
 	private void parseServices() throws Exception {
 
+	    NodeList nodeList = doc.getElementsByTagName("service");
+	    
+	    for (int i=0; i < nodeList.getLength(); i++) {
+	        
+	        Node childNode = nodeList.item(i);
+	        System.err.println(childNode.getUserData("lineNumber"));
+	        
+	        NamedNodeMap attributes = childNode.getAttributes();
+	        
+            String id = attributes.getNamedItem("id").getNodeValue();
+            String phpClass = attributes.getNamedItem("class").getNodeValue();
+            
+            Node publicItem = attributes.getNamedItem("public");
+            String _public = null;
+            
+            if (publicItem != null) {
+                _public = attributes.getNamedItem("public").getNodeValue();    
+            }
+            
+            if (phpClass != null && id != null) {
+
+                Service _service = null;
+                if (phpClass.startsWith("%") && phpClass.endsWith("%")) {
+
+                    String placeHolder = phpClass.replace("%", "");
+                    Iterator it = getParameters().keySet().iterator();
+
+                    while (it.hasNext()) {
+                        String key = (String) it.next();                        
+                        String val = (String) getParameters().get(key);
+
+                        if (placeHolder.equals(key)) {                  
+                            _service = new Service(id, val, null);                              
+                        }
+                    }                       
+                } else {
+                    _service = new Service(id, phpClass, null);                 
+                }
+                
+                /*
+                for(int k=0; k < tags.getLength(); k++) {
+                    
+                    Node tag = tags.item(k);
+                    NamedNodeMap map = tag.getAttributes();                                 
+                    Node tagName = map.getNamedItem("name");
+
+                    if (tagName != null && tagName.getNodeValue() != null)
+                        _service.addTag(tagName.getNodeValue());
+                    
+                }
+                */
+                
+                if (_service != null) {
+                    _service.setPublic(_public);
+                    _service.setLine(Integer.parseInt((String) childNode.getUserData("lineNumber")));
+                }
+                
+                synchronized (services) {
+                    services.put(id, _service); 
+                }
+            }	        
+
+	    }
+	    
+/*	    
 		String servicePath = "/container/services/service[@class]";
 		NodeList serviceNodes = getNodes(servicePath);
 		
@@ -174,6 +249,11 @@ public class XMLConfigParser implements IConfigParser {
 			Element service = (Element) serviceNodes.item(i);
 			
 			//TODO: Check the services visibility and if it's abstract
+			
+			Object userData = service.getUserData(LocationRecordingHandler.KEY_LINE_NO);
+			
+			System.err.println(userData);
+			
 			String id = service.getAttribute("id");
 			String phpClass = service.getAttribute("class");			
 			String _public = service.getAttribute("public");
@@ -222,6 +302,7 @@ public class XMLConfigParser implements IConfigParser {
 				}
 			}
 		}
+		*/
 	}
 
 	@SuppressWarnings("rawtypes")

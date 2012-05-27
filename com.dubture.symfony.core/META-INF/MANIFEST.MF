@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.commons.lang,
  com.dubture.symfony.index,
  com.dubture.symfony.annotation,
- com.dubture.doctrine.core
+ com.dubture.doctrine.core,
+ org.eclipse.wst.validation;bundle-version="1.2.303"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.dubture.symfony.core,

@@ -124,6 +124,24 @@
             class="com.dubture.symfony.core.goals.SymfonyEntityResolver">
       </resolver>
    </extension>
+   
    <!-- End code assist -->
+   
+    <extension id="serviceWarning" point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.core.resources.problemmarker"/>
+        <super type="com.dubture.symfony.core.serviceMarker"/>
+        <attribute name="serviceClass"/>
+        <persistent value="true"/>    
+    </extension>
+    <extension
+          id="id1"
+          name="name"
+          point="org.eclipse.wst.validation.validatorV2">
+       <validator
+             class="org.eclipse.wst.xml.core.internal.validation.eclipse.Validator"
+             sourceid="org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidatorForXML">
+       </validator>
+    </extension>
+    
 
 </plugin>

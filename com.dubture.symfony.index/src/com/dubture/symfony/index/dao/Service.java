@@ -34,6 +34,7 @@ public class Service {
 		
 	private List<String> aliases = new ArrayList<String>();
 	private List<String> tags = new ArrayList<String>();
+    private Integer line;
 	
 	public Service(String id, String phpClass, String path) {
 		
@@ -41,6 +42,11 @@ public class Service {
 		this.phpClass = phpClass;
 		this.path = path;
 		
+	}
+	
+	public String getPHPClass()
+	{
+	    return phpClass;
 	}
 
 	public void setPublic(String _public)
@@ -89,4 +95,17 @@ public class Service {
 		
 	}
 
+    /**
+     * @param userData
+     */
+    public void setLine(Integer line)
+    {
+        this.line = line;
+        
+    }
+    
+    public Integer getLine() 
+    {
+        return line;
+    }
 }
