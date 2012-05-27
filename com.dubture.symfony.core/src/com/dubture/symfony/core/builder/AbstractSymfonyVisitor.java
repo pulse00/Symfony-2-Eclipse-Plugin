@@ -317,19 +317,29 @@ public abstract class AbstractSymfonyVisitor {
 	        String next = iterator.next();
 	        Service service = hashMap.get(next);
 	        
+	        if (service == null) {
+	        	Logger.log(Logger.INFO, "Error setting marker for service " + next);
+	        	continue;
+	        }
 	        String phpClass = service.getPHPClass();
+	        
+	        if ("synthetic".equals(phpClass)) {
+	        	Logger.log(Logger.INFO, "Error setting marker for synthetic service " + next);
+	        	continue;
+	        }
+	        
 	        IType[] types = model.findTypes(phpClass, MatchRule.EXACT, 0, 0, scope, null);
 	        
 	        if (types.length == 0) {
-
 	            IMarker marker = resource.createMarker(markerType);
 	            marker.setAttribute(SymfonyMarker.SERVICE_CLASS, phpClass);
 	            marker.setAttribute(SymfonyMarker.RESOLUTION_TEXT, "Create class " + phpClass);
 	            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
 	            marker.setAttribute(IMarker.MESSAGE, "Class " + phpClass + " does not exist");
 	            marker.setAttribute(IMarker.LINE_NUMBER, service.getLine());
-	        	
+            //TODO: check for non-existing methods and create a marker
 	        } else if (types.length == 1) {
+	        	
 	        	
         	// type is ambigous.
 	        } else {

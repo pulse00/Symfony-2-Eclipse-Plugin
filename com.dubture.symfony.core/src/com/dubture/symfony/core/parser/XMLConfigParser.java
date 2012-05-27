@@ -177,12 +177,16 @@ public class XMLConfigParser implements IConfigParser {
 	    for (int i=0; i < nodeList.getLength(); i++) {
 	        
 	        Node childNode = nodeList.item(i);
-	        System.err.println(childNode.getUserData("lineNumber"));
-	        
 	        NamedNodeMap attributes = childNode.getAttributes();
-	        
             String id = attributes.getNamedItem("id").getNodeValue();
-            String phpClass = attributes.getNamedItem("class").getNodeValue();
+            String phpClass = null;
+            Node namedItem = attributes.getNamedItem("class");
+            
+            if (namedItem != null) {
+            	phpClass =  namedItem.getNodeValue();
+            } else {
+            	Logger.log(Logger.INFO, "Unable to parse class attribute from service " + childNode);
+            }
             
             Node publicItem = attributes.getNamedItem("public");
             String _public = null;
