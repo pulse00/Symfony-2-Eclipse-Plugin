@@ -16,7 +16,7 @@ public class XMLQuickassistProcessor implements IMarkerResolutionGenerator2 {
 		try {
 			if (SymfonyMarker.MISSING_SERVICE_CLASS.equals(marker.getType())) {
 				
-				XMLMarkerResolution resolution = new XMLMarkerResolution();
+				XMLMarkerResolution resolution = new XMLMarkerResolution(marker);
 				return new XMLMarkerResolution[]{resolution};
 				
 			}

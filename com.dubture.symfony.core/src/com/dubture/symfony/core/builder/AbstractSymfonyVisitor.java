@@ -324,10 +324,9 @@ public abstract class AbstractSymfonyVisitor {
 
 	            IMarker marker = resource.createMarker(markerType);
 	            marker.setAttribute(SymfonyMarker.SERVICE_CLASS, phpClass);
+	            marker.setAttribute(SymfonyMarker.RESOLUTION_TEXT, "Create class " + phpClass);
 	            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
 	            marker.setAttribute(IMarker.MESSAGE, "Class " + phpClass + " does not exist");
-//	            marker.setAttribute(IMarker.CHAR_START, 0);
-//	            marker.setAttribute(IMarker.CHAR_END, 20);
 	            marker.setAttribute(IMarker.LINE_NUMBER, service.getLine());
 	        	
 	        } else if (types.length == 1) {

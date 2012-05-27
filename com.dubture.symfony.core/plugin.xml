@@ -140,6 +140,9 @@
      <attribute
            name="serviceClass">
      </attribute>
+     <attribute
+           name="resolutionText">
+     </attribute>
     </extension>
     
 
