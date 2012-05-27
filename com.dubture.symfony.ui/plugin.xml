@@ -322,12 +322,14 @@
           class="com.dubture.symfony.ui.wizards.SymfonyNamespaceResolver">
     </resolver>
  </extension>
+ <!--
  <extension
        point="org.dadacoalition.yedit.sourceViewerConfigurationContribution">
     <sourceViewerConfiguration
           class="com.dubture.symfony.ui.YEditSourceViewerConfiguration:1">
     </sourceViewerConfiguration>
  </extension>
+ -->
  <extension
        point="com.dubture.pdt.formatter.profileContributor">
     <contributor
@@ -365,15 +367,15 @@
        point="org.eclipse.ui.bindings">
     <key
           commandId="com.dubture.symfony.ui.command.insertRoute"
-          contextId="org.eclipse.php.core.phpsource"
+          contextId="org.eclipse.ui.textEditorScope"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="Ctrl+K">
+          sequence="M1+R">
     </key>
     <key
           commandId="com.dubture.symfony.ui.command.insertService"
-          contextId="org.eclipse.php.core.phpsource"
+          contextId="org.eclipse.ui.textEditorScope"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="Ctrl+S">
+          sequence="M1+M2+S">
     </key>
  </extension>
  <extension
@@ -382,14 +384,6 @@
           class="com.dubture.symfony.ui.quickassist.XMLQuickassistProcessor"
           markerType="com.dubture.symfony.core.serviceMarker">
     </markerResolutionGenerator>
- </extension>
- <extension
-       point="org.eclipse.ui.editors.annotationTypes">
-    <type
-          markerType="com.dubture.symfony.core.serviceMarker"
-          name="com.dubture.symfony.ui.serviceAnnotation"
-          super="org.eclipse.ui.workbench.texteditor.warning">
-    </type>
  </extension>
  
  

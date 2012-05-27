@@ -14,6 +14,7 @@ public class XMLQuickassistProcessor implements IMarkerResolutionGenerator2 {
 	public IMarkerResolution[] getResolutions(IMarker marker) {
 
 		try {
+			System.err.println("get .");
 			if (SymfonyMarker.MISSING_SERVICE_CLASS.equals(marker.getType())) {
 				
 				XMLMarkerResolution resolution = new XMLMarkerResolution(marker);
@@ -31,13 +32,17 @@ public class XMLQuickassistProcessor implements IMarkerResolutionGenerator2 {
 	@Override
 	public boolean hasResolutions(IMarker marker)
 	{
+		System.err.println("has ?");
 		try {
 			if (SymfonyMarker.MISSING_SERVICE_CLASS.equals(marker.getType())) {
+				System.err.println("return true");
 				return true;
 			}
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
+		
+		System.err.println("return false");
 		
 		return false;
 	}
