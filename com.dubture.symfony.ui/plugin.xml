@@ -376,18 +376,25 @@
           sequence="Ctrl+S">
     </key>
  </extension>
+ <extension
+       point="org.eclipse.ui.ide.markerResolution">
+    <markerResolutionGenerator
+          class="com.dubture.symfony.ui.quickassist.XMLQuickassistProcessor"
+          markerType="com.dubture.symfony.core.serviceMarker">
+    </markerResolutionGenerator>
+ </extension>
+ <extension
+       point="org.eclipse.ui.editors.annotationTypes">
+    <type
+          markerType="com.dubture.symfony.core.serviceMarker"
+          name="com.dubture.symfony.ui.serviceAnnotation"
+          super="org.eclipse.ui.workbench.texteditor.warning">
+    </type>
+ </extension>
  
- <!-- TODO: finish implementation -->
+ 
  
  <!--
- <extension
-       point="org.eclipse.php.ui.quickFixProcessors">
-    <quickFixProcessor
-          class="com.dubture.symfony.ui.quickfix.InterfaceMethodQuickFixProcessor"
-          id="com.dubture.symfony.ui.interfaceQuickfixProcessor"
-          name="InterfaceMethod Problem Marker">
-    </quickFixProcessor>
- </extension>
  <extension
        id="interfacemethodmarker"
        point="org.eclipse.core.resources.markers">

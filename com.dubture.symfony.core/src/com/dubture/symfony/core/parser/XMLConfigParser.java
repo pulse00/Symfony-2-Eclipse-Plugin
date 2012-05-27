@@ -8,16 +8,12 @@
  ******************************************************************************/
 package com.dubture.symfony.core.parser;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -53,13 +49,13 @@ public class XMLConfigParser implements IConfigParser {
 	private HashMap<String, Service> services;
 	private Stack<Route> routes = new Stack<Route>();
 
-	public XMLConfigParser(File file) throws Exception {
+	public XMLConfigParser(FileInputStream file) throws Exception {
 
 		try {
 //		    SAXParser sp = SAXParserFactory.newInstance().newSAXParser();
 		    
-		    FileInputStream is = new FileInputStream(file);
-		    doc = PositionalXMLReader.readXML(is);
+//		    FileInputStream is = new FileInputStream(file);
+		    doc = PositionalXMLReader.readXML(file);
 //		    doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
 //		    sp.parse(file, new LocationRecordingHandler(doc));
 		    
