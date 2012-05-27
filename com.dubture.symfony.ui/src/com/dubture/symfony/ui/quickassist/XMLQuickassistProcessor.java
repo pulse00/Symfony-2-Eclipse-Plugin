@@ -8,6 +8,13 @@ import org.eclipse.ui.IMarkerResolutionGenerator2;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.resources.SymfonyMarker;
 
+/**
+ * 
+ * Provides a quick-fix proposal in the "Problem" view of eclipse.
+ * 
+ * @author Robert Gruendler <r.gruendler@gmail.com>
+ *
+ */
 public class XMLQuickassistProcessor implements IMarkerResolutionGenerator2 {
 
 	@Override
@@ -33,7 +40,6 @@ public class XMLQuickassistProcessor implements IMarkerResolutionGenerator2 {
 	{
 		try {
 			if (SymfonyMarker.MISSING_SERVICE_CLASS.equals(marker.getType())) {
-				System.err.println("return true");
 				return true;
 			}
 		} catch (CoreException e) {

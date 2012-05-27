@@ -308,10 +308,9 @@ public abstract class AbstractSymfonyVisitor {
 	    
 	    PhpModelAccess model = PhpModelAccess.getDefault();
 	    
-        String markerType = SymfonyMarker.MISSING_SERVICE_CLASS;
-        
-        resource.deleteMarkers(markerType, true, 1);
+        resource.deleteMarkers(SymfonyMarker.MISSING_SERVICE_CLASS, true, 1);
 	    
+        System.err.println("marker time");
 	    while (iterator.hasNext()) {
 	    	
 	        String next = iterator.next();
@@ -331,10 +330,11 @@ public abstract class AbstractSymfonyVisitor {
 	        IType[] types = model.findTypes(phpClass, MatchRule.EXACT, 0, 0, scope, null);
 	        
 	        if (types.length == 0) {
-	            IMarker marker = resource.createMarker(markerType);
+	            IMarker marker = resource.createMarker(SymfonyMarker.MISSING_SERVICE_CLASS);
 	            marker.setAttribute(SymfonyMarker.SERVICE_CLASS, phpClass);
 	            marker.setAttribute(SymfonyMarker.RESOLUTION_TEXT, "Create class " + phpClass);
 	            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
+	            marker.setAttribute("problemType", SymfonyMarker.MISSING_SERVICE_CLASS);
 	            marker.setAttribute(IMarker.MESSAGE, "Class " + phpClass + " does not exist");
 	            marker.setAttribute(IMarker.LINE_NUMBER, service.getLine());
             //TODO: check for non-existing methods and create a marker
