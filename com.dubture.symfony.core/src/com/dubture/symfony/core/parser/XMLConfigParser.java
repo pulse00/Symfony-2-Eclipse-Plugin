@@ -9,8 +9,10 @@
 package com.dubture.symfony.core.parser;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -215,18 +217,30 @@ public class XMLConfigParser implements IConfigParser {
                     _service = new Service(id, phpClass, null);                 
                 }
                 
-                /*
-                for(int k=0; k < tags.getLength(); k++) {
-                    
-                    Node tag = tags.item(k);
+                NodeList children = childNode.getChildNodes();
+                
+                List<Node> tags = new ArrayList<Node>();
+                List<Node> arguments = new ArrayList<Node>();
+                List<Node> calls = new ArrayList<Node>();
+                
+                for (int j=0; j < children.getLength(); j++) {
+                    Node child = children.item(j);
+                    if ("tag".equals(child.getNodeName())) {
+                        tags.add(child);
+                    } else if ("argument".equals(child.getNodeName())) {
+                        arguments.add(child);
+                    } else if ("call".equals(child.getNodeName())) {
+                        calls.add(child);
+                    }
+                }
+                
+                for(Node tag : tags) {
                     NamedNodeMap map = tag.getAttributes();                                 
                     Node tagName = map.getNamedItem("name");
-
-                    if (tagName != null && tagName.getNodeValue() != null)
+                    if (tagName != null && tagName.getNodeValue() != null) {
                         _service.addTag(tagName.getNodeValue());
-                    
+                    } 
                 }
-                */
                 
                 if (_service != null) {
                     _service.setPublic(_public);

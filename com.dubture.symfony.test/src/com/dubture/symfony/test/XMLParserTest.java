@@ -144,6 +144,7 @@ public class XMLParserTest extends TestCase {
 			
 		} catch (Exception e) {
 			
+		    e.printStackTrace();
 			fail();
 			
 		}		

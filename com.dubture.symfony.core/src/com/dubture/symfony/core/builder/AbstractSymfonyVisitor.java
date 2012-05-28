@@ -310,7 +310,6 @@ public abstract class AbstractSymfonyVisitor {
 	    
         resource.deleteMarkers(SymfonyMarker.MISSING_SERVICE_CLASS, true, 1);
 	    
-        System.err.println("marker time");
 	    while (iterator.hasNext()) {
 	    	
 	        String next = iterator.next();

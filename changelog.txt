@@ -1,3 +1,9 @@
+1.0.70
+
+* fixed service/route keybindings
+* added missing service-class validator/quickfix
+
+
 1.0.69
 
 * added pattern and parameters to route completionproposal
