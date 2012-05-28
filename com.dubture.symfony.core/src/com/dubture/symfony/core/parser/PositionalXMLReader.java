@@ -1,5 +1,12 @@
+/*******************************************************************************
+ * This file is part of the Symfony eclipse plugin.
+ * 
+ * (c) Robert Gruendler <r.gruendler@gmail.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ ******************************************************************************/
 package com.dubture.symfony.core.parser;
-
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,46 +26,67 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class PositionalXMLReader {
+/**
+ * @see http
+ *      ://stackoverflow.com/questions/4915422/get-line-number-from-xml-node-
+ *      java
+ */
+public class PositionalXMLReader
+{
     final static String LINE_NUMBER_KEY_NAME = "lineNumber";
 
-    public static Document readXML(final InputStream is) throws IOException, SAXException {
+    public static Document readXML(final InputStream is) throws IOException,
+            SAXException
+    {
         final Document doc;
         SAXParser parser;
         try {
             final SAXParserFactory factory = SAXParserFactory.newInstance();
             parser = factory.newSAXParser();
-            final DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-            final DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+            final DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
+                    .newInstance();
+            final DocumentBuilder docBuilder = docBuilderFactory
+                    .newDocumentBuilder();
             doc = docBuilder.newDocument();
         } catch (final ParserConfigurationException e) {
-            throw new RuntimeException("Can't create SAX parser / DOM builder.", e);
+            throw new RuntimeException(
+                    "Can't create SAX parser / DOM builder.", e);
         }
 
         final Stack<Element> elementStack = new Stack<Element>();
         final StringBuilder textBuffer = new StringBuilder();
-        final DefaultHandler handler = new DefaultHandler() {
+        final DefaultHandler handler = new DefaultHandler()
+        {
             private Locator locator;
 
             @Override
-            public void setDocumentLocator(final Locator locator) {
-                this.locator = locator; // Save the locator, so that it can be used later for line tracking when traversing nodes.
+            public void setDocumentLocator(final Locator locator)
+            {
+                this.locator = locator; // Save the locator, so that it can be
+                                        // used later for line tracking when
+                                        // traversing nodes.
             }
 
             @Override
-            public void startElement(final String uri, final String localName, final String qName, final Attributes attributes)
-                    throws SAXException {
+            public void startElement(final String uri, final String localName,
+                    final String qName, final Attributes attributes)
+                    throws SAXException
+            {
                 addTextIfNeeded();
                 final Element el = doc.createElement(qName);
                 for (int i = 0; i < attributes.getLength(); i++) {
-                    el.setAttribute(attributes.getQName(i), attributes.getValue(i));
+                    el.setAttribute(attributes.getQName(i),
+                            attributes.getValue(i));
                 }
-                el.setUserData(LINE_NUMBER_KEY_NAME, String.valueOf(this.locator.getLineNumber()), null);
+                el.setUserData(LINE_NUMBER_KEY_NAME,
+                        String.valueOf(this.locator.getLineNumber()), null);
                 elementStack.push(el);
             }
 
             @Override
-            public void endElement(final String uri, final String localName, final String qName) {
+            public void endElement(final String uri, final String localName,
+                    final String qName)
+            {
                 addTextIfNeeded();
                 final Element closedEl = elementStack.pop();
                 if (elementStack.isEmpty()) { // Is this the root element?
@@ -70,15 +98,19 @@ public class PositionalXMLReader {
             }
 
             @Override
-            public void characters(final char ch[], final int start, final int length) throws SAXException {
+            public void characters(final char ch[], final int start,
+                    final int length) throws SAXException
+            {
                 textBuffer.append(ch, start, length);
             }
 
             // Outputs text accumulated under the current node
-            private void addTextIfNeeded() {
+            private void addTextIfNeeded()
+            {
                 if (textBuffer.length() > 0) {
                     final Element el = elementStack.peek();
-                    final Node textNode = doc.createTextNode(textBuffer.toString());
+                    final Node textNode = doc.createTextNode(textBuffer
+                            .toString());
                     el.appendChild(textNode);
                     textBuffer.delete(0, textBuffer.length());
                 }
