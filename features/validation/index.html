@@ -1,12 +1,32 @@
 <div id="validationf" class="featurediv">
-	<p>Symfony elements can be validated by the plugin for syntax errors or other problems. For example you will see a validation error for unresolvable annotations:</p>
+	
+	<h2>XML Validation</h2>	
+	
+	<p>The plugin validates your XML service definitions for missing classes. If a service class does not exist, you will see a warning in the line of its definition. Press <span class="code">Cmd+1</span>
+	(Mac) or <span class="code">Ctrl+1</span> (Win/Linux) to show the quickFix proposals. If you select <span class="code">Create class</span> the <span class="italic">New PHP Class Wizard</span>
+	will show up with the pre-filled values of your new class.</p>
+
+	<div class="centered">			
+		<a class="lightbox" href="/images/screenshots/xmlvalidator1.png">
+			<img src="/images/screenshots/xmlvalidator1_thumb.png"/>
+		</a>
+		<a class="lightbox" href="/images/screenshots/xmlvalidator2.png">
+			<img src="/images/screenshots/xmlvalidator2_thumb.png"/>
+		</a>
+		<a class="lightbox" href="/images/screenshots/xmlvalidator2.png">
+			<img src="/images/screenshots/xmlvalidator2_thumb.png"/>
+		</a>		
+	</div>		
+	
+	<h2>Annotation Validation</h2>	
+	
 	<div class="centered">			
 		<a class="lightbox" href="/images/screenshots/annotationerror.png">
 			<img src="/images/screenshots/annotationerror_thumb.png"/>
 		</a>
 	</div>	
 	<p>The severity level of those validation problems can be altered in the preference page of the Plugin ( or turned off completely).</p>
-	<p>It's planned to validate additional elements with a corresponding quickfix solution, so these the validation error of a missing template will offer you quickfix to create that template for you.</p>	
+	<p>Ideas for additional validation/quickfix implementations are welcome!</p>	
 </div>															
 <script type="text/javascript" charset="utf-8">
 	initLightbox();

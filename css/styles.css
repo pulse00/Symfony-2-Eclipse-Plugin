@@ -642,7 +642,7 @@ div.faq h2 a {
 }
 
 .multiShot.centered a {
-
+	
 }
 
 .gist {
@@ -682,4 +682,8 @@ li.githubpanel {
    position: absolute;
    right: -4px;
    top: -20px;
+}
+
+.italic {
+	font-style: italic;
 }
