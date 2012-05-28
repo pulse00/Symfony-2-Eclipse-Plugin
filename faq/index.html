@@ -13,8 +13,8 @@ title: Symfony2 Eclipse Plugin - FAQ
 		</p>
   	</div>  
   
-  	<div class="faq">  		
-		<h2 class="question">I'm getting a lot of errors/warnings after installation. What's up with that?</h2>
+  	<div class="faq" id="warnings">  		
+		<h2 class="question"><a href="#warnings">My Problem view shows errors/warnings after creation of a new Symfony project. What's up with that?</a></h2>
 		<p class="answer">
 
 			The Symfony2 standard edition comes with various vendor libraries. Those libraries contain php files which cause PHP Syntax errors when indexed
@@ -32,39 +32,31 @@ title: Symfony2 Eclipse Plugin - FAQ
 			<div class="centered">
 				<a class="lightbox" href="/images/screenshots/validation.png"><img src="/images/screenshots/validation_thumb.png"></img></a>
 			</div>
-			
-
-			
   	</div>  
 	
-	<div class="faq">					
-		<h2 class="question"><a href="#symfony-aware">How do i know a PHP project is symfony-aware?</a></h2>
-		<p class="answer">Check for a "Symfony Builder" in the projects builders - <span class="eclipsehint">project -> Properties -> Builders</span>. If it's not there, run the "Add/Remove Symfony Nature" (right-click on the project in the <span class="eclipsehint">package explorer -> Symfony -> Add/Remove Symfony Nature</span>).</p>
+	<div class="faq" id="symfonyaware">					
+		<h2 class="question"><a href="#symfonyaware">How do i know a PHP project is symfony-aware?</a></h2>
+		<p class="answer">Your project icon in the PHP package explorer will have a small Symfony logo attached to it. If it's not there, run "Convert to Symfony project" (right-click on the project in the <span class="eclipsehint">package explorer -> Configure -> Convert to Symfony project</span>).</p>
 	</div>
 	
-	<div class="faq">					
+	<div class="faq" id="no-service-completion">					
 		<h2 class="question"><a href="#no-service-completion">Service XYZ is not being completed at all, but others are. How come?</a></h2>
 		<p class="answer">The plugin cannot infer types of synthetic services - services which are dynamically injected during runtime. For those cases, there's a preference page called <b>Services</b> where the id/class mapping can be stored. After that, the plugin should complete the service properly.</p>	
 	</div>				
 	
 
-	<div class="faq">					
+	<div class="faq" id="no-codeassist">					
 		<h2 class="question"><a href="#no-codeassist">There's no additional codeassistance showing up, what can i do?</a></h2>
 		<p class="answer">The plugin indexes services and annotation during the build process. Try to clean the project (<span class="eclipsehint">project -> clean</span>). If it's still not working, check if the project has a Symfony nature.</p>					
 	</div>
 	
-	<div class="faq">					
+	<div class="faq" id="no-codeassist2">					
 		<h2 class="question"><a href="#no-codeassist2">Still no code assist, what now?</a></h2>
 		<p class="answer">Check your build-path - <span class="eclipsehint"> project -> properties -> PHP build path</span> - and ensure that all your source folders are in the build path. Also make sure that none of your sourcefolders are excluded.</p>					
 	</div>
-
-	<div class="faq">					
-		<h2 class="question"><a href="#pdt-completion-broken">The plugin broke the built in PHP code completion!?!</a></h2>
-		<p class="answer">Sorry about that ;) To check that it's really the plugins fault, first remove the symfony nature, clean your project and try again. If you're getting code assist, it's probably the plugin causing it. If not, you're build-path is probably misconfigured.</p>
-	</div>
 	
-	<div class="faq">					
-		<h2 class="question"><a href="#troubleshooting">Okay, it seems the plugin broke it, how can i figure out what's wrong?</a></h2>
+	<div class="faq" id="troubleshooting">					
+		<h2 class="question"><a href="#troubleshooting">When reporting an issue, how can get stacktraces to ease debugging?</a></h2>
 		<p class="answer">Eclipse can be started with various debugging options. This can be turned on/off for each installed plugin independently. To debug the symfony plugin, create a file called <span class="code">.options</span> in your Eclipse installation folder. The file should contain the following lines:
 			
 			<p class="code indent-1">				
@@ -80,7 +72,7 @@ title: Symfony2 Eclipse Plugin - FAQ
 			</p>
 	</div>
 	
-	<div class="faq">					
+	<div class="faq" id="plugin-version">					
 		<h2 class="question"><a href="#plugin-version">How do i know which version of the plugin is installed?</a></h2>
 		<p class="answer"> <span class="eclipsehint">Eclipse(Mac) / Help(Windows/Linux) -> About Eclipse -> SDK -> Installation Details -> Plugins </span> lists all installed plugins and their version. Note that the Symfony eclipse Feature actually consists of multiple plugins listed on that page.</p>
 	</div>				
