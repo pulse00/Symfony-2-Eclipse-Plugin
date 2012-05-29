@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.dubture.symfony.debug;singleton:=true
-Bundle-Version: 1.0.70
+Bundle-Version: 1.0.71
 Bundle-Activator: com.dubture.symfony.debug.SymfonyDebugPlugin
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.core.runtime,

@@ -1,3 +1,7 @@
+1.0.71
+
+* moved to composer/lucene indexing
+
 1.0.70
 
 * fixed service/route keybindings
