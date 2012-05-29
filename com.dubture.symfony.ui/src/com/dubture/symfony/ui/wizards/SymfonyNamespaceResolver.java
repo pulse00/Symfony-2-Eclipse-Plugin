@@ -33,6 +33,7 @@ public class SymfonyNamespaceResolver implements INamespaceResolver {
 	            return path.toString().replace("/", "\\");
 	        }
         } catch (Exception e) {
+            e.printStackTrace();
             Logger.logException(e);
         }
 		

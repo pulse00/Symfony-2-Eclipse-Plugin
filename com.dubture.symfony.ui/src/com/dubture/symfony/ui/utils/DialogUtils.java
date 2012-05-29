@@ -74,7 +74,7 @@ public class DialogUtils
         IResource resource = marker.getResource();
 
         // TODO: refactor this to the composer plugin
-        for (Composer pkg : composer.getPackages()) {
+        for (Composer pkg : composer.getPackages(resource.getProject().getFullPath())) {
 
             Autoload autoload = pkg.getAutoload();
             if (autoload != null) {

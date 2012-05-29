@@ -234,17 +234,17 @@ public class XMLConfigParser implements IConfigParser {
                     }
                 }
                 
-                for(Node tag : tags) {
-                    NamedNodeMap map = tag.getAttributes();                                 
-                    Node tagName = map.getNamedItem("name");
-                    if (tagName != null && tagName.getNodeValue() != null) {
-                        _service.addTag(tagName.getNodeValue());
-                    } 
-                }
-                
                 if (_service != null) {
                     _service.setPublic(_public);
                     _service.setLine(Integer.parseInt((String) childNode.getUserData("lineNumber")));
+                    
+                    for(Node tag : tags) {
+                        NamedNodeMap map = tag.getAttributes();                                 
+                        Node tagName = map.getNamedItem("name");
+                        if (tagName != null && tagName.getNodeValue() != null) {
+                            _service.addTag(tagName.getNodeValue());
+                        } 
+                    }
                 }
                 
                 synchronized (services) {
