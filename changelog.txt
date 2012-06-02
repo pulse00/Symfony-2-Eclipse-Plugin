@@ -1,3 +1,8 @@
+1.0.72
+
+* updated to Symfony 2.0.15
+* minor twig templateprovider performance improvement
+
 1.0.71
 
 * moved to composer/lucene indexing
