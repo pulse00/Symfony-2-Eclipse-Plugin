@@ -26,14 +26,15 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.dubture.symfony.core.builder.SymfonyNature;
+import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.ViewPath;
-import com.dubture.twig.core.log.Logger;
 import com.dubture.twig.core.parser.SourceParserUtil;
 import com.dubture.twig.core.parser.ast.node.BlockStatement;
 import com.dubture.twig.core.parser.ast.node.TwigModuleDeclaration;
@@ -61,6 +62,8 @@ public class TemplateProvider implements ITemplateProvider
     
     // make sure to inject the dialog only in Symfony projects
     private boolean isValid = true;
+    private ContentProposalAdapter contentProposalAdapter;
+    private SimpleContentProposalProvider provider;
     
     
     @Override
@@ -132,7 +135,10 @@ public class TemplateProvider implements ITemplateProvider
         blockTable.setInput(blocks);
         blockTable.getControl().setLayoutData(gridData);
         
+        Logger.debugMSG("Setting up autocomplete");
+        
         setupAutocomplete();
+        Logger.debugMSG("Controls created");
 
     }
     
@@ -159,51 +165,13 @@ public class TemplateProvider implements ITemplateProvider
 
     private void setupAutocomplete()
     {
-
-        List<String> proposals = new LinkedList<String>();
-        List<Bundle> bundles = model.findBundles(scriptProject);
-
-        for (Bundle bundle : bundles) {
-
-            IType[] controllers = model.findBundleControllers(
-                    bundle.getElementName(), scriptProject);
-
-            if (controllers == null) {
-                continue;
-            }
-
-            IModelElement[] rootTemplates = model.findBundleRootTemplates(
-                    bundle.getElementName(), scriptProject);
-
-            for (IModelElement tpl : rootTemplates) {
-                String path = String.format("%s::%s", bundle.getElementName(),
-                        tpl.getElementName());
-                proposals.add(path);
-            }
-
-            for (IType controller : controllers) {
-                IModelElement[] templates = model.findTemplates(
-                        bundle.getElementName(), controller.getElementName(),
-                        scriptProject);
-
-                for (IModelElement template : templates) {
-                    String path = String.format("%s:%s:%s", bundle
-                            .getElementName(), controller.getElementName()
-                            .replace("Controller", ""), template
-                            .getElementName());
-                    proposals.add(path);
-                }
-            }
-        }
-        
         try {
             
             KeyStroke keyStroke = KeyStroke.getInstance("Ctrl+Space");
-            SimpleContentProposalProvider provider = new SimpleContentProposalProvider(
-                    (String[]) proposals.toArray(new String[proposals.size()]));
+            provider = new SimpleContentProposalProvider(new String[]{});
             provider.setFiltering(true);
             
-            ContentProposalAdapter contentProposalAdapter = new ContentProposalAdapter(parentTemplate, new ViewpathProposalAdapter(),
+            contentProposalAdapter = new ContentProposalAdapter(parentTemplate, new ViewpathProposalAdapter(),
                     provider, keyStroke, null);
             
             contentProposalAdapter.setFilterStyle(ContentProposalAdapter.FILTER_CHARACTER);
@@ -244,10 +212,54 @@ public class TemplateProvider implements ITemplateProvider
                 }
             });
             
+            Display.getDefault().asyncExec(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    List<String> proposals = new LinkedList<String>();
+                    List<Bundle> bundles = model.findBundles(scriptProject);
+
+                    for (Bundle bundle : bundles) {
+
+                        IType[] controllers = model.findBundleControllers(
+                                bundle.getElementName(), scriptProject);
+
+                        if (controllers == null) {
+                            continue;
+                        }
+
+                        IModelElement[] rootTemplates = model.findBundleRootTemplates(
+                                bundle.getElementName(), scriptProject);
+
+                        for (IModelElement tpl : rootTemplates) {
+                            String path = String.format("%s::%s", bundle.getElementName(),
+                                    tpl.getElementName());
+                            proposals.add(path);
+                        }
+
+                        for (IType controller : controllers) {
+                            IModelElement[] templates = model.findTemplates(
+                                    bundle.getElementName(), controller.getElementName(),
+                                    scriptProject);
+
+                            for (IModelElement template : templates) {
+                                String path = String.format("%s:%s:%s", bundle
+                                        .getElementName(), controller.getElementName()
+                                        .replace("Controller", ""), template
+                                        .getElementName());
+                                proposals.add(path);
+                            }
+                        }
+                    }
+                    Logger.debugMSG("Setting proposals");
+                    provider.setProposals(proposals.toArray(new String[proposals.size()]));
+                }
+            });
+            
         } catch (ParseException e) {
             Logger.logException(e);
         }
-
     }
 
     @Override
