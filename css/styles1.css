@@ -190,7 +190,7 @@ h4 {
 header {
 	position: relative;
 	width: 100%;
-	height: 90px;
+	height: 100px;
 /*  margin-bottom: 20px;*/
 }
 	
@@ -686,4 +686,15 @@ li.githubpanel {
 
 .italic {
 	font-style: italic;
+}
+
+.marketplace {
+    position: absolute;
+       right: -7px;
+       top: 68px;
+}
+
+#flattr {
+    float: left;
+    margin-right: 20px;
 }
