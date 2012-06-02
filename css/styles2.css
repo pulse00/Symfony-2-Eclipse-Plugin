@@ -73,7 +73,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-	font-size: 40px;
+	font-size: 30px;
 	line-height: 0.9;
 	color: #666666;
 	text-align: left;
@@ -339,23 +339,23 @@ footer, .push {
 ***************************************************/
 
 nav {
-	position: absolute;
-	width: 360px;
-	top: 15px;
-	left: 620px;
-	background: transparent;
-	border-top: 1px solid #A3A3A3;
-	border-bottom: 1px solid #A3A3A3;
+    background: none repeat scroll 0 0 transparent;
+       border-bottom: medium none;
+       border-top: 1px solid #A3A3A3;
+       left: 710px;
+       position: absolute;
+       top: 15px;
+       width: 260px;
 }
 
 nav ul li {
 	float: left;
-	margin-left: 16px;
+	margin-left: 5px;
 	line-height: normal;
 }
 
 nav ul li a {
-	font-size: 20px;
+	font-size: 16px;
    font-family: Arial, Helvetica, sans-serif;
 	color: #666666;
 	font-weight: normal;
@@ -690,11 +690,13 @@ li.githubpanel {
 
 .marketplace {
     position: absolute;
-       right: -7px;
-       top: 68px;
+    right: 280px;
+    top: 11px;
 }
 
 #flattr {
     float: left;
     margin-right: 20px;
+	padding-top: 5px;
 }
+
