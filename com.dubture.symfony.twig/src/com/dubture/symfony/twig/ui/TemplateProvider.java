@@ -35,6 +35,7 @@ import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.ViewPath;
+import com.dubture.symfony.twig.model.SymfonyTemplateResolver;
 import com.dubture.twig.core.parser.SourceParserUtil;
 import com.dubture.twig.core.parser.ast.node.BlockStatement;
 import com.dubture.twig.core.parser.ast.node.TwigModuleDeclaration;
@@ -191,8 +192,9 @@ public class TemplateProvider implements ITemplateProvider
                         
                         try {
                             
-                            SourceModule module = (SourceModule) template;
-                            TwigModuleDeclaration twig = (TwigModuleDeclaration) SourceParserUtil.parseSourceModule(module);
+                            SymfonyTemplateResolver resolver = new SymfonyTemplateResolver();
+                            SourceModule sourceModule = resolver.revolePath(parent, scriptProject);
+                            TwigModuleDeclaration twig = (TwigModuleDeclaration) SourceParserUtil.parseSourceModule(sourceModule);
                             
                             blocks = new LinkedList<String>();
                             if (twig != null) {

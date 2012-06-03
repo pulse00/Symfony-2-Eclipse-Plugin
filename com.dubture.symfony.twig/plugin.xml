@@ -50,6 +50,11 @@
             class="com.dubture.symfony.twig.codeassist.CompletionProposalProvider">
       </proposalProvider>
    </extension>
+   <extension
+         point="com.dubture.twig.core.templateResolvers">
+      <resolver
+            class="com.dubture.symfony.twig.model.SymfonyTemplateResolver"></resolver>
+   </extension>
    
    
 
