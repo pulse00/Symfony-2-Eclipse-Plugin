@@ -700,3 +700,9 @@ li.githubpanel {
 	padding-top: 5px;
 }
 
+.newIconInner {
+    left: 81px;
+       margin-top: -20px;
+       position: absolute;
+       top: -1px;
+}
