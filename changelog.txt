@@ -1,3 +1,7 @@
+1.0.73
+
+* implemented twig template resolver
+
 1.0.72
 
 * updated to Symfony 2.0.15
