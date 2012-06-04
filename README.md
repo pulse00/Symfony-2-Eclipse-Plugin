@@ -19,7 +19,7 @@ Drag the `Install` icon onto your eclipse workspace (eclipse marketplace client 
 
 #### Updatesite
 
-[http://pulse00.github.com/p2/](http://pulse00.github.com/p2/)
+[http://p2.dubture.com](http://p2.dubture.com)
 
 For more info visit [http://symfony.dubture.com/](http://symfony.dubture.com/)
 
