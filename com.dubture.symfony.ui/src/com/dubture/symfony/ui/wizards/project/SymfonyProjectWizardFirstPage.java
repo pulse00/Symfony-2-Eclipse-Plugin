@@ -318,7 +318,9 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
         }
 
         public boolean hasSymfonyStandardEdition() {
-            return layoutSelector.getSelectionIndex() <= 2;
+            
+            System.err.println("selected index " + layoutSelector.getSelectionIndex());
+            return layoutSelector.getSelectionIndex() <= 1;
         }
 
         public SymfonyVersion getSymfonyVersion() {
