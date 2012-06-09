@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of the Symfony eclipse plugin.
- * 
+ *
  * (c) Robert Gruendler <r.gruendler@gmail.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
@@ -21,156 +21,157 @@ import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.Service;
 
 /**
- * Encoding / Decoding for json metadata in the SqlIndex.  
- * 
- * 
- * 
+ * Encoding / Decoding for json metadata in the SqlIndex.
+ *
+ *
+ *
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
+@SuppressWarnings("restriction")
 public class JsonUtils {
 
-	private static JSONParser parser = new JSONParser();
-	
-	@SuppressWarnings("unchecked")
-	public static String createReference(String elementName, String qualifier, String viewPath, String method) {
-		
-		
-		JSONObject data = new JSONObject();
-		data.put("elementName", elementName);
-		data.put("qualifier", qualifier);
-		data.put("viewPath", viewPath);
-		data.put("method", method);
-		
-		JSONObject header = new JSONObject();
-		header.put("type", "reference");
-		header.put("data", data);
-		
-		return header.toString();		
-		
-		
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static String createDefaultSyntheticServices() {
-		
-		JSONArray data = new JSONArray();
-		
-		JSONObject request = new JSONObject();
-		request.put(Service.NAME, "request");
-		request.put(Service.CLASS, "Symfony\\Component\\HttpFoundation\\Request");
-				
-		data.add(request);
-		return data.toString();		
-		
-	}
+    private static JSONParser parser = new JSONParser();
 
-	public static String getElementType(String metadata) {
+    @SuppressWarnings("unchecked")
+    public static String createReference(String elementName, String qualifier, String viewPath, String method) {
 
-		try {
-			
-			JSONObject json = (JSONObject) parser.parse(metadata);
-			String type = (String) json.get("type");
-			return type;
-		} catch (ParseException e) {
-			Logger.logException(e);
-		}		
-		
-		return null;
-	}
-	
 
-	public static JSONObject getReferenceData(String metadata) {
+        JSONObject data = new JSONObject();
+        data.put("elementName", elementName);
+        data.put("qualifier", qualifier);
+        data.put("viewPath", viewPath);
+        data.put("method", method);
 
-		try {
-			JSONObject header = (JSONObject) parser.parse(metadata);
-			return (JSONObject) header.get("data");
-		} catch (ParseException e) {
+        JSONObject header = new JSONObject();
+        header.put("type", "reference");
+        header.put("data", data);
 
-			Logger.logException(e);
-		}
-		return null;
-	}
+        return header.toString();
 
-	@SuppressWarnings("unchecked")
-	public static JSONObject createService(String id, String className) {
 
-		JSONObject service = new JSONObject();
-		service.put(Service.NAME, id);
-		service.put(Service.CLASS, className);
-		return service;		
+    }
 
-	}
+    @SuppressWarnings("unchecked")
+    public static String createDefaultSyntheticServices() {
 
-	public static JSONArray parseArray(String defaults) {
+        JSONArray data = new JSONArray();
 
-		try {
-			return (JSONArray) parser.parse(defaults);
-		} catch (Exception e) {			
-			Logger.logException(e);
-			return new JSONArray();
-		}
-	}
+        JSONObject request = new JSONObject();
+        request.put(Service.NAME, "request");
+        request.put(Service.CLASS, "Symfony\\Component\\HttpFoundation\\Request");
 
-	@SuppressWarnings({ "restriction", "unchecked" })
-	public static JSONObject createBundle(ISourceModule sourceModule,
-			ClassDeclaration classDec, NamespaceDeclaration namespace) {
+        data.add(request);
+        return data.toString();
 
-		JSONObject bundle = new JSONObject();
-		
-		bundle.put(Bundle.NAME, classDec.getName());
-		bundle.put(Bundle.NAMESPACE, namespace != null ? namespace.getName() : "");
-		bundle.put(Bundle.PATH, sourceModule.getPath().removeLastSegments(1).toString());
-						
-		return bundle;
-		
-	}
+    }
 
-	public static Bundle unpackBundle(String metadata) {
+    public static String getElementType(String metadata) {
 
-		try {
-			JSONObject json = (JSONObject) parser.parse(metadata);
-			Bundle bundle = new Bundle(null, (String) json.get(Bundle.NAME));
-			bundle.setPath((String) json.get(Bundle.PATH));
-			
-			return bundle;
-		} catch (ParseException e) {
-			
-			Logger.logException(e);
+        try {
 
-		}
-		
-		return null;
+            JSONObject json = (JSONObject) parser.parse(metadata);
+            String type = (String) json.get("type");
+            return type;
+        } catch (ParseException e) {
+            Logger.logException(e);
+        }
 
-	}
+        return null;
+    }
 
-	@SuppressWarnings("unchecked")
-	public static String createScalar(String elementName, String viewPath, String method) {
 
-		JSONObject data = new JSONObject();
-		data.put("elementName", elementName);
-		data.put("viewPath", viewPath);
-		data.put("method", method);
-		
-		JSONObject header = new JSONObject();
-		header.put("type", "scalar");
-		header.put("data", data);
-		
-		return header.toString();		
-		
+    public static JSONObject getReferenceData(String metadata) {
 
-	}
+        try {
+            JSONObject header = (JSONObject) parser.parse(metadata);
+            return (JSONObject) header.get("data");
+        } catch (ParseException e) {
 
-	public static JSONObject getScalar(String metadata) {
+            Logger.logException(e);
+        }
+        return null;
+    }
 
-		try {
-			JSONObject header = (JSONObject) parser.parse(metadata);
-			return (JSONObject) header.get("data");
-		} catch (ParseException e) {
+    @SuppressWarnings("unchecked")
+    public static JSONObject createService(String id, String className) {
 
-			Logger.logException(e);
-		}
-		return null;
+        JSONObject service = new JSONObject();
+        service.put(Service.NAME, id);
+        service.put(Service.CLASS, className);
+        return service;
 
-	}
+    }
+
+    public static JSONArray parseArray(String defaults) {
+
+        try {
+            return (JSONArray) parser.parse(defaults);
+        } catch (Exception e) {
+            Logger.logException(e);
+            return new JSONArray();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static JSONObject createBundle(ISourceModule sourceModule,
+            ClassDeclaration classDec, NamespaceDeclaration namespace) {
+
+        JSONObject bundle = new JSONObject();
+
+        bundle.put(Bundle.NAME, classDec.getName());
+        bundle.put(Bundle.NAMESPACE, namespace != null ? namespace.getName() : "");
+        bundle.put(Bundle.PATH, sourceModule.getPath().removeLastSegments(1).toString());
+
+        return bundle;
+
+    }
+
+    public static Bundle unpackBundle(String metadata) {
+
+        try {
+            JSONObject json = (JSONObject) parser.parse(metadata);
+            Bundle bundle = new Bundle(null, (String) json.get(Bundle.NAME));
+            bundle.setPath((String) json.get(Bundle.PATH));
+
+            return bundle;
+        } catch (ParseException e) {
+
+            Logger.logException(e);
+
+        }
+
+        return null;
+
+    }
+
+    @SuppressWarnings("unchecked")
+    public static String createScalar(String elementName, String viewPath, String method) {
+
+        JSONObject data = new JSONObject();
+        data.put("elementName", elementName);
+        data.put("viewPath", viewPath);
+        data.put("method", method);
+
+        JSONObject header = new JSONObject();
+        header.put("type", "scalar");
+        header.put("data", data);
+
+        return header.toString();
+
+
+    }
+
+    public static JSONObject getScalar(String metadata) {
+
+        try {
+            JSONObject header = (JSONObject) parser.parse(metadata);
+            return (JSONObject) header.get("data");
+        } catch (ParseException e) {
+
+            Logger.logException(e);
+        }
+        return null;
+
+    }
 }

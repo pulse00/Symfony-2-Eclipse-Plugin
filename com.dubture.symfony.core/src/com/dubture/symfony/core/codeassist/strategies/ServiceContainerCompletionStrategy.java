@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of the Symfony eclipse plugin.
- * 
+ *
  * (c) Robert Gruendler <r.gruendler@gmail.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
@@ -27,67 +27,65 @@ import com.dubture.symfony.core.model.SymfonyModelAccess;
 
 /**
  * CompletionStrategy to provide service names for DI::get calls like
- * 
- * 
+ *
+ *
  * <pre>
- * 
+ *
  *  // inside a ContainerAware interface
- * 	$this->get('| 
- *  $this->container->get('| 
- * 
+ *     $this->get('|
+ *  $this->container->get('|
+ *
  * </pre>
- * 
- * 
- * 
+ *
+ *
+ *
  * @author "Robert Gruendler <r.gruendler@gmail.com>"
  *
  */
 @SuppressWarnings({ "restriction", "deprecation" })
 public class ServiceContainerCompletionStrategy extends
-		MethodParameterKeywordStrategy {
+        MethodParameterKeywordStrategy {
 
-	private static int workaroundCount = 0;
+    public ServiceContainerCompletionStrategy(ICompletionContext context) {
+        super(context);
 
-	public ServiceContainerCompletionStrategy(ICompletionContext context) {
-		super(context);
+    }
 
-	}
-		
-	@Override
-	public void apply(ICompletionReporter reporter) throws BadLocationException {
+    @Override
+    public void apply(ICompletionReporter reporter) throws BadLocationException {
 
-		ServiceContainerContext context = (ServiceContainerContext) getContext();
-		IScriptProject project = context.getSourceModule().getScriptProject();
-		
-		SymfonyModelAccess model= SymfonyModelAccess.getDefault();
-		List<Service> services = model.findServices(project.getPath());
-		SourceRange range = getReplacementRange(context);
-		
-		String prefix = context.getPrefix();
-		
-		if (services == null) {
-			return;
-		}
+        ServiceContainerContext context = (ServiceContainerContext) getContext();
+        IScriptProject project = context.getSourceModule().getScriptProject();
 
-		for(Service service : services) {
+        SymfonyModelAccess model= SymfonyModelAccess.getDefault();
+        List<Service> services = model.findServices(project.getPath());
+        SourceRange range = getReplacementRange(context);
 
-			if (CodeAssistUtils.startsWithIgnoreCase(service.getId(), prefix)) {
-				
-				IType[] serviceTypes = model.findServiceTypes(service, project);
-				
-				ModelElement parent = null;
-				if (serviceTypes.length > 0) {
-					parent = (ModelElement) serviceTypes[0];
-				} else {
-					parent = (ModelElement) context.getSourceModule();
-				}
-				
-				
-				Service s = new Service(parent, service.getElementName());		
-				s.setId(service.getId());
-				
-				reporter.reportType(s, "", range);
-			}
-		}
-	}
+        String prefix = context.getPrefix();
+
+        if (services == null) {
+            return;
+        }
+
+        for(Service service : services) {
+
+            if (CodeAssistUtils.startsWithIgnoreCase(service.getId(), prefix)) {
+
+                IType[] serviceTypes = model.findServiceTypes(service, project);
+
+                ModelElement parent = null;
+                if (serviceTypes.length > 0) {
+                    parent = (ModelElement) serviceTypes[0];
+                } else {
+                    parent = (ModelElement) context.getSourceModule();
+                }
+
+
+                Service s = new Service(parent, service.getElementName());
+                s.setId(service.getId());
+
+                reporter.reportType(s, "", range);
+            }
+        }
+    }
 }

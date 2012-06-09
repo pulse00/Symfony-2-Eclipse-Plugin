@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of the Symfony eclipse plugin.
- * 
+ *
  * (c) Robert Gruendler <r.gruendler@gmail.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
@@ -61,15 +61,15 @@ import com.dubture.symfony.index.dao.Route;
 
 
 /**
- * 
+ *
  * {@link SymfonyIndexingVisitorExtension} contributes model elements
  * to the index.
- * 
+ *
  *
  * TODO: This indexer is currently called on any PHP Project, regardless
  * of a Symfony nature: Find a way to check if the Indexer is indexing
  * a Sourcemodule of a project with the SymfonyNature.
- * 
+ *
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
@@ -78,438 +78,442 @@ public class SymfonyIndexingVisitorExtension extends
 PhpIndexingVisitorExtension {
 
 
-	private boolean inController = false;
-	private ClassDeclaration currentClass;
-	private NamespaceDeclaration namespace;
-	private TemplateVariableVisitor controllerIndexer;
-	private SymfonyIndexer indexer;
+    private boolean inController = false;
+    private ClassDeclaration currentClass;
+    private NamespaceDeclaration namespace;
+    private TemplateVariableVisitor controllerIndexer;
+    private SymfonyIndexer indexer;
 
-	private List<UseStatement> useStatements = new ArrayList<UseStatement>();
-	private boolean isSymfonyResource;
+    private List<UseStatement> useStatements = new ArrayList<UseStatement>();
+    private boolean isSymfonyResource;
 
 
-	@Override
-	public void setSourceModule(ISourceModule module) {
+    @Override
+    public void setSourceModule(ISourceModule module) {
 
-		super.setSourceModule(module);
+        super.setSourceModule(module);
 
-		try {
-			isSymfonyResource = sourceModule.getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID) != null;
-		} catch (CoreException e) {
-			Logger.logException(e);
-			isSymfonyResource = false;
-		}
-	}
+        try {
+            isSymfonyResource = sourceModule.getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID) != null;
+        } catch (CoreException e) {
+            Logger.logException(e);
+            isSymfonyResource = false;
+        }
+    }
 
 
-	@Override
-	public boolean visit(ASTNode s) throws Exception {
+    @Override
+    public boolean visit(ASTNode s) throws Exception {
 
-		return true;
-	}
+        return true;
+    }
 
 
-	@Override
-	public boolean visit(ModuleDeclaration s) throws Exception {
+    @Override
+    public boolean visit(ModuleDeclaration s) throws Exception {
 
-		return true;
-	}
+        return true;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean visit(Statement s) throws Exception {
+    public boolean isInController() {
+        return inController;
+    }
 
-		if (s instanceof ExpressionStatement) {
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean visit(Statement s) throws Exception {
 
-			ExpressionStatement stmt = (ExpressionStatement) s;
+        if (s instanceof ExpressionStatement) {
 
-			if (stmt.getExpr() instanceof PHPCallExpression) {
+            ExpressionStatement stmt = (ExpressionStatement) s;
 
-				PHPCallExpression call = (PHPCallExpression) stmt.getExpr();
+            if (stmt.getExpr() instanceof PHPCallExpression) {
 
-				if (("registerNamespaces".equals(call.getName()) || "registerNamespaceFallbacks".equals(call.getName()))
-						&& call.getReceiver() instanceof VariableReference) {
+                PHPCallExpression call = (PHPCallExpression) stmt.getExpr();
 
-					if (sourceModule.getElementName().equals("bootstrap.php"))
-						return false;
-					
-					RegisterNamespaceVisitor registrar = new RegisterNamespaceVisitor(sourceModule);
-					registrar.visit(call);
+                if (("registerNamespaces".equals(call.getName()) || "registerNamespaceFallbacks".equals(call.getName()))
+                        && call.getReceiver() instanceof VariableReference) {
 
-					for (IPath namespace : registrar.getNamespaces()) {
-						ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.NAMESPACE, 0, 0, namespace.toString(), null, null);
-						requestor.addReference(info);						
-					}
-				}				
-				// TODO: check if the variable implements Symfony\Component\DependencyInjection\ContainerInterface
-				else if("setAlias".equals(call.getName())) {
+                    if (sourceModule.getElementName().equals("bootstrap.php"))
+                        return false;
 
-					if (call.getReceiver() instanceof VariableReference) {
+                    RegisterNamespaceVisitor registrar = new RegisterNamespaceVisitor(sourceModule);
+                    registrar.visit(call);
 
-						CallArgumentsList args = call.getArgs();
+                    for (IPath namespace : registrar.getNamespaces()) {
+                        ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.NAMESPACE, 0, 0, namespace.toString(), null, null);
+                        requestor.addReference(info);
+                    }
+                }
+                // TODO: check if the variable implements Symfony\Component\DependencyInjection\ContainerInterface
+                else if("setAlias".equals(call.getName())) {
 
-						if (args.getChilds().size() == 2) {
+                    if (call.getReceiver() instanceof VariableReference) {
 
-							List<ASTNode> nodes = args.getChilds();
+                        CallArgumentsList args = call.getArgs();
 
-							try {
+                        if (args.getChilds().size() == 2) {
 
-								Scalar alias = (Scalar) nodes.get(0);
-								Scalar reference = (Scalar) nodes.get(1);
+                            List<ASTNode> nodes = args.getChilds();
 
-								if (alias != null && reference != null) {
+                            try {
 
-									String id = SymfonyTextSequenceUtilities.removeQuotes(alias.getValue());
-									String ref = "alias_" + SymfonyTextSequenceUtilities.removeQuotes(reference.getValue());
-									
-									com.dubture.symfony.core.model.Service _service = SymfonyModelAccess.getDefault().findService(StringUtils.stripQuotes(reference.getValue()), sourceModule.getScriptProject().getPath());
-									
-									if (_service != null) {
-										
-										indexer.addService(id, _service.getClassName(), _service.getPublicString(), _service.getTags(), sourceModule.getScriptProject().getPath().toString(), 0);								
-										indexer.exitServices();
+                                Scalar alias = (Scalar) nodes.get(0);
+                                Scalar reference = (Scalar) nodes.get(1);
 
-									}
-								}
+                                if (alias != null && reference != null) {
 
-							} catch (ClassCastException e) {
-								//ignore cause not a valid node
-							}
-						}
-					}
-				}
-			}
-		}
+                                    String id = SymfonyTextSequenceUtilities.removeQuotes(alias.getValue());
+//                                    String ref = "alias_" + SymfonyTextSequenceUtilities.removeQuotes(reference.getValue());
 
-		return true;
+                                    com.dubture.symfony.core.model.Service _service = SymfonyModelAccess.getDefault().findService(StringUtils.stripQuotes(reference.getValue()), sourceModule.getScriptProject().getPath());
 
-	}
+                                    if (_service != null) {
 
-	@SuppressWarnings("rawtypes")
-	@Override
-	public boolean visit(Expression s) throws Exception {
+                                        indexer.addService(id, _service.getClassName(), _service.getPublicString(), _service.getTags(), sourceModule.getScriptProject().getPath().toString(), 0);
+                                        indexer.exitServices();
 
-		if(!isSymfonyResource)
-			return false;
+                                    }
+                                }
 
-		if (s.getClass() == Block.class) {
+                            } catch (ClassCastException e) {
+                                //ignore cause not a valid node
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-			s.traverse(new PHPASTVisitor() {
+        return true;
 
-				@Override
-				public boolean visit(UseStatement s) throws Exception {
-					useStatements.add(s);
-					return true;
-				}
-			});
-		}
-		
-		if (s instanceof ClassInstanceCreation) {
-			
-			ClassInstanceCreation instance = (ClassInstanceCreation) s;
+    }
 
-			if (SymfonyCoreConstants.APP_KERNEL.equals(instance.getClassName().toString())) {
-				
-				List args = instance.getCtorParams().getChilds();
-				
-				if (args.get(0) instanceof Scalar) {
-					Scalar environment = (Scalar) args.get(0);
-					
-					String value = environment.getValue().replace("\"", "").replace("'", "");
-					String path = sourceModule.getPath().toString();					
-					Logger.debugMSG("indexing environment: " + value + " => " + path);
-					
-					ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.ENVIRONMENT, instance.sourceStart(), instance.sourceEnd()-instance.sourceStart(), value, null, path);
-					requestor.addReference(info);
-					
-				}
-			}
-		}
-		return super.visit(s);
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    public boolean visit(Expression s) throws Exception {
 
+        if(!isSymfonyResource)
+            return false;
 
-	@Override
-	public boolean visit(TypeDeclaration s) throws Exception {
+        if (s.getClass() == Block.class) {
 
-		if(!isSymfonyResource)
-			return false;
+            s.traverse(new PHPASTVisitor() {
 
-		if (indexer == null)
-			indexer = SymfonyIndexer.getInstance();
+                @Override
+                public boolean visit(UseStatement s) throws Exception {
+                    useStatements.add(s);
+                    return true;
+                }
+            });
+        }
 
-		if (s instanceof ClassDeclaration) {
+        if (s instanceof ClassInstanceCreation) {
 
-			currentClass = (ClassDeclaration) s;
+            ClassInstanceCreation instance = (ClassInstanceCreation) s;
 
-			parseAnnotation(currentClass);
+            if (SymfonyCoreConstants.APP_KERNEL.equals(instance.getClassName().toString())) {
 
-			for (Object o : currentClass.getSuperClasses().getChilds()) {
+                List args = instance.getCtorParams().getChilds();
 
-				if (o instanceof FullyQualifiedReference) {
+                if (args.get(0) instanceof Scalar) {
+                    Scalar environment = (Scalar) args.get(0);
 
-					FullyQualifiedReference superReference = (FullyQualifiedReference) o;					
-					String ns = getUseStatement(superReference.getName());
+                    String value = environment.getValue().replace("\"", "").replace("'", "");
+                    String path = sourceModule.getPath().toString();
+                    Logger.debugMSG("indexing environment: " + value + " => " + path);
 
-					if (ns != null) {
+                    ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.ENVIRONMENT, instance.sourceStart(), instance.sourceEnd()-instance.sourceStart(), value, null, path);
+                    requestor.addReference(info);
 
-						String fqcn = ns + "\\" + superReference.getName();	
+                }
+            }
+        }
+        return super.visit(s);
+    }
 
 
-						boolean isTestOrFixture = false;
+    @Override
+    public boolean visit(TypeDeclaration s) throws Exception {
 
-						if (namespace != null && namespace.getName() != null)
-							isTestOrFixture = namespace.getName().contains("Test") || namespace.getName().contains("Fixtures");
+        if(!isSymfonyResource)
+            return false;
 
-						// we got a bundle definition, index it
-						if (fqcn.equals(SymfonyCoreConstants.BUNDLE_FQCN) && ! isTestOrFixture) {
+        if (indexer == null)
+            indexer = SymfonyIndexer.getInstance();
 
-							int length = (currentClass.sourceEnd() - currentClass.sourceEnd());
+        if (s instanceof ClassDeclaration) {
 
-							JSONObject meta = JsonUtils.createBundle(sourceModule, currentClass, namespace);
-							ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.BUNDLE, currentClass.sourceStart(), length, currentClass.getName(), meta.toJSONString(), namespace.getName());
-							requestor.addReference(info);
+            currentClass = (ClassDeclaration) s;
 
-						}						
-					}
+            parseAnnotation(currentClass);
 
-					//TODO: Check against an implementation of Symfony\Component\DependencyInjection\ContainerAwareInterface
-					//
-					// see http://symfony.com/doc/current/cookbook/bundles/best_practices.html#controllers
-					// and http://api.symfony.com/2.0/Symfony/Component/DependencyInjection/ContainerAwareInterface.html
-					if (superReference.getName().equals(SymfonyCoreConstants.CONTROLLER_CLASS)) {
+            for (Object o : currentClass.getSuperClasses().getChilds()) {
 
-						inController = true;
+                if (o instanceof FullyQualifiedReference) {
 
+                    FullyQualifiedReference superReference = (FullyQualifiedReference) o;
+                    String ns = getUseStatement(superReference.getName());
 
-						// the ControllerIndexer does the actual work of parsing the
-						// the relevant elements inside the controller
-						// which are then being collected in the endVisit() method
-						controllerIndexer = new TemplateVariableVisitor(useStatements, namespace, sourceModule);
-						currentClass.traverse(controllerIndexer);
+                    if (ns != null) {
 
-					} 
-				} 
-			}
-		} else if (s instanceof NamespaceDeclaration) {
-			namespace = (NamespaceDeclaration) s;
-		}
+                        String fqcn = ns + "\\" + superReference.getName();
 
-		return true; 
-	}
 
-	/**
-	 * 
-	 * Check if the class is tagged to be used as an annotation.
-	 * 
-	 */
-	private void parseAnnotation(ClassDeclaration clazz) {
+                        boolean isTestOrFixture = false;
 
-		PHPDocBlock block = clazz.getPHPDoc();
+                        if (namespace != null && namespace.getName() != null)
+                            isTestOrFixture = namespace.getName().contains("Test") || namespace.getName().contains("Fixtures");
 
-		if (block == null)
-			return;
-		
-		boolean isAnnotation = false;
+                        // we got a bundle definition, index it
+                        if (fqcn.equals(SymfonyCoreConstants.BUNDLE_FQCN) && ! isTestOrFixture) {
 
-		if (block.getCommentType() == Comment.TYPE_PHPDOC) {
+                            int length = (currentClass.sourceEnd() - currentClass.sourceEnd());
 
-			for (PHPDocTag tag  : block.getTags()) {
+                            JSONObject meta = JsonUtils.createBundle(sourceModule, currentClass, namespace);
+                            ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.BUNDLE, currentClass.sourceStart(), length, currentClass.getName(), meta.toJSONString(), namespace.getName());
+                            requestor.addReference(info);
 
-				if (tag.getValue() != null && 
-						tag.getValue().contains("Annotation")) {
-					isAnnotation = true;
-				}
+                        }
+                    }
 
-			}
-			
-			if (isAnnotation == false) {
-				
-				String comment = block.getShortDescription();
+                    //TODO: Check against an implementation of Symfony\Component\DependencyInjection\ContainerAwareInterface
+                    //
+                    // see http://symfony.com/doc/current/cookbook/bundles/best_practices.html#controllers
+                    // and http://api.symfony.com/2.0/Symfony/Component/DependencyInjection/ContainerAwareInterface.html
+                    if (superReference.getName().equals(SymfonyCoreConstants.CONTROLLER_CLASS)) {
 
-				if (comment.length() == 0) {
-					comment = block.getLongDescription();
-				}
+                        inController = true;
 
-				if ((comment == null || !comment.contains("@Annotation")))
-					return;
 
-				isAnnotation = true;
-				
-			}
-			
-		} 
+                        // the ControllerIndexer does the actual work of parsing the
+                        // the relevant elements inside the controller
+                        // which are then being collected in the endVisit() method
+                        controllerIndexer = new TemplateVariableVisitor(useStatements, namespace, sourceModule);
+                        currentClass.traverse(controllerIndexer);
 
+                    }
+                }
+            }
+        } else if (s instanceof NamespaceDeclaration) {
+            namespace = (NamespaceDeclaration) s;
+        }
 
-		if (!isAnnotation)
-			return;
+        return true;
+    }
 
-		String ns = "";
-		if (namespace != null) {			
-			ns = namespace.getName();
-		}
+    /**
+    *
+    * Check if the class is tagged to be used as an annotation.
+    *
+    */
+    private void parseAnnotation(ClassDeclaration clazz) {
 
-		Logger.debugMSG("indexing annotation class: " + clazz.getName() + " " + ns);
+        PHPDocBlock block = clazz.getPHPDoc();
 
-		ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.ANNOTATION, clazz.sourceStart(), clazz.sourceEnd(), clazz.getName(), null, ns);
-		requestor.addReference(info);
+        if (block == null)
+            return;
 
-	}
+        boolean isAnnotation = false;
 
+        if (block.getCommentType() == Comment.TYPE_PHPDOC) {
 
-	@Override
-	@SuppressWarnings({ "rawtypes" })
-	public boolean endvisit(TypeDeclaration s) throws Exception {
+            for (PHPDocTag tag  : block.getTags()) {
 
+                if (tag.getValue() != null &&
+                        tag.getValue().contains("Annotation")) {
+                    isAnnotation = true;
+                }
 
-		if (controllerIndexer != null) {
+            }
 
-			Map<TemplateVariable, String> variables = controllerIndexer.getTemplateVariables();			
-			Iterator it = variables.keySet().iterator();
+            if (isAnnotation == false) {
 
-			while(it.hasNext()) {
+                String comment = block.getShortDescription();
 
-				TemplateVariable variable = (TemplateVariable) it.next();
-				String viewPath = variables.get(variable);
+                if (comment.length() == 0) {
+                    comment = block.getLongDescription();
+                }
 
-				int start = variable.sourceStart();
-				int length = variable.sourceEnd() - variable.sourceStart();
-				String name = null;				
+                if ((comment == null || !comment.contains("@Annotation")))
+                    return;
 
-				if (variable.isReference()) {
+                isAnnotation = true;
 
-					name = variable.getName();
+            }
 
-					String phpClass = variable.getClassName();
-					String namespace = variable.getNamespace();
-					String method = variable.getMethod().getName();
-					String metadata = JsonUtils.createReference(phpClass, namespace, viewPath, method);
-					
-					if (viewPath.contains(".")) {						
-						viewPath = viewPath.substring(0, viewPath.indexOf("."));
-					}
-					
-					Logger.debugMSG("add reference info: " + name +  " =>  " + viewPath + " with metadata " + metadata);
-					ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.TEMPLATE_VARIABLE, start, length, name, metadata, viewPath);
-					requestor.addReference(info);
+        }
 
-				} else if (variable.isScalar()) {
 
-					name = variable.getName();
-					String method = variable.getMethod().getName();
-					String metadata = JsonUtils.createScalar(name, viewPath, method);
-					
-					if (viewPath.contains(".")) {						
-						viewPath = viewPath.substring(0, viewPath.indexOf("."));
-					}
-					
-					Logger.debugMSG("add scalar info: " + name +  " => " + viewPath + " with metadata: "  + metadata );
-					ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.TEMPLATE_VARIABLE, start, length, name, metadata, viewPath);
-					requestor.addReference(info);
+        if (!isAnnotation)
+            return;
 
-				} else {
-					
-					Logger.debugMSG("Unable to resolve template variable: " + variable.getClass().toString());
-				}
+        String ns = "";
+        if (namespace != null) {
+            ns = namespace.getName();
+        }
 
+        Logger.debugMSG("indexing annotation class: " + clazz.getName() + " " + ns);
 
-			}
+        ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.ANNOTATION, clazz.sourceStart(), clazz.sourceEnd(), clazz.getName(), null, ns);
+        requestor.addReference(info);
 
-			Stack<Route> routes = controllerIndexer.getRoutes();
+    }
 
 
-			for (Route route : routes) {
-				Logger.debugMSG("indexing route: " + route.toString());
-				indexer.addRoute(route, sourceModule.getScriptProject().getPath());
-			}
+    @Override
+    @SuppressWarnings({ "rawtypes" })
+    public boolean endvisit(TypeDeclaration s) throws Exception {
 
-			indexer.exitRoutes();
-		}
 
-		inController = false;
-		currentClass = null;
-//		namespace = null;
-		controllerIndexer = null;
+        if (controllerIndexer != null) {
 
+            Map<TemplateVariable, String> variables = controllerIndexer.getTemplateVariables();
+            Iterator it = variables.keySet().iterator();
 
-		return true;
-	}
+            while(it.hasNext()) {
 
-	private String getUseStatement(String name) {
+                TemplateVariable variable = (TemplateVariable) it.next();
+                String viewPath = variables.get(variable);
 
-		for (UseStatement statement : useStatements) {
+                int start = variable.sourceStart();
+                int length = variable.sourceEnd() - variable.sourceStart();
+                String name = null;
 
-			for (UsePart part : statement.getParts()) {
+                if (variable.isReference()) {
 
-				if (part.getNamespace().getName().equals(name)) {
+                    name = variable.getName();
 
-					//TODO: clean this up ;)
-					if (part.getNamespace() == null || part.getNamespace().getNamespace() == null
-							|| part.getNamespace().getNamespace().getName() == null) {
+                    String phpClass = variable.getClassName();
+                    String namespace = variable.getNamespace();
+                    String method = variable.getMethod().getName();
+                    String metadata = JsonUtils.createReference(phpClass, namespace, viewPath, method);
 
-						Logger.log(Logger.WARNING, sourceModule.getPath().toString() + ": error parsing namespace parts for " + name);
-						return null;
-					}
+                    if (viewPath.contains(".")) {
+                        viewPath = viewPath.substring(0, viewPath.indexOf("."));
+                    }
 
-					return part.getNamespace().getNamespace().getName();
-				}
-			}
+                    Logger.debugMSG("add reference info: " + name +  " =>  " + viewPath + " with metadata " + metadata);
+                    ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.TEMPLATE_VARIABLE, start, length, name, metadata, viewPath);
+                    requestor.addReference(info);
 
-		}
+                } else if (variable.isScalar()) {
 
-		return null;
+                    name = variable.getName();
+                    String method = variable.getMethod().getName();
+                    String metadata = JsonUtils.createScalar(name, viewPath, method);
 
-	}
+                    if (viewPath.contains(".")) {
+                        viewPath = viewPath.substring(0, viewPath.indexOf("."));
+                    }
 
-	/**
-	 * Parse {@link PHPMethodDeclaration} to index a couple of elements needed for code-assist
-	 * like Methods that accept viewpaths as parameters.
-	 */
-	@Override
-	public boolean visit(MethodDeclaration s) throws Exception {
+                    Logger.debugMSG("add scalar info: " + name +  " => " + viewPath + " with metadata: "  + metadata );
+                    ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.TEMPLATE_VARIABLE, start, length, name, metadata, viewPath);
+                    requestor.addReference(info);
 
-		if(!isSymfonyResource)
-			return false;
+                } else {
 
-		if (s instanceof PHPMethodDeclaration) {
+                    Logger.debugMSG("Unable to resolve template variable: " + variable.getClass().toString());
+                }
 
-			PHPMethodDeclaration method = (PHPMethodDeclaration) s;
-			PHPDocBlock docBlock = method.getPHPDoc();
 
-			if (docBlock != null) {
+            }
 
-				PHPDocTag[] tags = docBlock.getTags();
+            Stack<Route> routes = controllerIndexer.getRoutes();
 
-				for (PHPDocTag tag : tags) {
 
-					String value = tag.getValue();
+            for (Route route : routes) {
+                Logger.debugMSG("indexing route: " + route.toString());
+                indexer.addRoute(route, sourceModule.getScriptProject().getPath());
+            }
 
-					if (tag.getReferences().length == 2) {
+            indexer.exitRoutes();
+        }
 
-						SimpleReference[] refs = tag.getReferences();
-						SimpleReference varName = refs[0];
-						SimpleReference varType = refs[1];
+        inController = false;
+        currentClass = null;
+//        namespace = null;
+        controllerIndexer = null;
 
-						if(varName.getName().equals("$view") && varType.getName().equals("string")) {
 
-							int length = method.sourceEnd() - method.sourceStart();							
-							ReferenceInfo viewMethod = new ReferenceInfo(ISymfonyModelElement.VIEW_METHOD, method.sourceStart()	, length, method.getName(), null, null);
-							requestor.addReference(viewMethod);
+        return true;
+    }
 
-						} else if (value.contains("route") || value.contains("url")) {
+    private String getUseStatement(String name) {
 
-							int length = method.sourceEnd() - method.sourceStart();
-							ReferenceInfo routeMethod = new ReferenceInfo(ISymfonyModelElement.ROUTE_METHOD, method.sourceStart(), length, method.getName(), null, null);
-							requestor.addReference(routeMethod);
+        for (UseStatement statement : useStatements) {
 
-						}
-					}					
-				}				
-			}
-		}
+            for (UsePart part : statement.getParts()) {
 
-		return true;
-	}
-	
+                if (part.getNamespace().getName().equals(name)) {
+
+                    //TODO: clean this up ;)
+                    if (part.getNamespace() == null || part.getNamespace().getNamespace() == null
+                            || part.getNamespace().getNamespace().getName() == null) {
+
+                        Logger.log(Logger.WARNING, sourceModule.getPath().toString() + ": error parsing namespace parts for " + name);
+                        return null;
+                    }
+
+                    return part.getNamespace().getNamespace().getName();
+                }
+            }
+
+        }
+
+        return null;
+
+    }
+
+    /**
+    * Parse {@link PHPMethodDeclaration} to index a couple of elements needed for code-assist
+    * like Methods that accept viewpaths as parameters.
+    */
+    @Override
+    public boolean visit(MethodDeclaration s) throws Exception {
+
+        if(!isSymfonyResource)
+            return false;
+
+        if (s instanceof PHPMethodDeclaration) {
+
+            PHPMethodDeclaration method = (PHPMethodDeclaration) s;
+            PHPDocBlock docBlock = method.getPHPDoc();
+
+            if (docBlock != null) {
+
+                PHPDocTag[] tags = docBlock.getTags();
+
+                for (PHPDocTag tag : tags) {
+
+                    String value = tag.getValue();
+
+                    if (tag.getReferences().length == 2) {
+
+                        SimpleReference[] refs = tag.getReferences();
+                        SimpleReference varName = refs[0];
+                        SimpleReference varType = refs[1];
+
+                        if(varName.getName().equals("$view") && varType.getName().equals("string")) {
+
+                            int length = method.sourceEnd() - method.sourceStart();
+                            ReferenceInfo viewMethod = new ReferenceInfo(ISymfonyModelElement.VIEW_METHOD, method.sourceStart()    , length, method.getName(), null, null);
+                            requestor.addReference(viewMethod);
+
+                        } else if (value.contains("route") || value.contains("url")) {
+
+                            int length = method.sourceEnd() - method.sourceStart();
+                            ReferenceInfo routeMethod = new ReferenceInfo(ISymfonyModelElement.ROUTE_METHOD, method.sourceStart(), length, method.getName(), null, null);
+                            requestor.addReference(routeMethod);
+
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
 
 }

@@ -5,5 +5,4 @@ Bundle-SymbolicName: com.dubture.symfony.test
 Bundle-Version: 1.0.75
 Fragment-Host: com.dubture.symfony.core;bundle-version="1.0.0.qualifier"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit,
- com.dubture.symfony.core;bundle-version="1.0.0"
+Require-Bundle: org.junit

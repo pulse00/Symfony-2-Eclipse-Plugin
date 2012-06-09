@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of the Symfony eclipse plugin.
- * 
+ *
  * (c) Robert Gruendler <r.gruendler@gmail.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
@@ -17,78 +17,77 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.EntityAlias;
-import com.dubture.symfony.core.model.ViewPath;
 import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
 
 @SuppressWarnings("restriction")
 public class EntityCompletionContext extends QuotesContext {
 
-	
-	private EntityAlias alias;
 
-	@Override
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+    private EntityAlias alias;
 
-		
-		if (super.isValid(sourceModule, offset, requestor)) {
-			try {
-				
-				IProjectNature nature = sourceModule.getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID);
-				
-				// wrong nature
-				if(!(nature instanceof SymfonyNature)) {
-					return false;	
-				}
+    @Override
+    public boolean isValid(ISourceModule sourceModule, int offset,
+            CompletionRequestor requestor) {
 
-				if ( requestor == null || !requestor.getClass().toString().contains("Symfony"))
-				    return false;
-				
-				TextSequence statementText = getStatementText();
-				
-				if (getNextChar() != ' ' && getNextChar() != '\n' && getNextChar() != '\'' && getNextChar() != '"') {
-				    return false;
-				}
-				
-				if (SymfonyTextSequenceUtilities.isInEntityFunctionParameter(statementText) > -1) {
-					
-					int startOffset = SymfonyTextSequenceUtilities.readViewPathStartIndex(statementText);
-					String path = null;
 
-					if (startOffset == -1) {
-						path = "";
-					} else {
+        if (super.isValid(sourceModule, offset, requestor)) {
+            try {
 
-						int original = statementText.getOriginalOffset(startOffset);
-						int end = offset;
+                IProjectNature nature = sourceModule.getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID);
 
-						if (original >= 0 &&  end > original) {
-							path = statementText.getSource().getFullText().substring(original, end);
-						}
-						else path = "";
-					}
+                // wrong nature
+                if(!(nature instanceof SymfonyNature)) {
+                    return false;
+                }
 
-					if (path != null) {								
-						alias = new EntityAlias(path);
-						return true;
-					}
-					
-					//TODO: check if the containing class is implementing a ContainerAware Interface
-					return true;
-				}
-				
-			} catch (Exception e) {				
-				Logger.logException(e);
-			}
-		}		
-		
-		return false;
-	}
-	
-	
-	public EntityAlias getAlias() {
-		
-		return alias;
-		
-	}
+                if ( requestor == null || !requestor.getClass().toString().contains("Symfony"))
+                    return false;
+
+                TextSequence statementText = getStatementText();
+
+                if (getNextChar() != ' ' && getNextChar() != '\n' && getNextChar() != '\'' && getNextChar() != '"') {
+                    return false;
+                }
+
+                if (SymfonyTextSequenceUtilities.isInEntityFunctionParameter(statementText) > -1) {
+
+                    int startOffset = SymfonyTextSequenceUtilities.readViewPathStartIndex(statementText);
+                    String path = null;
+
+                    if (startOffset == -1) {
+                        path = "";
+                    } else {
+
+                        int original = statementText.getOriginalOffset(startOffset);
+                        int end = offset;
+
+                        if (original >= 0 &&  end > original) {
+                            path = statementText.getSource().getFullText().substring(original, end);
+                        }
+                        else path = "";
+                    }
+
+                    if (path != null) {
+                        alias = new EntityAlias(path);
+                        return true;
+                    }
+
+                    //TODO: check if the containing class is implementing a ContainerAware Interface
+                    return true;
+                }
+
+            } catch (Exception e) {
+                Logger.logException(e);
+            }
+        }
+
+        return false;
+    }
+
+
+    public EntityAlias getAlias() {
+
+        return alias;
+
+    }
 }
