@@ -42,10 +42,10 @@ import com.dubture.twig.core.parser.ast.node.TwigModuleDeclaration;
 import com.dubture.twig.ui.wizards.ITemplateProvider;
 
 /**
- * 
- * 
+ *
+ *
  * Provides the "New twig template" dialog with a parent/block choice.
- * 
+ *
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
@@ -56,23 +56,23 @@ public class TemplateProvider implements ITemplateProvider
     private SymfonyModelAccess model = SymfonyModelAccess.getDefault();
     private Text parentTemplate;
     private IScriptProject scriptProject;
-    private CheckboxTableViewer blockTable;    
-    private List<String> blocks = new ArrayList<String>();    
+    private CheckboxTableViewer blockTable;
+    private List<String> blocks = new ArrayList<String>();
     private List<String> checkedBlocks = new LinkedList<String>();
     private String parent = "";
-    
+
     // make sure to inject the dialog only in Symfony projects
     private boolean isValid = true;
     private ContentProposalAdapter contentProposalAdapter;
     private SimpleContentProposalProvider provider;
-    
-    
+
+
     @Override
     public void createContentControls(IScriptFolder folder, Composite container)
     {
-        
+
         initialize(folder);
-        
+
         if (!isValid) {
             return;
         }
@@ -91,34 +91,34 @@ public class TemplateProvider implements ITemplateProvider
 
         parentTemplate = new Text(container, SWT.BORDER | SWT.SINGLE);
         parentTemplate.setLayoutData(gd);
-        
-        ControlDecoration dec = new ControlDecoration(parentTemplate, SWT.TOP | SWT.LEFT);        
+
+        ControlDecoration dec = new ControlDecoration(parentTemplate, SWT.TOP | SWT.LEFT);
         FieldDecoration indicator = FieldDecorationRegistry.getDefault().
                 getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
-                
+
         dec.setImage(indicator.getImage());
-        dec.setDescriptionText(indicator.getDescription() + "(Ctrl+Space)"); 
+        dec.setDescriptionText(indicator.getDescription() + "(Ctrl+Space)");
         dec.setShowOnlyOnFocus(true);
-        
-        Label filler = new Label(container, SWT.NONE);        
+
+        Label filler = new Label(container, SWT.NONE);
         filler.setVisible(false);
-        
+
         gd = new GridData();
         gd.verticalAlignment = SWT.TOP;
-        
+
         Label blockLabel = new Label(container, SWT.NONE);
         blockLabel.setText("Override blocks:");
         blockLabel.setLayoutData(gd);
-        
+
         GridData gridData = new GridData();
         gridData.verticalAlignment = GridData.FILL;
         gridData.grabExcessHorizontalSpace = true;
         gridData.grabExcessVerticalSpace = true;
-        gridData.horizontalAlignment = GridData.FILL;       
-        
+        gridData.horizontalAlignment = GridData.FILL;
+
         blockTable = CheckboxTableViewer.newCheckList(container, SWT.H_SCROLL | SWT.V_SCROLL  | SWT.BORDER);
         blockTable.addCheckStateListener(new ICheckStateListener()
-        {            
+        {
             @Override
             public void checkStateChanged(CheckStateChangedEvent event)
             {
@@ -128,36 +128,36 @@ public class TemplateProvider implements ITemplateProvider
                     }
                 } else {
                     checkedBlocks.remove(event.getElement());
-                }                
+                }
             }
         });
-        
+
         blockTable.setContentProvider(ArrayContentProvider.getInstance());
         blockTable.setInput(blocks);
         blockTable.getControl().setLayoutData(gridData);
-        
+
         Logger.debugMSG("Setting up autocomplete");
-        
+
         setupAutocomplete();
         Logger.debugMSG("Controls created");
 
     }
-    
+
     private void initialize(IScriptFolder folder)
     {
-        try {            
-            isValid = true;            
-            
+        try {
+            isValid = true;
+
             if (folder == null) {
                 isValid = false;
             }
-            
-            scriptProject = folder.getScriptProject();            
-            
-            if (!scriptProject.getProject().hasNature(SymfonyNature.NATURE_ID)) {
-                isValid = false;
+            else {
+                scriptProject = folder.getScriptProject();
+
+                if (scriptProject == null || !scriptProject.getProject().hasNature(SymfonyNature.NATURE_ID)) {
+                    isValid = false;
+                }
             }
-            
         } catch (CoreException e) {
             Logger.logException(e);
             isValid = false;
@@ -167,39 +167,39 @@ public class TemplateProvider implements ITemplateProvider
     private void setupAutocomplete()
     {
         try {
-            
+
             KeyStroke keyStroke = KeyStroke.getInstance("Ctrl+Space");
             provider = new SimpleContentProposalProvider(new String[]{});
             provider.setFiltering(true);
-            
+
             contentProposalAdapter = new ContentProposalAdapter(parentTemplate, new ViewpathProposalAdapter(),
                     provider, keyStroke, null);
-            
+
             contentProposalAdapter.setFilterStyle(ContentProposalAdapter.FILTER_CHARACTER);
             contentProposalAdapter.setAutoActivationDelay(10);
             contentProposalAdapter.setPropagateKeys(true);
-            
+
             contentProposalAdapter.addContentProposalListener(new IContentProposalListener()
             {
-                
+
                 @Override
                 public void proposalAccepted(IContentProposal proposal)
                 {
-                    parent = proposal.getContent();                    
+                    parent = proposal.getContent();
                     IModelElement template = model.findTemplate(new ViewPath(parent), scriptProject);
-                    
+
                     if (template != null && template instanceof SourceModule) {
-                        
+
                         try {
-                            
+
                             SymfonyTemplateResolver resolver = new SymfonyTemplateResolver();
                             SourceModule sourceModule = resolver.revolePath(parent, scriptProject);
                             TwigModuleDeclaration twig = (TwigModuleDeclaration) SourceParserUtil.parseSourceModule(sourceModule);
-                            
+
                             blocks = new LinkedList<String>();
                             if (twig != null) {
                                 for (BlockStatement block : twig.getBlocks()) {
-                                    
+
                                     if (block.isBlock()) {
                                         blocks.add(block.getBlockName().getValue());
                                     }
@@ -213,7 +213,7 @@ public class TemplateProvider implements ITemplateProvider
                     }
                 }
             });
-            
+
             Display.getDefault().asyncExec(new Runnable()
             {
                 @Override
@@ -258,7 +258,7 @@ public class TemplateProvider implements ITemplateProvider
                     provider.setProposals(proposals.toArray(new String[proposals.size()]));
                 }
             });
-            
+
         } catch (ParseException e) {
             Logger.logException(e);
         }
@@ -266,18 +266,18 @@ public class TemplateProvider implements ITemplateProvider
 
     @Override
     public String getContents()
-    {        
+    {
         if (!isValid || parent == null || parent.length() == 0) {
             return "";
         }
-        
+
         String delim = System.getProperty("line.separator");
         String content = String.format("{%% extends '%s' %%}%s%s", parent, delim, delim);
-        
+
         for (String block : checkedBlocks) {
             content += String.format("{%% block %s %%}%s%s{%% endblock %%}%s%s", block, delim, delim, delim, delim);
         }
-        
+
         return content;
     }
 }
