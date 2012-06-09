@@ -198,7 +198,7 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
             IncludePathManager.getInstance().setIncludePath(getProject(),
                     includepathEntries);
 
-            if (installSymfony)
+            if (installSymfony && p.hasSymfonyStandardEdition())
                 installSymfony(new SubProgressMonitor(monitor, 50));
 
         } finally {
