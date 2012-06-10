@@ -45,6 +45,7 @@ import org.eclipse.php.internal.ui.wizards.PHPProjectWizardSecondPage;
 
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
+import com.dubture.symfony.core.util.FileSystemUtils;
 import com.dubture.symfony.core.util.UncompressUtils;
 
 /**
@@ -80,7 +81,9 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
         super.init(create, null, false);
         fCurrProjectLocation = getProjectLocationURI();
 
-        boolean installSymfony = true;
+        SymfonyProjectWizardFirstPage p = (SymfonyProjectWizardFirstPage) getFirstPage();
+        boolean installSymfony = p.hasSymfonyStandardEdition();
+        boolean installCustomLayout = p.hasCustomLayout();
 
         if (monitor == null) {
             monitor = new NullProgressMonitor();
@@ -119,6 +122,7 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
             if (firstPage.getDetect()) {
 
                 installSymfony = false;
+                installCustomLayout = false;
                 includepathEntries = setProjectBaseIncludepath();
                 if (!getProject().getFile(FILENAME_BUILDPATH).exists()) {
 
@@ -180,8 +184,6 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 
             configureScriptProject(new SubProgressMonitor(monitor, 30));
 
-            SymfonyProjectWizardFirstPage p = (SymfonyProjectWizardFirstPage) getFirstPage();
-
             // checking and adding JS nature,libs, include path if needed
             if (p.shouldSupportJavaScript()) {
                 addJavaScriptNature(monitor);
@@ -198,8 +200,11 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
             IncludePathManager.getInstance().setIncludePath(getProject(),
                     includepathEntries);
 
-            if (installSymfony && p.hasSymfonyStandardEdition())
+            if (installSymfony)
                 installSymfony(new SubProgressMonitor(monitor, 50));
+            else if (installCustomLayout) {
+                installCustomLayout(new SubProgressMonitor(monitor, 50));
+            }
 
         } finally {
             monitor.done();
@@ -324,16 +329,8 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
             uncompressSymfonyLibrary(symfonyArchiveFile, outputDirectory);
             monitor.worked(70);
 
-            if (!scriptProject.isOpen()) {
-                scriptProject.open(monitor);
-            }
-
-            scriptProject.getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
-            setupBuildPath(scriptProject);
-            monitor.worked(20);
-
+            finishInstallation(scriptProject, monitor);
         } catch (Exception exception) {
-            exception.printStackTrace();
             Logger.logException(exception);
         } finally {
             monitor.worked(100);
@@ -371,5 +368,52 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 
             return entryName;
         }
+    }
+
+    private void installCustomLayout(IProgressMonitor monitor) {
+        SymfonyProjectWizardFirstPage firstPage = (SymfonyProjectWizardFirstPage) fFirstPage;
+
+        final String customLayoutPath = firstPage.getLibraryPath();
+        if (customLayoutPath == null) {
+            Logger.debugMSG("Could not install custom layout, the library path received is null");
+            return;
+        }
+
+        if (monitor == null) {
+            monitor = new NullProgressMonitor();
+        }
+
+        monitor.subTask("Installing custom layout...");
+        monitor.beginTask("Installing custom layout...", 100);
+        monitor.worked(10);
+
+        IProject projectHandle = fFirstPage.getProjectHandle();
+        final IScriptProject scriptProject = DLTKCore.create(projectHandle);
+
+        try {
+            final File sourceDirectory = new File(customLayoutPath);
+            final File outputDirectory = scriptProject.getProject().getLocation().toFile();
+
+            FileSystemUtils.copyDirectory(sourceDirectory, outputDirectory);
+            monitor.worked(70);
+
+            finishInstallation(scriptProject, monitor);
+        } catch (Exception exception) {
+            Logger.logException(exception);
+        } finally {
+            monitor.worked(100);
+            monitor.done();
+        }
+    }
+
+    private void finishInstallation(final IScriptProject scriptProject, IProgressMonitor monitor)
+            throws CoreException, ModelException {
+        if (!scriptProject.isOpen()) {
+            scriptProject.open(monitor);
+        }
+
+        scriptProject.getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+        setupBuildPath(scriptProject);
+        monitor.worked(20);
     }
 }
