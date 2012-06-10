@@ -8,6 +8,7 @@
  ******************************************************************************/
 package com.dubture.symfony.ui.wizards.project;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -70,6 +72,8 @@ import com.dubture.symfony.ui.wizards.ISymfonyProjectWizardExtension;
 public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
     public static final String WIZARDEXTENSION_ID = "com.dubture.symfony.ui.projectWizardExtension";
+
+    private static final String CUSTOM_LAYOUT_PATH_SEPARATOR = ";";
 
     private SymfonySupportGroup symfonySupportGroup;
     private SymfonyLayoutGroup fSymfonyLayoutGroup;
@@ -238,7 +242,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
             IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
 
             String thing = store.getString(Messages.LibraryPreferencePage_1);
-            String[] paths = thing.split(":");
+            String[] paths = thing.split(CUSTOM_LAYOUT_PATH_SEPARATOR);
 
             available.put(layouts[2], paths);
 
@@ -318,9 +322,11 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
         }
 
         public boolean hasSymfonyStandardEdition() {
-            
-            System.err.println("selected index " + layoutSelector.getSelectionIndex());
             return layoutSelector.getSelectionIndex() <= 1;
+        }
+
+        public boolean hasCustomLayout() {
+            return layoutSelector.getSelectionIndex() == 2;
         }
 
         public SymfonyVersion getSymfonyVersion() {
@@ -355,11 +361,15 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
         return fSymfonyLayoutGroup.hasSymfonyStandardEdition();
     }
 
+    public boolean hasCustomLayout() {
+        return fSymfonyLayoutGroup.hasCustomLayout();
+    }
+
     public SymfonyVersion getSymfonyVersion() {
         return fSymfonyLayoutGroup.getSymfonyVersion();
     }
 
-    public String getLibraryPath() throws Exception {
+    public String getLibraryPath() {
 
         String path = null;
 
@@ -504,30 +514,41 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
                 }
             }
 
-            // TODO: This check never works because when layoutSelector == 2,
-            // returned LibraryPath is always null, hence the test
-            // will never by true. Don't know what is is suppose to
-            // check ...
-            // if (fSymfonyLayoutGroup.layoutSelector.getSelectionIndex() == 2) {
-            //
-            // String path;
-            // try {
-            // path = getLibraryPath();
-            // File file = new File(path);
-            //
-            // if (!file.exists()) {
-            // setErrorMessage("Directory for custom project layout does not exist.");
-            // setPageComplete(false);
-            // return;
-            // }
-            // } catch (Exception e) {
-            // Logger.logException(e);
-            // setErrorMessage("Directory for custom project layout does not exist.");
-            // setPageComplete(false);
-            // return;
-            // }
-            //
-            // }
+            // Check when custom project layout is selected
+            if (fSymfonyLayoutGroup.layoutSelector.getSelectionIndex() == 2) {
+                String path;
+                try {
+                    path = getLibraryPath();
+                    File file = new File(path);
+
+                    if (!file.exists() && !isExistingLocation()) {
+                        setErrorMessage("Directory for custom project layout does not exist. " +
+                                        "You must either set at least one Symfony Library in your Eclipse " +
+                                        "preferences or create the project from an existing location.");
+                        setPageComplete(false);
+                        return;
+                    }
+
+                    if (file.exists() && isExistingLocation()) {
+                        setMessage("A project already exists at this location, custom project layout will not be copied to location.", DialogPage.WARNING);
+                        if (isCurrentPage()) {
+                            getContainer().updateMessage();
+                        }
+                    }
+
+                } catch (Exception e) {
+                    Logger.logException(e);
+                    if (!getDetect()) {
+                        setErrorMessage("Directory for custom project layout does not exist. " +
+                                        "You must either set at least one Symfony Library in your Eclipse " +
+                                        "preferences or create the project from an existing location.");
+                        setPageComplete(false);
+                    }
+
+                    return;
+                }
+
+            }
 
             setPageComplete(true);
             setErrorMessage(null);
