@@ -242,8 +242,15 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
             IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
 
             String thing = store.getString(Messages.LibraryPreferencePage_1);
-            String[] paths = thing.split(CUSTOM_LAYOUT_PATH_SEPARATOR);
-
+            
+            String[] paths = {thing};
+            
+            if (thing.contains(":")) {
+                paths = thing.split(":");
+            } else if (thing.contains(";")) {
+                paths = thing.split(";");
+            } 
+                
             available.put(layouts[2], paths);
 
             versionSelector = new ComboDialogField(SWT.READ_ONLY);
