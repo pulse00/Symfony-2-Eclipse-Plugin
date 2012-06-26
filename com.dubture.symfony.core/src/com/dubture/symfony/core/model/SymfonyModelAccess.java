@@ -82,10 +82,6 @@ public class SymfonyModelAccess extends PhpModelAccess {
     private SymfonyIndexer index;
     private Map<Service, IType[]> serviceCache = new HashMap<Service, IType[]>();
 
-    private static final IModelElement[] EMPTY = {};
-    private static final Map<String, String> EMPTY_ANNOTATIONS = new HashMap<String, String>();
-
-
     private LRUCache controllerCache = new LRUCache();
     private LRUCache serviceCache2 = new LRUCache();
     private LRUCache entityCache = new LRUCache();
@@ -451,41 +447,41 @@ public class SymfonyModelAccess extends PhpModelAccess {
         return findTypes("", MatchRule.PREFIX, 0, 0, controllerScope, null);
 
     }
-    
+
     public List<IPath> findBundleViewPaths(String bundle, IScriptProject project)
     {
         ScriptFolder folder = findBundleFolder(bundle, project);
         List<IPath> viewPaths = new LinkedList<IPath>();
-        
+
         if (folder == null) {
             return viewPaths;
         }
-        
+
         try {
-            
+
             IResource resource = folder.getUnderlyingResource();
             List<IPath> structure = new LinkedList<IPath>();
             IPath path = resource.getFullPath();
             path = path.removeFirstSegments(1).append("Resources").append("views");
             int num = path.segmentCount() + 1;
-            
+
             IFolder viewFolder = project.getProject().getFolder(path);
             getFolderStructure(viewFolder, structure);
-            
+
             for (IPath p : structure) {
                 viewPaths.add(p.removeFirstSegments(num));
             }
-            
+
         } catch (ModelException e) {
             Logger.logException(e);
         } catch (CoreException e) {
             Logger.logException(e);
         }
-        
+
         return viewPaths;
-        
+
     }
-    
+
     protected List<IPath> getFolderStructure(IFolder folder, List<IPath> structure) throws CoreException
     {
         for (IResource child : folder.members()) {
@@ -697,7 +693,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
                 Service s = new Service(id, phpClass, path);
                 s.setTags(tags);
                 s.setPublic(_public);
-                
+
                 if (!services.contains(s)) {
                     services.add(s);
                 }
@@ -1196,7 +1192,6 @@ public class SymfonyModelAccess extends PhpModelAccess {
         IScriptProject project = type.getScriptProject();
 
         String bundleAlias = ModelUtils.extractBundleName(type.getFullyQualifiedName("\\"));
-        Bundle bundle = findBundle(bundleAlias, project);
 
         String controller = ModelUtils.getControllerName(type);
 

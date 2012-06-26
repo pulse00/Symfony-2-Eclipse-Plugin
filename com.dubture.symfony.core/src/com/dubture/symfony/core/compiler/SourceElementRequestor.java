@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of the Symfony eclipse plugin.
- * 
+ *
  * (c) Robert Gruendler <r.gruendler@gmail.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
@@ -31,134 +31,138 @@ import com.dubture.symfony.core.util.PathUtils;
 
 
 /**
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
 @SuppressWarnings("restriction")
 public class SourceElementRequestor extends PHPSourceElementRequestorExtension {
 
-	private ClassDeclaration currentClass;
-	private boolean inController;
-	
-	private SymfonyModelAccess model = SymfonyModelAccess.getDefault();
-	private boolean isSymfonySource;
-	
-	
-	@Override
-	public void setSourceModule(IModuleSource sourceModule) {
+    private ClassDeclaration currentClass;
+    private boolean inController;
 
-		super.setSourceModule(sourceModule);
-		
-		try {
-			isSymfonySource = sourceModule.getModelElement().getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID) != null;
-		} catch (CoreException e) {
-			isSymfonySource = false;
-			Logger.logException(e);
-		}
-	}
-	
-	@Override
-	public boolean visit(TypeDeclaration s) throws Exception {
-		
-		
-		if (!isSymfonySource)
-			return false;
-		
-		if (s instanceof ClassDeclaration) {			
-			currentClass = (ClassDeclaration) s;
-			for (Object o : currentClass.getSuperClasses().getChilds()) {
+    private SymfonyModelAccess model = SymfonyModelAccess.getDefault();
+    private boolean isSymfonySource;
 
-				if (o instanceof FullyQualifiedReference) {
 
-					FullyQualifiedReference superReference = (FullyQualifiedReference) o;					
+    @Override
+    public void setSourceModule(IModuleSource sourceModule) {
 
-					//TODO: find a way to check against the FQCN
-					// via the UseStatement
-					if (/*superReference.getNamespace().equals(SymfonyCoreConstants.CONTROLLER_NS) 
-							&& */superReference.getName().equals(SymfonyCoreConstants.CONTROLLER_CLASS)) {
-						
-						// the ControllerIndexer does the actual work of parsing the
-						// the relevant elements inside the controller
-						// which are then being collected in the endVisit() method
-						inController = true;
-						
-					}
-				}
-			}
-		}		
-	
-		return true;
-	}
-	
-	@Override
-	public boolean visit(Statement st) throws Exception {
+        super.setSourceModule(sourceModule);
 
-		return true;
-	}
-	
-	
-	@Override
-	public boolean visit(Expression st) throws Exception {
+        try {
+            isSymfonySource = sourceModule.getModelElement().getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID) != null;
+        } catch (CoreException e) {
+            isSymfonySource = false;
+            Logger.logException(e);
+        }
+    }
 
-		if (!isSymfonySource)
-			return false;
+    public boolean isInController() {
+        return inController;
+    }
 
-		
-		if (st instanceof StringLiteral) {
-			
-			StringLiteral literal = (StringLiteral) st;
-			String literalValue = literal.getValue().replaceAll("['\"]", "");
+    @Override
+    public boolean visit(TypeDeclaration s) throws Exception {
 
-			if (PathUtils.isViewPath(literalValue)) {
-				//TODO: report viewpath reference
-			}
-			
-			IPath path = getSourceModule().getModelElement().getScriptProject().getPath();
-			Service service = model.findService(literalValue, path);
-			
-			if (service != null) {
-				fRequestor.acceptTypeReference(service.getFullyQualifiedName(), literal.sourceStart());
-			}
-		}
-	
-		return true;
-	}
 
-	
-	@Override
-	public boolean visit(MethodDeclaration s) throws Exception {
-	
-	
-		
-		if (s instanceof PHPMethodDeclaration) {
-			
-			
-			
-			
-		}
-		
-		
-		return true;
-	}
-	
-	
-	
-	
-	@Override
-	public boolean endvisit(TypeDeclaration s) throws Exception {
-				
-		if (currentClass != null) {
-						
+        if (!isSymfonySource)
+            return false;
 
-		}
-		
-		inController = false;
-		
-		currentClass = null;
-		return true;
-	}
+        if (s instanceof ClassDeclaration) {
+            currentClass = (ClassDeclaration) s;
+            for (Object o : currentClass.getSuperClasses().getChilds()) {
+
+                if (o instanceof FullyQualifiedReference) {
+
+                    FullyQualifiedReference superReference = (FullyQualifiedReference) o;
+
+                    //TODO: find a way to check against the FQCN
+                    // via the UseStatement
+                    if (/*superReference.getNamespace().equals(SymfonyCoreConstants.CONTROLLER_NS)
+                            && */superReference.getName().equals(SymfonyCoreConstants.CONTROLLER_CLASS)) {
+
+                        // the ControllerIndexer does the actual work of parsing the
+                        // the relevant elements inside the controller
+                        // which are then being collected in the endVisit() method
+                        inController = true;
+
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean visit(Statement st) throws Exception {
+
+        return true;
+    }
+
+
+    @Override
+    public boolean visit(Expression st) throws Exception {
+
+        if (!isSymfonySource)
+            return false;
+
+
+        if (st instanceof StringLiteral) {
+
+            StringLiteral literal = (StringLiteral) st;
+            String literalValue = literal.getValue().replaceAll("['\"]", "");
+
+            if (PathUtils.isViewPath(literalValue)) {
+                //TODO: report viewpath reference
+            }
+
+            IPath path = getSourceModule().getModelElement().getScriptProject().getPath();
+            Service service = model.findService(literalValue, path);
+
+            if (service != null) {
+                fRequestor.acceptTypeReference(service.getFullyQualifiedName(), literal.sourceStart());
+            }
+        }
+
+        return true;
+    }
+
+
+    @Override
+    public boolean visit(MethodDeclaration s) throws Exception {
+
+
+
+        if (s instanceof PHPMethodDeclaration) {
+
+
+
+
+        }
+
+
+        return true;
+    }
+
+
+
+
+    @Override
+    public boolean endvisit(TypeDeclaration s) throws Exception {
+
+        if (currentClass != null) {
+
+
+        }
+
+        inController = false;
+
+        currentClass = null;
+        return true;
+    }
 }
