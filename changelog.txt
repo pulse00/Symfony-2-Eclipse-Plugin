@@ -1,3 +1,7 @@
+1.0.76 
+
+* fixed custom project layout
+
 1.0.75
 
 * twig bugfix update

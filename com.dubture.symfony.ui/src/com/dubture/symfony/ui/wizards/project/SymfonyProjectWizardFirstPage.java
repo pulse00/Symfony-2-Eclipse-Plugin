@@ -73,8 +73,6 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
     public static final String WIZARDEXTENSION_ID = "com.dubture.symfony.ui.projectWizardExtension";
 
-    private static final String CUSTOM_LAYOUT_PATH_SEPARATOR = ";";
-
     private SymfonySupportGroup symfonySupportGroup;
     private SymfonyLayoutGroup fSymfonyLayoutGroup;
 
@@ -242,8 +240,17 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
             IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
 
             String thing = store.getString(Messages.LibraryPreferencePage_1);
-            String[] paths = thing.split(CUSTOM_LAYOUT_PATH_SEPARATOR);
-
+            
+            String[] paths = {thing};
+            
+            // for some reason the path separation in the PathEditor class creates weird behavior on either windows/osx
+            // hence this workaround
+            if (thing.contains(":")) {
+                paths = thing.split(":");
+            } else if (thing.contains(";")) {
+                paths = thing.split(";");
+            } 
+                
             available.put(layouts[2], paths);
 
             versionSelector = new ComboDialogField(SWT.READ_ONLY);
