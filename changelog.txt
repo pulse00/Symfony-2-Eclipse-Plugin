@@ -1,3 +1,7 @@
+1.0.77
+
+* fixed route indexing for annotations
+
 1.0.76 
 
 * fixed custom project layout
