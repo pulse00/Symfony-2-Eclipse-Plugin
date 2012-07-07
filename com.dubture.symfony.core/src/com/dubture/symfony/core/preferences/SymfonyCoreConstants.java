@@ -41,15 +41,12 @@ public class SymfonyCoreConstants {
     public static final String ACTION_SUFFIX         = "Action";
     public static final String APP_KERNEL            = "AppKernel";
 
-
-
     // FrameworkExtraBundle Annotations
-    public static final String TEMPLATE_ANNOTATION   = "@Template";
-    public static final String ROUTE_ANNOTATION      = "@Route";
+    public static final String TEMPLATE_ANNOTATION   = "Template";
+    public static final String ROUTE_ANNOTATION      = "Route";
 
     // prefix for methods which render views
     public static final String RENDER_PREFIX         = "render";
-
 
     // namespaces
     public static final String CONTROLLER_NS         ="Symfony\\Bundle\\FrameworkBundle\\Controller";
