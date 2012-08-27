@@ -12,10 +12,12 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -234,8 +236,8 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
             final Map<String, String[]> available = new HashMap<String, String[]>();
 
-            available.put(layouts[0], new String[] {SymfonyVersion.Symfony2_0_15.getAlias()});
-            available.put(layouts[1], new String[] {SymfonyVersion.Symfony2_0_15.getAlias()});
+            available.put(layouts[0], new String[] {SymfonyVersion.Symfony2_0_16.getAlias()});
+            available.put(layouts[1], new String[] {SymfonyVersion.Symfony2_1_RC1.getAlias()});
 
             IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
 
@@ -264,11 +266,14 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
             layoutSelector.setDialogFieldListener(new org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener() {
                 @Override
                 public void dialogFieldChanged(org.eclipse.php.internal.ui.wizards.fields.DialogField field) {
+                	
                     String[] items = layoutSelector.getItems();
-
                     String index = items[layoutSelector.getSelectionIndex()];
                     String[] selection = available.get(index);
-
+                    
+                    if (layoutSelector.getSelectionIndex() <= 1) {
+                    	selection = new String[]{available.get(items[0])[0], available.get(items[1])[0]};
+                    }
                     versionSelector.setItems(selection);
                     versionSelector.selectItem(0);
 
@@ -338,7 +343,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
         public SymfonyVersion getSymfonyVersion() {
             if (versionSelector.getSelectionIndex() == 0) {
-                return SymfonyVersion.Symfony2_0_15;
+                return SymfonyVersion.Symfony2_0_16;
             }
 
             return null;
