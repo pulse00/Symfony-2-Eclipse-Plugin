@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <psf version="2.0">
 <provider id="org.eclipse.egit.core.GitProvider">
+<project reference="1.0,git@github.com:pulse00/Composer-Eclipse-Plugin.git,master,com.dubture.composer.core"/>
+<project reference="1.0,git@github.com:pulse00/Composer-Eclipse-Plugin.git,master,com.dubture.composer.feature"/>
+<project reference="1.0,git@github.com:pulse00/Composer-Eclipse-Plugin.git,master,com.dubture.composer.test"/>
 <project reference="1.0,git@github.com:pulse00/Doctrine-Eclipse-Plugin.git,master,com.dubture.doctrine.core"/>
 <project reference="1.0,git@github.com:pulse00/Doctrine-Eclipse-Plugin.git,master,com.dubture.doctrine.feature"/>
 <project reference="1.0,git@github.com:pulse00/Doctrine-Eclipse-Plugin.git,master,com.dubture.doctrine.test"/>
