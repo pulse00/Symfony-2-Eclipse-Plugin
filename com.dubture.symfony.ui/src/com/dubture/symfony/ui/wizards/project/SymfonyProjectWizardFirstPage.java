@@ -236,8 +236,8 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
             final Map<String, String[]> available = new HashMap<String, String[]>();
 
-            available.put(layouts[0], new String[] {SymfonyVersion.Symfony2_0_16.getAlias()});
-            available.put(layouts[1], new String[] {SymfonyVersion.Symfony2_1_RC1.getAlias()});
+            available.put(layouts[0], new String[] {SymfonyVersion.Symfony2_0_17.getAlias()});
+            available.put(layouts[1], new String[] {SymfonyVersion.Symfony2_1_RC2.getAlias()});
 
             IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
 
@@ -343,7 +343,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
         public SymfonyVersion getSymfonyVersion() {
             if (versionSelector.getSelectionIndex() == 0) {
-                return SymfonyVersion.Symfony2_0_16;
+                return SymfonyVersion.Symfony2_0_17;
             }
 
             return null;

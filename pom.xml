@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dubture.symfony</groupId>
   <artifactId>parent</artifactId>
-  <version>1.0.78</version>
+  <version>1.0.79</version>
   <packaging>pom</packaging>
   <modules>
     <module>com.dubture.symfony.core</module>
