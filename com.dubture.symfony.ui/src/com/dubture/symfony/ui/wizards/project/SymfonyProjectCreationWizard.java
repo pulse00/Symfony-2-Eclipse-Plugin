@@ -86,13 +86,14 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
             IProjectDescription description = project.getDescription();
             String[] natures = description.getNatureIds();
 
-            String[] newNatures = new String[natures.length + extensionNatures.size() + 1];
-            System.arraycopy(natures, 0, newNatures, 1, natures.length);
+            String[] newNatures = new String[natures.length + extensionNatures.size() + 2];
+            System.arraycopy(natures, 0, newNatures, 2, natures.length);
 
             newNatures[0] = SymfonyNature.NATURE_ID;
+            newNatures[1] = "com.dubture.composer.core.composerNature";
 
             for (int i = 0; i < extensionNatures.size(); i++) {
-                newNatures[natures.length + 1 + i] = extensionNatures.get(i);
+                newNatures[natures.length + 2 + i] = extensionNatures.get(i);
             }
 
             description.setNatureIds(newNatures);
