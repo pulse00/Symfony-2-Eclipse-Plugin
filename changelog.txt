@@ -1,3 +1,7 @@
+1.0.82
+
+* fixes #120
+
 1.0.81
 
 * fixed included composer feature

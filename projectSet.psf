@@ -30,6 +30,10 @@
 <project reference="1.0,git@github.com:pulse00/Twig-Eclipse-Plugin.git,master,com.dubture.twig.feature"/>
 <project reference="1.0,git@github.com:pulse00/Twig-Eclipse-Plugin.git,master,com.dubture.twig.test"/>
 <project reference="1.0,git@github.com:pulse00/Twig-Eclipse-Plugin.git,master,com.dubture.twig.ui"/>
+<project reference="1.0,git@github.com:pulse00/yedit.git,master,org.dadacoalition.yedit"/>
+<project reference="1.0,git@github.com:pulse00/yedit.git,master,org.dadacoalition.yedit.feature"/>
+<project reference="1.0,git@github.com:pulse00/yedit.git,master,org.dadacoalition.yedit.test"/>
+<project reference="1.0,git@github.com:pulse00/yedit.git,master,org.dadacoalition.yedit.update"/>
 <project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk"/>
 <project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk.console"/>
 <project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk.console.ui"/>
@@ -63,5 +67,12 @@
 <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.server.core"/>
 <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.server.ui"/>
 <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.ui"/>
+<project reference="1.0,git@github.com:ganoro/phing-eclipse.git,master,org.ganoro.phing-feature"/>
+<project reference="1.0,git@github.com:ganoro/phing-eclipse.git,master,org.ganoro.phing.core"/>
+<project reference="1.0,git@github.com:ganoro/phing-eclipse.git,master,org.ganoro.phing.launching"/>
+<project reference="1.0,git@github.com:ganoro/phing-eclipse.git,master,org.ganoro.phing.ui"/>
+<project reference="1.0,git@github.com:pulse00/Json-Eclipse-Plugin.git,master,org.sourceforge.jsonedit.core"/>
+<project reference="1.0,git@github.com:pulse00/Json-Eclipse-Plugin.git,master,org.sourceforge.jsonedit.feature"/>
+<project reference="1.0,git@github.com:pulse00/Json-Eclipse-Plugin.git,master,org.sourceforge.jsonedit.test"/>
 </provider>
 </psf>
