@@ -1,3 +1,7 @@
+1.0.81
+
+* fixed included composer feature
+
 1.0.80
 
 * fixed namespace resolver
