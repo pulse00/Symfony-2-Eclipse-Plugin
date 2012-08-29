@@ -251,7 +251,14 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
         if (srcPath != null) {
             entries.add(DLTKCore.newSourceEntry(srcPath));
         }
-
+        
+        IPath webPath = getSymfonyFolderPath(project, SymfonyCoreConstants.WEB_PATH);
+        if (webPath != null) {
+        	entries.add(DLTKCore.newSourceEntry(webPath, new IPath[] {
+        			new Path(SymfonyCoreConstants.WEB_BUNDLE_PATH)
+			}));
+        }
+        
         // Setup vendor folder build path
         IPath vendorPath = getSymfonyFolderPath(project, SymfonyCoreConstants.VENDOR_PATH);
         if (vendorPath != null) {

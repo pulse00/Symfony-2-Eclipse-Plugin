@@ -67,6 +67,8 @@ public class SymfonyCoreConstants {
     public static final String TEST_PATH_LC          = "**/tests/";
     public static final String CG_FIXTURE_PATH       = "**/CG/**/Fixture/";
     public static final String SRC_PATH              = "src";
+    public static final String WEB_PATH              = "web";
+    public static final String WEB_BUNDLE_PATH       = "bundles/*";
 
     public static final String BUILTIN_SYMFONY       = "/Resources/vendor/symfony2/";
     public static final String BUILTIN_VENDOR        = "vendors";
