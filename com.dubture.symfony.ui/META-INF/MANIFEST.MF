@@ -26,7 +26,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.databinding,
  org.dadacoalition.yedit,
  com.dubture.pdt.formatter,
- com.dubture.composer.core
+ com.dubture.composer.core,
+ org.eclipse.php.debug.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dubture.symfony.ui,
