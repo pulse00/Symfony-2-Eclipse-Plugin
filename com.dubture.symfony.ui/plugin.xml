@@ -188,7 +188,39 @@
     </image>
  </extension>
  <extension
+       point="org.eclipse.ui.actionSets">
+    <actionSet
+          id="com.dubture.symfony.ui.switchContext"
+          label="Sample Action Set"
+          visible="false">
+       <action
+             class="com.dubture.symfony.ui.actions.SwitchContextAction"
+             definitionId="com.dubture.symfony.ui.edit.text.switchContext"
+             id="com.dubture.symfony.ui.actions.SwitchContextAction"
+             label="&amp;Sample Action"
+             menubarPath="navigate/open.ext"
+             retarget="true">
+       </action>
+    </actionSet>
+ </extension>
+ <extension
+       point="org.eclipse.ui.actionSetPartAssociations">
+    <actionSetPartAssociation
+          targetID="com.dubture.symfony.ui.switchContext">
+       <part
+             id="org.eclipse.php.ui.explorer">
+       </part>
+       <part
+             id="org.eclipse.php.editor">
+       </part>
+    </actionSetPartAssociation>
+ </extension>
+ <extension
        point="org.eclipse.ui.commands">
+		<command name="Switch Context"
+			description="Switch context"
+			categoryId="org.eclipse.ui.category.navigate" id="com.dubture.symfony.ui.edit.text.switchContext">
+		</command>
   <command
         categoryId="org.eclipse.ui.category.dialogs"
         description="Insert a routename at the current cursor position"
@@ -200,11 +232,6 @@
         description="Insert a service ID at the current cursor position"
         id="com.dubture.symfony.ui.command.insertService"
         name="Insert Service">
-  </command>
-  <command
-        description="Run PHP-CS-Fixer on files and folders"
-        id="com.dubture.symfony.ui.command.phpcsfixer"
-        name="Run PHP-CS-Fixer">
   </command>
 
  </extension>
@@ -315,10 +342,6 @@
           class="com.dubture.symfony.ui.actions.InsertServiceHandler"
           commandId="com.dubture.symfony.ui.command.insertService">
     </handler>
-    <handler
-          class="com.dubture.symfony.ui.actions.RunPHPCSFixerHandler"
-          commandId="com.dubture.symfony.ui.command.phpcsfixer">
-    </handler>
  </extension>
  <extension
        point="org.eclipse.ui.menus">
@@ -335,21 +358,6 @@
              label="Insert service ID"
              style="push">
        </command>
-    </menuContribution>
-    <menuContribution
-          locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-       <menu
-             icon="ico/full/obj16/sf-logo.png"
-             id="com.dubture.symfony.ui.menus"
-             label="Symfony"
-             tooltip="Run">
-          <command
-                commandId="com.dubture.symfony.ui.command.phpcsfixer"
-                icon="ico/full/obj16/cs-fixer.png"
-                label="Run PHP-CS-Fixer"
-                tooltip="Run PHP-CS-Fixer">
-          </command>
-       </menu>
     </menuContribution>
  </extension>
  <extension
