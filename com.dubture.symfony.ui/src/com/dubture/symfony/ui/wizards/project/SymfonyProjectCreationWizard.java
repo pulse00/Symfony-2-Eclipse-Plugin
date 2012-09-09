@@ -18,6 +18,7 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard;
 
+import com.dubture.composer.core.ComposerNature;
 import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.ui.SymfonyPluginImages;
@@ -90,7 +91,7 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
             System.arraycopy(natures, 0, newNatures, 2, natures.length);
 
             newNatures[0] = SymfonyNature.NATURE_ID;
-            newNatures[1] = "com.dubture.composer.core.composerNature";
+            newNatures[1] = ComposerNature.NATURE_ID;
 
             for (int i = 0; i < extensionNatures.size(); i++) {
                 newNatures[natures.length + 2 + i] = extensionNatures.get(i);
