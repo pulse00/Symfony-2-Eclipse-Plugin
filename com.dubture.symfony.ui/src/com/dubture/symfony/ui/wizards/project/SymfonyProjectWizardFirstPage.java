@@ -236,8 +236,8 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
             final Map<String, String[]> available = new HashMap<String, String[]>();
 
+            available.put(layouts[1], new String[] {SymfonyVersion.Symfony2_1_0.getAlias()});
             available.put(layouts[0], new String[] {SymfonyVersion.Symfony2_0_17.getAlias()});
-            available.put(layouts[1], new String[] {SymfonyVersion.Symfony2_1_RC2.getAlias()});
 
             IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
 
@@ -275,7 +275,12 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
                     	selection = new String[]{available.get(items[0])[0], available.get(items[1])[0]};
                     }
                     versionSelector.setItems(selection);
-                    versionSelector.selectItem(0);
+                    
+                    if (selection.length > 1) {
+                    	versionSelector.selectItem(1);
+                    } else {
+                    	versionSelector.selectItem(0);
+                    }
 
                     fireEvent();
                 }
@@ -299,7 +304,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
             versionSelector.doFillIntoGrid(fGroup, 2);
             layoutSelector.selectItem(0);
-            versionSelector.selectItem(0);
+            versionSelector.selectItem(1);
 
             // fPreferenceLink = new Link(fGroup, SWT.NONE);
             // fPreferenceLink

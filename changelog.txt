@@ -1,3 +1,7 @@
+1.0.84
+
+* added Symfony 2.1.0
+
 1.0.83
 
 * updated to new composer implementation
