@@ -45,7 +45,6 @@ import org.eclipse.php.internal.ui.wizards.PHPProjectWizardSecondPage;
 
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
-import com.dubture.symfony.core.util.FileSystemUtils;
 import com.dubture.symfony.core.util.UncompressUtils;
 
 /**
@@ -401,7 +400,7 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
             final File sourceDirectory = new File(customLayoutPath);
             final File outputDirectory = scriptProject.getProject().getLocation().toFile();
 
-            FileSystemUtils.copyDirectory(sourceDirectory, outputDirectory);
+            uncompressSymfonyLibrary(sourceDirectory, outputDirectory);
             monitor.worked(70);
 
             finishInstallation(scriptProject, monitor);
