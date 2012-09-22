@@ -19,6 +19,7 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard;
 
 import com.dubture.composer.core.ComposerNature;
+import com.dubture.indexing.core.IndexingCorePlugin;
 import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.ui.SymfonyPluginImages;
@@ -99,6 +100,9 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 
             description.setNatureIds(newNatures);
             project.setDescription(description, null);
+            
+            //TODO: solve this via a ResourceChangedEvent on the Indexing-Core-Plugin side to avoid the dependency here
+            IndexingCorePlugin.getDefault().setupBuilder(project);
 
         } catch (CoreException exception) {
             Logger.logException(exception);
