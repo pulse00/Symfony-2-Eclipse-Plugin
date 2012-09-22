@@ -7,6 +7,15 @@ title: Symfony2 Eclipse Plugin - FAQ
 <div id="tabs-4" class="tabdiv">
 
   	<div class="faq">  		
+		<h2 class="question">How can i use a custom Symfony distribution for new Symfony projects?</h2>
+		<p class="answer"> 
+			Under <span class="code">Eclipse Preferences -> Symfony -> Distribution </span> you can setup your custom distributions. You need
+			to add a gzipped tarball (.tgz) containing your distribution (the same archive like the .tgz downloads from the <a href="http://symfony.com/download">Symfony download page</a>)<br/>
+			After adding your distribution in the preferences dialog, you can select it in the New Symfony Project wizard via "Custom project layout".
+		</p>
+  	</div>  
+
+  	<div class="faq">  		
 		<h2 class="question">I can't install because of missing <span class="code">org.apache.commons.lang</span> lib. Where can i get this?</h2>
 		<p class="answer"> 
 			See this <a href="https://github.com/pulse00/Symfony-2-Eclipse-Plugin/issues/98" target="_blank">github issue</a> for an answer.
