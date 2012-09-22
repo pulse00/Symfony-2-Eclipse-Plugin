@@ -36,7 +36,7 @@
           category="com.dubture.symfony.ui.preferences.SymfonyPreferencePage"
           class="com.dubture.symfony.ui.preferences.LibraryPreferencePage"
           id="com.dubture.symfony.ui.library"
-          name="%Library">
+          name="%Dist">
     </page>
  </extension>
  
@@ -55,14 +55,6 @@
           restorable="true">
     </view>
  </extension>
- 
- <extension
-       point="org.eclipse.help.contexts">
-    <contexts
-          file="contexts.xml">
-    </contexts>
- </extension>
- 
  
  <extension
        point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">       
@@ -188,39 +180,7 @@
     </image>
  </extension>
  <extension
-       point="org.eclipse.ui.actionSets">
-    <actionSet
-          id="com.dubture.symfony.ui.switchContext"
-          label="Sample Action Set"
-          visible="false">
-       <action
-             class="com.dubture.symfony.ui.actions.SwitchContextAction"
-             definitionId="com.dubture.symfony.ui.edit.text.switchContext"
-             id="com.dubture.symfony.ui.actions.SwitchContextAction"
-             label="&amp;Sample Action"
-             menubarPath="navigate/open.ext"
-             retarget="true">
-       </action>
-    </actionSet>
- </extension>
- <extension
-       point="org.eclipse.ui.actionSetPartAssociations">
-    <actionSetPartAssociation
-          targetID="com.dubture.symfony.ui.switchContext">
-       <part
-             id="org.eclipse.php.ui.explorer">
-       </part>
-       <part
-             id="org.eclipse.php.editor">
-       </part>
-    </actionSetPartAssociation>
- </extension>
- <extension
        point="org.eclipse.ui.commands">
-		<command name="Switch Context"
-			description="Switch context"
-			categoryId="org.eclipse.ui.category.navigate" id="com.dubture.symfony.ui.edit.text.switchContext">
-		</command>
   <command
         categoryId="org.eclipse.ui.category.dialogs"
         description="Insert a routename at the current cursor position"
