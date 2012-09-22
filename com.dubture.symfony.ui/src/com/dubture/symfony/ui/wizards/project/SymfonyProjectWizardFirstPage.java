@@ -12,12 +12,10 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -236,7 +234,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
             final Map<String, String[]> available = new HashMap<String, String[]>();
 
-            available.put(layouts[1], new String[] {SymfonyVersion.Symfony2_1_0.getAlias()});
+            available.put(layouts[1], new String[] {SymfonyVersion.Symfony2_1_2.getAlias()});
             available.put(layouts[0], new String[] {SymfonyVersion.Symfony2_0_17.getAlias()});
 
             IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
