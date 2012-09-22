@@ -20,10 +20,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
 <template
-	name="symfonyAnnotationAction"
+	name="action"
 	description="%description.newsymfony.annotationAction"
 	id="com.dubture.symfony.ui.editor.templates.new.annotationAction"
-	context="php-global-members"
+	context="php-type-members"
 	enabled="true">	
 /**
 * @Route("${routePattern}", name="${routeName}")
