@@ -1,3 +1,11 @@
+1.0.85
+
+* added Symfony 2.1.2
+* updated snakeyml library
+* fixed builder setup during project creation
+* fixed custom distribution setup
+* fixed code template
+
 1.0.84
 
 * added Symfony 2.1.0
