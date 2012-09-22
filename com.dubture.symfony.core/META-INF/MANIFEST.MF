@@ -38,6 +38,6 @@ Export-Package: com.dubture.symfony.core,
  org.json.simple.parser
 Bundle-ClassPath: .,
  lib/json_simple-1.1.jar,
- lib/snakeyaml-1.8.jar,
  lib/commons-compress-1.3.jar,
- lib/commons-io-2.2.jar
+ lib/commons-io-2.2.jar,
+ lib/snakeyaml-1.10.jar
