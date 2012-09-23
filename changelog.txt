@@ -1,3 +1,7 @@
+1.0.86
+
+* fixed psr-2 namespace formatting bug
+
 1.0.85
 
 * added Symfony 2.1.2
