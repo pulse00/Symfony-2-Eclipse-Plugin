@@ -41,6 +41,8 @@ public class SymfonyFormatterOptions extends CodeFormatterOptions {
 		this.brace_position_for_type_declaration = CodeFormatterConstants.NEXT_LINE;
 		this.brace_position_for_method_declaration = CodeFormatterConstants.NEXT_LINE;		
 		this.brace_position_for_constructor_declaration = CodeFormatterConstants.NEXT_LINE;
+		this.insert_new_line_after_namespace_declaration = true;
+		this.blank_lines_before_first_class_body_declaration = 1;
 		
 		
 	}
