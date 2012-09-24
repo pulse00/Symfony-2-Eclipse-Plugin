@@ -29,8 +29,15 @@
    <repository>
      <id>indigo</id>
      <layout>p2</layout>
-     <url>http://download.eclipse.org/releases/indigo</url>
+     <url>http://download.eclipse.org/releases/juno</url>
    </repository>	
+
+   <repository>
+     <id>pdt</id>
+     <layout>p2</layout>
+     <url>http://download.eclipse.org/tools/pdt/updates/3.1.1/release/</url>
+   </repository>    
+
   </repositories>
 
   <build>
