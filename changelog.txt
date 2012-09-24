@@ -1,3 +1,7 @@
+1.0.87
+
+* updated twig plugin
+
 1.0.86
 
 * fixed psr-2 namespace formatting bug
