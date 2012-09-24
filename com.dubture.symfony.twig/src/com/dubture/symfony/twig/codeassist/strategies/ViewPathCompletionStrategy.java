@@ -15,6 +15,7 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
 
 import com.dubture.symfony.core.codeassist.CodeassistUtils;
+import com.dubture.symfony.core.model.ViewPath;
 import com.dubture.symfony.twig.codeassist.context.ViewPathArgumentContext;
 
 
@@ -44,7 +45,7 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy
 	{
         ViewPathArgumentContext context = (ViewPathArgumentContext) getContext();       
         SourceRange range = getReplacementRange(context);
-        CodeassistUtils.reportViewpath(reporter, context.getViewPath(), 
+        CodeassistUtils.reportViewpath(reporter, (ViewPath) context.getViewPath(), 
                 context.getPrefix(), range, context.getSourceModule().getScriptProject());
 
 	}

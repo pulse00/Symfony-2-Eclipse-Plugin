@@ -9,6 +9,7 @@
 package com.dubture.symfony.core.model;
 
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.twig.core.model.IViewPath;
 
 
 /**
@@ -27,7 +28,7 @@ import com.dubture.symfony.core.log.Logger;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-public class ViewPath {
+public class ViewPath implements IViewPath {
 
 	private String bundle;
 	private String controller;
@@ -113,6 +114,10 @@ public class ViewPath {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.dubture.symfony.core.model.IViewPath#getTemplate()
+	 */
+	@Override
 	public String getTemplate() {
 		
 		return template;
@@ -131,11 +136,19 @@ public class ViewPath {
 		return basePath;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.dubture.symfony.core.model.IViewPath#isRoot()
+	 */
+	@Override
 	public boolean isRoot() {
 		
 		return _isRoot;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.dubture.symfony.core.model.IViewPath#isValid()
+	 */
+	@Override
 	public boolean isValid() {
 		
 		

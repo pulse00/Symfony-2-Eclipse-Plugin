@@ -33,6 +33,7 @@ import com.dubture.symfony.core.model.ViewPath;
 import com.dubture.symfony.core.util.AnnotationUtils;
 import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
 import com.dubture.symfony.index.dao.Route;
+import com.dubture.twig.core.model.IViewPath;
 
 
 /**
@@ -207,7 +208,7 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
             String controller = classDeclaration.getName().replace("Controller", "");
             String action = methodDeclaration.getName().replace("Action", "");
 
-            ViewPath path = new ViewPath(String.format("%s:%s:%s", bundle, controller, action));
+            IViewPath path = new ViewPath(String.format("%s:%s:%s", bundle, controller, action));
             
             if (!path.isValid()) {
                 return false;

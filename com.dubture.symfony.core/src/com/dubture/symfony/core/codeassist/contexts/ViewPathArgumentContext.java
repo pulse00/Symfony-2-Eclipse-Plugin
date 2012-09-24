@@ -17,6 +17,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.ViewPath;
 import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
+import com.dubture.twig.core.model.IViewPath;
 
 /**
  * 
@@ -40,7 +41,7 @@ import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
 @SuppressWarnings("restriction")
 public class ViewPathArgumentContext extends QuotesContext {
 
-	private ViewPath viewPath;
+	private IViewPath viewPath;
 
 	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset,
@@ -90,7 +91,7 @@ public class ViewPathArgumentContext extends QuotesContext {
 		return false;
 	}
 
-	public ViewPath getViewPath() {
+	public IViewPath getViewPath() {
 		return viewPath;
 	}
 }

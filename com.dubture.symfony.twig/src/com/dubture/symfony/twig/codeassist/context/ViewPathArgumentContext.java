@@ -17,6 +17,7 @@ import com.dubture.symfony.core.model.ViewPath;
 import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
 import com.dubture.symfony.twig.codeassist.strategies.ViewPathCompletionStrategy;
 import com.dubture.twig.core.codeassist.context.QuotesContext;
+import com.dubture.twig.core.model.IViewPath;
 import com.dubture.twig.core.util.text.TwigTextSequenceUtilities;
 
 /**
@@ -37,7 +38,7 @@ import com.dubture.twig.core.util.text.TwigTextSequenceUtilities;
 public class ViewPathArgumentContext extends QuotesContext {
 	
 	
-	private ViewPath viewPath;
+	private IViewPath viewPath;
 	
 	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset,
@@ -49,14 +50,12 @@ public class ViewPathArgumentContext extends QuotesContext {
 				 				 
 				 TextSequence statement = getStatementText();
 
-
 				 if (!requestor.getClass().getName().contains("Twig")) {
 				     return false;
 				 }
 				 if (TwigTextSequenceUtilities.isInFunction(statement)) {
 					 return false;
 				 }
-				 System.err.println("report");
 				 int startOffset = SymfonyTextSequenceUtilities.readViewPathStartIndex(statement);
 				 String path = getDocument().getText().substring(statement.getOriginalOffset(startOffset), offset);
 				 
@@ -73,7 +72,7 @@ public class ViewPathArgumentContext extends QuotesContext {
 		return false;
 	}
 	
-	public ViewPath getViewPath() {
+	public IViewPath getViewPath() {
 		return viewPath;
 	}	
 
