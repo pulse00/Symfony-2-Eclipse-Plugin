@@ -10,9 +10,9 @@ package com.dubture.symfony.ui.wizards;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.IScriptFolder;
+import org.pdtextensions.core.ui.extension.INamespaceResolver;
 
 import com.dubture.composer.core.model.ModelAccess;
-import com.dubture.pdt.ui.extension.INamespaceResolver;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 

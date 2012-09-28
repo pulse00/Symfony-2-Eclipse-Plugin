@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.ui,
  com.dubture.symfony.core,
  com.dubture.symfony.index,
  com.dubture.doctrine.core,
- com.dubture.pdt.ui,
+ org.pdtextensions.core.ui,
  org.eclipse.jface.text,
  org.eclipse.wst.sse.core,
  org.eclipse.wst.sse.ui,
@@ -25,10 +25,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.jsdt.core,
  org.eclipse.jface.databinding,
  org.dadacoalition.yedit,
- com.dubture.pdt.formatter,
  com.dubture.composer.core;bundle-version="0.0.4",
  org.getcomposer.core;bundle-version="0.0.1",
- com.dubture.indexing.core
+ com.dubture.indexing.core,
+ org.pdtextensions.core;bundle-version="0.0.12"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dubture.symfony.ui,

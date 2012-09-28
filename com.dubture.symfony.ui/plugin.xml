@@ -274,7 +274,7 @@
     </wizardextension>
  </extension>
  <extension
-       point="com.dubture.pdt.ui.namespaceresolver">
+       point="org.pdtextensions.core.ui.namespaceresolver">
     <resolver
           class="com.dubture.symfony.ui.wizards.SymfonyNamespaceResolver">
     </resolver>
@@ -288,7 +288,7 @@
  </extension>
  -->
  <extension
-       point="com.dubture.pdt.formatter.profileContributor">
+       point="org.pdtextensions.core.ui.formatterProfileContributor">
     <contributor
           class="com.dubture.symfony.ui.formatter.FormatterProfileContributor"></contributor>
  </extension>

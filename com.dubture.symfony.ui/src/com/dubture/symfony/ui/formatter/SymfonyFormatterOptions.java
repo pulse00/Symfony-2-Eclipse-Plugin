@@ -8,8 +8,8 @@
  ******************************************************************************/
 package com.dubture.symfony.ui.formatter;
 
-import com.dubture.pdt.formatter.internal.core.formatter.CodeFormatterConstants;
-import com.dubture.pdt.formatter.internal.core.formatter.CodeFormatterOptions;
+import org.pdtextensions.core.ui.formatter.CodeFormatterConstants;
+import org.pdtextensions.core.ui.formatter.CodeFormatterOptions;
 
 /**
  * 

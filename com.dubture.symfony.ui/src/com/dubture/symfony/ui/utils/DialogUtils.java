@@ -25,10 +25,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PlatformUI;
 import org.getcomposer.core.Autoload;
+import org.pdtextensions.core.ui.wizards.NewClassWizard;
 
 import com.dubture.composer.core.model.EclipsePHPPackage;
 import com.dubture.composer.core.model.ModelAccess;
-import com.dubture.pdt.ui.wizards.classes.ClassCreationWizard;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.resources.SymfonyMarker;
 
@@ -43,7 +43,7 @@ public class DialogUtils
                 .getActiveWorkbenchWindow().getSelectionService();
         ISelection selection = selectionService.getSelection();
 
-        ClassCreationWizard wizard = new ClassCreationWizard();
+        NewClassWizard wizard = new NewClassWizard();
         String serviceClass = "";
         String className = "";
         String namespace = "";

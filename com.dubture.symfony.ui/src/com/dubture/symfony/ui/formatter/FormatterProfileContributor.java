@@ -12,10 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.dubture.pdt.formatter.internal.ui.preferences.formatter.IProfileContributor;
-import com.dubture.pdt.formatter.internal.ui.preferences.formatter.IProfileVersioner;
-import com.dubture.pdt.formatter.internal.ui.preferences.formatter.ProfileManager.BuiltInProfile;
-import com.dubture.pdt.formatter.internal.ui.preferences.formatter.ProfileVersioner;
+import org.pdtextensions.core.ui.preferences.formatter.IProfileContributor;
+import org.pdtextensions.core.ui.preferences.formatter.IProfileVersioner;
+import org.pdtextensions.core.ui.preferences.formatter.ProfileManager.BuiltInProfile;
+import org.pdtextensions.core.ui.preferences.formatter.ProfileVersioner;
+
 import com.dubture.symfony.ui.SymfonyUiPlugin;
 
 public class FormatterProfileContributor implements IProfileContributor {
