@@ -29,7 +29,9 @@ If you want to use the nightly build, make sure to also add the __PDT nightly up
 
 #### Nightly build
 
-[http://pulse00.github.com/p2-nightly/](http://pulse00.github.com/p2-nightly)
+The nightly build is provided by the [PDT Extension group](https://github.com/pdt-eg) mirror:
+
+[http://p2-dev.pdt-extensions.org/](http://p2-dev.pdt-extensions.org/)
 
 
 For more info visit [http://symfony.dubture.com/](http://symfony.dubture.com/)
