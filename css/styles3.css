@@ -597,7 +597,7 @@ span.eclipsehint {
 	
 }
 
-#updatelink a {
+.updatelink a {
 	
 	 font-size: 24px;
 	 text-decoration: none;
@@ -607,7 +607,7 @@ span.eclipsehint {
 	min-height: 500px;
 }
 
-#p2wrapper {
+.p2wrapper {
 
 	padding-top: 20px;
 }
