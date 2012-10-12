@@ -8,14 +8,13 @@
  ******************************************************************************/
 package com.dubture.symfony.core.parser;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -27,7 +26,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXParseException;
 
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.index.dao.Route;
@@ -51,25 +49,13 @@ public class XMLConfigParser implements IConfigParser {
 	private HashMap<String, Service> services;
 	private Stack<Route> routes = new Stack<Route>();
 
-	public XMLConfigParser(FileInputStream file) throws Exception {
+	public XMLConfigParser(InputStream inputStream) throws Exception {
 
-		try {
-//		    SAXParser sp = SAXParserFactory.newInstance().newSAXParser();
-		    
-//		    FileInputStream is = new FileInputStream(file);
-		    doc = PositionalXMLReader.readXML(file);
-//		    doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
-//		    sp.parse(file, new LocationRecordingHandler(doc));
-		    
-		    xPath = XPathFactory.newInstance().newXPath();
-		    
-        } catch (SAXParseException e) {
-            doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse("<dummy></dummy>");
-            Logger.log(Logger.WARNING, "Error parsing xml ");
-        }
+	    doc = PositionalXMLReader.readXML(inputStream);
+	    xPath = XPathFactory.newInstance().newXPath();
 		parameters = new HashMap<String, String>();
 		services = new HashMap<String, Service>();
-
+		
 	}
 
 

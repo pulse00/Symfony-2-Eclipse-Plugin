@@ -144,6 +144,28 @@
            name="resolutionText">
      </attribute>
     </extension>
-    
+    <extension
+          id="com.dubture.symfony.validation.serviceValidator"
+          name="Symfony Service Validator"
+          point="org.eclipse.wst.validation.validatorV2">
+       <validator
+             build="true"
+             class="com.dubture.symfony.core.validation.ServiceDefinitionValidator"
+             markerId="com.dubture.symfony.core.serviceMarker"
+             sourceid="org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidatorForXML"
+             version="1">
+             <include>
+                <rules>
+                   <projectNature id="com.dubture.symfony.core.symfonyNature"/>
+                   <contentType id="org.eclipse.core.runtime.xml"></contentType>
+                   <contentType id="org.eclipse.wst.xml.core.xmlsource"></contentType>
+                   <fileext
+                         caseSensitive="false"
+                         ext="xml">
+                   </fileext>
+                </rules>
+             </include>
+       </validator>
+    </extension>
 
 </plugin>

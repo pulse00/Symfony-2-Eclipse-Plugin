@@ -8,6 +8,8 @@
  ******************************************************************************/
 package com.dubture.symfony.ui.utils;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -16,19 +18,21 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.wizards.NewElementWizard;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PlatformUI;
-import org.getcomposer.core.Autoload;
 import org.pdtextensions.core.ui.wizards.NewClassWizard;
 
-import com.dubture.composer.core.model.EclipsePHPPackage;
 import com.dubture.composer.core.model.ModelAccess;
+import com.dubture.composer.core.model.NamespaceMapping;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.resources.SymfonyMarker;
 
@@ -73,32 +77,37 @@ public class DialogUtils
         ModelAccess composer = ModelAccess.getInstance();
         IResource resource = marker.getResource();
 
-        // TODO: refactor this to the composer plugin
-        for (EclipsePHPPackage pkg : composer.getPackages(resource.getProject().getFullPath())) {
+        IPath resolvedNamespace = composer.resolve(resource);
+        IScriptProject scriptProject = DLTKCore.create(resource
+                .getProject());
 
-            Autoload autoload = pkg.getPhpPackage().getAutoload();
-            if (autoload != null) {
-
-                IPath path = pkg.getPath().append(autoload.getPSR0Path());
-
-                if (path.isPrefixOf(resource.getFullPath())) {
-
-                    IPath targetPath = path.append(namespace);
-                    IScriptProject scriptProject = DLTKCore.create(resource
-                            .getProject());
-                    IPath fixedPath = new Path(targetPath.toString()
-                            .replaceAll("\\\\", "/"));
-
-                    try {
-                        folder = scriptProject.findScriptFolder(fixedPath);
-                    } catch (Exception e) {
-                        Logger.logException(e);
-
-                    }
-                }
-            }
+        try {
+	        if (resolvedNamespace != null && resolvedNamespace.isEmpty()) {
+	        	IPath folderPath = new Path("/" + scriptProject.getElementName()).append("src").append(namespace.replace("\\", "/"));
+					folder = scriptProject.findScriptFolder(folderPath);
+	        	
+	        } else {
+	        	
+	        	List<NamespaceMapping> namespaceMappings = composer.getNamespaceMappings(scriptProject.getProject());
+	        	
+	        	for (NamespaceMapping mapping : namespaceMappings) {
+	        		if (mapping.getNamespace().equals(resolvedNamespace.toString())) {
+	        			IPath folderPath = new Path("/" + scriptProject.getElementName()).append(mapping.getPath());
+	        			folder = scriptProject.findScriptFolder(folderPath);
+	        			break;
+	        		}
+	        	}
+	        }
+        } catch (ModelException e) {
+        	Logger.logException(e);
         }
-
+        
+        if (folder == null) {
+        	MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), "Error opening class wizard", "Could not open the New Class wizard. See the workspace log for details");
+        	Logger.log(Logger.ERROR, "Unable to retrieve target folder from composer information");
+        	return;
+        }
+        
         wizard.setClassName(className);
         wizard.setNamespace(namespace);
         wizard.setScriptFolder(folder);

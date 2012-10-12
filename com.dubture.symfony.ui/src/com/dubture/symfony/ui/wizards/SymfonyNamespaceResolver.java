@@ -13,6 +13,7 @@ import org.eclipse.dltk.core.IScriptFolder;
 import org.pdtextensions.core.ui.extension.INamespaceResolver;
 
 import com.dubture.composer.core.model.ModelAccess;
+import com.dubture.composer.core.model.NamespaceMapping;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 
@@ -30,7 +31,13 @@ public class SymfonyNamespaceResolver implements INamespaceResolver {
 	    try {
 	        IPath path = ModelAccess.getInstance().resolve(container.getResource());
 	        if (path != null) {
-	            return path.toString().replace("/", "\\");
+	        	
+	        	for (NamespaceMapping mapping : ModelAccess.getInstance().getNamespaceMappings(container.getScriptProject().getProject())) {
+	        		
+	        		if (mapping.getNamespace().equals(path.toString())) {
+	        			return container.getPath().removeFirstSegments(1).toString().replace(mapping.getPath(), "").replace("/", "\\");
+	        		}
+	        	}
 	        }
         } catch (Exception e) {
             e.printStackTrace();

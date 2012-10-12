@@ -22,18 +22,11 @@ import java.util.Stack;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.yaml.snakeyaml.scanner.ScannerException;
@@ -44,7 +37,6 @@ import com.dubture.symfony.core.parser.YamlConfigParser;
 import com.dubture.symfony.core.parser.YamlRoutingParser;
 import com.dubture.symfony.core.parser.YamlTranslationParser;
 import com.dubture.symfony.core.preferences.ProjectOptions;
-import com.dubture.symfony.core.resources.SymfonyMarker;
 import com.dubture.symfony.core.util.BuildPathUtils;
 import com.dubture.symfony.core.util.TranslationUtils;
 import com.dubture.symfony.index.SymfonyIndexer;
@@ -62,7 +54,6 @@ import com.dubture.symfony.index.dao.TransUnit;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractSymfonyVisitor {
 
 	protected IFile file;
@@ -243,7 +234,6 @@ public abstract class AbstractSymfonyVisitor {
 
 			if (parser.hasServices()) {
 				indexServices(parser.getServices());
-				setMarkers(resource, parser.getServices());
 			}
 
 			if (parser.hasRoutes()) {
@@ -297,53 +287,5 @@ public abstract class AbstractSymfonyVisitor {
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
-	}
-	
-	public void setMarkers(IResource resource, HashMap<String,Service> hashMap) throws CoreException
-	{
-	    
-	    Iterator<String> iterator = hashMap.keySet().iterator();
-	    IScriptProject scriptProject = DLTKCore.create(resource.getProject());
-	    IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-	    
-	    PhpModelAccess model = PhpModelAccess.getDefault();
-	    
-        resource.deleteMarkers(SymfonyMarker.MISSING_SERVICE_CLASS, true, 1);
-	    
-	    while (iterator.hasNext()) {
-	    	
-	        String next = iterator.next();
-	        Service service = hashMap.get(next);
-	        
-	        if (service == null) {
-	        	Logger.log(Logger.INFO, "Error setting marker for service " + next);
-	        	continue;
-	        }
-	        String phpClass = service.getPHPClass();
-	        
-	        if ("synthetic".equals(phpClass)) {
-	        	Logger.log(Logger.INFO, "Error setting marker for synthetic service " + next);
-	        	continue;
-	        }
-	        
-	        IType[] types = model.findTypes(phpClass, MatchRule.EXACT, 0, 0, scope, null);
-	        
-	        if (types.length == 0) {
-	            IMarker marker = resource.createMarker(SymfonyMarker.MISSING_SERVICE_CLASS);
-	            marker.setAttribute(SymfonyMarker.SERVICE_CLASS, phpClass);
-	            marker.setAttribute(SymfonyMarker.RESOLUTION_TEXT, "Create class " + phpClass);
-	            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
-	            marker.setAttribute("problemType", SymfonyMarker.MISSING_SERVICE_CLASS);
-	            marker.setAttribute(IMarker.MESSAGE, "Class " + phpClass + " does not exist");
-	            marker.setAttribute(IMarker.LINE_NUMBER, service.getLine());
-            //TODO: check for non-existing methods and create a marker
-	        } else if (types.length == 1) {
-	        	
-	        	
-        	// type is ambigous.
-	        } else {
-	        	
-	        }
-	    }
 	}
 }
