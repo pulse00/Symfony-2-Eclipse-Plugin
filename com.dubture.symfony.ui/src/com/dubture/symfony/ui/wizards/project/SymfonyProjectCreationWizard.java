@@ -14,11 +14,15 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard;
+import org.eclipse.wst.common.project.facet.core.IFacetedProject;
+import org.eclipse.wst.common.project.facet.core.IProjectFacet;
+import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
-import com.dubture.composer.core.ComposerNature;
+import com.dubture.composer.core.ComposerConstants;
 import com.dubture.indexing.core.IndexingCorePlugin;
 import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.log.Logger;
@@ -85,17 +89,21 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 
             }
 
+            
+            final IFacetedProject facetedProject = ProjectFacetsManager.create(project);
+            IProjectFacet facet = ProjectFacetsManager.getProjectFacet(ComposerConstants.COMPOSER_FACET);
+            facetedProject.installProjectFacet(facet.getDefaultVersion(), null, new NullProgressMonitor());
+            
             IProjectDescription description = project.getDescription();
             String[] natures = description.getNatureIds();
 
-            String[] newNatures = new String[natures.length + extensionNatures.size() + 2];
-            System.arraycopy(natures, 0, newNatures, 2, natures.length);
+            String[] newNatures = new String[natures.length + extensionNatures.size() + 1];
+            System.arraycopy(natures, 0, newNatures, 1, natures.length);
 
             newNatures[0] = SymfonyNature.NATURE_ID;
-            newNatures[1] = ComposerNature.NATURE_ID;
 
             for (int i = 0; i < extensionNatures.size(); i++) {
-                newNatures[natures.length + 2 + i] = extensionNatures.get(i);
+                newNatures[natures.length + 1 + i] = extensionNatures.get(i);
             }
 
             description.setNatureIds(newNatures);
