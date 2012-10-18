@@ -40,6 +40,12 @@
      <url>http://download.eclipse.org/tools/pdt/updates/nightly/</url>
    </repository>    
 
+   <repository>
+     <id>orbit</id>
+     <layout>p2</layout>
+     <url>http://download.eclipse.org/tools/orbit/downloads/drops/I20121015230140/repository</url>
+   </repository>
+
   </repositories>
 
   <build>
