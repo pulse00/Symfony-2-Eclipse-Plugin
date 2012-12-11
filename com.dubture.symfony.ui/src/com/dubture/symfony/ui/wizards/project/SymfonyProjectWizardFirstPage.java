@@ -245,11 +245,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
             
             // for some reason the path separation in the PathEditor class creates weird behavior on either windows/osx
             // hence this workaround
-            if (thing.contains(":")) {
-                paths = thing.split(":");
-            } else if (thing.contains(";")) {
-                paths = thing.split(";");
-            } 
+            paths = thing.split(File.pathSeparator);
                 
             available.put(layouts[2], paths);
 
