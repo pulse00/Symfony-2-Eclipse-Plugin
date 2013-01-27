@@ -50,7 +50,7 @@ public class LibraryEditor extends ListEditor {
 		
         FileDialog dialog = new FileDialog(getShell(), SWT.SHEET);
         
-        dialog.setFilterExtensions(new String[]{"tgz"});
+        dialog.setFilterExtensions(new String[]{".tgz"});
         
         if (dirChooserLabelText != null) {
 			dialog.setText(dirChooserLabelText);
