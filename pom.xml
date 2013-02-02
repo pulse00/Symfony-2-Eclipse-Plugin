@@ -25,7 +25,7 @@
         <repository>
             <id>dltk</id>
             <layout>p2</layout>
-            <url>http://hudson.eclipse.org/hudson/job/dltk-nightly/487/artifact/org.eclipse.dltk.releng/build/update.site/target/site/</url>
+            <url>https://hudson.eclipse.org/hudson/job/dltk-nightly/lastSuccessfulBuild/artifact/org.eclipse.dltk.releng/build/update.site/target/site/</url>
         </repository>
         <repository>
             <id>pex</id>
