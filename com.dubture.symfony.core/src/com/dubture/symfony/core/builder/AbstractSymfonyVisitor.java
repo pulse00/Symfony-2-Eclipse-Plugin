@@ -37,7 +37,6 @@ import com.dubture.symfony.core.parser.YamlConfigParser;
 import com.dubture.symfony.core.parser.YamlRoutingParser;
 import com.dubture.symfony.core.parser.YamlTranslationParser;
 import com.dubture.symfony.core.preferences.ProjectOptions;
-import com.dubture.symfony.core.util.BuildPathUtils;
 import com.dubture.symfony.core.util.TranslationUtils;
 import com.dubture.symfony.index.SymfonyIndexer;
 import com.dubture.symfony.index.dao.Route;
@@ -71,8 +70,9 @@ public abstract class AbstractSymfonyVisitor {
 			if (resource instanceof IProject || resource instanceof IFolder) {
 				return resource.getProject().hasNature(SymfonyNature.NATURE_ID);
 			}
-
-			if (resource instanceof IFile) {
+			
+			IScriptProject scriptProject = DLTKCore.create(resource.getProject());
+			if (resource instanceof IFile && scriptProject.isOnBuildpath(resource)) {
 
 				indexer = SymfonyIndexer.getInstance();
 				file = (IFile) resource;
@@ -80,15 +80,13 @@ public abstract class AbstractSymfonyVisitor {
 				resource.getParent();
 				timestamp = (int) resource.getLocalTimeStamp();
 				
-				IScriptProject scriptProject = DLTKCore.create(resource.getProject());
-				boolean doIndex = BuildPathUtils.isContainedInBuildpath(resource, scriptProject);
 				
-				if ("xml".equals(resource.getFileExtension()) && doIndex)
+				if ("xml".equals(resource.getFileExtension()))
 				{
 					loadXML(resource);
 					built = true;
 
-				} else if ("yml".equals(resource.getFileExtension()) && doIndex) {
+				} else if ("yml".equals(resource.getFileExtension())) {
 					
 					if ("services.yml".equals(resource.getName())) {					
 						loadYaml();
