@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
@@ -238,7 +239,7 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
                 if (callName.startsWith(SymfonyCoreConstants.RENDER_PREFIX)) {
 
                     CallArgumentsList args = expression.getArgs();
-                    List<Object> children = args.getChilds();
+                    List<ASTNode> children = args.getChilds();
 
                     Scalar view = (Scalar) children.get(0);
 
