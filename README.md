@@ -33,11 +33,11 @@ certain that no major bugs make it into the nightly updatesite ;)
 
 If you want to use the nightly build, make sure to also add the __PDT nightly updatesite:__ [http://download.eclipse.org/tools/pdt/updates/nightly](http://download.eclipse.org/tools/pdt/updates/nightly)!
 
-#### Stable Updatesite
+##### Stable Updatesite
 
 [http://p2.dubture.com](http://p2.dubture.com)
 
-#### Nightly build
+##### Nightly build
 
 The nightly build is provided by the [PDT Extension group](https://github.com/pdt-eg) mirror:
 
