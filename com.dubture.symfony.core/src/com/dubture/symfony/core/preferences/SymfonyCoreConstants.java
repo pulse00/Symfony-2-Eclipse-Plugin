@@ -60,12 +60,15 @@ public class SymfonyCoreConstants {
     // Paths
     public static final String APP_PATH              = "app";
     public static final String VENDOR_PATH           = "vendor";
-    public static final String CACHE_PATH            = "**/cache/";
-    public static final String LOG_PATH              = "**/logs/";
-    public static final String SKELETON_PATH         = "**/skeleton/";
-    public static final String TEST_PATH             = "**/Tests/";
-    public static final String TEST_PATH_LC          = "**/tests/";
-    public static final String CG_FIXTURE_PATH       = "**/CG/**/Fixture/";
+    public static final String CACHE_PATH            = "app/cache";
+    public static final String LOG_PATH              = "app/logs";
+    
+    public static final String CACHE_PATTERN         = "**/cache/";
+    public static final String LOG_PATTERN           = "**/logs/";
+    public static final String SKELETON_PATTERN      = "**/skeleton/";
+    public static final String TEST_PATTERN          = "**/Tests/";
+    public static final String TEST_PATTERN_LC       = "**/tests/";
+    public static final String CG_FIXTURE_PATTERN    = "**/CG/**/Fixture/";
     public static final String SRC_PATH              = "src";
     public static final String WEB_PATH              = "web";
     public static final String WEB_BUNDLE_PATH       = "bundles/*";
@@ -73,7 +76,6 @@ public class SymfonyCoreConstants {
     public static final String BUILTIN_SYMFONY       = "/Resources/vendor/symfony2/";
     public static final String BUILTIN_VENDOR        = "vendors";
     public static final String BUILTIN_NO_VENDOR     = "novendors";
-
 
     // routing types
     public static final String ANNOTATION            = "annotation";

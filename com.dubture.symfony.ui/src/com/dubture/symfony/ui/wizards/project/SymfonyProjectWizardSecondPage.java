@@ -240,8 +240,8 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
         IPath appPath = getSymfonyFolderPath(project, SymfonyCoreConstants.APP_PATH);
         if (appPath != null) {
             entries.add(DLTKCore.newSourceEntry(appPath, new IPath[] {
-                new Path(SymfonyCoreConstants.CACHE_PATH),
-                new Path(SymfonyCoreConstants.LOG_PATH),
+                new Path(SymfonyCoreConstants.CACHE_PATTERN),
+                new Path(SymfonyCoreConstants.LOG_PATTERN),
             }));
         }
 
@@ -262,10 +262,10 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
         IPath vendorPath = getSymfonyFolderPath(project, SymfonyCoreConstants.VENDOR_PATH);
         if (vendorPath != null) {
             entries.add(DLTKCore.newSourceEntry(vendorPath, new IPath[] {
-                new Path(SymfonyCoreConstants.SKELETON_PATH),
-                new Path(SymfonyCoreConstants.TEST_PATH),
-                new Path(SymfonyCoreConstants.TEST_PATH_LC),
-                new Path(SymfonyCoreConstants.CG_FIXTURE_PATH)
+                new Path(SymfonyCoreConstants.SKELETON_PATTERN),
+                new Path(SymfonyCoreConstants.TEST_PATTERN),
+                new Path(SymfonyCoreConstants.TEST_PATTERN_LC),
+                new Path(SymfonyCoreConstants.CG_FIXTURE_PATTERN)
             }));
         }
 
@@ -419,7 +419,21 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
         }
 
         scriptProject.getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+        
+        markFolderAsDerived(scriptProject.getProject().getFolder(new Path(SymfonyCoreConstants.VENDOR_PATH)), monitor);
+        markFolderAsDerived(scriptProject.getProject().getFolder(new Path(SymfonyCoreConstants.LOG_PATH)), monitor);
+        markFolderAsDerived(scriptProject.getProject().getFolder(new Path(SymfonyCoreConstants.CACHE_PATH)), monitor);
+        
         setupBuildPath(scriptProject);
         monitor.worked(20);
+    }
+    
+    private void markFolderAsDerived(IFolder folder, IProgressMonitor monitor) throws CoreException {
+    	
+    	if (folder == null) {
+    		return;
+    	}
+    	
+    	folder.setDerived(true, monitor);
     }
 }
