@@ -11,7 +11,6 @@
  */
 package com.dubture.symfony.core.builder;
 
-
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +43,6 @@ import com.dubture.symfony.index.dao.RoutingResource;
 import com.dubture.symfony.index.dao.Service;
 import com.dubture.symfony.index.dao.TransUnit;
 
-
 /**
  *
  * Abstract visitor to provide xml- and yml parsers.
@@ -72,6 +70,7 @@ public abstract class AbstractSymfonyVisitor {
 			}
 			
 			IScriptProject scriptProject = DLTKCore.create(resource.getProject());
+			
 			if (resource instanceof IFile && scriptProject.isOnBuildpath(resource)) {
 
 				indexer = SymfonyIndexer.getInstance();
@@ -80,31 +79,22 @@ public abstract class AbstractSymfonyVisitor {
 				resource.getParent();
 				timestamp = (int) resource.getLocalTimeStamp();
 				
-				
-				if ("xml".equals(resource.getFileExtension()))
-				{
+				if (resource.getName().toLowerCase().endsWith("devdebugprojectcontainer.xml")) {
 					loadXML(resource);
 					built = true;
-
 				} else if ("yml".equals(resource.getFileExtension())) {
-					
-					if ("services.yml".equals(resource.getName())) {					
-						loadYaml();
-						built = true;
-					} else if (resource.getName().contains("routing")) {
+					if (resource.getName().contains("routing")) {
 						loadYamlRouting();
 						built = true;
-					} else {
-						
-						if (resource.getFullPath().toString().contains("translations")) {
+					} else if (resource.getFullPath().toString().contains("translations")) {
 							loadYamlTranslation();
-						}
 					}
 				}
 			}
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
+		
 		return built;
 	}
 	

@@ -166,7 +166,15 @@ public class XMLConfigParser implements IConfigParser {
 	        
 	        Node childNode = nodeList.item(i);
 	        NamedNodeMap attributes = childNode.getAttributes();
-            String id = attributes.getNamedItem("id").getNodeValue();
+	        
+            Node idItem = attributes.getNamedItem("id");
+            
+            if (idItem == null)  {
+            	continue;
+            }
+            
+            String id = idItem.getNodeValue();
+            
             String phpClass = null;
             Node namedItem = attributes.getNamedItem("class");
             
