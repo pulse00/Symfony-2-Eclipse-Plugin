@@ -23,12 +23,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.yaml.snakeyaml.scanner.ScannerException;
 
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.parser.XMLConfigParser;
@@ -71,18 +71,23 @@ public abstract class AbstractSymfonyVisitor {
 			
 			IScriptProject scriptProject = DLTKCore.create(resource.getProject());
 			
-			if (resource instanceof IFile && scriptProject.isOnBuildpath(resource)) {
+			if (resource instanceof IFile) {
 
+				boolean isOnBuildPath = scriptProject.isOnBuildpath(resource);
 				indexer = SymfonyIndexer.getInstance();
 				file = (IFile) resource;
 				path = resource.getFullPath();
 				resource.getParent();
 				timestamp = (int) resource.getLocalTimeStamp();
 				
+				// the cache folder is not in the build path
 				if (resource.getName().toLowerCase().endsWith("devdebugprojectcontainer.xml")) {
+					loadDumpedXmlContainer(resource);
+					built = true;
+				} else if ("xml".equals(resource.getFileExtension()) && isOnBuildPath) {
 					loadXML(resource);
 					built = true;
-				} else if ("yml".equals(resource.getFileExtension())) {
+				} else if ("yml".equals(resource.getFileExtension()) && isOnBuildPath) {
 					if (resource.getName().contains("routing")) {
 						loadYamlRouting();
 						built = true;
@@ -100,180 +105,125 @@ public abstract class AbstractSymfonyVisitor {
 	
 	
 	@SuppressWarnings("rawtypes")
-	protected void loadYamlTranslation() {
+	protected void loadYamlTranslation() throws Exception {
 		
-		try {
-			
-			YamlTranslationParser parser = new YamlTranslationParser(file.getContents());
-			parser.parse();
-			
-			String lang = TranslationUtils.getLanguageFromFilename(file.getName());
-			
-			Map<String, String> transUnits = parser.getTranslations();			
-			Iterator it = transUnits.keySet().iterator();
-			
-			List<TransUnit> translations = new ArrayList<TransUnit>();
-			
-			while(it.hasNext()) {
-				
-				String key = (String) it.next();				
-				String value = transUnits.get(key);								
-				TransUnit unit = new TransUnit(key, value, lang);				
-				translations.add(unit);				
-
-			}
-			
-			indexTranslations(translations);
-			
-		} catch (Exception e) {			
-			e.printStackTrace();
-			Logger.logException(e);
+		YamlTranslationParser parser = new YamlTranslationParser(file.getContents());
+		parser.parse();
+		String lang = TranslationUtils.getLanguageFromFilename(file.getName());
+		Map<String, String> transUnits = parser.getTranslations();			
+		Iterator it = transUnits.keySet().iterator();
+		List<TransUnit> translations = new ArrayList<TransUnit>();
+		
+		while(it.hasNext()) {
+			String key = (String) it.next();				
+			String value = transUnits.get(key);								
+			TransUnit unit = new TransUnit(key, value, lang);				
+			translations.add(unit);				
 		}
+		
+		indexTranslations(translations);
 	}
 
 	protected JSONArray getSynthetics() {
-
-		if (syntheticServices == null)
+		if (syntheticServices == null) {
 			syntheticServices = ProjectOptions.getSyntheticServices(file.getProject());;
+		}
 
 		return syntheticServices;
-
 	}
 
-	protected void loadYamlRouting() {
-
-		try {			
-
-			YamlRoutingParser parser = new YamlRoutingParser(file.getContents());
-			parser.parse();
-
-			indexRoutes(parser.getRoutes());
-			indexResources(parser.getResources());
-
-		} catch (ScannerException se) {
-			Logger.logException(se);
-		} catch (Exception e) {		
-			Logger.logException(e);
-		}
+	protected void loadYamlRouting() throws CoreException {
+		YamlRoutingParser parser = new YamlRoutingParser(file.getContents());
+		parser.parse();
+		indexRoutes(parser.getRoutes());
+		indexResources(parser.getResources());
 	}
-	
-	
 	
 	protected void indexTranslations(List<TransUnit> translations) {
-		
-		
 		for (TransUnit unit: translations) {
 			indexer.addTranslation(unit, file.getFullPath().toString(), timestamp);
 			Logger.debugMSG(String.format("indexing translational: %s", unit.toString()));
 		}
 		
 		indexer.exitTranslations();
-		
 	}
 
 
 	protected void indexRoutes(Stack<Route> routes) {
-
 		//indexer.enterRoutes();
 		for (Route route : routes) {
 			indexer.addRoute(route, file.getProject().getFullPath());
 		}
+		
 		indexer.exitRoutes();		
-
 	}
 	
 	protected void indexResources(Stack<RoutingResource> resources) {
-
 		for (RoutingResource resource : resources) {
-			
 			Logger.debugMSG("indexing resource: " + resource.toString());
 			indexer.addResource(resource, file.getProject().getFullPath());
 		}
+		
 		indexer.exitResources();
-				
 	}
 
 
-	protected void loadYaml() {
-
-		try {
-
-			YamlConfigParser parser = new YamlConfigParser(file.getContents());
-			parser.parse();
-
-			indexServices(parser.getServices());
-
-		} catch (Exception e1) {
-
-			Logger.logException(e1);
-
-		}
-
+	protected void loadYaml() throws Exception {
+		YamlConfigParser parser = new YamlConfigParser(file.getContents());
+		parser.parse();
+		indexServices(parser.getServices());
+	}
+	
+	protected void loadDumpedXmlContainer(IResource resource) throws Exception {
+		FileInputStream fis = new FileInputStream(file.getLocation().toFile());
+		XMLConfigParser parser = new XMLConfigParser(fis);
+		parser.parse();
+		indexServices(parser.getServices());
 	}
 
 	protected void loadXML(IResource resource) {
-
 		try {
-
-			XMLConfigParser parser;					
 			FileInputStream fis = new FileInputStream(file.getLocation().toFile());
-			parser = new XMLConfigParser(fis);
+			XMLConfigParser parser = new XMLConfigParser(fis);
 			parser.parse();
-
-			if (parser.hasServices()) {
-				indexServices(parser.getServices());
-			}
-
 			if (parser.hasRoutes()) {
 				indexRoutes(parser.getRoutes());
 			}
-
 		} catch (Exception e) {
-
-		    e.printStackTrace();
 			Logger.logException(e);
-
 		}
 	}
 
 	@SuppressWarnings({ "rawtypes" })
 	protected void indexServices(HashMap<String, Service> services) {
+		indexer.enterServices(path.toString());
+		Iterator it = services.keySet().iterator();
+		JSONArray synths = getSynthetics();
 
-		try {
+		while(it.hasNext()) {
 
-			indexer.enterServices(path.toString());
-			Iterator it = services.keySet().iterator();
+			String id = (String) it.next();
+			Service service = services.get(id);				
 
-			JSONArray synths = getSynthetics();
-
-			while(it.hasNext()) {
-
-				String id = (String) it.next();
-				Service service = services.get(id);				
-
-				if (service == null) {
-				    Logger.log(Logger.WARNING, "error parsing service " + id);
-				    continue;
-				}
-				
-				if(service.phpClass != null && Service.SYNTHETIC.equals(service.phpClass)) {
-					for (Object o : synths) {
-						JSONObject _s = (JSONObject) o;
-						if (_s.get(Service.NAME).equals(id)) {							
-							service.phpClass = (String) _s.get(Service.CLASS);
-							break;
-						}
+			if (service == null) {
+			    Logger.log(Logger.WARNING, "error parsing service " + id);
+			    continue;
+			}
+			
+			if(service.phpClass != null && Service.SYNTHETIC.equals(service.phpClass)) {
+				for (Object o : synths) {
+					JSONObject _s = (JSONObject) o;
+					if (_s.get(Service.NAME).equals(id)) {							
+						service.phpClass = (String) _s.get(Service.CLASS);
+						break;
 					}
 				}
-
-				String _pub = service.isPublic() ? "true" : "false";
-				indexer.addService(id, service.phpClass, _pub, service.getTags(), path.toString(), timestamp);
 			}
 
-			indexer.exitServices();			
-
-		} catch (Exception e) {
-			Logger.logException(e);
+			String _pub = service.isPublic() ? "true" : "false";
+			indexer.addService(id, service.phpClass, _pub, service.getTags(), path.toString(), timestamp);
 		}
+
+		indexer.exitServices();			
 	}
 }
