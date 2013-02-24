@@ -1,3 +1,7 @@
+1.0.90
+
+* merged #141 (faster builds)
+
 1.0.87
 
 * updated twig plugin

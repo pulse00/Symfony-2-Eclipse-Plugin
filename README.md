@@ -38,4 +38,4 @@ For more info visit [http://symfony.dubture.com/](http://symfony.dubture.com/)
 
 ### Contributors
 
-- [Matthieu Vachon](https://github.com/maoueh)
+See the [contributors](https://github.com/pulse00/Symfony-2-Eclipse-Plugin/contributors).
