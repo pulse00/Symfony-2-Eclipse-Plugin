@@ -10,7 +10,7 @@ package com.dubture.symfony.ui.editor.hover;
 
 import org.eclipse.jface.internal.text.html.BrowserInformationControlInput;
 
-import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.model.Route;
 import com.dubture.symfony.ui.utils.HTMLUtils;
 
 /**

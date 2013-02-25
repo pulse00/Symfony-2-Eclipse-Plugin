@@ -22,8 +22,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.dubture.symfony.core.parser.XMLConfigParser;
-import com.dubture.symfony.index.dao.Route;
-import com.dubture.symfony.index.dao.Service;
+import com.dubture.symfony.index.model.Route;
+import com.dubture.symfony.index.model.Service;
 
 
 /**

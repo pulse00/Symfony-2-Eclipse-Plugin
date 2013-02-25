@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dubture.symfony.core.model.SymfonyModelAccess;
-import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.model.Route;
 
 public class InsertRouteHandler extends BaseTextInsertionHandler
 {

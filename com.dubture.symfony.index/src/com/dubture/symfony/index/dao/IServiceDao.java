@@ -8,13 +8,12 @@
  ******************************************************************************/
 package com.dubture.symfony.index.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 
-import com.dubture.symfony.index.IServiceHandler;
+import com.dubture.symfony.index.handler.IServiceHandler;
+import com.dubture.symfony.index.model.Service;
 
 
 /**
@@ -26,25 +25,23 @@ import com.dubture.symfony.index.IServiceHandler;
  */
 public interface IServiceDao extends IDao {
 	
-	void insert(Connection connection, String id, String phpClass, String _public, List<String> tags, String path, int timestamp) throws SQLException;
+	void insert(String id, String phpClass, String _public, List<String> tags, String path, int timestamp) throws Exception;
 	
-	void delete(Connection connection, String id, String path);
+	void delete(String id, String path);
 
-	void truncate(Connection connection);
-	
-	void findAll(Connection connection, IServiceHandler handler);
+	void findAll(IServiceHandler handler);
 
-	Service find(Connection connection, String string);
+	Service find(String string);
 
-	void deleteServices(Connection connection, String path);
+	void deleteServices(String path);
 
-	void findServicesByPath(Connection connection, String path, IServiceHandler handler);
+	void findServicesByPath(String path, IServiceHandler handler);
 
-	void findService(Connection connection, String id, String path,
+	void findService(String id, String path,
 			IServiceHandler iServiceHandler);
 
-	
-	List<String> findTags(Connection connection, IPath path);
+	List<String> findTags(IPath path);
 
+	void truncate();
 
 }

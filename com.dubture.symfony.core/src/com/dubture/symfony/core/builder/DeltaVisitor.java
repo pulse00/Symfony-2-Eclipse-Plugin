@@ -13,45 +13,43 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 
+import com.dubture.symfony.core.log.Logger;
+
 /**
  * 
- * The {@link DeltaVisitor} is a standard delta buildvisitor to 
- * parse xml/yml config files from a Symfony2 project.
- *  
+ * The {@link DeltaVisitor} is a standard delta buildvisitor to parse xml/yml
+ * config files from a Symfony2 project.
+ * 
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
- *
  */
-public class DeltaVisitor extends AbstractSymfonyVisitor 
-	implements IResourceDeltaVisitor {
-
+public class DeltaVisitor extends AbstractSymfonyVisitor implements IResourceDeltaVisitor {
 
 	@Override
 	public boolean visit(IResourceDelta delta) throws CoreException {
 
 		IResource resource = delta.getResource();
 		boolean built = false;
-		
+
 		switch (delta.getKind()) {
-		
+
 		case IResourceDelta.ADDED:
 		case IResourceDelta.CHANGED:
-			
-			built = handleResource(resource);
+			try {
+				built = handleResource(resource);
+			} catch (Exception e) {
+				Logger.logException(e);
+			}
 			break;
 
 		case IResourceDelta.REMOVED:
-
-			//TODO: find a way to remove the routes of a deleted yml/xml file
-			
-			if (path != null)
+			// TODO: find a way to remove the routes of a deleted yml/xml file
+			if (path != null) {
 				indexer.deleteServices(path.toString());
-			
+			}
+
 			break;
 		}
-
 		return built;
-
 	}
-
 }

@@ -45,7 +45,7 @@ import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.core.util.AnnotationUtils;
 import com.dubture.symfony.core.util.ModelUtils;
 import com.dubture.symfony.core.util.PathUtils;
-import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.model.Route;
 
 
 /**

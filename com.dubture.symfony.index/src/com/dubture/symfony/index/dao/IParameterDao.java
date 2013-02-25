@@ -8,14 +8,23 @@
  ******************************************************************************/
 package com.dubture.symfony.index.dao;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IPath;
 
-import com.dubture.symfony.index.handler.IResourceHandler;
+import com.dubture.symfony.index.handler.IParameterHandler;
+import com.dubture.symfony.index.model.Parameter;
 
-public interface IResourceDao extends IDao {
+public interface IParameterDao extends IDao {
 
-	void insert(String path, String type, String prefix, IPath fullPath) throws Exception;
-
-	void findResource(IPath path, IResourceHandler iResourceHandler);
+	void insert(String key, String value, IPath path) throws Exception;
 	
+	void delete(String id, String path);
+
+	void findAll(IParameterHandler handler);
+	
+	List<Parameter> findParameters(IPath path) throws Exception;
+
+	void deleteParameters(String path);
+
 }

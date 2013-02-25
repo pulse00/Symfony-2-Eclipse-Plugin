@@ -29,7 +29,7 @@ import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.Template;
 import com.dubture.symfony.core.model.Translation;
 import com.dubture.symfony.core.model.ViewPath;
-import com.dubture.symfony.index.dao.TransUnit;
+import com.dubture.symfony.index.model.TransUnit;
 
 @SuppressWarnings({ "restriction", "deprecation" })
 public class CodeassistUtils {

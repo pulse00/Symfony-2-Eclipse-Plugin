@@ -18,8 +18,8 @@ import org.eclipse.dltk.core.IType;
 import com.dubture.symfony.core.model.Resource;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.SymfonyResourceAccess;
-import com.dubture.symfony.index.dao.Route;
-import com.dubture.symfony.index.dao.RouteParameter;
+import com.dubture.symfony.index.model.Route;
+import com.dubture.symfony.index.model.RouteParameter;
 
 /**
  * 

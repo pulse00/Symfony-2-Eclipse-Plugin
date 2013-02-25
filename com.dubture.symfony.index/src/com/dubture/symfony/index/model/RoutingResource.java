@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
-package com.dubture.symfony.index.dao;
+package com.dubture.symfony.index.model;
 
 public class RoutingResource {
 	
@@ -45,13 +45,8 @@ public class RoutingResource {
 		this.prefix = prefix;
 	}
 	
-	
 	@Override
 	public String toString() {
-
 		return String.format("%s: type = %s, prefix = %s", path, type, prefix);
-		
 	}
-	
-
 }

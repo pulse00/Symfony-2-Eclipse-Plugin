@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
-package com.dubture.symfony.index.dao;
+package com.dubture.symfony.index.model;
 
 public class RouteParameter {
 	
@@ -18,33 +18,23 @@ public class RouteParameter {
 	private String raw;
 	
 	public RouteParameter(String raw) {
-
 		this.raw = raw;
-		
 		name = raw.replace(LEFT_DELIM, "").replace(RIGHT_DELIM, "");
-		
 	}
 	
 	public String getName() {
-		
 		return name;
-		
 	}
 
 	public void setValue(String string) {
-
 		value = string;
-		
 	}
 	
 	public String getValue() {
-				
 		return value;
 	}
 
 	public String getRaw() {
-
 		return raw;
 	}
-	
 }

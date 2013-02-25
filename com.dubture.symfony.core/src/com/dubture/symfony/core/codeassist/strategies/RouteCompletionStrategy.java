@@ -24,7 +24,7 @@ import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywor
 import com.dubture.symfony.core.codeassist.contexts.RouteCompletionContext;
 import com.dubture.symfony.core.model.RouteSource;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
-import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.model.Route;
 
 
 /**

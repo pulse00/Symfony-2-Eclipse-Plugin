@@ -8,46 +8,32 @@
  ******************************************************************************/
 package com.dubture.symfony.index.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 
+import com.dubture.symfony.index.model.Route;
 
 /**
- * 
  * RouteDao Interface.
  * 
- * 
- * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
- *
  */
-public interface IRouteDao {
+public interface IRouteDao extends IDao {
 	
+	void insert(String name, String pattern, String controller, String bundle, String action, IPath path) throws Exception;
 
-	void insert(Connection connection, String name, String pattern, 
-		String controller, String bundle, String action, IPath path)
-			throws SQLException;
+	void deleteRoutesByPath(String name, IPath path);
 
-	void commitInsertions() throws SQLException;
-
-	void deleteRoutesByPath(Connection connection, String name, IPath path);
-
-	List<Route> findRoutes(Connection connection, IPath path);
+	List<Route> findRoutes(IPath path);
 	
-	List<Route> findRoutes(Connection connection, String prefix, IPath path);
+	List<Route> findRoutes(String prefix, IPath path);
 	
-	List<Route> findRoutesByBundle(Connection connection, String bundle, IPath path);
+	List<Route> findRoutesByBundle(String bundle, IPath path);
 
-	Route findRoute(Connection connection, String route, IPath path);
+	Route findRoute(String route, IPath path);
 	
+	List<Route> findRoutesByController(String bundleAlias, String controller, IPath path);
 
-	List<Route> findRoutesByController(Connection connection,
-			String bundleAlias, String controller, IPath path);
-
-	void insertResource(Connection connection, String path, String type,
-			String prefix, IPath fullPath);
-
+	void insertResource(String path, String type, String prefix, IPath fullPath);
 }

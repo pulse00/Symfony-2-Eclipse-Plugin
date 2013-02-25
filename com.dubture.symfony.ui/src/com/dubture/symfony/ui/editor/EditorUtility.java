@@ -32,7 +32,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
-import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.model.Route;
 
 @SuppressWarnings("restriction")
 public class EditorUtility {

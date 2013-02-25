@@ -20,7 +20,7 @@ import com.dubture.symfony.core.model.AppKernel;
 import com.dubture.symfony.core.model.SymfonyKernelAccess;
 import com.dubture.symfony.debug.server.SymfonyServer;
 import com.dubture.symfony.debug.util.ServerUtils;
-import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.model.Route;
 import com.dubture.symfony.ui.editor.EditorUtility;
 
 /**

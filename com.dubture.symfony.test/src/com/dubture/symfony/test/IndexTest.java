@@ -18,10 +18,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.dubture.symfony.index.IServiceHandler;
 import com.dubture.symfony.index.SymfonyDbFactory;
 import com.dubture.symfony.index.dao.IServiceDao;
-import com.dubture.symfony.index.dao.Service;
+import com.dubture.symfony.index.handler.IServiceHandler;
+import com.dubture.symfony.index.model.Service;
 
 /**
  * 
@@ -50,8 +50,7 @@ public class IndexTest extends TestCase {
 		serviceDao = factory.getServiceDao();		
 		assertNotNull(serviceDao);
 		
-		serviceDao.truncate(connection);
-		
+		serviceDao.truncate();
 	}
 
 	@After
@@ -69,15 +68,15 @@ public class IndexTest extends TestCase {
 
 		try {
 			
-			serviceDao.insert(connection, "request", "Symfony\\Request\\Request", "true", null, "/foo/bar", 0);
-			serviceDao.insert(connection, "many", "Symfony\\Doctrine\\ORM\\ManyToOne", "true", null, "/moo/lar", 0);
-			serviceDao.insert(connection, "kernel", "Symfony\\Http\\Kernel", "false", null, "/sy/ror", 0);
+			serviceDao.insert("request", "Symfony\\Request\\Request", "true", null, "/foo/bar", 0);
+			serviceDao.insert("many", "Symfony\\Doctrine\\ORM\\ManyToOne", "true", null, "/moo/lar", 0);
+			serviceDao.insert("kernel", "Symfony\\Http\\Kernel", "false", null, "/sy/ror", 0);
 			serviceDao.commitInsertions();
 			connection.commit();
 
 			final Stack<Service> services = new Stack<Service>();
 			
-			serviceDao.findAll(connection, new IServiceHandler() {
+			serviceDao.findAll(new IServiceHandler() {
 				
 				@Override
 				public void handle(String id, String phpClass, String path, String _public, String tags) {
@@ -92,7 +91,7 @@ public class IndexTest extends TestCase {
 			
 			assertEquals(3, services.size());
 						
-			Service service = serviceDao.find(connection, "request");
+			Service service = serviceDao.find("request");
 			
 			assertNotNull(service);
 			assertEquals("request", service.id);

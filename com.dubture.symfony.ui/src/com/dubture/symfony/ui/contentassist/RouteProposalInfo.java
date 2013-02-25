@@ -14,7 +14,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.ui.text.completion.MemberProposalInfo;
 
 import com.dubture.symfony.core.model.RouteSource;
-import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.model.Route;
 import com.dubture.symfony.ui.utils.HTMLUtils;
 
 /**

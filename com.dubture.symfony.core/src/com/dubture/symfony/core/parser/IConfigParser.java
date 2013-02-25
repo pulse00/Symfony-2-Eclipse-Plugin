@@ -10,7 +10,7 @@ package com.dubture.symfony.core.parser;
 
 import java.util.HashMap;
 
-import com.dubture.symfony.index.dao.Service;
+import com.dubture.symfony.index.model.Service;
 
 
 /**

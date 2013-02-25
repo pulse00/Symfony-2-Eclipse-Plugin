@@ -193,6 +193,13 @@
         id="com.dubture.symfony.ui.command.insertService"
         name="Insert Service">
   </command>
+  <command
+        categoryId="org.eclipse.ui.category.dialogs"
+        description="Insert a container parameter at the current cursor position"
+        id="com.dubture.symfony.ui.command.insertParameter"
+        name="Insert Parameter">
+  </command>
+  
 
  </extension>
  
@@ -302,6 +309,10 @@
           class="com.dubture.symfony.ui.actions.InsertServiceHandler"
           commandId="com.dubture.symfony.ui.command.insertService">
     </handler>
+    <handler
+          class="com.dubture.symfony.ui.actions.InsertParameterHandler"
+          commandId="com.dubture.symfony.ui.command.insertParameter">
+    </handler>
  </extension>
  <extension
        point="org.eclipse.ui.menus">
@@ -316,6 +327,11 @@
        <command
              commandId="com.dubture.symfony.ui.command.insertService"
              label="Insert service ID"
+             style="push">
+       </command>
+       <command
+             commandId="com.dubture.symfony.ui.command.insertParameter"
+             label="Insert container parameter"
              style="push">
        </command>
     </menuContribution>
@@ -333,6 +349,12 @@
           contextId="org.eclipse.ui.textEditorScope"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
           sequence="M1+M2+S">
+    </key>
+   <key
+          commandId="com.dubture.symfony.ui.command.insertParameter"
+          contextId="org.eclipse.ui.textEditorScope"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+          sequence="M1+M2+P">
     </key>
  </extension>
  <extension

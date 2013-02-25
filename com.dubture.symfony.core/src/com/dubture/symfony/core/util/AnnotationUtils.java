@@ -24,7 +24,7 @@ import org.eclipse.php.internal.ui.Logger;
 import com.dubture.symfony.annotation.model.Annotation;
 import com.dubture.symfony.annotation.parser.AnnotationCommentParser;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
-import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.model.Route;
 
 @SuppressWarnings("restriction")
 public class AnnotationUtils {

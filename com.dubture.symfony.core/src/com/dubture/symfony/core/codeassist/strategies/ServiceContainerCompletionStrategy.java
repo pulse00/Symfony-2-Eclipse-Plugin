@@ -68,22 +68,20 @@ public class ServiceContainerCompletionStrategy extends
         }
 
         for(Service service : services) {
-
             if (CodeAssistUtils.startsWithIgnoreCase(service.getId(), prefix)) {
-
+            	
                 IType[] serviceTypes = model.findServiceTypes(service, project);
-
                 ModelElement parent = null;
+                
                 if (serviceTypes.length > 0) {
                     parent = (ModelElement) serviceTypes[0];
                 } else {
                     parent = (ModelElement) context.getSourceModule();
                 }
 
-
                 Service s = new Service(parent, service.getElementName());
                 s.setId(service.getId());
-
+                System.err.println("reporting " + s.getElementName());
                 reporter.reportType(s, "", range);
             }
         }

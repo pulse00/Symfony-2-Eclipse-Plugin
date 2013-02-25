@@ -29,8 +29,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 
 import com.dubture.symfony.debug.server.SymfonyServer;
-import com.dubture.symfony.index.dao.Route;
-import com.dubture.symfony.index.dao.RouteParameter;
+import com.dubture.symfony.index.model.Route;
+import com.dubture.symfony.index.model.RouteParameter;
 
 /**
  * A Launch dialog to offer the possibility of altering the route parameters of a Launch URL.

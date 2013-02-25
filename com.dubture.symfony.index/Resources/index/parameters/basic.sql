@@ -1,0 +1,12 @@
+-- IF YOU UPDATE THIS FILE, DON'T FORGET TO INCREMENT THE Schema.VERSION!
+-- This are basic tables that must be created prior
+-- to creation of tables containing elements.
+
+
+CREATE TABLE IF NOT EXISTS PARAMETERS(
+	ID INT AUTO_INCREMENT PRIMARY KEY,
+	PATH VARCHAR NOT NULL,
+	KEY VARCHAR NOT NULL,
+	VALUE VARCHAR NOT NULL
+);
+

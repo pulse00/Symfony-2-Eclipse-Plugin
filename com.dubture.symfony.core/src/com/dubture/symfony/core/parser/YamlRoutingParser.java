@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
 import org.yaml.snakeyaml.Yaml;
 
 import com.dubture.symfony.core.log.Logger;
-import com.dubture.symfony.index.dao.Route;
-import com.dubture.symfony.index.dao.RoutingResource;
+import com.dubture.symfony.index.model.Route;
+import com.dubture.symfony.index.model.RoutingResource;
 
 
 /**

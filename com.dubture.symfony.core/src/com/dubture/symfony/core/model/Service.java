@@ -45,9 +45,9 @@ public class Service extends SourceType {
 
 
     // just for bc purposec
-    public static final String NAME = com.dubture.symfony.index.dao.Service.NAME;
-    public static final String CLASS = com.dubture.symfony.index.dao.Service.CLASS;
-    public static final Object SYNTHETIC = com.dubture.symfony.index.dao.Service.SYNTHETIC;
+    public static final String NAME = com.dubture.symfony.index.model.Service.NAME;
+    public static final String CLASS = com.dubture.symfony.index.model.Service.CLASS;
+    public static final Object SYNTHETIC = com.dubture.symfony.index.model.Service.SYNTHETIC;
 
 
     private IFile file;
@@ -177,7 +177,7 @@ public class Service extends SourceType {
         return className;
     }
 
-    public static Service fromIndex(com.dubture.symfony.index.dao.Service s) {
+    public static Service fromIndex(com.dubture.symfony.index.model.Service s) {
 
         Service service = new Service(s.id, s.phpClass, s.path, null);
         return service;

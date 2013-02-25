@@ -6,7 +6,6 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
@@ -22,17 +21,16 @@ import org.eclipse.wst.validation.ValidationState;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.parser.XMLConfigParser;
 import com.dubture.symfony.core.resources.SymfonyMarker;
-import com.dubture.symfony.index.dao.Service;
+import com.dubture.symfony.index.model.Service;
 
 @SuppressWarnings("restriction")
 public class ServiceDefinitionValidator extends AbstractValidator {
 
-	
 	@Override
 	public ValidationResult validate(IResource resource, int kind,
 			ValidationState state, IProgressMonitor monitor) {
 
-		if (resource.getType() != IResource.FILE) {
+		if (resource.getType() != IResource.FILE || resource.isDerived(IResource.CHECK_ANCESTORS)) {
 			return null;
 		}
 		
@@ -85,12 +83,8 @@ public class ServiceDefinitionValidator extends AbstractValidator {
 		            marker.setAttribute(IMarker.LINE_NUMBER, service.getLine());
 				}
 			}
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.logException(e);			
 		}
 		
 		return result;

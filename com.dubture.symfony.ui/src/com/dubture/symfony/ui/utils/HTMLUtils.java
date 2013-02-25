@@ -34,8 +34,8 @@ import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.Template;
 import com.dubture.symfony.core.model.Translation;
-import com.dubture.symfony.index.dao.Route;
-import com.dubture.symfony.index.dao.TransUnit;
+import com.dubture.symfony.index.model.Route;
+import com.dubture.symfony.index.model.TransUnit;
 import com.dubture.symfony.ui.SymfonyPluginImages;
 import com.dubture.symfony.ui.SymfonyUiPlugin;
 

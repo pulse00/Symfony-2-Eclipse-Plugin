@@ -6,10 +6,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
-package com.dubture.symfony.index.dao;
+package com.dubture.symfony.index.handler;
 
-public interface IDao {
+public interface IParameterHandler {
 
-	void commitInsertions() throws Exception;
-	
+	void handle(String key, String value, String path);
+
 }

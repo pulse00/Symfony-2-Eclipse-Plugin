@@ -1,3 +1,7 @@
+1.0.92
+
+* added "insert parameter" dialog
+
 1.0.91
 
 * update to snapshot versioning

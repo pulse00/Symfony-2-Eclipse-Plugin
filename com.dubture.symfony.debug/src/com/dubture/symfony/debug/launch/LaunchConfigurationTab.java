@@ -52,7 +52,7 @@ import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.debug.DebuggerConfiguration;
 import com.dubture.symfony.debug.server.SymfonyServer;
 import com.dubture.symfony.debug.util.ServerUtils;
-import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.model.Route;
 
 /**
  *

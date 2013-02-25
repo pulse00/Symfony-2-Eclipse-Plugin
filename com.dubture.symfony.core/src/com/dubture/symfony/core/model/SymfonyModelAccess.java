@@ -58,11 +58,12 @@ import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.core.util.JsonUtils;
 import com.dubture.symfony.core.util.ModelUtils;
 import com.dubture.symfony.core.util.PathUtils;
-import com.dubture.symfony.index.IServiceHandler;
-import com.dubture.symfony.index.ITranslationHandler;
 import com.dubture.symfony.index.SymfonyIndexer;
-import com.dubture.symfony.index.dao.Route;
-import com.dubture.symfony.index.dao.TransUnit;
+import com.dubture.symfony.index.handler.IServiceHandler;
+import com.dubture.symfony.index.handler.ITranslationHandler;
+import com.dubture.symfony.index.model.Parameter;
+import com.dubture.symfony.index.model.Route;
+import com.dubture.symfony.index.model.TransUnit;
 
 /**
  *
@@ -308,6 +309,10 @@ public class SymfonyModelAccess extends PhpModelAccess {
 
         return null;
     }
+    
+    public List<Parameter> findParameters(IScriptProject project) {
+    	return index.findParameters(project.getPath());
+    }
 
     /**
     *
@@ -317,17 +322,14 @@ public class SymfonyModelAccess extends PhpModelAccess {
     * @return
     */
     public List<Route> findRoutes(IScriptProject project) {
-
         if (index == null) {
             Logger.log(Logger.ERROR, "The SymfonyIndexer has not been instantiated...");
             return new ArrayList<Route>();
         }
 
-
         return index.findRoutes(project.getPath());
-
     }
-
+    
     /**
     * Find routes by prefix.
     *

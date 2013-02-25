@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 import org.yaml.snakeyaml.Yaml;
 
-import com.dubture.symfony.index.dao.Service;
+import com.dubture.symfony.index.model.Service;
 
 /**
  * 

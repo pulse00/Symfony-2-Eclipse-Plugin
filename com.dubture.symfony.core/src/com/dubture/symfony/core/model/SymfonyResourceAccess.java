@@ -14,9 +14,9 @@ import java.util.List;
 import org.eclipse.dltk.core.IScriptProject;
 
 import com.dubture.symfony.core.log.Logger;
-import com.dubture.symfony.index.IResourceHandler;
 import com.dubture.symfony.index.SymfonyIndexer;
-import com.dubture.symfony.index.dao.RoutingResource;
+import com.dubture.symfony.index.handler.IResourceHandler;
+import com.dubture.symfony.index.model.RoutingResource;
 
 
 public class SymfonyResourceAccess {

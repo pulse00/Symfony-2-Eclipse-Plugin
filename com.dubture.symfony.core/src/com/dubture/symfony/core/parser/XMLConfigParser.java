@@ -28,8 +28,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.dubture.symfony.core.log.Logger;
-import com.dubture.symfony.index.dao.Route;
-import com.dubture.symfony.index.dao.Service;
+import com.dubture.symfony.index.model.Route;
+import com.dubture.symfony.index.model.Service;
 
 /**
  * 

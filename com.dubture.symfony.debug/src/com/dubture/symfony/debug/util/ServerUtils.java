@@ -19,7 +19,7 @@ import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.AppKernel;
 import com.dubture.symfony.core.util.RoutingUtil;
 import com.dubture.symfony.debug.server.SymfonyServer;
-import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.model.Route;
 
 /**
  * 

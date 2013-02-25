@@ -38,18 +38,18 @@ import com.dubture.symfony.core.parser.YamlTranslationParser;
 import com.dubture.symfony.core.preferences.ProjectOptions;
 import com.dubture.symfony.core.util.TranslationUtils;
 import com.dubture.symfony.index.SymfonyIndexer;
-import com.dubture.symfony.index.dao.Route;
-import com.dubture.symfony.index.dao.RoutingResource;
-import com.dubture.symfony.index.dao.Service;
-import com.dubture.symfony.index.dao.TransUnit;
+import com.dubture.symfony.index.model.Route;
+import com.dubture.symfony.index.model.RoutingResource;
+import com.dubture.symfony.index.model.Service;
+import com.dubture.symfony.index.model.TransUnit;
 
 /**
- *
+ * 
  * Abstract visitor to provide xml- and yml parsers.
  * 
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
- *
+ * 
  */
 public abstract class AbstractSymfonyVisitor {
 
@@ -58,75 +58,65 @@ public abstract class AbstractSymfonyVisitor {
 	protected SymfonyIndexer indexer;
 	protected int timestamp;
 	protected JSONArray syntheticServices;
-
-	protected boolean handleResource(IResource resource) {
+	
+	protected boolean handleResource(IResource resource) throws Exception {
 
 		boolean built = false;
 
-		try {
-
-			if (resource instanceof IProject || resource instanceof IFolder) {
-				return resource.getProject().hasNature(SymfonyNature.NATURE_ID);
-			}
-			
-			IScriptProject scriptProject = DLTKCore.create(resource.getProject());
-			
-			if (resource instanceof IFile) {
-
-				boolean isOnBuildPath = scriptProject.isOnBuildpath(resource);
-				indexer = SymfonyIndexer.getInstance();
-				file = (IFile) resource;
-				path = resource.getFullPath();
-				resource.getParent();
-				timestamp = (int) resource.getLocalTimeStamp();
-				
-				// the cache folder is not in the build path
-				if (resource.getName().toLowerCase().endsWith("devdebugprojectcontainer.xml")) {
-					loadDumpedXmlContainer(resource);
-					built = true;
-				} else if ("xml".equals(resource.getFileExtension()) && isOnBuildPath) {
-					loadXML(resource);
-					built = true;
-				} else if ("yml".equals(resource.getFileExtension()) && isOnBuildPath) {
-					if (resource.getName().contains("routing")) {
-						loadYamlRouting();
-						built = true;
-					} else if (resource.getFullPath().toString().contains("translations")) {
-							loadYamlTranslation();
-					}
-				}
-			}
-		} catch (Exception e) {
-			Logger.logException(e);
+		if (resource instanceof IProject || resource instanceof IFolder) {
+			return resource.getProject().hasNature(SymfonyNature.NATURE_ID);
+		} else if (!(resource instanceof IFile)) {
+			return false;
 		}
 		
+		IScriptProject scriptProject = DLTKCore.create(resource.getProject());
+		boolean isOnBuildPath = scriptProject.isOnBuildpath(resource);
+		indexer = SymfonyIndexer.getInstance();
+		file = (IFile) resource;
+		path = resource.getFullPath();
+		timestamp = (int) resource.getLocalTimeStamp();
+
+		if (resource.getName().toLowerCase().endsWith("devdebugprojectcontainer.xml")) {
+			loadDumpedXmlContainer(resource);
+			built = true;
+		} else if ("xml".equals(resource.getFileExtension()) && isOnBuildPath) {
+			loadXML(resource);
+			built = true;
+		} else if ("yml".equals(resource.getFileExtension()) && isOnBuildPath) {
+			if (resource.getName().contains("routing")) {
+				loadYamlRouting();
+				built = true;
+			} else if (resource.getFullPath().toString().contains("translations")) {
+				loadYamlTranslation();
+			}
+		}
+
 		return built;
 	}
-	
-	
+
 	@SuppressWarnings("rawtypes")
 	protected void loadYamlTranslation() throws Exception {
-		
+
 		YamlTranslationParser parser = new YamlTranslationParser(file.getContents());
 		parser.parse();
 		String lang = TranslationUtils.getLanguageFromFilename(file.getName());
-		Map<String, String> transUnits = parser.getTranslations();			
+		Map<String, String> transUnits = parser.getTranslations();
 		Iterator it = transUnits.keySet().iterator();
 		List<TransUnit> translations = new ArrayList<TransUnit>();
-		
-		while(it.hasNext()) {
-			String key = (String) it.next();				
-			String value = transUnits.get(key);								
-			TransUnit unit = new TransUnit(key, value, lang);				
-			translations.add(unit);				
+
+		while (it.hasNext()) {
+			String key = (String) it.next();
+			String value = transUnits.get(key);
+			TransUnit unit = new TransUnit(key, value, lang);
+			translations.add(unit);
 		}
-		
+
 		indexTranslations(translations);
 	}
 
 	protected JSONArray getSynthetics() {
 		if (syntheticServices == null) {
-			syntheticServices = ProjectOptions.getSyntheticServices(file.getProject());;
+			syntheticServices = ProjectOptions.getSyntheticServices(file.getProject());
 		}
 
 		return syntheticServices;
@@ -138,47 +128,63 @@ public abstract class AbstractSymfonyVisitor {
 		indexRoutes(parser.getRoutes());
 		indexResources(parser.getResources());
 	}
-	
+
 	protected void indexTranslations(List<TransUnit> translations) {
-		for (TransUnit unit: translations) {
+		for (TransUnit unit : translations) {
 			indexer.addTranslation(unit, file.getFullPath().toString(), timestamp);
 			Logger.debugMSG(String.format("indexing translational: %s", unit.toString()));
 		}
-		
+
 		indexer.exitTranslations();
 	}
 
-
 	protected void indexRoutes(Stack<Route> routes) {
-		//indexer.enterRoutes();
+		// indexer.enterRoutes();
 		for (Route route : routes) {
 			indexer.addRoute(route, file.getProject().getFullPath());
 		}
-		
-		indexer.exitRoutes();		
+
+		indexer.exitRoutes();
 	}
-	
+
 	protected void indexResources(Stack<RoutingResource> resources) {
 		for (RoutingResource resource : resources) {
 			Logger.debugMSG("indexing resource: " + resource.toString());
 			indexer.addResource(resource, file.getProject().getFullPath());
 		}
-		
+
 		indexer.exitResources();
 	}
-
 
 	protected void loadYaml() throws Exception {
 		YamlConfigParser parser = new YamlConfigParser(file.getContents());
 		parser.parse();
 		indexServices(parser.getServices());
 	}
-	
+
 	protected void loadDumpedXmlContainer(IResource resource) throws Exception {
 		FileInputStream fis = new FileInputStream(file.getLocation().toFile());
 		XMLConfigParser parser = new XMLConfigParser(fis);
 		parser.parse();
 		indexServices(parser.getServices());
+		indexParameters(parser.getParameters());
+	}
+
+	@SuppressWarnings("rawtypes")
+	private void indexParameters(HashMap<String, String> parameters) {
+		Iterator it = parameters.keySet().iterator();
+		while (it.hasNext()) {
+			String key = (String) it.next();
+			String value = parameters.get(key);
+			if (key.isEmpty() || value.isEmpty()) {
+				continue;
+			}
+			try {
+				indexer.addParameter(key, value, path);
+			} catch (Exception e) {
+				Logger.logException(e);
+			}
+		}
 	}
 
 	protected void loadXML(IResource resource) {
@@ -193,6 +199,7 @@ public abstract class AbstractSymfonyVisitor {
 			Logger.logException(e);
 		}
 	}
+	
 
 	@SuppressWarnings({ "rawtypes" })
 	protected void indexServices(HashMap<String, Service> services) {
@@ -200,20 +207,20 @@ public abstract class AbstractSymfonyVisitor {
 		Iterator it = services.keySet().iterator();
 		JSONArray synths = getSynthetics();
 
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 
 			String id = (String) it.next();
-			Service service = services.get(id);				
+			Service service = services.get(id);
 
 			if (service == null) {
-			    Logger.log(Logger.WARNING, "error parsing service " + id);
-			    continue;
+				Logger.log(Logger.WARNING, "error parsing service " + id);
+				continue;
 			}
-			
-			if(service.phpClass != null && Service.SYNTHETIC.equals(service.phpClass)) {
+
+			if (service.phpClass != null && Service.SYNTHETIC.equals(service.phpClass)) {
 				for (Object o : synths) {
 					JSONObject _s = (JSONObject) o;
-					if (_s.get(Service.NAME).equals(id)) {							
+					if (_s.get(Service.NAME).equals(id)) {
 						service.phpClass = (String) _s.get(Service.CLASS);
 						break;
 					}
@@ -224,6 +231,6 @@ public abstract class AbstractSymfonyVisitor {
 			indexer.addService(id, service.phpClass, _pub, service.getTags(), path.toString(), timestamp);
 		}
 
-		indexer.exitServices();			
+		indexer.exitServices();
 	}
 }

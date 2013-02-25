@@ -28,17 +28,11 @@ import com.dubture.symfony.index.preferences.SymfonyIndexPreferences;
 
 
 /**
- * 
- * 
- * 
- * 
  * @author "Robert Gruendler <r.gruendler@gmail.com>"
- *
  */
 public class Schema {
 
-
-	public static final String VERSION = "0.7"; //$NON-NLS-1$
+	public static final String VERSION = "0.8"; //$NON-NLS-1$
 
 	/**
 	 * Creates the database schema using given connection.
@@ -53,17 +47,15 @@ public class Schema {
 			try {
 				statement.executeUpdate(readSqlFile("Resources/index/basic.sql")); //$NON-NLS-1$
 				statement.executeUpdate(readSqlFile("Resources/index/routes/basic.sql")); //$NON-NLS-1$
+				statement.executeUpdate(readSqlFile("Resources/index/parameters/basic.sql")); //$NON-NLS-1$
 				statement.executeUpdate(readSqlFile("Resources/index/translations/basic.sql")); //$NON-NLS-1$
 				statement.executeUpdate(readSqlFile("Resources/index/resources/basic.sql")); //$NON-NLS-1$
 			} finally {
 				statement.close();
 			}
-
 			// Store new schema version:
 			storeSchemaVersion(VERSION);
-
 		} catch (SQLException e) {
-			
 			Logger.logException(e);
 			throw e;
 		}
@@ -119,7 +111,4 @@ public class Schema {
 		}
 		return null;
 	}
-	
-
-	
 }

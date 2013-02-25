@@ -32,7 +32,7 @@ import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.ViewPath;
 import com.dubture.symfony.core.util.AnnotationUtils;
 import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
-import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.model.Route;
 
 
 /**

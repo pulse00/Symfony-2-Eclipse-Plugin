@@ -20,14 +20,16 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.h2.tools.DeleteDbFiles;
 
+import com.dubture.symfony.index.dao.IParameterDao;
 import com.dubture.symfony.index.dao.IResourceDao;
 import com.dubture.symfony.index.dao.IRouteDao;
 import com.dubture.symfony.index.dao.IServiceDao;
 import com.dubture.symfony.index.dao.ITransUnitDao;
-import com.dubture.symfony.index.dao.ResourceDao;
-import com.dubture.symfony.index.dao.RouteDao;
-import com.dubture.symfony.index.dao.ServiceDao;
-import com.dubture.symfony.index.dao.TransUnitDao;
+import com.dubture.symfony.index.dao.sql.ParameterDao;
+import com.dubture.symfony.index.dao.sql.ResourceDao;
+import com.dubture.symfony.index.dao.sql.RouteDao;
+import com.dubture.symfony.index.dao.sql.ServiceDao;
+import com.dubture.symfony.index.dao.sql.TransUnitDao;
 import com.dubture.symfony.index.log.Logger;
 import com.dubture.symfony.index.preferences.SymfonyIndexPreferences;
 
@@ -46,7 +48,6 @@ public class SymfonyDbFactory  {
 	private static final String DB_USER = ""; //$NON-NLS-1$
 	private static final String DB_PASS = ""; //$NON-NLS-1$
 	private JdbcConnectionPool pool;
-
 	private static SymfonyDbFactory instance = null;
 
 	public static SymfonyDbFactory getInstance() {
@@ -88,18 +89,10 @@ public class SymfonyDbFactory  {
 
 
 	private SymfonyDbFactory() throws Exception {
-		try {
-			Class.forName("org.h2.Driver");
-		} catch (ClassNotFoundException e) {
-			Logger.logException(e);
-		}
-
-		IPath dbPath = SymfonyIndex.getDefault().getStateLocation();
 		
+		IPath dbPath = SymfonyIndex.getDefault().getStateLocation();
 		String connString = getConnectionString(dbPath);
-
 		pool = JdbcConnectionPool.create(connString, DB_USER, DB_PASS);
-
 		Schema schema = new Schema();
 		boolean initializeSchema = false;
 
@@ -140,21 +133,16 @@ public class SymfonyDbFactory  {
 					}
 				}
 			} catch (SQLException e) {
-
 				Logger.logException(e);
-
 				// remove corrupted DB
 				try {
 					DeleteDbFiles.execute(dbPath.toOSString(), DB_NAME, true);
-
 				} catch (Exception e1) {
-
 					Logger.logException(e1);
 					throw e1;
 				}
 			}
 		} while (connection == null && --tries > 0);
-		
 	}
 
 	/**
@@ -200,26 +188,23 @@ public class SymfonyDbFactory  {
 		}
 	}
 
-	public IServiceDao getServiceDao() {
-		return new ServiceDao();
+	public IServiceDao getServiceDao() throws SQLException {
+		return new ServiceDao(createConnection());
 	}
 
-
-	public IRouteDao getRouteDao() {
-		return new RouteDao();
+	public IRouteDao getRouteDao() throws SQLException {
+		return new RouteDao(createConnection());
 	}
 	
-	public ITransUnitDao getTransDao() {
-		
-		return new TransUnitDao();
-		
+	public ITransUnitDao getTransDao() throws SQLException {
+		return new TransUnitDao(createConnection());
 	}
 
-
-	public IResourceDao getResourceDao() {
-
-		return new ResourceDao();
-		
+	public IResourceDao getResourceDao() throws SQLException {
+		return new ResourceDao(createConnection());
 	}
-
+	
+	public IParameterDao getParamDao() throws SQLException {
+		return new ParameterDao(createConnection());
+	}
 }

@@ -99,14 +99,11 @@ public class ServiceReturnTypeCompletionStrategy extends ClassMembersStrategy {
 	private IType[] getTypes(AbstractCompletionContext context, String prefix, String pkg) {
 		
 		IDLTKSearchScope scope = createSearchScope();
-
 		List<IType> result = new LinkedList<IType>();
-		
 		IType[] types = PhpModelAccess.getDefault().findTypes(pkg, prefix,
 				MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		result.addAll(Arrays.asList(types));
-
-		return (IType[]) result.toArray(new IType[result.size()]);		
 		
+		return (IType[]) result.toArray(new IType[result.size()]);		
 	}	
 }

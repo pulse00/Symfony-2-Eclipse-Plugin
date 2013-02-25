@@ -17,7 +17,7 @@ import org.eclipse.dltk.ui.text.completion.MemberProposalInfo;
 
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.Translation;
-import com.dubture.symfony.index.dao.TransUnit;
+import com.dubture.symfony.index.model.TransUnit;
 import com.dubture.symfony.ui.utils.HTMLUtils;
 
 public class TranslationProposalInfo extends MemberProposalInfo {

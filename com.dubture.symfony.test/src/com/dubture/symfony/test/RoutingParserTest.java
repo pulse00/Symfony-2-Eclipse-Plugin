@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import com.dubture.symfony.core.parser.YamlRoutingParser;
-import com.dubture.symfony.index.dao.Route;
+import com.dubture.symfony.index.model.Route;
 
 public class RoutingParserTest extends TestCase {
 
