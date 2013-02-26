@@ -378,6 +378,13 @@
           type="org.eclipse.jface.text.quickassist.IQuickAssistProcessor">
     </provisionalConfiguration>
  </extension>
+ <extension
+       point="org.eclipse.php.ui.phpTreeContentProviders">
+    <provider
+          contentProvider="com.dubture.symfony.ui.explorer.ServiceTreeContentProvider"
+          labelProvider="com.dubture.symfony.ui.explorer.ServiceTreeLabelProvider">
+    </provider>
+ </extension>
  
  
  
