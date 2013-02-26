@@ -30,7 +30,6 @@ public class YamlHyperlinkDetector extends AbstractHyperlinkDetector {
 			String text = document.get(wordRegion.getOffset(),
 					wordRegion.getLength());
 			
-			System.err.println(text);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -56,7 +56,6 @@ public class ViewPathArgumentContext extends QuotesContext {
 				 if (TwigTextSequenceUtilities.isInFunction(statement)) {
 					 return false;
 				 }
-				 System.err.println("report");
 				 int startOffset = SymfonyTextSequenceUtilities.readViewPathStartIndex(statement);
 				 String path = getDocument().getText().substring(statement.getOriginalOffset(startOffset), offset);
 				 

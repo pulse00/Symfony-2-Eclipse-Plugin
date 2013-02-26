@@ -81,7 +81,6 @@ public class ServiceContainerCompletionStrategy extends
 
                 Service s = new Service(parent, service.getElementName());
                 s.setId(service.getId());
-                System.err.println("reporting " + s.getElementName());
                 reporter.reportType(s, "", range);
             }
         }
