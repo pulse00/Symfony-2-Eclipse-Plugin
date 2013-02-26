@@ -58,7 +58,6 @@ public class ParameterDao extends BaseDao implements IParameterDao {
 
 	private void insertBatch(PreparedStatement statement, String key, String value, IPath path) throws Exception {
 		int param = 0;
-		System.err.println(key + " " + value);
 		statement.setString(++param, key);
 		statement.setString(++param, value);
 		statement.setString(++param, path.toString());
