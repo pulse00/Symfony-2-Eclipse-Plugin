@@ -8,7 +8,6 @@
  ******************************************************************************/
 package com.dubture.symfony.ui;
 
-
 import java.io.IOException;
 
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
@@ -33,72 +32,71 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 	// The shared instance
 	private static SymfonyUiPlugin plugin;
 
-	
 	private ImagesOnFileSystemRegistry fImagesOnFSRegistry;
-	
-	
+
 	private SymfonyTemplateStore fCodeTemplateStore;
-	
-	protected ContextTypeRegistry codeTypeRegistry = null;	
-	
+
+	protected ContextTypeRegistry codeTypeRegistry = null;
+
 	/**
 	 * The constructor
 	 */
 	public SymfonyUiPlugin() {
-		
-		
-		
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
+	 * )
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		
-		//TODO: implement OpenDocumentListener for file links in 
+
+		// TODO: implement OpenDocumentListener for file links in
 		// symfony exception pages
 		// currently this is not used, as eclipse itself handles this
 		// event and opens the file
-		//Display.getDefault().addListener(SWT.OpenDocument, new OpenDocumentListener());
-		
+		// Display.getDefault().addListener(SWT.OpenDocument, new
+		// OpenDocumentListener());
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
+	 * )
 	 */
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
-		plugin = null;		
+		plugin = null;
 	}
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static SymfonyUiPlugin getDefault() {
 		return plugin;
 	}
-	
+
 	public ImagesOnFileSystemRegistry getImagesOnFSRegistry() {
 		if (fImagesOnFSRegistry == null) {
 			fImagesOnFSRegistry = new ImagesOnFileSystemRegistry();
 		}
 		return fImagesOnFSRegistry;
 	}
-	
+
 	public TemplateStore getCodeTemplateStore() {
 		if (fCodeTemplateStore == null) {
 
-			fCodeTemplateStore = new SymfonyTemplateStore(
-					getCodeTemplateContextRegistry(), getPreferenceStore(),
+			fCodeTemplateStore = new SymfonyTemplateStore(getCodeTemplateContextRegistry(), getPreferenceStore(),
 					PreferenceConstants.CODE_TEMPLATES_KEY);
-
 			try {
 				fCodeTemplateStore.load();
 			} catch (IOException e) {
@@ -108,12 +106,11 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 
 		return fCodeTemplateStore;
 	}
-	
+
 	public ContextTypeRegistry getCodeTemplateContextRegistry() {
 		if (codeTypeRegistry == null) {
 			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
 
-			
 			CodeTemplateContextType.registerContextTypes(registry);
 
 			codeTypeRegistry = registry;
@@ -121,8 +118,4 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 
 		return codeTypeRegistry;
 	}
-	
-	
-	
-
 }

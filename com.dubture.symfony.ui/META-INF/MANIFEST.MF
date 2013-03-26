@@ -25,24 +25,23 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.jsdt.core,
  org.eclipse.jface.databinding,
  org.dadacoalition.yedit,
- com.dubture.composer.core;bundle-version="0.0.4",
- org.getcomposer.core;bundle-version="0.0.1",
+ com.dubture.composer.core,
  com.dubture.indexing.core,
- org.pdtextensions.core;bundle-version="0.0.12",
+ org.pdtextensions.core,
  org.eclipse.wst.common.project.facet.core,
- org.eclipse.wst.common.project.facet.ui
+ org.eclipse.wst.common.project.facet.ui,
+ org.getcomposer.core;bundle-version="0.0.2"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dubture.symfony.ui,
  com.dubture.symfony.ui.actions,
  com.dubture.symfony.ui.contentassist,
  com.dubture.symfony.ui.editor,
- com.dubture.symfony.ui.editor.highlighting;uses:="org.eclipse.php.internal.core.ast.nodes,org.eclipse.php.internal.ui.editor.highlighter",
+ com.dubture.symfony.ui.editor.highlighting,
  com.dubture.symfony.ui.editor.hyperlink,
  com.dubture.symfony.ui.popup.actions,
  com.dubture.symfony.ui.preferences,
  com.dubture.symfony.ui.utils,
  com.dubture.symfony.ui.wizards
-Bundle-ClassPath: .,
- lib/snakeyaml-1.8.jar
+Bundle-ClassPath: .
 Bundle-Vendor: https://github.com/pulse00

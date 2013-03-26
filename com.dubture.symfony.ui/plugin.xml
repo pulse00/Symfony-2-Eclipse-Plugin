@@ -121,13 +121,18 @@
 		<category name="%category.name.1" id="com.dubture.symfony.project.ui" />
 		
 		<wizard
-        	category="com.dubture.symfony.project.ui"
-        	class="com.dubture.symfony.ui.wizards.project.SymfonyProjectCreationWizard"
-        	icon="ico/full/obj16/add_php_file.gif"
-        	id="com.dubture.symfony.ui.wizards.ProjectCreationWizard"
-        	name="%wizard.new.symfonyproject"
-        	project="true">
+        category="com.dubture.symfony.project.ui"
+        class="com.dubture.symfony.ui.wizards.project.SymfonyProjectCreationWizard"
+        finalPerspective="org.eclipse.php.perspective"
+        icon="ico/full/obj16/workingSet_obj.gif"
+        id="com.dubture.symfony.ui.wizards.ProjectCreationWizard"
+        name="%wizard.new.symfonyproject"
+        preferredPerspectives="org.eclipse.php.perspective"
+        project="true">
         </wizard>
+  <primaryWizard
+        id="com.dubture.symfony.ui.wizards.ProjectCreationWizard">
+  </primaryWizard>
 		
 		<!-- https://github.com/sensio/SensioGeneratorBundle can be used for this, no need to implement it in the plugin
 		<wizard
