@@ -8,8 +8,6 @@
  ******************************************************************************/
 package com.dubture.symfony.ui.utils;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -25,14 +23,15 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PlatformUI;
+import org.getcomposer.core.collection.Psr0;
+import org.getcomposer.core.objects.Namespace;
 import org.pdtextensions.core.ui.wizards.NewClassWizard;
 
 import com.dubture.composer.core.model.ModelAccess;
-import com.dubture.composer.core.model.NamespaceMapping;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.resources.SymfonyMarker;
 
@@ -87,14 +86,18 @@ public class DialogUtils
 					folder = scriptProject.findScriptFolder(folderPath);
 	        	
 	        } else {
-	        	
-	        	List<NamespaceMapping> namespaceMappings = composer.getNamespaceMappings(scriptProject.getProject());
-	        	
-	        	for (NamespaceMapping mapping : namespaceMappings) {
+	        	Psr0 namespaceMappings = composer.getNamespaceMappings(scriptProject.getProject());
+	        	for (Namespace mapping : namespaceMappings) {
 	        		if (mapping.getNamespace().equals(resolvedNamespace.toString())) {
-	        			IPath folderPath = new Path("/" + scriptProject.getElementName()).append(mapping.getPath());
-	        			folder = scriptProject.findScriptFolder(folderPath);
-	        			break;
+	        			for (Object p : mapping.getPaths()) {
+	        				if (!(p instanceof String)) {
+	        					continue;
+	        				}
+	        				String path = (String) p;
+	        				IPath folderPath = new Path("/" + scriptProject.getElementName()).append(path);
+	        				folder = scriptProject.findScriptFolder(folderPath);
+	        				break;
+	        			}
 	        		}
 	        	}
 	        }
@@ -103,7 +106,7 @@ public class DialogUtils
         }
         
         if (folder == null) {
-        	MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), "Error opening class wizard", "Could not open the New Class wizard. See the workspace log for details");
+        	MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error opening class wizard", "Could not open the New Class wizard. See the workspace log for details");
         	Logger.log(Logger.ERROR, "Unable to retrieve target folder from composer information");
         	return;
         }

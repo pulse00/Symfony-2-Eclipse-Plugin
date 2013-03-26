@@ -280,12 +280,6 @@
           class="com.dubture.symfony.ui.wizards.project.DoctrineProjectWizardExtension">
     </wizardextension>
  </extension>
- <extension
-       point="org.pdtextensions.core.ui.namespaceresolver">
-    <resolver
-          class="com.dubture.symfony.ui.wizards.SymfonyNamespaceResolver">
-    </resolver>
- </extension>
  <!--
  <extension
        point="org.dadacoalition.yedit.sourceViewerConfigurationContribution">
