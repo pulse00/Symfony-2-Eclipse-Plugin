@@ -1,19 +1,7 @@
 .DS_Store
-com.dubture.symfony.annotation/bin/*
-com.dubture.symfony.core/bin/*
-com.dubture.symfony.ui/bin/*
-com.dubture.symfony.twig/bin/*
-com.dubture.symfony.test/bin/*
-com.dubture.symfony.index/bin/*
-com.dubture.symfony.debug/bin/*
-
-com.dubture.symfony.annotation/target/*
-com.dubture.symfony.core/target/*
-com.dubture.symfony.ui/target/*
-com.dubture.symfony.twig/target/*
-com.dubture.symfony.test/target/*
-com.dubture.symfony.index/target/*
-com.dubture.symfony.debug/target/*
-com.dubture.symfony.feature/target/*
-
+target/
+bin/
+.project
+.settings/
+.classpath
 

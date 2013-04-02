@@ -22,6 +22,12 @@
     </properties>
 
     <repositories>
+
+	<repository>
+		<id>dubture-osgi</id>
+		<layout>p2</layout>
+		<url>http://dzwiupza59who.cloudfront.net/repository</url>
+	</repository>
         <repository>
             <id>dltk</id>
             <layout>p2</layout>
