@@ -320,18 +320,127 @@
           locationURI="menu:sourceMenuId?before=sourceBegin">
        <command
              commandId="com.dubture.symfony.ui.command.insertRoute"
-             label="Insert route"
+             label="Insert Symfony route"
              style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <with
+                   variable="selection">
+                <iterate
+                      ifEmpty="false"
+                      operator="and">
+                   <test
+                         forcePluginActivation="true"
+                         property="org.pdtextensions.parentProjectNature"
+                         value="com.dubture.symfony.core.symfonyNature">
+                   </test>
+                </iterate>
+             </with>
+          </visibleWhen>
        </command>
        <command
              commandId="com.dubture.symfony.ui.command.insertService"
-             label="Insert service ID"
+             label="Insert Symfony service ID"
              style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <with
+                   variable="selection">
+                <iterate
+                      ifEmpty="false"
+                      operator="and">
+                   <test
+                         forcePluginActivation="true"
+                         property="org.pdtextensions.parentProjectNature"
+                         value="com.dubture.symfony.core.symfonyNature">
+                   </test>
+                </iterate>
+             </with>
+          </visibleWhen>
        </command>
        <command
              commandId="com.dubture.symfony.ui.command.insertParameter"
-             label="Insert container parameter"
+             label="Insert Symfony container parameter"
              style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <with
+                   variable="selection">
+                <iterate
+                      ifEmpty="false"
+                      operator="and">
+                   <test
+                         forcePluginActivation="true"
+                         property="org.pdtextensions.parentProjectNature"
+                         value="com.dubture.symfony.core.symfonyNature">
+                   </test>
+                </iterate>
+             </with>
+          </visibleWhen>
+       </command>
+    </menuContribution>
+    <menuContribution
+          allPopups="false"
+          locationURI="popup:sourcePopupMenuId?after=sourceBegin">
+       <command
+             commandId="com.dubture.symfony.ui.command.insertRoute"
+             label="Insert Symfony route"
+             style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <with
+                   variable="selection">
+                <iterate
+                      ifEmpty="false"
+                      operator="and">
+                   <test
+                         forcePluginActivation="true"
+                         property="org.pdtextensions.parentProjectNature"
+                         value="com.dubture.symfony.core.symfonyNature">
+                   </test>
+                </iterate>
+             </with>
+          </visibleWhen>
+       </command>
+       <command
+             commandId="com.dubture.symfony.ui.command.insertService"
+             label="Insert Symfony service ID"
+             style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <with
+                   variable="selection">
+                <iterate
+                      ifEmpty="false"
+                      operator="and">
+                   <test
+                         forcePluginActivation="true"
+                         property="org.pdtextensions.parentProjectNature"
+                         value="com.dubture.symfony.core.symfonyNature">
+                   </test>
+                </iterate>
+             </with>
+          </visibleWhen>
+       </command>
+       <command
+             commandId="com.dubture.symfony.ui.command.insertParameter"
+             label="Insert Symfony container parameter"
+             style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <with
+                   variable="selection">
+                <iterate
+                      ifEmpty="false"
+                      operator="and">
+                   <test
+                         forcePluginActivation="true"
+                         property="org.pdtextensions.parentProjectNature"
+                         value="com.dubture.symfony.core.symfonyNature">
+                   </test>
+                </iterate>
+             </with>
+          </visibleWhen>
        </command>
     </menuContribution>
  </extension>
