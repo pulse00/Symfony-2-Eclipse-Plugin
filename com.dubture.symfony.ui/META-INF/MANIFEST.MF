@@ -30,8 +30,8 @@ Require-Bundle: org.eclipse.ui,
  org.pdtextensions.core,
  org.eclipse.wst.common.project.facet.core,
  org.eclipse.wst.common.project.facet.ui,
- org.getcomposer.core,
- org.json.simple
+ org.json.simple,
+ com.dubture.getcomposer.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dubture.symfony.core.model,

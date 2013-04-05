@@ -22,7 +22,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -36,12 +35,9 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PHPProjectLayoutPreferencePage;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.wizards.CompositeData;
 import org.eclipse.php.internal.ui.wizards.DetectGroup;
 import org.eclipse.php.internal.ui.wizards.LocationGroup;
@@ -54,7 +50,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.dialogs.PreferencesUtil;
@@ -78,7 +73,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
     protected Validator validator;
 
-    private List<ISymfonyProjectWizardExtension> extensions = new ArrayList<ISymfonyProjectWizardExtension>();
+    List<ISymfonyProjectWizardExtension> extensions = new ArrayList<ISymfonyProjectWizardExtension>();
 
     public SymfonyProjectWizardFirstPage() {
 
@@ -109,17 +104,15 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
         data.setParetnt(composite);
         data.setSettings(getDialogSettings());
         data.setObserver(fPHPLocationGroup);
-        fragment = (WizardFragment) Platform.getAdapterManager().loadAdapter(
-                                                                             data,
-                                                                             PHPProjectWizardFirstPage.class.getName());
+        fragment = (WizardFragment) Platform.getAdapterManager().loadAdapter(data, PHPProjectWizardFirstPage.class.getName());
 
         // don't really have a choice with Symfony2 ;)
-        // fVersionGroup = new VersionGroup(composite);
+    	fVersionGroup = new VersionGroup(composite, PHPVersion.PHP5_3);
 
         fSymfonyLayoutGroup = new SymfonyLayoutGroup(composite);
         fJavaScriptSupportGroup = new JavaScriptSupportGroup(composite, this);
 
-        symfonySupportGroup = new SymfonySupportGroup(composite, this);
+//        symfonySupportGroup = new SymfonySupportGroup(this, composite, this);
         fDetectGroup = new DetectGroup(composite, fPHPLocationGroup, fNameGroup);
 
         // establish connections
@@ -146,67 +139,12 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
     }
 
     public boolean hasTwigSupport() {
-        return symfonySupportGroup.getSelection();
+    	return true;
+//        return symfonySupportGroup.getSelection();
     }
 
     public List<ISymfonyProjectWizardExtension> getExtensions() {
         return extensions;
-    }
-
-    public class SymfonySupportGroup implements SelectionListener {
-
-        private final Group fGroup;
-        protected Button fEnableJavaScriptSupport;
-
-        public boolean shouldSupportJavaScript() {
-            return PHPUiPlugin.getDefault()
-                              .getPreferenceStore()
-                              .getBoolean((PreferenceConstants.JavaScriptSupportEnable));
-        }
-
-        public SymfonySupportGroup(Composite composite, WizardPage projectWizardFirstPage) {
-            final int numColumns = 1;
-            fGroup = new Group(composite, SWT.NONE);
-            fGroup.setFont(composite.getFont());
-
-            fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
-                                            true));
-            fGroup.setText("Symfony"); //$NON-NLS-1$
-
-            IConfigurationElement[] config = Platform.getExtensionRegistry()
-                                                     .getConfigurationElementsFor(WIZARDEXTENSION_ID);
-            extensions = new ArrayList<ISymfonyProjectWizardExtension>();
-
-            try {
-                for (IConfigurationElement e : config) {
-                    final Object object = e.createExecutableExtension("class");
-                    if (object instanceof ISymfonyProjectWizardExtension) {
-                        ISymfonyProjectWizardExtension extension = (ISymfonyProjectWizardExtension) object;
-                        extension.addElements(fGroup);
-                        extensions.add(extension);
-                    }
-                }
-            } catch (Exception e) {
-                Logger.logException(e);
-            }
-
-            // hide the symfony group if no extensions is filling it up
-            if (config.length == 0)
-                fGroup.setVisible(false);
-        }
-
-        public void widgetDefaultSelected(SelectionEvent e) {
-        }
-
-        public void widgetSelected(SelectionEvent e) {
-            PHPUiPlugin.getDefault().getPreferenceStore().setValue((PreferenceConstants.JavaScriptSupportEnable),
-                                                                   fEnableJavaScriptSupport.getSelection());
-        }
-
-        public boolean getSelection() {
-            return fEnableJavaScriptSupport.getSelection();
-        }
     }
 
     /**

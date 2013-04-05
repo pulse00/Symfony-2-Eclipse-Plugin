@@ -22,7 +22,7 @@ import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
-import com.dubture.composer.core.ComposerConstants;
+import com.dubture.composer.core.facet.ComposerFacetConstants;
 import com.dubture.indexing.core.IndexingCorePlugin;
 import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.log.Logger;
@@ -91,7 +91,7 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 
             
             final IFacetedProject facetedProject = ProjectFacetsManager.create(project);
-            IProjectFacet facet = ProjectFacetsManager.getProjectFacet(ComposerConstants.COMPOSER_FACET);
+            IProjectFacet facet = ProjectFacetsManager.getProjectFacet(ComposerFacetConstants.COMPOSER_COMPONENT);
             facetedProject.installProjectFacet(facet.getDefaultVersion(), null, new NullProgressMonitor());
             
             IProjectDescription description = project.getDescription();
