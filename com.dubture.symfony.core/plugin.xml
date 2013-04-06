@@ -167,5 +167,61 @@
              </include>
        </validator>
     </extension>
+    <extension
+          point="org.eclipse.wst.common.project.facet.core.facets">
+       <project-facet
+             id="php.symfony.component">
+          <label>
+             Symfony
+          </label>
+          <description>
+             Adds Symfony support to your PHP project.
+          </description>
+       </project-facet>
+       <project-facet-version
+             facet="php.symfony.component"
+             version="2.2">
+          <constraint>
+             <and>
+                <requires
+                      facet="php.core.component">
+                </requires>
+                <requires
+                      facet="php.composer.component">
+                </requires>
+             </and>
+          </constraint>
+       </project-facet-version>
+       <project-facet-version
+             facet="php.symfony.component"
+             version="2.1">
+          <constraint>
+             <and>
+                <requires
+                      facet="php.core.component">
+                </requires>
+                <requires
+                      facet="php.composer.component">
+                </requires>
+             </and>
+          </constraint>
+       </project-facet-version>
+       <action
+             facet="php.symfony.component"
+             id="php.symfony.component.install"
+             type="install">
+          <delegate
+                class="com.dubture.symfony.core.facet.InstallActionDelegate">
+          </delegate>
+       </action>
+       <action
+             facet="php.symfony.component"
+             id="php.symfony.component.uninstall"
+             type="uninstall">
+          <delegate
+                class="com.dubture.symfony.core.facet.UninstallActionDelegate">
+          </delegate>
+       </action>
+    </extension>
 
 </plugin>

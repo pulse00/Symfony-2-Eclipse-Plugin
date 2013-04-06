@@ -23,7 +23,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.commons.compress,
  org.apache.commons.io,
  org.json.simple,
- org.yaml.snakeyaml
+ org.yaml.snakeyaml,
+ org.eclipse.wst.common.project.facet.core,
+ com.dubture.composer.core,
+ com.dubture.indexing.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.dubture.symfony.core,
@@ -33,6 +36,7 @@ Export-Package: com.dubture.symfony.core,
  com.dubture.symfony.core.codeassist.strategies,
  com.dubture.symfony.core.compiler,
  com.dubture.symfony.core.event,
+ com.dubture.symfony.core.facet,
  com.dubture.symfony.core.goals,
  com.dubture.symfony.core.goals.evaluator,
  com.dubture.symfony.core.index,

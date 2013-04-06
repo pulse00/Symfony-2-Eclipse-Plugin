@@ -2,22 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="projectWizardExtension" name="Symfony New Project Wizard Extension" schema="schema/projectWizardExtension.exsd"/>	
-	
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            id="com.dubture.symfony.ui.addnature"
-            objectClass="org.eclipse.dltk.core.IScriptProject">
-         <action
-               class="com.dubture.symfony.ui.popup.actions.AddSymfonyNature"
-               enablesFor="1"
-               id="com.dubture.symfony.ui.newAction"
-               label="%action.label"
-               menubarPath="org.eclipse.ui.projectConfigure/additions">
-         </action>
-      </objectContribution>
-   </extension>
 
  <extension
        point="org.eclipse.ui.preferencePages">
@@ -203,6 +187,16 @@
         description="Insert a container parameter at the current cursor position"
         id="com.dubture.symfony.ui.command.insertParameter"
         name="Insert Parameter">
+  </command>
+  <command
+        defaultHandler="com.dubture.symfony.ui.handler.AddSymfonySupportHandler"
+        id="com.dubture.symfony.ui.command.addSymfonySupport"
+        name="Add Symfony support">
+  </command>
+  <command
+        defaultHandler="com.dubture.symfony.ui.handler.RemoveSymfonySupportHandler"
+        id="com.dubture.symfony.ui.command.removeSymfonySupport"
+        name="Remove Symfony support">
   </command>
   
 
@@ -425,6 +419,66 @@
        <command
              commandId="com.dubture.symfony.ui.command.insertParameter"
              label="Insert Symfony container parameter"
+             style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <with
+                   variable="selection">
+                <iterate
+                      ifEmpty="false"
+                      operator="and">
+                   <test
+                         forcePluginActivation="true"
+                         property="org.pdtextensions.parentProjectNature"
+                         value="com.dubture.symfony.core.symfonyNature">
+                   </test>
+                </iterate>
+             </with>
+          </visibleWhen>
+       </command>
+    </menuContribution>
+    <menuContribution
+          allPopups="false"
+          locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
+       <command
+             commandId="com.dubture.symfony.ui.command.addSymfonySupport"
+             label="Add Symfony support"
+             style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <and>
+                <with
+                      variable="selection">
+                   <iterate
+                         ifEmpty="false"
+                         operator="and">
+                      <test
+                            forcePluginActivation="true"
+                            property="org.pdtextensions.parentProjectNature"
+                            value="org.eclipse.php.core.PHPNature">
+                      </test>
+                   </iterate>
+                </with>
+                <not>
+                   <with
+                         variable="selection">
+                      <iterate
+                            ifEmpty="false"
+                            operator="and">
+                         <test
+                               forcePluginActivation="true"
+                               property="org.pdtextensions.parentProjectNature"
+                               value="com.dubture.symfony.core.symfonyNature">
+                         </test>
+                      </iterate>
+                   </with>
+                </not>
+             </and>
+          </visibleWhen>
+       </command>
+       <command
+             commandId="com.dubture.symfony.ui.command.removeSymfonySupport"
+             label="Remove Symfony support"
              style="push">
           <visibleWhen
                 checkEnabled="false">

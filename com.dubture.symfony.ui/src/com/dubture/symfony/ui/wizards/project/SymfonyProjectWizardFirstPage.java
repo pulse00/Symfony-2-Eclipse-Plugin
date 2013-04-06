@@ -172,9 +172,8 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
             final Map<String, String[]> available = new HashMap<String, String[]>();
 
-            available.put(SymfonyVersion.Symfony2_1_7.getAlias(), new String[] {SymfonyVersion.Symfony2_1_7.getAlias()});
-            available.put(SymfonyVersion.Symfony2_0_22.getAlias(), new String[] {SymfonyVersion.Symfony2_0_22.getAlias()});
-            available.put(SymfonyVersion.Symfony2_2_RC2.getAlias(), new String[] {SymfonyVersion.Symfony2_2_RC2.getAlias()});
+            available.put(SymfonyVersion.Symfony2_2_0.getAlias(), new String[] {SymfonyVersion.Symfony2_2_0.getAlias()});
+            available.put(SymfonyVersion.Symfony2_1_9.getAlias(), new String[] {SymfonyVersion.Symfony2_1_9.getAlias()});
 
             IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
 
@@ -206,9 +205,8 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
                     
                     if (layoutSelector.getSelectionIndex() <= 1) {
                     	selection = new String[]{
-                			available.get(SymfonyVersion.Symfony2_1_7.getAlias())[0],
-                			available.get(SymfonyVersion.Symfony2_0_22.getAlias())[0],
-                			available.get(SymfonyVersion.Symfony2_2_RC2.getAlias())[0]
+                			available.get(SymfonyVersion.Symfony2_2_0.getAlias())[0],
+        					available.get(SymfonyVersion.Symfony2_1_9.getAlias())[0]
     					};
                     }
                     versionSelector.setItems(selection);
@@ -241,7 +239,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
             versionSelector.doFillIntoGrid(fGroup, 2);
             layoutSelector.selectItem(0);
-            versionSelector.selectItem(1);
+            versionSelector.selectItem(0);
 
             // fPreferenceLink = new Link(fGroup, SWT.NONE);
             // fPreferenceLink
@@ -284,11 +282,15 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
         }
 
         public SymfonyVersion getSymfonyVersion() {
-            if (versionSelector.getSelectionIndex() == 0) {
-                return SymfonyVersion.Symfony2_1_7;
-            }
-
-            return null;
+        	switch (versionSelector.getSelectionIndex()) {
+        	case 0:
+        		return SymfonyVersion.Symfony2_2_0;        		
+        	case 1:
+        		return SymfonyVersion.Symfony2_1_9;
+        	default:
+        		Logger.log(Logger.WARNING, "Falling back to default symfony version during installation");
+        		return SymfonyVersion.Symfony2_2_0;
+        	}
         }
 
         @Override

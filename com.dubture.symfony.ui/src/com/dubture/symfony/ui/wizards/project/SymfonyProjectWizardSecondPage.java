@@ -34,7 +34,6 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.wizards.BuildpathDetector;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
-import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
@@ -59,16 +58,6 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 
     public SymfonyProjectWizardSecondPage(PHPProjectWizardFirstPage mainPage) {
         super(mainPage);
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.php.internal.ui.wizards.PHPProjectWizardSecondPage#performFinish(org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-    public void performFinish(IProgressMonitor monitor) throws CoreException,
-            InterruptedException
-    {
-        super.performFinish(monitor);
     }
 
     @Override
@@ -223,7 +212,9 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
     // Symfony2 requires > PHP 5.3
     protected void setPhpLangOptions() {
         ProjectOptions.setSupportingAspTags(false, getProject());
-        ProjectOptions.setPhpVersion(PHPVersion.PHP5_3, getProject());
+        
+        SymfonyProjectWizardFirstPage firstPage = (SymfonyProjectWizardFirstPage) fFirstPage;
+        ProjectOptions.setPhpVersion(firstPage.getPHPVersionValue(), getProject());
     }
 
     /**
