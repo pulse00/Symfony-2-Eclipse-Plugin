@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.dubture.symfony</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.92-SNAPSHOT</version>
+    <version>1.0.93-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>com.dubture.symfony.core</module>
@@ -19,6 +19,7 @@
 
     <properties>
         <tycho-version>0.17.0</tycho-version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <repositories>
@@ -48,27 +49,24 @@
         <repository>
             <id>pdt-nightly</id>
             <layout>p2</layout>
-            <url>http://download.eclipse.org/tools/pdt/updates/nightly/</url>
+            <url>http://download.eclipse.org/tools/pdt/updates/3.2-nightly/</url>
         </repository>
 
         <repository>
             <id>orbit</id>
             <layout>p2</layout>
-            <url>http://download.eclipse.org/tools/orbit/downloads/drops/I20130201140822/repository</url>
+            <url>http://download.eclipse.org/tools/orbit/downloads/drops/I20130403140131/repository/</url>
         </repository>
 
     </repositories>
 
-
         <dependencies>
                 <dependency>
-                        <groupId>org.getcomposer</groupId>
+                        <groupId>com.dubture</groupId>
                         <artifactId>composer-java-api</artifactId>
-                        <version>0.0.2-SNAPSHOT</version>
+                        <version>0.0.3-SNAPSHOT</version>
                 </dependency>
         </dependencies>
-
-
     <build>
         <plugins>
             <plugin>
@@ -93,6 +91,7 @@
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
+
 					<pomDependencies>consider</pomDependencies>				
 					<environments>
 						<environment>

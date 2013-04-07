@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Symfony Annotation Plugin
 Bundle-SymbolicName: com.dubture.symfony.annotation;singleton:=true
-Bundle-Version: 1.0.92.qualifier
+Bundle-Version: 1.0.93.qualifier
 Bundle-Activator: com.dubture.symfony.annotation.SymfonyAnnotationPlugin
 Bundle-Vendor: https://github.com/pulse00
 Require-Bundle: org.eclipse.core.runtime,
@@ -17,3 +17,4 @@ Export-Package: com.dubture.symfony.annotation,
  com.dubture.symfony.annotation.parser.tree,
  com.dubture.symfony.annotation.parser.tree.visitor
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .

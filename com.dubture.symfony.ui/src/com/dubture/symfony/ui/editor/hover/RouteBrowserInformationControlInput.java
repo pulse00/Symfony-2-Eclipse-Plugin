@@ -13,6 +13,7 @@ import org.eclipse.jface.internal.text.html.BrowserInformationControlInput;
 import com.dubture.symfony.index.model.Route;
 import com.dubture.symfony.ui.utils.HTMLUtils;
 
+
 /**
  * 
  * Creates the HTML for the route documentation popup when hovering over routes.
