@@ -15,9 +15,9 @@ import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.dltk.core.builder.IBuildContext;
 
-import com.dubture.symfony.annotation.parser.antlr.AnnotationLexer;
-import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
-import com.dubture.symfony.annotation.parser.antlr.error.IAnnotationErrorReporter;
+import com.dubture.doctrine.annotation.parser.antlr.AnnotationLexer;
+import com.dubture.doctrine.annotation.parser.antlr.AnnotationParser;
+import com.dubture.doctrine.annotation.parser.antlr.error.IAnnotationErrorReporter;
 import com.dubture.symfony.core.preferences.SymfonyCorePreferences;
 
 /**

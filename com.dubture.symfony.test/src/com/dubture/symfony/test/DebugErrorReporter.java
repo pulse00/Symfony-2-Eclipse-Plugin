@@ -10,7 +10,7 @@ package com.dubture.symfony.test;
 
 import org.antlr.runtime.RecognitionException;
 
-import com.dubture.symfony.annotation.parser.antlr.error.IAnnotationErrorReporter;
+import com.dubture.doctrine.annotation.parser.antlr.error.IAnnotationErrorReporter;
 
 public class DebugErrorReporter implements IAnnotationErrorReporter {
 

@@ -21,8 +21,8 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.ui.Logger;
 
-import com.dubture.symfony.annotation.model.Annotation;
-import com.dubture.symfony.annotation.parser.AnnotationCommentParser;
+import com.dubture.doctrine.annotation.model.Annotation;
+import com.dubture.doctrine.annotation.parser.AnnotationCommentParser;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.index.model.Route;
 

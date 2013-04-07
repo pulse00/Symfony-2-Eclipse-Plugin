@@ -8,7 +8,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>com.dubture.symfony.core</module>
-        <module>com.dubture.symfony.annotation</module>
         <module>com.dubture.symfony.debug</module>
         <module>com.dubture.symfony.index</module>
         <module>com.dubture.symfony.twig</module>

@@ -7,8 +7,8 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import com.dubture.symfony.annotation.model.Annotation;
-import com.dubture.symfony.annotation.parser.AnnotationCommentParser;
+import com.dubture.doctrine.annotation.model.Annotation;
+import com.dubture.doctrine.annotation.parser.AnnotationCommentParser;
 
 public class AnnotationCommentParserTest extends TestCase {
 

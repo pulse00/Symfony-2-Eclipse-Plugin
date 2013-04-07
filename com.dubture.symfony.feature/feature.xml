@@ -38,13 +38,6 @@ THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRES
    </requires>
 
    <plugin
-         id="com.dubture.symfony.annotation"
-         download-size="0"
-         install-size="0"
-         version="1.0.93.qualifier"
-         unpack="false"/>
-
-   <plugin
          id="com.dubture.symfony.core"
          download-size="0"
          install-size="0"

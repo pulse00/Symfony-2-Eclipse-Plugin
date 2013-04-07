@@ -18,16 +18,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.dubture.symfony.annotation.model.Annotation;
-import com.dubture.symfony.annotation.model.AnnotationValue;
-import com.dubture.symfony.annotation.model.ArgumentValueType;
-import com.dubture.symfony.annotation.model.ArrayValue;
-import com.dubture.symfony.annotation.model.ObjectValue;
-import com.dubture.symfony.annotation.parser.antlr.AnnotationLexer;
-import com.dubture.symfony.annotation.parser.antlr.AnnotationParser;
-import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTree;
-import com.dubture.symfony.annotation.parser.tree.AnnotationCommonTreeAdaptor;
-import com.dubture.symfony.annotation.parser.tree.visitor.AnnotationNodeVisitor;
+import com.dubture.doctrine.annotation.model.Annotation;
+import com.dubture.doctrine.annotation.model.AnnotationValue;
+import com.dubture.doctrine.annotation.model.ArgumentValueType;
+import com.dubture.doctrine.annotation.model.ArrayValue;
+import com.dubture.doctrine.annotation.model.ObjectValue;
+import com.dubture.doctrine.annotation.parser.antlr.AnnotationLexer;
+import com.dubture.doctrine.annotation.parser.antlr.AnnotationParser;
+import com.dubture.doctrine.annotation.parser.tree.AnnotationCommonTree;
+import com.dubture.doctrine.annotation.parser.tree.AnnotationCommonTreeAdaptor;
+import com.dubture.doctrine.annotation.parser.tree.visitor.AnnotationNodeVisitor;
 
 
 /**

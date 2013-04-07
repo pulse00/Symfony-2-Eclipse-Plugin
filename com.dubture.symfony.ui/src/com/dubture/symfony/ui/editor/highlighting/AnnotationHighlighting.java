@@ -16,9 +16,9 @@ import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.swt.graphics.RGB;
 
-import com.dubture.symfony.annotation.model.Annotation;
-import com.dubture.symfony.annotation.parser.AnnotationCommentParser;
-import com.dubture.symfony.annotation.parser.antlr.SourcePosition;
+import com.dubture.doctrine.annotation.model.Annotation;
+import com.dubture.doctrine.annotation.parser.AnnotationCommentParser;
+import com.dubture.doctrine.annotation.parser.antlr.SourcePosition;
 import com.dubture.symfony.core.util.AnnotationUtils;
 
 /**
