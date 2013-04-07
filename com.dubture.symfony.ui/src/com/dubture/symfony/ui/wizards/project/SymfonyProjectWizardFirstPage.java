@@ -172,7 +172,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
 
             final Map<String, String[]> available = new HashMap<String, String[]>();
 
-            available.put(SymfonyVersion.Symfony2_2_0.getAlias(), new String[] {SymfonyVersion.Symfony2_2_0.getAlias()});
+            available.put(SymfonyVersion.Symfony2_2_1.getAlias(), new String[] {SymfonyVersion.Symfony2_2_1.getAlias()});
             available.put(SymfonyVersion.Symfony2_1_9.getAlias(), new String[] {SymfonyVersion.Symfony2_1_9.getAlias()});
 
             IPreferenceStore store = SymfonyUiPlugin.getDefault().getPreferenceStore();
@@ -205,7 +205,7 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
                     
                     if (layoutSelector.getSelectionIndex() <= 1) {
                     	selection = new String[]{
-                			available.get(SymfonyVersion.Symfony2_2_0.getAlias())[0],
+                			available.get(SymfonyVersion.Symfony2_2_1.getAlias())[0],
         					available.get(SymfonyVersion.Symfony2_1_9.getAlias())[0]
     					};
                     }
@@ -284,12 +284,12 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
         public SymfonyVersion getSymfonyVersion() {
         	switch (versionSelector.getSelectionIndex()) {
         	case 0:
-        		return SymfonyVersion.Symfony2_2_0;        		
+        		return SymfonyVersion.Symfony2_2_1;        		
         	case 1:
         		return SymfonyVersion.Symfony2_1_9;
         	default:
         		Logger.log(Logger.WARNING, "Falling back to default symfony version during installation");
-        		return SymfonyVersion.Symfony2_2_0;
+        		return SymfonyVersion.Symfony2_2_1;
         	}
         }
 
@@ -308,9 +308,12 @@ public class SymfonyProjectWizardFirstPage extends PHPProjectWizardFirstPage {
         return fJavaScriptSupportGroup.shouldSupportJavaScript();
     }
 
-    // Symfony requires php 5.3
     public PHPVersion getPHPVersionValue() {
-        return PHPVersion.PHP5_3;
+		if (fVersionGroup != null) {
+			return fVersionGroup.fConfigurationBlock.getPHPVersionValue();
+		}
+		
+		return PHPVersion.PHP5_4;
     }
 
     public boolean hasSymfonyStandardEdition() {

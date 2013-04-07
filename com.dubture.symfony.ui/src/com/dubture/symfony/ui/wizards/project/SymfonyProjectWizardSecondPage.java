@@ -42,6 +42,7 @@ import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.wizards.PHPProjectWizardFirstPage;
 import org.eclipse.php.internal.ui.wizards.PHPProjectWizardSecondPage;
 
+import com.dubture.composer.core.buildpath.BuildPathManager;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.core.util.UncompressUtils;
@@ -249,16 +250,15 @@ public class SymfonyProjectWizardSecondPage extends PHPProjectWizardSecondPage {
 			}));
         }
         
-        // Setup vendor folder build path
+        
         IPath vendorPath = getSymfonyFolderPath(project, SymfonyCoreConstants.VENDOR_PATH);
-        if (vendorPath != null) {
-            entries.add(DLTKCore.newSourceEntry(vendorPath, new IPath[] {
-                new Path(SymfonyCoreConstants.SKELETON_PATTERN),
-                new Path(SymfonyCoreConstants.TEST_PATTERN),
-                new Path(SymfonyCoreConstants.TEST_PATTERN_LC),
-                new Path(SymfonyCoreConstants.CG_FIXTURE_PATTERN)
-            }));
-        }
+        IBuildpathEntry sourceEntry = DLTKCore.newSourceEntry(vendorPath, new IPath[] {
+            new Path(SymfonyCoreConstants.SKELETON_PATTERN),
+            new Path(SymfonyCoreConstants.TEST_PATTERN),
+            new Path(SymfonyCoreConstants.CG_FIXTURE_PATTERN)
+        });        
+        
+        BuildPathManager.setExclusionPattern(getScriptProject(), sourceEntry);
 
         return entries;
     }

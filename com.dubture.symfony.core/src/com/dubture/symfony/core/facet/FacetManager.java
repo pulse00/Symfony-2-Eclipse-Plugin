@@ -59,7 +59,7 @@ public class FacetManager {
 						symfonyFacet.getVersion(SymfonyFacetConstants.SYMFONY_COMPONENT_VERSION_2_1), symfonyFacet,
 						monitor);
 				break;
-			case Symfony2_2_0:
+			case Symfony2_2_1:
 				facetedProject.installProjectFacet(
 						symfonyFacet.getVersion(SymfonyFacetConstants.SYMFONY_COMPONENT_VERSION_2_2), symfonyFacet,
 						monitor);

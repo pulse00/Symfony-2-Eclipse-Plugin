@@ -30,7 +30,7 @@ public class AddSymfonySupportHandler extends AbstractHandler {
 				IAdaptable adaptable = (IAdaptable)item;
 				IProject project = ((IResource)adaptable.getAdapter(IResource.class)).getProject();
 				
-				FacetManager.installFacets(project, ProjectOptions.getDefaultPhpVersion(), SymfonyVersion.Symfony2_2_0, null);
+				FacetManager.installFacets(project, ProjectOptions.getDefaultPhpVersion(), SymfonyVersion.Symfony2_2_1, null);
 			}
 		}
 		

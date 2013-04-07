@@ -66,8 +66,7 @@ public class SymfonyCoreConstants {
     public static final String CACHE_PATTERN         = "**/cache/";
     public static final String LOG_PATTERN           = "**/logs/";
     public static final String SKELETON_PATTERN      = "**/skeleton/";
-    public static final String TEST_PATTERN          = "**/Tests/";
-    public static final String TEST_PATTERN_LC       = "**/tests/";
+    public static final String TEST_PATTERN          = "**/Test*/";
     public static final String CG_FIXTURE_PATTERN    = "**/CG/**/Fixture/";
     public static final String SRC_PATH              = "src";
     public static final String WEB_PATH              = "web";

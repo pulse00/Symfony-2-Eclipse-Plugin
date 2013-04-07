@@ -17,7 +17,7 @@ import java.util.Map;
 public enum SymfonyVersion {
 
 	Symfony2_1_9("Symfony 2.1.9"),
-	Symfony2_2_0("Symfony 2.2.0");
+	Symfony2_2_1("Symfony 2.2.1");
 	
 	private String alias;
 

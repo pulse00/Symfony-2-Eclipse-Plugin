@@ -11,14 +11,18 @@ package com.dubture.symfony.ui.wizards.project;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard;
 
+import com.dubture.composer.core.internal.resources.ComposerProject;
 import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.facet.FacetManager;
 import com.dubture.symfony.ui.SymfonyPluginImages;
@@ -61,16 +65,23 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 
 		fLastPage = fSecondPage;
 	}
+	
+	@Override
+	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
+		super.finishPage(monitor);
+		
+		System.err.println("finish page");
+	}
 
 	@Override
 	public boolean performFinish() {
 
-		System.err.println("perform wizard finish");
 		boolean res = super.performFinish();
 
 		if (res == false) {
 			return res;
 		}
+		System.err.println("perform finish");
 
 		IProject project = fLastPage.getScriptProject().getProject();
 		SymfonyProjectWizardFirstPage firstPage = (SymfonyProjectWizardFirstPage) fFirstPage;
@@ -87,6 +98,15 @@ public class SymfonyProjectCreationWizard extends PHPProjectCreationWizard {
 		}
 		SymfonyVersion version = firstPage.getSymfonyVersion();
 		FacetManager.installFacets(project, firstPage.getPHPVersionValue(), version, new NullProgressMonitor());
+		
+		try {
+			ComposerProject composerProject = new ComposerProject(project);
+			IFolder composerFolder = project.getFolder(new Path(composerProject.getVendorDir()).append("composer"));
+			composerFolder.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
 
 		return res;
 	}
