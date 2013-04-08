@@ -68,7 +68,7 @@
                 <dependency>
                         <groupId>com.dubture</groupId>
                         <artifactId>composer-java-api</artifactId>
-                        <version>0.0.3-SNAPSHOT</version>
+                        <version>0.0.3</version>
                 </dependency>
         </dependencies>
     <build>
