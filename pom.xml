@@ -6,6 +6,11 @@
     <artifactId>parent</artifactId>
     <version>1.0.93-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
+    
     <modules>
         <module>com.dubture.symfony.core</module>
         <module>com.dubture.symfony.debug</module>

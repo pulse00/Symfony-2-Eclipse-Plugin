@@ -13,4 +13,8 @@
 	<artifactId>com.dubture.symfony.core</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 </project>
