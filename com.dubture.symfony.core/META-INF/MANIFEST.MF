@@ -55,3 +55,5 @@ Export-Package: com.dubture.symfony.core,
  com.dubture.symfony.core.visitor,
  com.dubture.symfony.core.yaml.exception
 Bundle-ClassPath: .
+
+

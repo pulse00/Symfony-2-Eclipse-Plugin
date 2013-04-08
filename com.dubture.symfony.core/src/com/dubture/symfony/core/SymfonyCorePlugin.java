@@ -31,32 +31,32 @@ public class SymfonyCorePlugin extends Plugin {
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
-	    
 		super.start(bundleContext);
 		plugin = this;
 		
-		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IResourceChangeListener listener = new IResourceChangeListener()
-        {
-            
-            @Override
-            public void resourceChanged(IResourceChangeEvent event)
-            {
-                final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-                SymfonyIndexer indexer;
-                try {
-                    indexer = SymfonyIndexer.getInstance();
-                    for (IProject project : workspace.getRoot().getProjects()) {
-                        indexer.deleteServices(project.getFullPath().toString());    
-                    }
-                } catch (Exception e) {
-                    Logger.logException(e);
-                }
-            }
-        };
-        
-        workspace.addResourceChangeListener(listener, IResourceChangeEvent.PRE_BUILD);
-
+		try {
+			final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+			IResourceChangeListener listener = new IResourceChangeListener() {
+	            @Override
+	            public void resourceChanged(IResourceChangeEvent event)
+	            {
+	                final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+	                SymfonyIndexer indexer;
+	                    try {
+							indexer = SymfonyIndexer.getInstance();
+							for (IProject project : workspace.getRoot().getProjects()) {
+								indexer.deleteServices(project.getFullPath().toString());    
+							}
+						} catch (Exception e) {
+							Logger.logException(e);
+						}
+	            }
+	        };
+	        
+	        workspace.addResourceChangeListener(listener, IResourceChangeEvent.PRE_BUILD);
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
 	}
 
 	/*
