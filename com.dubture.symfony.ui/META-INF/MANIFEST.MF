@@ -31,7 +31,13 @@ Require-Bundle: org.eclipse.ui,
  org.pdtextensions.core,
  org.eclipse.wst.common.project.facet.core,
  org.eclipse.wst.common.project.facet.ui,
- org.json.simple
+ org.json.simple,
+ com.dubture.composer.ui,
+ javax.inject,
+ org.eclipse.e4.ui.di,
+ org.eclipse.e4.core.contexts,
+ org.eclipse.e4.core.di,
+ org.apache.commons.exec
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dubture.symfony.core.model,

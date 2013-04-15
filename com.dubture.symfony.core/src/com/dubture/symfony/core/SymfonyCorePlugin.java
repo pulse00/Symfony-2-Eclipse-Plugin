@@ -15,6 +15,9 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.framework.BundleContext;
 
 import com.dubture.symfony.core.log.Logger;
@@ -24,12 +27,9 @@ public class SymfonyCorePlugin extends Plugin {
 
 	public static String ID = "com.dubture.symfony.core";
 	private static SymfonyCorePlugin plugin;
+	
+	protected ScopedPreferenceStore prefStore = null;
 
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
-	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		plugin = this;
@@ -77,9 +77,16 @@ public class SymfonyCorePlugin extends Plugin {
 	private static final String isDebugMode = "com.dubture.symfony.core/debug";
 
 	public static boolean debug() {
-		
 		String debugOption = Platform.getDebugOption(isDebugMode); //$NON-NLS-1$
 		return getDefault().isDebugging() && "true".equalsIgnoreCase(debugOption); 
+	}
+	
+	public IPreferenceStore getPreferenceStore() {
 		
+		if (prefStore == null) {
+			prefStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, SymfonyCorePlugin.ID);
+		}
+		
+		return prefStore;
 	}
 }

@@ -22,6 +22,12 @@
           id="com.dubture.symfony.ui.library"
           name="%Dist">
     </page>
+    <page
+          category="com.dubture.symfony.ui.preferences.SymfonyPreferencePage"
+          class="com.dubture.symfony.ui.preferences.ConsolePreferencePage"
+          id="com.dubture.symfony.ui.consolePreferences"
+          name="Console">
+    </page>
  </extension>
  
  <extension
@@ -143,15 +149,35 @@
           class="com.dubture.symfony.ui.preferences.ServicesPreferencePage"
           id="com.dubture.symfony.ui.servicePreferencePage"
           name="%servicesPreferencePage">
+         <enabledWhen>
+            <adapt
+                  type="org.eclipse.core.resources.IProject">
+               <instanceof
+                     value="org.eclipse.core.resources.IProject">
+               </instanceof>
+               <test
+                     property="org.eclipse.core.resources.projectNature"
+                     value="com.dubture.symfony.core.symfonyNature">
+               </test>
+            </adapt>
+        </enabledWhen>
+    </page>
+    <page
+          class="com.dubture.symfony.ui.preferences.ConsolePreferencePage"
+          id="com.dubture.symfony.ui.consolePreferences"
+          name="Console">
        <enabledWhen>
           <adapt
                 type="org.eclipse.core.resources.IProject">
+             <instanceof
+                   value="org.eclipse.core.resources.IProject">
+             </instanceof>
+             <test
+                   property="org.eclipse.core.resources.projectNature"
+                   value="com.dubture.symfony.core.symfonyNature">
+             </test>
           </adapt>
        </enabledWhen>
-       <filter
-             name="nature"
-             value="com.dubture.symfony.core.symfonyNature">
-       </filter>
     </page>
  </extension>
  <extension

@@ -32,6 +32,9 @@ public class CorePreferenceConstants {
 		public static final String SYNTHETIC_SERVICES = "synthetic_services";
 		public static final String TWIG_SUPPORT = "twig_support";
 		public static final String SYMFONY_VERSION = "symfony_versio";
+		public static final String PHP_EXECUTABLE = SymfonyCorePlugin.ID + "php_executable";
+		public static final String CONSOLE = SymfonyCorePlugin.ID + "console";
+		public static final String USE_PROJECT_PHAR = SymfonyCorePlugin.ID + "use_project_phar";
 	}
 
 	

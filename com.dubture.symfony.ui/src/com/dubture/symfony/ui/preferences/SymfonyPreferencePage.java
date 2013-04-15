@@ -22,67 +22,48 @@ import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.ui.Messages;
 import com.dubture.symfony.ui.SymfonyUiPlugin;
 
-
 /**
- *
- *
- *
+ * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
- *
  */
-public class SymfonyPreferencePage extends FieldEditorPreferencePage
-implements IWorkbenchPreferencePage {
+public class SymfonyPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-    public SymfonyPreferencePage() {
-        super();
+	public SymfonyPreferencePage() {
+		super();
 
-        setPreferenceStore(SymfonyUiPlugin.getDefault().getPreferenceStore());
-        setDescription(Messages.SymfonyPreferencePage_0);
+		setPreferenceStore(SymfonyUiPlugin.getDefault().getPreferenceStore());
+		setDescription(Messages.SymfonyPreferencePage_0);
+	}
 
-    }
+	public void init(IWorkbench workbench) {
 
+	}
 
-    /* (non-Javadoc)
-    * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-    */
-    public void init(IWorkbench workbench) {
+	@Override
+	protected Control createContents(Composite parent) {
+		initializeDialogUnits(parent);
 
-    }
+		Composite result = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+		layout.marginWidth = 0;
+		layout.verticalSpacing = convertVerticalDLUsToPixels(10);
+		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+		result.setLayout(layout);
 
-    @Override
-    protected Control createContents(Composite parent) {
-        initializeDialogUnits(parent);
+		return super.createContents(parent);
+	}
 
-        Composite result = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
-        layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
-        layout.marginWidth = 0;
-        layout.verticalSpacing = convertVerticalDLUsToPixels(10);
-        layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
-        result.setLayout(layout);
+	@Override
+	protected void createFieldEditors() {
 
+		String[][] options;
 
+		options = new String[][] { { SymfonyCoreConstants.ANNOTATION_ERROR, SymfonyCoreConstants.ANNOTATION_ERROR },
+				{ SymfonyCoreConstants.ANNOTATION_WARNING, SymfonyCoreConstants.ANNOTATION_WARNING },
+				{ SymfonyCoreConstants.ANNOTATION_IGNORE, SymfonyCoreConstants.ANNOTATION_IGNORE } };
 
-
-        return super.createContents(parent);
-    }
-
-
-    @Override
-    protected void createFieldEditors() {
-
-        String[][] options;
-
-        options = new String[][]
-                {
-                { SymfonyCoreConstants.ANNOTATION_ERROR, SymfonyCoreConstants.ANNOTATION_ERROR },
-                { SymfonyCoreConstants.ANNOTATION_WARNING,  SymfonyCoreConstants.ANNOTATION_WARNING },
-                { SymfonyCoreConstants.ANNOTATION_IGNORE, SymfonyCoreConstants.ANNOTATION_IGNORE}
-                };
-
-
-        addField(new ComboFieldEditor(SymfonyCoreConstants.ANNOTATION_PROBLEM_SEVERITY, Messages.SymfonyPreferencePage_3, options, getFieldEditorParent()));
-
-
-    }
+		addField(new ComboFieldEditor(SymfonyCoreConstants.ANNOTATION_PROBLEM_SEVERITY,
+				Messages.SymfonyPreferencePage_3, options, getFieldEditorParent()));
+	}
 }

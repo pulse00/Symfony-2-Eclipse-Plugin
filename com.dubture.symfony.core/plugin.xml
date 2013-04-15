@@ -223,5 +223,12 @@
           </delegate>
        </action>
     </extension>
+    <extension
+          point="org.pdtextensions.core.executableLauncher">
+       <environmentFactory
+             class="com.dubture.symfony.core.launch.SymfonyEnvironmentFactory"
+             id="com.dubture.symfony.core.launcherfactory">
+       </environmentFactory>
+    </extension>
 
 </plugin>

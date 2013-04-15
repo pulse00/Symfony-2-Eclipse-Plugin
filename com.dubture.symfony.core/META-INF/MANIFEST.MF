@@ -26,7 +26,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.yaml.snakeyaml,
  org.eclipse.wst.common.project.facet.core,
  com.dubture.composer.core,
- com.dubture.indexing.core
+ com.dubture.indexing.core,
+ org.pdtextensions.core;bundle-version="0.16.0",
+ org.apache.commons.exec,
+ org.eclipse.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.dubture.symfony.core,
@@ -41,6 +44,7 @@ Export-Package: com.dubture.symfony.core,
  com.dubture.symfony.core.goals.evaluator,
  com.dubture.symfony.core.index,
  com.dubture.symfony.core.index.visitor,
+ com.dubture.symfony.core.launch,
  com.dubture.symfony.core.log,
  com.dubture.symfony.core.model,
  com.dubture.symfony.core.model.exception,

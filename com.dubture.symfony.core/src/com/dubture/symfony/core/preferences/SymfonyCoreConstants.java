@@ -81,6 +81,8 @@ public class SymfonyCoreConstants {
     public static final String YAML                  = "yaml";
     public static final String XML                   = "xml";
 
+	public static final String SYMFONY_STANDARD_EDITION = "symfony/framework-standard-edition";
+
 
 
 }
