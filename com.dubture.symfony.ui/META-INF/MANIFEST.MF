@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.ui,
  com.dubture.composer.core,
  com.dubture.indexing.core,
  com.dubture.doctrine.annotation,
- com.dubture.symfony.core;bundle-version="1.0.93",
+ com.dubture.symfony.core,
  com.dubture.symfony.index,
  com.dubture.doctrine.core,
  org.pdtextensions.core.ui,
@@ -37,7 +37,12 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.ui.di,
  org.eclipse.e4.core.contexts,
  org.eclipse.e4.core.di,
- org.apache.commons.exec
+ org.apache.commons.exec,
+ org.eclipse.php.server.core,
+ org.eclipse.php.debug.core,
+ com.dubture.symfony.debug,
+ org.eclipse.php.server.ui,
+ org.eclipse.ui.forms
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dubture.symfony.core.model,

@@ -21,7 +21,6 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
@@ -56,7 +55,6 @@ import com.dubture.symfony.core.model.SymfonyKernelAccess;
 import com.dubture.symfony.debug.server.SymfonyServer;
 import com.dubture.symfony.debug.util.ServerUtils;
 import com.dubture.symfony.index.model.Route;
-import com.dubture.symfony.ui.editor.EditorUtility;
 
 
 
@@ -129,8 +127,9 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
             ILaunchConfigurationType configType) {
         int entries = search == null ? 0 : search.length;
 
-        EditorUtility utility = new EditorUtility();
-        Route route = utility.getRouteAtCursor();
+        
+//        EditorUtility utility = new EditorUtility();
+        Route route = new Route("foo", "bar");
 
         for (int i = 0; i < entries; i++) {
             try {
@@ -207,6 +206,7 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
                 }
 
                 // Launch the app
+                /*
                 ILaunchConfiguration config = findLaunchConfiguration(project,
                         phpPathString, selectedURL, defaultServer, mode,
                         configType, breakAtFirstLine, showDebugDialog, res, route, utility.getProject());
@@ -219,6 +219,7 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
                     // PHPDebugUIPlugin.ID, IStatus.OK,
                     // PHPDebugUIMessages.launch_failure_no_config, null));
                 }
+                */
             } catch (CoreException ce) {
                 final IStatus stat = ce.getStatus();
                 Display.getDefault().asyncExec(new Runnable() {

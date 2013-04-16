@@ -11,17 +11,35 @@ package com.dubture.symfony.ui.wizards.project;
 import java.util.Observable;
 import java.util.concurrent.CountDownLatch;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationType;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
+import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.php.internal.server.ui.ServerLaunchConfigurationTab;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
@@ -43,6 +61,7 @@ import com.dubture.symfony.ui.job.NopJob;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
+@SuppressWarnings("restriction")
 public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 
 	public SymfonyProjectWizardSecondPage(AbstractWizardFirstPage mainPage, String title) {
@@ -71,14 +90,20 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 	}
 
 	@Override
-	@SuppressWarnings("restriction")
 	protected void beforeFinish(IProgressMonitor monitor) throws Exception {
 
 		final CountDownLatch latch = new CountDownLatch(1);
 		
 		SymfonyProjectWizardFirstPage symfonyPage = (SymfonyProjectWizardFirstPage) firstPage;
 		monitor.beginTask("Initializing Symfony project", 1);
-		CreateProjectJob projectJob = new CreateProjectJob(firstPage.nameGroup.getName(), SymfonyCoreConstants.SYMFONY_STANDARD_EDITION, symfonyPage.getSymfonyVersion());
+		IPath path = null;
+		
+		if (symfonyPage.isInLocalServer()) {
+			path = symfonyPage.getPath().removeLastSegments(1);
+		} else {
+			path = Platform.getLocation();
+		}
+		CreateProjectJob projectJob = new CreateProjectJob(path, firstPage.nameGroup.getName(), SymfonyCoreConstants.SYMFONY_STANDARD_EDITION, symfonyPage.getSymfonyVersion());
 		projectJob.setJobListener(new JobListener() {
 			@Override
 			public void jobStarted() {
@@ -154,6 +179,21 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
         	symfonyVersion = SymfonyVersion.Symfony2_1_9;
         }
         FacetManager.installFacets(getProject(), firstPage.getPHPVersionValue(), symfonyVersion, monitor);
+        
+        if (!firstPage.isInLocalServer()) {
+        	return;
+        }
+        
+        try {
+        	Server server = ServersManager.createServer(getProject().getName(), ((SymfonyProjectWizardFirstPage)firstPage).getVirtualHost());
+        	server.setDocumentRoot(getProject().getRawLocation().append("web").toOSString());
+        	ServersManager.addServer(server);
+        	ServersManager.save();
+        	
+        	createLaunchConfiguration(server, getProject().getFile(new Path("web/app_dev.php")));
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
 	}
 	
     private IPath getSymfonyFolderPath(IProject project, String folderPath) {
@@ -164,4 +204,48 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 
         return null;
     }	
+    
+    private ILaunchConfiguration createLaunchConfiguration(Server server, IFile frontController) throws CoreException {
+    	
+        ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
+        ILaunchConfigurationType  configType = lm.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
+    	
+    	if (!frontController.exists()) {
+            Logger.debugMSG("Front controller does not exist, cannot create launch configuration: " + frontController.toString());
+            return null;
+        }
+        
+        IProject project = getProject();
+        ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(getProject().getName()));
+        String debuggerID = PHPProjectPreferences.getDefaultDebuggerID(project);
+        String URL = server.getBaseURL() + "/app_dev.php";
+        AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerID);
+        
+        wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
+        wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, debuggerConfiguration.getWebLaunchDelegateClass());
+        wc.setAttribute(Server.NAME, server.getName());
+        wc.setAttribute(Server.FILE_NAME, frontController.getFullPath().toOSString());
+        wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
+        wc.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
+        wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false);
+        wc.setAttribute(Server.BASE_URL, URL);
+        wc.setAttribute(ServerLaunchConfigurationTab.AUTO_GENERATED_URL, false);
+        
+        return wc.doSave();
+    }
+    
+    protected static String getNewConfigurationName(String name) {
+
+        String configurationName = "New_configuration";
+
+        try {
+            configurationName = name;
+
+        } catch (Exception e) {
+            Logger.logException(e);
+        }
+        return DebugPlugin.getDefault().getLaunchManager()
+                .generateLaunchConfigurationName(configurationName);
+    }
+    
 }

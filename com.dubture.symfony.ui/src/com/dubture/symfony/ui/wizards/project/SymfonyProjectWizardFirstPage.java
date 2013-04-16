@@ -11,7 +11,6 @@ package com.dubture.symfony.ui.wizards.project;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.php.internal.ui.wizards.CompositeData;
-import org.eclipse.php.internal.ui.wizards.LocationGroup;
 import org.eclipse.php.internal.ui.wizards.NameGroup;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -31,7 +30,6 @@ public class SymfonyProjectWizardFirstPage extends PackageProjectWizardFirstPage
 
 	private Validator projectTemplateValidator;
 	
-	
 	@Override
 	public void createControl(Composite parent) {
 		
@@ -43,22 +41,23 @@ public class SymfonyProjectWizardFirstPage extends PackageProjectWizardFirstPage
 		initialName = "";
 		nameGroup = new NameGroup(composite, initialName, getShell());
 		nameGroup.addObserver(this);
-		PHPLocationGroup = new LocationGroup(composite, nameGroup, getShell());
+		PHPLocationGroup = new SymfonyLocationGroup(composite, nameGroup, getShell());
 		
-		final Group group = new Group(composite, SWT.None);
-		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		group.setLayout(new GridLayout(3, false));
-		group.setText("Optional information (composer.json)");
-		
-		settingsGroup = new BasicSettingsGroup(group, getShell());
-		settingsGroup.addObserver(this);
-
 		CompositeData data = new CompositeData();
 		data.setParetnt(composite);
 		data.setSettings(getDialogSettings());
 		data.setObserver(PHPLocationGroup);
 
 		versionGroup = new SymfonyVersionGroup(this, composite);
+		
+		final Group group = new Group(composite, SWT.None);
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		group.setLayout(new GridLayout(3, false));
+		group.setText("Composer info");
+		
+		settingsGroup = new BasicSettingsGroup(group, getShell());
+		settingsGroup.addObserver(this);
+		
 		nameGroup.addObserver(PHPLocationGroup);
 		nameGroup.notifyObservers();
 		projectTemplateValidator = new Validator(this);
@@ -89,5 +88,9 @@ public class SymfonyProjectWizardFirstPage extends PackageProjectWizardFirstPage
 
 	public String getSymfonyVersion() {
 		return ((SymfonyVersionGroup)versionGroup).getSymfonyVersion();
+	}
+	
+	public String getVirtualHost() {
+		return ((SymfonyLocationGroup)PHPLocationGroup).getVirtualHost();
 	}
 }
