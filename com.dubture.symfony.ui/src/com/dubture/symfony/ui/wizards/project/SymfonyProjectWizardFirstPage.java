@@ -17,18 +17,25 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.PlatformUI;
 
 import com.dubture.composer.ui.converter.String2KeywordsConverter;
-import com.dubture.composer.ui.wizard.project.BasicSettingsGroup;
 import com.dubture.composer.ui.wizard.project.template.PackageProjectWizardFirstPage;
 import com.dubture.composer.ui.wizard.project.template.Validator;
 import com.dubture.getcomposer.core.ComposerPackage;
+import com.dubture.symfony.ui.SymfonyUiPlugin;
 
 @SuppressWarnings("restriction")
 public class SymfonyProjectWizardFirstPage extends PackageProjectWizardFirstPage implements IShellProvider {
 
 	private Validator projectTemplateValidator;
+	
+	public SymfonyProjectWizardFirstPage() {
+		setPageComplete(false);
+		setTitle("Basic Symfony settings");
+		setDescription("Create a new Symfony project and select the target location");
+	}
+	
 	
 	@Override
 	public void createControl(Composite parent) {
@@ -50,14 +57,6 @@ public class SymfonyProjectWizardFirstPage extends PackageProjectWizardFirstPage
 
 		versionGroup = new SymfonyVersionGroup(this, composite);
 		
-		final Group group = new Group(composite, SWT.None);
-		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		group.setLayout(new GridLayout(3, false));
-		group.setText("Composer info");
-		
-		settingsGroup = new BasicSettingsGroup(group, getShell());
-		settingsGroup.addObserver(this);
-		
 		nameGroup.addObserver(PHPLocationGroup);
 		nameGroup.notifyObservers();
 		projectTemplateValidator = new Validator(this);
@@ -72,13 +71,13 @@ public class SymfonyProjectWizardFirstPage extends PackageProjectWizardFirstPage
 		keywordConverter = new String2KeywordsConverter(composerPackage);
 		
 		setHelpContext(composite);
+		setPageComplete(false);
 		
 	}
 
 	@Override
 	protected void setHelpContext(Control container) {
-		// TODO Auto-generated method stub
-		
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(container, SymfonyUiPlugin.PLUGIN_ID + "." + "newproject_firstpage");		
 	}
 	
 	@Override

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contexts>
+   <context id="newproject_firstpage" title="New Symfony wizard | Basic settings">
+      <description>Select the name and location for your new Symfony project. You can either create the project in your Eclipse workspace, or inside the Documentroot of your default server. 
+
+If you haven&apos;t set the Local Web Root for your Default PHP Server, click on the &quot;Configure now&quot; link on the left to open the preference page.
+
+Creating your project in the DocumentRoot of your local webserver is recommended, as the Wizard will be able to automatically create a Launch configuration for you so you can start debugging using XDebug right away.</description>
+      <topic href="http://wiki.eclipse.org/Debugging_using_XDebug" label="Debugging using XDebug"/>
+      <topic href="http://xdebug.org/" label="XDebug"/>
+      <topic href="http://www.phptherightway.com/#xdebug" label="PHP the right way"/>
+   </context>
+   <context id="newproject_secondpage" title="Composer values for your Symfony project">
+      <description>The Symfony Standard Edition comes with a default composer.json containing values you probably want to override for your project.
+
+By filling values on this page, your composer.json values of your project will be customized.</description>
+   </context>
+</contexts>

@@ -12,6 +12,7 @@ import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.SelectionButtonDialogField;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -19,11 +20,15 @@ import org.eclipse.php.internal.ui.wizards.NameGroup;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import com.dubture.composer.ui.wizard.LocationGroup;
 
@@ -49,13 +54,38 @@ public class SymfonyLocationGroup extends LocationGroup {
 		
 	}
 	
+	protected void createNoLocalServersFound(Group group, int numColumns) {
+		
+		Link link = new Link(group, SWT.WRAP | SWT.READ_ONLY | SWT.MULTI);
+		link.setText("You haven't configured a local web root for your default server. By configuring one, the Symfony wizard will automatically create a launch configuration to be used with XDebug for new projects. \n\n<a>Configure one now</a>");
+		
+		GridDataFactory.fillDefaults().grab(true, false).hint(350, SWT.DEFAULT).applyTo(link);
+		link.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String id = "org.eclipse.php.server.internal.ui.PHPServersPreferencePage";
+				PreferenceDialog preferenceDialog = PreferencesUtil.createPreferenceDialogOn(shell, id, new String[] {}, null);
+				preferenceDialog.open();
+			}
+		});
+	}
+	
+	
 	@Override
 	protected void createLocalServersGroup(Group group, int numColumns) {
 		Server[] servers = ServersManager.getServers();
+		Server defaultServer = ServersManager.getDefaultServer(null);
+		int initialSelection = 0;
+		
 		List<String> docRoots = new ArrayList<String>();
 		for (int i = 0; i < servers.length; i++) {
+			
 			String docRoot = servers[i].getDocumentRoot();
 			if (docRoot != null && !"".equals(docRoot.trim())) { //$NON-NLS-1$
+				if (defaultServer != null && defaultServer.getBaseURL().equals(servers[i].getBaseURL())) {
+					initialSelection = i;
+				}
 				docRoots.add(docRoot);
 			}
 		}
@@ -77,7 +107,7 @@ public class SymfonyLocationGroup extends LocationGroup {
 			docRootArray = new String[docRoots.size()];
 			docRoots.toArray(docRootArray);
 			fSeverLocationList.setItems(docRootArray);
-			fSeverLocationList.selectItem(0);
+			fSeverLocationList.selectItem(initialSelection);
 			fLocalServerRadio.attachDialogField(fSeverLocationList);
 			fWorkspaceRadio.setSelection(false);
 			fLocalServerRadio.setSelection(true);
@@ -121,7 +151,7 @@ public class SymfonyLocationGroup extends LocationGroup {
 	}
 	
 	public void update(Observable o, Object arg) {
-		if (isInWorkspace()) {
+		if (isInWorkspace() && fLocation != null && fNameGroup != null) {
 			fLocation.setText(getDefaultPath(fNameGroup.getName()));
 		}
 		if (docRootArray != null && docRootArray.length > 0) {
@@ -143,6 +173,9 @@ public class SymfonyLocationGroup extends LocationGroup {
 
 	public void dialogFieldChanged(DialogField field) {
 		
+		if (field == fCustomHost) {
+			fVirtualHost.setEnabled(fCustomHost.isSelected());
+		}
 		fireEvent();
 	}
 

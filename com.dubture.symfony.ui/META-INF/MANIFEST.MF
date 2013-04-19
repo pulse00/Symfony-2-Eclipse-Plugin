@@ -42,7 +42,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.php.debug.core,
  com.dubture.symfony.debug,
  org.eclipse.php.server.ui,
- org.eclipse.ui.forms
+ org.eclipse.ui.forms,
+ org.eclipse.php.debug.ui,
+ org.eclipse.help
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dubture.symfony.core.model,
