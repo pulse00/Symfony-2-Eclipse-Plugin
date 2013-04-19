@@ -23,19 +23,24 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.dubture.symfony.core.SymfonyCorePlugin;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.parser.XMLConfigParser;
 import com.dubture.symfony.core.parser.YamlConfigParser;
 import com.dubture.symfony.core.parser.YamlRoutingParser;
 import com.dubture.symfony.core.parser.YamlTranslationParser;
 import com.dubture.symfony.core.preferences.ProjectOptions;
+import com.dubture.symfony.core.preferences.CorePreferenceConstants.Keys;
 import com.dubture.symfony.core.util.TranslationUtils;
 import com.dubture.symfony.index.SymfonyIndexer;
 import com.dubture.symfony.index.model.Route;
@@ -75,8 +80,12 @@ public abstract class AbstractSymfonyVisitor {
 		file = (IFile) resource;
 		path = resource.getFullPath();
 		timestamp = (int) resource.getLocalTimeStamp();
+		
+		IEclipsePreferences node = new ProjectScope(scriptProject.getProject()).getNode(SymfonyCorePlugin.ID);
+		String container = node.get(Keys.DUMPED_CONTAINER, null);
+		
 
-		if (resource.getName().toLowerCase().endsWith("devdebugprojectcontainer.xml")) {
+		if (container != null && resource.getFullPath().removeFirstSegments(1).equals(new Path(container))) {
 			loadDumpedXmlContainer(resource);
 			built = true;
 		} else if ("xml".equals(resource.getFileExtension()) && isOnBuildPath) {

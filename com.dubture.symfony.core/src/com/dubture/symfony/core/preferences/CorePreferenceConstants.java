@@ -35,6 +35,7 @@ public class CorePreferenceConstants {
 		public static final String PHP_EXECUTABLE = SymfonyCorePlugin.ID + "php_executable";
 		public static final String CONSOLE = SymfonyCorePlugin.ID + "console";
 		public static final String USE_PROJECT_PHAR = SymfonyCorePlugin.ID + "use_project_phar";
+		public static final String DUMPED_CONTAINER = SymfonyCorePlugin.ID + "dumped_container";
 	}
 
 	

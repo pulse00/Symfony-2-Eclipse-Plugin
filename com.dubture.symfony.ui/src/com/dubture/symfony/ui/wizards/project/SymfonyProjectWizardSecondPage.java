@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -27,6 +28,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
@@ -40,6 +43,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
+import org.osgi.service.prefs.BackingStoreException;
 import org.pdtextensions.core.debug.LaunchConfigurationHelper;
 
 import com.dubture.composer.core.buildpath.BuildPathManager;
@@ -50,9 +54,11 @@ import com.dubture.composer.ui.wizard.AbstractWizardFirstPage;
 import com.dubture.composer.ui.wizard.AbstractWizardSecondPage;
 import com.dubture.composer.ui.wizard.project.BasicSettingsGroup;
 import com.dubture.getcomposer.core.ComposerPackage;
+import com.dubture.symfony.core.SymfonyCorePlugin;
 import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.facet.FacetManager;
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.core.preferences.CorePreferenceConstants.Keys;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.ui.SymfonyUiPlugin;
 import com.dubture.symfony.ui.job.NopJob;
@@ -179,7 +185,28 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 				job.addJobChangeListener(new JobChangeAdapter() {
 					@Override
 					public void done(IJobChangeEvent event) {
+						//now that the container has been dumped...
+						IProject project = getProject();
+						if (project == null) {
+							Logger.log(Logger.WARNING, "Could not retrieve project for saving the debug container");
+							return;
+						}
 						
+						IFile dumpedContainer = project.getFile("app/cache/dev/appDevDebugProjectContainer.xml");
+						
+						if (dumpedContainer == null || dumpedContainer.exists() == false) {
+							Logger.log(Logger.WARNING, "Could not retrieve project for saving the debug container");
+							return;
+						}
+						
+						try {
+							Logger.debugMSG("Setting dumped service container");
+							IEclipsePreferences node = new ProjectScope(project).getNode(SymfonyCorePlugin.ID);
+							node.put(Keys.DUMPED_CONTAINER, dumpedContainer.getFullPath().removeFirstSegments(1).toOSString());
+							node.flush();
+						} catch (BackingStoreException e) {
+							Logger.logException(e);
+						}
 					}
 				});
 				
@@ -224,6 +251,8 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
         		updateComposerJson(monitor);
         	}
         	
+        	createProjectSettings();
+        	
         	if (!firstPage.isInLocalServer()) {
         		return;
         	}
@@ -234,6 +263,19 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
+	}
+	
+	protected void createProjectSettings() throws BackingStoreException {
+		
+		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(SymfonyCorePlugin.ID);
+		String executable = preferences.get(Keys.PHP_EXECUTABLE, null);
+		
+		IEclipsePreferences node = new ProjectScope(getProject()).getNode(SymfonyCorePlugin.ID);
+		node.put(Keys.PHP_EXECUTABLE, executable);
+		node.put(Keys.CONSOLE, "app/console");
+		node.put(Keys.USE_PROJECT_PHAR, "false");
+		node.flush();
+		
 	}
 	
     private void updateComposerJson(IProgressMonitor monitor) throws IOException, CoreException {
