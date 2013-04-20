@@ -15,4 +15,13 @@ Creating your project in the DocumentRoot of your local webserver is recommended
 
 By filling values on this page, your composer.json values of your project will be customized.</description>
    </context>
+   <context id="import_firstpage" title="Importing an existing Symfony project">
+      <description>This wizard helps you to import existing Symfony projects into your Eclipse workspace. 
+
+After selecting the location of your existing project, the wizard will scan the project for a dumped service container and a console script.
+
+The dumped service container is used to parse the services in your project and provide type inference for your services in your PHP code.
+
+The console script is needed to execute Symfony console commands.</description>
+   </context>
 </contexts>

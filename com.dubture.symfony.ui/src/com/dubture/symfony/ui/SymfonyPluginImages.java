@@ -57,6 +57,7 @@ public class SymfonyPluginImages {
     private static final String T_WIZBAN = "wizban"; //$NON-NLS-1$
 
     public static final ImageDescriptor DESC_WIZBAN_ADD_SYMFONY_FILE = create(T_WIZBAN, "newpfile_wiz.gif");//$NON-NLS-1$
+    public static final ImageDescriptor DESC_WIZBAN_IMPORT_PROJECT = create(T_WIZBAN, "importer.gif");//$NON-NLS-1$
 
     private static ImageDescriptor createManagedFromKey(String prefix, String key) {
         return createManaged(prefix, key.substring(NAME_PREFIX_LENGTH), key);

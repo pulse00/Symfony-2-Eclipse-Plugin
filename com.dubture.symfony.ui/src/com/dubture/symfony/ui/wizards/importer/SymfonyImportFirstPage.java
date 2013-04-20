@@ -29,12 +29,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.ui.PlatformUI;
 
 import com.dubture.getcomposer.core.ComposerPackage;
 import com.dubture.getcomposer.core.VersionedPackage;
 import com.dubture.getcomposer.core.collection.Dependencies;
 import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.ui.SymfonyPluginImages;
+import com.dubture.symfony.ui.SymfonyUiPlugin;
 
 /**
  * @author Robert Gruendler <r.gruendler@gmail.com>
@@ -68,6 +71,9 @@ public class SymfonyImportFirstPage extends WizardPage {
 		super(pageName);
 		scanner = new SymfonyProjectScanner();
 		workspace = ResourcesPlugin.getWorkspace();
+		setTitle("Import Symfony project");
+		setDescription("Import an existing Symfony project into your workspace");
+		setImageDescriptor(SymfonyPluginImages.DESC_WIZBAN_IMPORT_PROJECT);
 	}
 
 	@Override
@@ -160,6 +166,8 @@ public class SymfonyImportFirstPage extends WizardPage {
 		consoleButton.doFillIntoGrid(container, 3);
 		
 		LayoutUtil.setHorizontalGrabbing(consoleButton.getTextControl(null));
+		
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(container, SymfonyUiPlugin.PLUGIN_ID + "." + "import_firstpage");
 		
 		disableButtons();
 		
@@ -344,21 +352,43 @@ public class SymfonyImportFirstPage extends WizardPage {
 	}
 	
 	public void validateProjectName() throws ValidationException {
-		IProject project = workspace.getRoot().getProject(projectName);
-		if (project != null && project.exists()) {
-			throw new ValidationException("A project with the same name already exists in the workspace.");
+		
+		try {
+			IProject project = workspace.getRoot().getProject(projectName);
+			if (project != null && project.exists()) {
+				throw new ValidationException("A project with the same name already exists in the workspace.");
+			}
+		} catch (Exception e) {
+			throw new ValidationException(e.getMessage());
 		}
 	}
 	
 	public void validateContainerPath() throws ValidationException {
-		if (containerPath == null || containerPath.toFile().exists() == false) {
+		try {
+			validatePath(containerPath.toOSString());
+		} catch (Exception e) {
 			throw new ValidationException("The selected service container does not exist.");
 		}
 	}
 	
 	public void validateConsolePath() throws ValidationException {
-		if (consolePath== null || consolePath.toFile().exists() == false) {
+		try {
+			validatePath(consolePath.toOSString());
+		} catch (Exception e) {
 			throw new ValidationException("The selected Symfony console does not exist.");
+		}
+	}
+	
+	public void validatePath(String path) throws ValidationException {
+
+		if (sourcePath == null) {
+			throw new ValidationException("");
+		}
+		
+		File absolute = new File(sourcePath.toOSString(), path);
+		
+		if (absolute.exists() == false) {
+			throw new ValidationException("");			
 		}
 	}
 	
@@ -370,6 +400,7 @@ public class SymfonyImportFirstPage extends WizardPage {
 		} catch (ValidationException e) {
 			setErrorMessage(e.getMessage());
 			setPageComplete(false);
+			return;
 		}
 		
 		setPageComplete(true);

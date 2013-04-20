@@ -25,12 +25,15 @@
           name="%Dist">
     </page>
     -->
+    <!-- Makes only sense on a project level-->
+    <!--
     <page
           category="com.dubture.symfony.ui.preferences.SymfonyPreferencePage"
           class="com.dubture.symfony.ui.preferences.ConsolePreferencePage"
           id="com.dubture.symfony.ui.consolePreferences"
           name="Console">
     </page>
+    -->
  </extension>
  
  <extension
@@ -599,6 +602,7 @@
     <wizard
           category="org.eclipse.php.ui.PHP"
           class="com.dubture.symfony.ui.wizards.importer.SymfonyImportWizard"
+          icon="ico/full/obj16/symfony_icon_16.png"
           id="com.dubture.symfony.ui.importWizard"
           name="Symfony Project">
     </wizard>
