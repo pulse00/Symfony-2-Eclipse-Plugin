@@ -192,7 +192,7 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 							return;
 						}
 						
-						IFile dumpedContainer = project.getFile("app/cache/dev/appDevDebugProjectContainer.xml");
+						IFile dumpedContainer = project.getFile(SymfonyCoreConstants.DEFAULT_CONTAINER);
 						
 						if (dumpedContainer == null || dumpedContainer.exists() == false) {
 							Logger.log(Logger.WARNING, "Could not retrieve project for saving the debug container");
@@ -272,8 +272,8 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 		
 		IEclipsePreferences node = new ProjectScope(getProject()).getNode(SymfonyCorePlugin.ID);
 		node.put(Keys.PHP_EXECUTABLE, executable);
-		node.put(Keys.CONSOLE, "app/console");
-		node.put(Keys.USE_PROJECT_PHAR, "false");
+		node.put(Keys.CONSOLE, SymfonyCoreConstants.DEFAULT_CONSOLE);
+		node.put(Keys.USE_PROJECT_PHAR, Boolean.FALSE.toString());
 		node.flush();
 		
 	}

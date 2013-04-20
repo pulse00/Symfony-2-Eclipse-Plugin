@@ -594,6 +594,15 @@
           file="help/contexts.xml">
     </contexts>
  </extension>
+ <extension
+       point="org.eclipse.ui.importWizards">
+    <wizard
+          category="org.eclipse.php.ui.PHP"
+          class="com.dubture.symfony.ui.wizards.importer.SymfonyImportWizard"
+          id="com.dubture.symfony.ui.importWizard"
+          name="Symfony Project">
+    </wizard>
+ </extension>
  
  
  

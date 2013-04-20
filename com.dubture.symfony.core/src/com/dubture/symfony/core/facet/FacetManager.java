@@ -70,7 +70,7 @@ public class FacetManager {
 			
 			IndexingCorePlugin.getDefault().setupBuilder(project);
 
-		} catch (CoreException ex) {
+		} catch (Exception ex) {
 			Logger.logException(ex.getMessage(), ex);
 		}
 	}

@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IStringButtonAdapter;
+import org.eclipse.dltk.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.StringButtonDialogField;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -25,6 +26,7 @@ import org.osgi.service.prefs.BackingStoreException;
 import com.dubture.symfony.core.SymfonyCorePlugin;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.preferences.CorePreferenceConstants.Keys;
+import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 
 @SuppressWarnings("restriction")
 public class SymfonyProjectPropertyPage extends PropertyPage implements IWorkbenchPropertyPage {
@@ -34,7 +36,6 @@ public class SymfonyProjectPropertyPage extends PropertyPage implements IWorkben
 	private IEclipsePreferences node;
 
 	public SymfonyProjectPropertyPage() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -56,6 +57,7 @@ public class SymfonyProjectPropertyPage extends PropertyPage implements IWorkben
 		containerPath.setButtonLabel("Browse");
 		containerPath.doFillIntoGrid(container, 3);
 		containerPath.getTextControl(null).setEnabled(false);
+		LayoutUtil.setHorizontalGrabbing(containerPath.getTextControl(null));
 		
 		IAdaptable element2 = getElement();
 		
@@ -73,7 +75,7 @@ public class SymfonyProjectPropertyPage extends PropertyPage implements IWorkben
 	
 	protected void loadContainer() {
 		node = new ProjectScope(project).getNode(SymfonyCorePlugin.ID);
-		String container = node.get(Keys.DUMPED_CONTAINER, "app/cache/dev/appDevDebugProjectContainer.xml");
+		String container = node.get(Keys.DUMPED_CONTAINER, SymfonyCoreConstants.DEFAULT_CONTAINER);
 		containerPath.setText(container);
 	}
 	

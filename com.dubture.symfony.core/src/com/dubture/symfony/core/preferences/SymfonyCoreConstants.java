@@ -58,6 +58,8 @@ public class SymfonyCoreConstants {
     public static final String SYMFONY_VERSION       = "symfony_version";
 
     // Paths
+    public static final String DEFAULT_CONSOLE		 = "app/console";
+    public static final String DEFAULT_CONTAINER     = "app/cache/dev/appDevDebugProjectContainer.xml";
     public static final String APP_PATH              = "app";
     public static final String VENDOR_PATH           = "vendor";
     public static final String CACHE_PATH            = "app/cache";
