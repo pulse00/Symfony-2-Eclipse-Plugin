@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.ui.Messages;
@@ -50,6 +51,8 @@ public class SymfonyPreferencePage extends FieldEditorPreferencePage implements 
 		layout.verticalSpacing = convertVerticalDLUsToPixels(10);
 		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
 		result.setLayout(layout);
+		
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SymfonyUiPlugin.PLUGIN_ID + "." + "symfony_preferences");
 
 		return super.createContents(parent);
 	}

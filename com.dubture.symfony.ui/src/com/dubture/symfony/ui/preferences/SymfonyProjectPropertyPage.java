@@ -17,6 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPropertyPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
@@ -27,6 +28,7 @@ import com.dubture.symfony.core.SymfonyCorePlugin;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.preferences.CorePreferenceConstants.Keys;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
+import com.dubture.symfony.ui.SymfonyUiPlugin;
 
 @SuppressWarnings("restriction")
 public class SymfonyProjectPropertyPage extends PropertyPage implements IWorkbenchPropertyPage {
@@ -69,6 +71,8 @@ public class SymfonyProjectPropertyPage extends PropertyPage implements IWorkben
 		}
 		
 		loadContainer();
+		
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SymfonyUiPlugin.PLUGIN_ID + "." + "symfony_property_page");
 		
 		return container;
 	}

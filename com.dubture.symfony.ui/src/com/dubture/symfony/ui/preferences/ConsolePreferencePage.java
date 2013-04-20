@@ -5,9 +5,11 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 import com.dubture.symfony.core.SymfonyCorePlugin;
+import com.dubture.symfony.ui.SymfonyUiPlugin;
 
 @SuppressWarnings("restriction")
 public class ConsolePreferencePage extends PropertyAndPreferencePage {
@@ -28,6 +30,7 @@ public class ConsolePreferencePage extends PropertyAndPreferencePage {
 	public void createControl(Composite parent) {
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
 		configurationBlock = new SymfonyLauncherConfigurationBlock(getNewStatusChangedListener(), getProject(), container, new SymfonyLauncherBag());
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SymfonyUiPlugin.PLUGIN_ID + "." + "symfony_launcher");
 		super.createControl(parent);
 	}
 	

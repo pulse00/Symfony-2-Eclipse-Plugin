@@ -24,4 +24,27 @@ The dumped service container is used to parse the services in your project and p
 
 The console script is needed to execute Symfony console commands.</description>
    </context>
+   <context id="symfony_preferences" title="General Symfony preferences">
+      <description>The Symfony plugin validates xml files containing service declarations. If a service class does not exist, it will provide a validation marker. This marker has a quick-fix attached to it, which will allow you to create the missing class automatically.
+
+The Validation dropdown on the left allows you to specify the type of severity of the marker being set.
+
+You can set this to &quot;Ignore&quot; to disable validation.</description>
+      <topic href="http://symfony.com/doc/current/book/service_container.html" label="Symfony Service Container"/>
+   </context>
+   <context id="symfony_services_preference">
+      <description>Some Symfony services are instantiated during runtime. These services are called &quot;synthetic&quot; and cannot be inferred from reading your service descriptions.
+
+To allow type inference for synthetic services, you can specify the Service ID and the associated PHP class in the dialog on the left.</description>
+   </context>
+   <context id="symfony_property_page" title="Symfony project properties">
+      <description>To provide type inference for your Symfony services, Eclipse needs to parse your service definitions. This is done by reading the dumped service container, which is created automatically by Symfony.
+
+When you create a new Symfony project, the path to the dumped container is set automatically, but you can choose a custom container path by changing the container path on the left.</description>
+      <topic href="http://symfony.com/doc/current/components/dependency_injection/compilation.html" label="Symfony Dependency Injection"/>
+   </context>
+   <context id="symfony_launcher" title="Symfony console configuration">
+      <description>This page allows you to select the PHP executable and the console script which will be used to launch Symfony commands from within Eclipse.</description>
+      <topic href="http://symfony.com/doc/2.0/components/console/introduction.html" label="The Symfony Console Component"/>
+   </context>
 </contexts>
