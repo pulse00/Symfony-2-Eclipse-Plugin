@@ -13,12 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import com.dubture.symfony.index.log.Logger;
-
 /**
- *
  * Represents a Symfony route.
- * 
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  */
@@ -29,129 +25,110 @@ public class Route {
 	public String controller;
 	public String action;
 	public String bundle;
-	
+
 	private Map<String, RouteParameter> parameters = null;
-	
+
 	public Route(String bundle, String controller, String action, String name, String pattern) {
-		
 		this.bundle = bundle;
 		this.controller = controller;
 		this.action = action;
 		this.name = name;
 		this.pattern = pattern.replace("\"", "").replace("'", "");
 	}
-	
+
 	public Route(String name, String pattern, String viewPath) {
-		
 		this.name = name;
 		this.pattern = pattern;
-		
-		try {
-			
-			StringTokenizer tokenizer = new StringTokenizer(viewPath, ":");
-			
+		StringTokenizer tokenizer = new StringTokenizer(viewPath, ":");
+		if (tokenizer.hasMoreTokens()) {
 			this.bundle = tokenizer.nextToken();
+		}
+		if (tokenizer.hasMoreTokens()) {
 			this.controller = tokenizer.nextToken();
+		}
+		if (tokenizer.hasMoreTokens()) {
 			this.action = tokenizer.nextToken();
-			
-		} catch (Exception e) {
-
-			Logger.logException(e);
 		}
 	}
 
 	public Route(String name2, String pattern2) {
-
 		name = name2;
 		pattern = pattern2;
 	}
-	
-	
+
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return name + " => " + pattern + " => " + getViewPath();
 	}
 
-	public void setAction(String action) 
-	{
+	public void setAction(String action) {
 		this.action = action;
 	}
-	
-	public String getAction()
-	{
+
+	public String getAction() {
 		return action;
 	}
 
-	public String getViewPath()
-	{
+	public String getViewPath() {
 		return String.format("%s:%s:%s", bundle, controller, action);
 	}
-	
-	public String getName()
-	{
+
+	public String getName() {
 		return name;
 	}
-	
-	public String getController()
-	{
+
+	public String getController() {
 		return controller;
 	}
-	
-	public boolean hasParameters()
-	{
-		return pattern.contains(RouteParameter.LEFT_DELIM);		
+
+	public boolean hasParameters() {
+		return pattern.contains(RouteParameter.LEFT_DELIM);
 	}
 
-	public Map<String, RouteParameter> getParameters()
-	{
-		if(parameters != null)
+	public Map<String, RouteParameter> getParameters() {
+		if (parameters != null) {
 			return parameters;
-		
+		}
+
 		parameters = new HashMap<String, RouteParameter>();
-		
+
 		String route = pattern;
 		String[] parts = route.split("\\/");
-		
-		for (String part : parts) {			
+
+		for (String part : parts) {
 			if (part.startsWith(RouteParameter.LEFT_DELIM)) {
-				
-				RouteParameter param = new RouteParameter(part);				
+
+				RouteParameter param = new RouteParameter(part);
 				parameters.put(param.getName(), param);
 			}
-		}		
-		
+		}
+
 		return parameters;
-		
 	}
 
-	public String getURL(Collection<RouteParameter> collection, String prefix)
-	{
+	public String getURL(Collection<RouteParameter> collection, String prefix) {
 		String url = pattern;
-		
 		for (RouteParameter param : collection) {
-			String regex = String.format("{%s}", param.getName());			
+			String regex = String.format("{%s}", param.getName());
 			url = url.replace(regex, param.getValue());
 		}
-	
-		if (prefix != null)
-			url = prefix + url;
-		
-		return url;
 
+		if (prefix != null) {
+			url = prefix + url;
+		}
+
+		return url;
 	}
-	
-	public String getURL(String prefix)
-	{
-		if (prefix != null)
+
+	public String getURL(String prefix) {
+		if (prefix != null) {
 			return prefix + pattern;
-		
+		}
+
 		return pattern;
-				
-	}	
-	
-	public String getPattern()
-	{
-	    return pattern;
+	}
+
+	public String getPattern() {
+		return pattern;
 	}
 }
