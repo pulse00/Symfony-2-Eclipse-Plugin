@@ -7,7 +7,7 @@ import com.dubture.symfony.test.AbstractCodeAssistTest;
 public class ServiceCodeAssistTest extends AbstractCodeAssistTest {
 
 	public ServiceCodeAssistTest() {
-		super("codeassist");
+		super("services");
 	}
 	
 	@Test
