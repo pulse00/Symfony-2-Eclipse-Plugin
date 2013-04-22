@@ -3,6 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-SymbolicName: com.dubture.symfony.test
 Bundle-Version: 1.0.93.qualifier
-Fragment-Host: com.dubture.symfony.core;bundle-version="1.0.0.qualifier"
+Bundle-Vendor: https://github.com/pulse00
+Fragment-Host: com.dubture.symfony.core;bundle-version="0.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit
+Require-Bundle: org.junit,
+ org.eclipse.dltk.core.tests,
+ org.eclipse.php.core.tests,
+ org.apache.commons.lang

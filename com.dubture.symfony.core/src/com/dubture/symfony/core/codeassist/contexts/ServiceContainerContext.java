@@ -53,7 +53,7 @@ public class ServiceContainerContext extends
 					return false;	
 				}
 
-				if (requestor == null || !requestor.getClass().toString().contains("Symfony"))
+				if (requestor == null || !requestor.getClass().toString().toLowerCase().contains("symfony"))
 				    return false;
 				
 				TextSequence statementText = getStatementText();

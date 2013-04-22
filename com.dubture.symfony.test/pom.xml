@@ -19,11 +19,16 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<useUIHarness>false</useUIHarness>
-					<useUIThread>false</useUIThread>
-					<excludes>
-						<exclude>**/DebugErrorReporter.java</exclude>
-					</excludes>
+					<parallel>classes</parallel>
+					<threadCount>1</threadCount>
+	      			<testSuite>com.dubture.symfony.test</testSuite>
+    	  			<testClass>com.dubture.symfony.test.AllTests</testClass>
+	      			<dependencies>
+						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
+						</dependency>
+					</dependencies>
 				</configuration>
 			</plugin>
 		</plugins>

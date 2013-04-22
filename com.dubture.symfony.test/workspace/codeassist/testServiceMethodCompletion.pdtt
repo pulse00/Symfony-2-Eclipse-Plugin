@@ -1,0 +1,14 @@
+--TEST--
+Should complete methods from the session service
+--FILE--
+<?
+namespace NS;
+class A {
+	function goo() {
+		$this->get('session')->|
+	}
+}
+?>
+--EXPECT--
+method(sessionTest)
+method(someOtherMethod)
