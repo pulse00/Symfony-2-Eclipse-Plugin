@@ -66,18 +66,14 @@ public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
         EntityAlias alias = context.getAlias();
         String prefix = context.getPrefix();
         
-        System.err.println("######################################################### AHAHAHAHAHA");
-
         if (alias.hasBundle() == false) {
             List<Bundle> bundles = model.findBundles(project);
             for (Bundle b : bundles) {
                 IType[] bundleTypes = PhpModelAccess.getDefault().findTypes(b.getElementName(), MatchRule.EXACT, 0, 0, projectScope, null);
-                System.err.println("aha " + bundleTypes.length);
                 if (bundleTypes.length == 1) {
                     ModelElement bType = (ModelElement) bundleTypes[0];
                     if (CodeAssistUtils.startsWithIgnoreCase(bType.getElementName(), prefix)) {
                         Bundle bundleType = new Bundle(bType, b.getElementName());
-                        System.err.println("report " + bundleType.getElementName());
                         reporter.reportType(bundleType, ":", range);
                     }
                 }

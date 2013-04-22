@@ -87,8 +87,6 @@ abstract public class AbstractCodeAssistTest extends TestCase {
 			return;
 		}
 		
-		System.err.println("CREATE NEW PROJECt");
-		
 		project = setUpProject(projectName);
 		
 		IProjectDescription desc = project.getDescription();
@@ -127,7 +125,6 @@ abstract public class AbstractCodeAssistTest extends TestCase {
 			if (res.getName().startsWith(".")) {
 				continue;
 			}
-			System.err.println("DELETE " + res.getName());
 			res.delete(true, null);
 		}
 		

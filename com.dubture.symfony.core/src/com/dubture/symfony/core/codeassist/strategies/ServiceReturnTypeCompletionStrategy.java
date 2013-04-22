@@ -58,7 +58,6 @@ public class ServiceReturnTypeCompletionStrategy extends ClassMembersStrategy {
 	public void apply(ICompletionReporter reporter) throws Exception {
 
 		ServiceReturnTypeContext context = (ServiceReturnTypeContext) getContext();
-		
 		IScriptProject project = context.getSourceModule().getScriptProject();
 		String source = SymfonyTextSequenceUtilities.getServiceFromMethodParam(context.getStatementText());
 		
@@ -66,18 +65,10 @@ public class ServiceReturnTypeCompletionStrategy extends ClassMembersStrategy {
 			return;
 		
 		Service service = SymfonyModelAccess.getDefault().findService(source, project.getPath());
-		
-		System.err.println(context.getSourceModule().getSource());
-		System.err.println("statemetn text");
-		System.err.println(context.getStatementText());
-		System.err.println("FOUND SERVICE for " + source);
-		System.err.println(service.getElementName());
-
 		if (service == null) {
 			return;
 		}
 
-		
 		//TODO: the corresponding IType of a service should be searched for
 		// at the point where the service is created during the build process
 		// if that's possible.
@@ -85,7 +76,6 @@ public class ServiceReturnTypeCompletionStrategy extends ClassMembersStrategy {
 		// this way, we could avoid the SearchEngine call here
 		
 		String namespace = service.getSimpleNamespace();
-		
 		IType[] types = getTypes(context, service.getClassName(), namespace);
 		
 		if (types.length != 1) {

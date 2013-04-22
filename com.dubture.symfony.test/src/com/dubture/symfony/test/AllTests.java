@@ -6,12 +6,11 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.dubture.symfony.test.codeassist.DoctrineCodeAssistTest;
 import com.dubture.symfony.test.codeassist.SymfonyCodeAssistTest;
-import com.dubture.symfony.test.codeassist.SymfonyCodeAssistTest2;
 
 @RunWith(Suite.class)
 @SuiteClasses({ AnnotationCommentParserTest.class, AnnotationParserTest.class, IndexTest.class, ModelUtilsTest.class,
 		PathUtilsTest.class, RoutingParserTest.class, TextSequenceUtilityTest.class, XMLParserTest.class,
-		YamlTest.class, SymfonyCodeAssistTest.class, SymfonyCodeAssistTest2.class, DoctrineCodeAssistTest.class })
+		YamlTest.class, SymfonyCodeAssistTest.class, DoctrineCodeAssistTest.class })
 public class AllTests {
 
 }
