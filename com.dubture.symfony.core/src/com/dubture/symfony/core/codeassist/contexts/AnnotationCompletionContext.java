@@ -8,7 +8,6 @@
  ******************************************************************************/
 package com.dubture.symfony.core.codeassist.contexts;
 
-import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
@@ -34,15 +33,13 @@ public class AnnotationCompletionContext extends PHPDocTagContext {
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
 
-		if (!super.isValid(sourceModule, offset, requestor) == true)
+		if (!super.isValid(sourceModule, offset, requestor) == true) {
 			return false;
+		}
 
 		try {
-			
-			IProjectNature nature = sourceModule.getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID);
-			
 			// wrong nature
-			if(!(nature instanceof SymfonyNature)) {
+			if(!sourceModule.getScriptProject().getProject().hasNature(SymfonyNature.NATURE_ID)) {
 				return false;	
 			}
 			

@@ -46,6 +46,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.json.simple.JSONObject;
 
+import com.dubture.doctrine.annotation.model.Annotation;
+import com.dubture.doctrine.annotation.parser.AnnotationCommentParser;
 import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.index.visitor.RegisterNamespaceVisitor;
 import com.dubture.symfony.core.index.visitor.TemplateVariableVisitor;
@@ -54,6 +56,7 @@ import com.dubture.symfony.core.model.ISymfonyModelElement;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.TemplateVariable;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
+import com.dubture.symfony.core.util.AnnotationUtils;
 import com.dubture.symfony.core.util.JsonUtils;
 import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
 import com.dubture.symfony.index.SymfonyIndexer;
@@ -82,6 +85,7 @@ PhpIndexingVisitorExtension {
     private NamespaceDeclaration namespace;
     private TemplateVariableVisitor controllerIndexer;
     private SymfonyIndexer indexer;
+    private AnnotationCommentParser parser = AnnotationUtils.createParser();
 
     private List<UseStatement> useStatements = new ArrayList<UseStatement>();
     private boolean isSymfonyResource;
@@ -197,23 +201,16 @@ PhpIndexingVisitorExtension {
         }
 
         if (s instanceof ClassInstanceCreation) {
-
             ClassInstanceCreation instance = (ClassInstanceCreation) s;
-
             if (SymfonyCoreConstants.APP_KERNEL.equals(instance.getClassName().toString())) {
-
                 List args = instance.getCtorParams().getChilds();
-
                 if (args.get(0) instanceof Scalar) {
                     Scalar environment = (Scalar) args.get(0);
-
                     String value = environment.getValue().replace("\"", "").replace("'", "");
                     String path = sourceModule.getPath().toString();
                     Logger.debugMSG("indexing environment: " + value + " => " + path);
-
                     ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.ENVIRONMENT, instance.sourceStart(), instance.sourceEnd()-instance.sourceStart(), value, null, path);
                     requestor.addReference(info);
-
                 }
             }
         }
@@ -253,9 +250,7 @@ PhpIndexingVisitorExtension {
 
                         // we got a bundle definition, index it
                         if (fqcn.equals(SymfonyCoreConstants.BUNDLE_FQCN) && ! isTestOrFixture) {
-
                             int length = (currentClass.sourceEnd() - currentClass.sourceEnd());
-
                             JSONObject meta = JsonUtils.createBundle(sourceModule, currentClass, namespace);
                             ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.BUNDLE, currentClass.sourceStart(), length, currentClass.getName(), meta.toJSONString(), namespace.getName());
                             requestor.addReference(info);
@@ -291,29 +286,28 @@ PhpIndexingVisitorExtension {
     private void parseAnnotation(ClassDeclaration clazz) {
 
         PHPDocBlock block = clazz.getPHPDoc();
-
-        if (block == null)
+        
+        if (block == null) {
             return;
+        }
 
         boolean isAnnotation = false;
-
         if (block.getCommentType() == Comment.TYPE_PHPDOC) {
-            for (PHPDocTag tag  : block.getTags()) {
-                if (tag.getValue() != null &&
-                        tag.getValue().contains("Annotation")) {
-                    isAnnotation = true;
-                }
+            
+            List<Annotation> annotations = null;
+            if (org.apache.commons.lang.StringUtils.isNotBlank(block.getLongDescription())) {
+            	annotations = parser.parse(block.getLongDescription());
+            } else if (org.apache.commons.lang.StringUtils.isNotBlank(block.getShortDescription())) {
+            	annotations = parser.parse(block.getShortDescription());
             }
-
-            if (isAnnotation == false) {
-                String comment = block.getShortDescription();
-                if (comment.length() == 0) {
-                    comment = block.getLongDescription();
-                }
-                if ((comment == null || !comment.contains("@Annotation"))) {
-                    return;
-                }
-                isAnnotation = true;
+            
+            if (annotations != null) {
+            	for (Annotation annotation : annotations) {
+            		if (annotation.getClassName().equals("Annotation")) {
+            			isAnnotation = true;
+            			break;
+            		}
+            	}
             }
         }
 

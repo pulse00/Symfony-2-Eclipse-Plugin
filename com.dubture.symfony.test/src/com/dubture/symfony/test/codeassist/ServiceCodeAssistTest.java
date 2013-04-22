@@ -4,9 +4,9 @@ import org.junit.Test;
 
 import com.dubture.symfony.test.AbstractCodeAssistTest;
 
-public class SymfonyCodeAssistTest extends AbstractCodeAssistTest {
+public class ServiceCodeAssistTest extends AbstractCodeAssistTest {
 
-	public SymfonyCodeAssistTest() {
+	public ServiceCodeAssistTest() {
 		super("codeassist");
 	}
 	

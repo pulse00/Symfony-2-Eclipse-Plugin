@@ -76,19 +76,15 @@ public class AnnotationCompletionStrategy extends PHPDocTagStrategy {
 		AnnotationCompletionContext context = (AnnotationCompletionContext) ctx;
 		SourceRange replaceRange = getReplacementRange(context);
 
-		annotations = SymfonyModelAccess.getDefault()
-				.findAnnotationClasses(context.getSourceModule().getScriptProject());
+		annotations = SymfonyModelAccess.getDefault().findAnnotationClasses(context.getSourceModule().getScriptProject());
 
 		String suffix = "()";		
 		String prefix = context.getPrefix();
 
 		IType[] types = getTypes(context, prefix);
 		for (IType type : types) {
-
 			if (annotations.containsKey(type.getElementName())) {
-
 				String qualifier = annotations.get(type.getElementName());
-
 				if (qualifier != null && type.getTypeQualifiedName().equals(qualifier + "$" + type.getElementName()) ) {
 					reporter.reportType(type, suffix, replaceRange);
 				}
@@ -104,26 +100,22 @@ public class AnnotationCompletionStrategy extends PHPDocTagStrategy {
 
 	private IType[] getTypes(AnnotationCompletionContext context, String prefix) {
 
-
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {
-			return PhpModelAccess.getDefault().findTypes(prefix,
-					MatchRule.EXACT, trueFlag, falseFlag, scope, null);
+			return PhpModelAccess.getDefault().findTypes(prefix, MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
 
 		List<IType> result = new LinkedList<IType>();
 		if (prefix.length() > 1 && prefix.toUpperCase().equals(prefix)) {
 			// Search by camel-case
-			IType[] types = PhpModelAccess.getDefault().findTypes(prefix,
-					MatchRule.CAMEL_CASE, trueFlag, falseFlag, scope, null);
+			IType[] types = PhpModelAccess.getDefault().findTypes(prefix, MatchRule.CAMEL_CASE, trueFlag, falseFlag, scope, null);
 			result.addAll(Arrays.asList(types));
 		}
-		IType[] types = PhpModelAccess.getDefault().findTypes(null, prefix,
-				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
+		
+		IType[] types = PhpModelAccess.getDefault().findTypes(null, prefix, MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
 		result.addAll(Arrays.asList(types));
 
 		return (IType[]) result.toArray(new IType[result.size()]);		
-
 	}
 
 
@@ -152,17 +144,10 @@ public class AnnotationCompletionStrategy extends PHPDocTagStrategy {
 			for (IType type : types) {
 				try {
 					int flags = type.getFlags();
-					
 					if (annotations.containsKey(type.getElementName())) {
-
 						String qualifier = annotations.get(type.getElementName());
-
 						if (qualifier != null && type.getTypeQualifiedName().equals(qualifier + "$" + type.getElementName()) ) {
-
-							reporter.reportType(type,
-									PHPFlags.isNamespace(flags) ? nsSuffix : suffix,
-											replacementRange, getExtraInfo());
-							
+							reporter.reportType(type,PHPFlags.isNamespace(flags) ? nsSuffix : suffix, replacementRange, getExtraInfo());
 						}
 					}					
 					

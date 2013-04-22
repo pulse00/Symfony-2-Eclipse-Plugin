@@ -1,0 +1,20 @@
+--TEST--
+Should complete methods a @Route annotation
+--FILE--
+<?
+namespace NS;
+class SomeController {
+
+    /**
+     * @I|
+     */
+	public function someAction() {
+	
+	}
+}
+?>
+--EXPECT--
+type(Inject)
+keyword(ignore)
+keyword(internal)
+
