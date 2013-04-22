@@ -14,6 +14,10 @@
 		<service id="other" class="%some.other.class%">
 		</service>
 		
+		<service id="form.factory" class="Symfony\Component\Form\FormFactory">
+		</service>
+		
+		
 	</services>
 
 </container>

@@ -12,3 +12,4 @@ class A {
 --EXPECT--
 type(component)
 type(session)
+type(formfactory)

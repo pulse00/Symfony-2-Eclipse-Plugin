@@ -24,4 +24,9 @@ public class ServiceCodeAssistTest extends AbstractCodeAssistTest {
 	public void testParameterizedServiceMethodCompletion() throws Exception {
 		runPdttTest("testParameterizedServiceMethodCompletion.pdtt");
 	}
+	
+	@Test
+	public void testChainedServiceCompletion() throws Exception {
+		runPdttTest("testChainedServiceCompletion.pdtt");
+	}	
 }

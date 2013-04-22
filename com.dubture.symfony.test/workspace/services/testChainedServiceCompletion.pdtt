@@ -1,0 +1,22 @@
+--TEST--
+Should complete methods from the session service
+--FILE--
+<?
+namespace NS;
+class A {
+	function goo() {
+		$form = $this->get('form.factory');
+		$form->|
+	}
+}
+?>
+--EXPECT--
+method(create)
+method(createNamed)
+method(createForProperty)
+method(createBuilder)
+method(createNamedBuilder)
+method(createBuilderForProperty)
+method(hasType)
+method(addType)
+method(getType)
