@@ -1,0 +1,13 @@
+--TEST--
+Should complete methods from the other service
+--FILE--
+<?
+namespace NS;
+class SomeController {
+	function someAction() {
+		$doctrine->getRepository('|');
+	}
+}
+?>
+--EXPECT--
+bundle(AcmeDemoBundle)

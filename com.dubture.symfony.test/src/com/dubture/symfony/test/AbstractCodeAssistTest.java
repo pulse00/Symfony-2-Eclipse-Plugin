@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import junit.framework.TestCase;
 
@@ -37,8 +38,6 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.WorkingCopyOwner;
 import org.eclipse.dltk.core.tests.FileUtil;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile;
-import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.facet.PHPFacets;
@@ -47,10 +46,14 @@ import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.osgi.framework.Bundle;
 
+import com.dubture.doctrine.core.DoctrineNature;
 import com.dubture.symfony.core.SymfonyCorePlugin;
 import com.dubture.symfony.core.SymfonyVersion;
+import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.facet.FacetManager;
 import com.dubture.symfony.core.preferences.CorePreferenceConstants.Keys;
+import com.dubture.symfony.test.codeassist.CodeAssistPdttFile;
+import com.dubture.symfony.test.codeassist.CodeAssistPdttFile.ExpectedProposal;
 
 @SuppressWarnings("restriction")
 abstract public class AbstractCodeAssistTest extends TestCase {
@@ -84,10 +87,12 @@ abstract public class AbstractCodeAssistTest extends TestCase {
 			return;
 		}
 		
+		System.err.println("CREATE NEW PROJECt");
+		
 		project = setUpProject(projectName);
 		
 		IProjectDescription desc = project.getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
+		desc.setNatureIds(new String[] { PHPNature.ID, SymfonyNature.NATURE_ID, DoctrineNature.NATURE_ID });
 		project.setDescription(desc, null);
 
 		ProjectOptions.setPhpVersion(PHPVersion.PHP5_3, project);
@@ -118,6 +123,15 @@ abstract public class AbstractCodeAssistTest extends TestCase {
 			testFile = null;
 		}
 		
+		for (IResource res : project.members()) {
+			if (res.getName().startsWith(".")) {
+				continue;
+			}
+			System.err.println("DELETE " + res.getName());
+			res.delete(true, null);
+		}
+		
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
@@ -145,7 +159,7 @@ abstract public class AbstractCodeAssistTest extends TestCase {
 		// replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
 
-		testFile = project.getFile("test.php");
+		testFile = project.getFile(UUID.randomUUID().toString() + ".php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
@@ -193,29 +207,30 @@ abstract public class AbstractCodeAssistTest extends TestCase {
 				boolean found = false;
 				for (CompletionProposal proposal : proposals) {
 					IModelElement modelElement = proposal.getModelElement();
+					
 					if (modelElement == null) {
-						if (new String(proposal.getName()).equalsIgnoreCase(expectedProposal.name)) { // keyword
+						if (new String(proposal.getName().trim()).equalsIgnoreCase(expectedProposal.name)) { // keyword
 							found = true;
 							break;
 						}
 					} else if (modelElement.getElementType() == expectedProposal.type) {
 						if (modelElement instanceof AliasType) {
-							if (((AliasType) modelElement).getAlias().equals(expectedProposal.name)) {
+							if (((AliasType) modelElement).getAlias().trim().equals(expectedProposal.name)) {
 								found = true;
 								break;
 							}
 						} else if ((modelElement instanceof FakeConstructor) && (modelElement.getParent() instanceof AliasType)) {
-							if (((AliasType) modelElement.getParent()).getAlias().equals(expectedProposal.name)) {
+							if (((AliasType) modelElement.getParent()).getAlias().trim().equals(expectedProposal.name)) {
 								found = true;
 								break;
 							}
 						} else {
-							if (modelElement.getElementName().equalsIgnoreCase(expectedProposal.name)) {
+							if (modelElement.getElementName().trim().equalsIgnoreCase(expectedProposal.name)) {
 								found = true;
 								break;
 							}
 						}
-					} else if (modelElement.getElementType() == expectedProposal.type&& new String(proposal.getName()).equalsIgnoreCase(expectedProposal.name)) {
+					} else if (modelElement.getElementType() == expectedProposal.type&& new String(proposal.getName()).trim().equalsIgnoreCase(expectedProposal.name)) {
 						// for phar include
 						found = true;
 						break;

@@ -8,6 +8,7 @@ import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 
+import com.dubture.doctrine.core.DoctrineNature;
 import com.dubture.symfony.core.builder.SymfonyNature;
 
 @SuppressWarnings("restriction")
@@ -24,5 +25,6 @@ public class InstallActionDelegate implements IDelegate {
 
 		// add the composer nature
 		ResourceUtil.addNature(project, monitor, SymfonyNature.NATURE_ID);
+		ResourceUtil.addNature(project, monitor, DoctrineNature.NATURE_ID);
 	}
 }

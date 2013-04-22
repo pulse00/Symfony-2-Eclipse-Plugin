@@ -170,11 +170,11 @@ public class AnnotationCommentParserTest extends TestCase {
 
         List<Annotation> annotations = parser.parse(comment, 1568);
 
-        assertEquals(1, annotations.size());
+        assertEquals(2, annotations.size());
 
         Annotation annotation = annotations.get(0);
         assertEquals("", annotation.getNamespace());
-        assertEquals("Template", annotation.getClassName());
+        assertEquals("Route", annotation.getClassName());
     }
 
     @Test

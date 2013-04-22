@@ -32,7 +32,6 @@ import com.dubture.symfony.core.model.EntityAlias;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 
 /**
- *
  * Completes the parts of doctrine entity aliases, ie
  *
  * <pre>
@@ -40,10 +39,8 @@ import com.dubture.symfony.core.model.SymfonyModelAccess;
  * </pre>
  *
  * <pre>
- *
  * $this->getDoctrine->getRepository('AcmeDemoBundle:| <-- completes the available entity classes
  * </pre>
- *
  *
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
@@ -53,7 +50,6 @@ public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
 
     public EntityCompletionStrategy(ICompletionContext context) {
         super(context);
-
     }
 
 
@@ -69,33 +65,32 @@ public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
 
         EntityAlias alias = context.getAlias();
         String prefix = context.getPrefix();
+        
+        System.err.println("######################################################### AHAHAHAHAHA");
 
         if (alias.hasBundle() == false) {
             List<Bundle> bundles = model.findBundles(project);
             for (Bundle b : bundles) {
                 IType[] bundleTypes = PhpModelAccess.getDefault().findTypes(b.getElementName(), MatchRule.EXACT, 0, 0, projectScope, null);
+                System.err.println("aha " + bundleTypes.length);
                 if (bundleTypes.length == 1) {
                     ModelElement bType = (ModelElement) bundleTypes[0];
                     if (CodeAssistUtils.startsWithIgnoreCase(bType.getElementName(), prefix)) {
                         Bundle bundleType = new Bundle(bType, b.getElementName());
+                        System.err.println("report " + bundleType.getElementName());
                         reporter.reportType(bundleType, ":", range);
                     }
                 }
             }
         } else {
-
             List<Entity> entities = doctrineModel.getEntities(project);
-
             //TODO: cache the entities
             for (Entity entity : entities) {
-
                 EntityAlias newAliase = new EntityAlias(alias.getBundleAlias(), entity.getElementName());
                 IType type = model.findEntity(newAliase, project);
 
                 if (type != null) {
-                    Entity e = new Entity((ModelElement) type, type.getElementName());
-
-                    reporter.reportType(e, "", range);
+                    reporter.reportType(new Entity((ModelElement) type, type.getElementName()), "", range);
                 }
             }
         }
