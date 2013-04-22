@@ -66,9 +66,16 @@ public class ServiceReturnTypeCompletionStrategy extends ClassMembersStrategy {
 			return;
 		
 		Service service = SymfonyModelAccess.getDefault().findService(source, project.getPath());
+		
+		System.err.println(context.getSourceModule().getSource());
+		System.err.println("statemetn text");
+		System.err.println(context.getStatementText());
+		System.err.println("FOUND SERVICE for " + source);
+		System.err.println(service.getElementName());
 
-		if (service == null)
+		if (service == null) {
 			return;
+		}
 
 		
 		//TODO: the corresponding IType of a service should be searched for

@@ -18,6 +18,5 @@ public class SymfonyCodeAssistTest extends AbstractCodeAssistTest {
 	@Test
 	public void testServiceMethodCompletion() throws Exception {
 		runPdttTest("testServiceMethodCompletion.pdtt");
-	}	
-	
+	}
 }

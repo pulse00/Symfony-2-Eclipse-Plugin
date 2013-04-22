@@ -113,6 +113,11 @@ abstract public class AbstractCodeAssistTest extends TestCase {
 			this.wcOwner = null;
 		}
 		
+		if (testFile != null) {
+			testFile.delete(true, null);
+			testFile = null;
+		}
+		
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;

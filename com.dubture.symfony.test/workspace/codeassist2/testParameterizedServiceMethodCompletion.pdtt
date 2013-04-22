@@ -1,0 +1,14 @@
+--TEST--
+Should complete methods from the other service
+--FILE--
+<?
+namespace NS;
+class B {
+	function roo() {
+		$this->get('other')->|
+	}
+}
+?>
+--EXPECT--
+method(foo)
+method(bar)

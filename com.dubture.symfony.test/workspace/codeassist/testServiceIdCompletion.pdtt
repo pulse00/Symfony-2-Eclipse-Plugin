@@ -10,4 +10,5 @@ class A {
 }
 ?>
 --EXPECT--
+type(component)
 type(session)
