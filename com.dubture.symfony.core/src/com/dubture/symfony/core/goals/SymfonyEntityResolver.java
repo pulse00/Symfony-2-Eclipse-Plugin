@@ -22,10 +22,10 @@ public class SymfonyEntityResolver implements IEntityResolver {
 
 		EntityAlias alias = new EntityAlias(entity);
 		
-		if (alias == null || alias.getBundleAlias() == null)
+		if (alias == null || alias.getBundleAlias() == null) {
 			return null;
+		}
 		
 		return SymfonyModelAccess.getDefault().findEntity(alias, project);
-		
 	}
 }

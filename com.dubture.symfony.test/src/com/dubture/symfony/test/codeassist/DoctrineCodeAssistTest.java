@@ -19,4 +19,9 @@ public class DoctrineCodeAssistTest extends AbstractCodeAssistTest {
 	public void testNamespaceCompletion() throws Exception {
 		runPdttTest("testNamespaceCompletion.pdtt");
 	}
+	
+	@Test
+	public void testRepositoryCompletion() throws Exception {
+		runPdttTest("testRepositoryCompletion.pdtt");
+	}
 }

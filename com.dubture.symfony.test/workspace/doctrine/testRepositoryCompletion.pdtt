@@ -1,0 +1,15 @@
+--TEST--
+Should complete methods from the other service
+--FILE--
+<?
+namespace NS;
+class SomeController {
+	function someAction() {
+		$repo = $doctrine->getRepository('AcmeDemoBundle:Book');
+		$repo->|
+	}
+}
+?>
+--EXPECT--
+method(listNewestBooks)
+method(deleteBook)
