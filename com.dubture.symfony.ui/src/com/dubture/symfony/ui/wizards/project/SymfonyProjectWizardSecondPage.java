@@ -282,7 +282,8 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 	
     private void updateComposerJson(IProgressMonitor monitor) throws IOException, CoreException {
 
-    	ComposerPackage composerPackage = new ComposerPackage();
+    	IFile composerJson = getProject().getFile("composer.json");
+    	ComposerPackage composerPackage = new ComposerPackage(composerJson.getRawLocation().makeAbsolute().toFile());
 		String2KeywordsConverter keywordConverter = new String2KeywordsConverter(composerPackage);    	
     	
 		if (settingsGroup.getVendor() != null && firstPage.nameGroup.getName() != null) {
@@ -306,9 +307,7 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 			keywordConverter.convert(settingsGroup.getKeywords());
 		}
 
-		
 		String json = composerPackage.toJson();
-		IFile composerJson = getProject().getFile("composer.json");
 		ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes());
 		
 		monitor.beginTask("Updating composer.json", 1);
