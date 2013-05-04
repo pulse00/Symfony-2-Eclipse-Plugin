@@ -9,7 +9,9 @@
 package com.dubture.symfony.ui.wizards.project;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.php.internal.ui.preferences.util.PreferencesSupport;
 import org.eclipse.php.internal.ui.wizards.CompositeData;
 import org.eclipse.php.internal.ui.wizards.NameGroup;
 import org.eclipse.swt.SWT;
@@ -19,7 +21,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
 
+import com.dubture.composer.core.ComposerPlugin;
+import com.dubture.composer.core.preferences.CorePreferenceConstants.Keys;
 import com.dubture.composer.ui.converter.String2KeywordsConverter;
+import com.dubture.composer.ui.wizard.ValidationException;
+import com.dubture.composer.ui.wizard.ValidationException.Severity;
 import com.dubture.composer.ui.wizard.project.template.PackageProjectWizardFirstPage;
 import com.dubture.composer.ui.wizard.project.template.Validator;
 import com.dubture.getcomposer.core.ComposerPackage;
@@ -58,8 +64,19 @@ public class SymfonyProjectWizardFirstPage extends PackageProjectWizardFirstPage
 		versionGroup = new SymfonyVersionGroup(this, composite);
 		
 		nameGroup.addObserver(PHPLocationGroup);
+		
 		nameGroup.notifyObservers();
-		projectTemplateValidator = new Validator(this);
+		projectTemplateValidator = new Validator(this) {
+			@Override
+			protected void finishValidation() throws ValidationException {
+				IPreferenceStore store = ComposerPlugin.getDefault().getPreferenceStore();
+				PreferencesSupport prefSupport = new PreferencesSupport(ComposerPlugin.ID, store);
+				String executable = prefSupport.getPreferencesValue(Keys.PHP_EXECUTABLE, null, null);
+				if (executable == null || executable.length() == 0) {
+					throw new ValidationException("No PHP executable defined. Please specify a valid executable in the PHP Executables preference page.", Severity.ERROR);
+				}
+			}
+		};
 		
 		nameGroup.addObserver(projectTemplateValidator);
 		PHPLocationGroup.addObserver(projectTemplateValidator);

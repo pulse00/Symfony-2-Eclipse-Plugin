@@ -132,7 +132,9 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 		final CountDownLatch latch = new CountDownLatch(1);
 		
 		SymfonyProjectWizardFirstPage symfonyPage = (SymfonyProjectWizardFirstPage) firstPage;
-		monitor.beginTask("Initializing Symfony project", 1);
+		monitor.beginTask("Initializing Symfony project", 2);
+		monitor.setTaskName("Running create-project command...");
+		monitor.worked(1);
 		IPath path = null;
 		
 		if (symfonyPage.isInLocalServer()) {
