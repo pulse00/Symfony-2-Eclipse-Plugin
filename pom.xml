@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.dubture.symfony</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.93-SNAPSHOT</version>
+    <version>1.0.94-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <prerequisites>

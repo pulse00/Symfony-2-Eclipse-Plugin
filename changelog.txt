@@ -1,3 +1,17 @@
+1.0.94
+
+* Project wizard now uses composers `create-project` command
+* Project wizard can now automatically create Run/Debug configurations for new projects
+* Project wizard can now automatically create a local server for new projects
+* Added help contexts for wizards
+* Added an "Import Symfony project" wizard to import existing projects and provide a proper project setup
+* The Dumped service container used for service typeinference can now be selected in the project properties page
+* Added codeassist tests for: Annotations, Doctrine, Service Typeinference, Service proposals
+
+1.0.93
+
+* Facet support
+
 1.0.92
 
 * added "insert parameter" dialog

@@ -607,6 +607,13 @@
           name="Symfony Project">
     </wizard>
  </extension>
+ <extension
+       point="org.eclipse.wst.common.project.facet.ui.images">
+    <image
+          facet="php.symfony.component"
+          path="ico/full/obj16/symfony_icon_16.png">
+    </image>
+ </extension>
  
  
  
