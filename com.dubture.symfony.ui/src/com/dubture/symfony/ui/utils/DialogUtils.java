@@ -10,9 +10,11 @@ package com.dubture.symfony.ui.utils;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -66,8 +68,16 @@ public class DialogUtils
         	return;
         }
         
-        IFolder folder2 = resource.getProject().getFolder(folderPath);
-    	folder = (IScriptFolder) DLTKCore.create(folder2);
+        IFolder targetFolder = resource.getProject().getFolder(folderPath);
+        if (targetFolder.exists() == false) {
+        	try {
+				targetFolder.create(true, true, new NullProgressMonitor());
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+        }
+        
+    	folder = (IScriptFolder) DLTKCore.create(targetFolder);
         
         wizard.setClassName(className.replace("\\", ""));
         wizard.setNamespace(ns);
