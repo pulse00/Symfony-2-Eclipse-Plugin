@@ -1,7 +1,4 @@
 navigation:
-- text: About
-  url: /
-  permalink: /
 - text: Installation
   url: /installation
   permalink: /installation

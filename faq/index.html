@@ -3,86 +3,60 @@ layout: default
 title: Symfony2 Eclipse Plugin - FAQ
 ---
 
+<div class="container faq">
 			
-<div id="tabs-4" class="tabdiv">
+	<div id="tabs-4" class="tabdiv">
 
-  	<div class="faq">  		
-		<h2 class="question">How can i use a custom Symfony distribution for new Symfony projects?</h2>
-		<p class="answer"> 
-			Under <span class="code">Eclipse Preferences -> Symfony -> Distribution </span> you can setup your custom distributions. You need
-			to add a gzipped tarball (.tgz) containing your distribution (the same archive like the .tgz downloads from the <a href="http://symfony.com/download">Symfony download page</a>)<br/>
-			After adding your distribution in the preferences dialog, you can select it in the New Symfony Project wizard via "Custom project layout".
-		</p>
-  	</div>  
-
-  	<div class="faq">  		
-		<h2 class="question">I can't install because of missing <span class="code">org.apache.commons.lang</span> lib. Where can i get this?</h2>
-		<p class="answer"> 
-			See this <a href="https://github.com/pulse00/Symfony-2-Eclipse-Plugin/issues/98" target="_blank">github issue</a> for an answer.
-		</p>
-  	</div>  
-  
-  	<div class="faq" id="warnings">  		
-		<h2 class="question"><a href="#warnings">My Problem view shows errors/warnings after creation of a new Symfony project. What's up with that?</a></h2>
-		<p class="answer">
-
-			The Symfony2 standard edition comes with various vendor libraries. Those libraries contain php files which cause PHP Syntax errors when indexed
-			by the PDT plugin - for example because they are solely test files that should trigger those errors or skeleton files with placeholders inside.
-			
-			The Symfony plugin creates initial exclusion patterns for the standard edition, which should avoid those syntax errors for Tests, skeleton files and
-			fixtures in the vendor folder.
-			
-			However, in a default eclipse installation, you'll see exact 9 errors in a fresh Symfony project, which are out of the scope of the plugin to solve though:<br/><br/>
-						
-			<h4>XML Problem</h4>
-			<p>The XML Problem indicates that the XML validator (<span class="warning">NOT</span> part of this plugin!!) found a problem in an XML file or an XSD schema. Some of the schemas in Symfony core contain invalid complex types, 
-			which is a known issue and will not be resolved (see <a target="_blank" href="https://github.com/symfony/symfony/issues/2122">this thread</a> for more info). To hide those errors, you need to disable XML/XSD validation from the 
-			Eclipse preferences` "validation" tab. If you don't see this tab, you need to install the "Eclipse Web Development Tools" plugin from the standard updatesite.</p>
-			<div class="centered">
-				<a class="lightbox" href="/images/screenshots/validation.png"><img src="/images/screenshots/validation_thumb.png"></img></a>
-			</div>
-  	</div>  
-	
-	<div class="faq" id="symfonyaware">					
-		<h2 class="question"><a href="#symfonyaware">How do i know a PHP project is symfony-aware?</a></h2>
-		<p class="answer">Your project icon in the PHP package explorer will have a small Symfony logo attached to it. If it's not there, run "Convert to Symfony project" (right-click on the project in the <span class="eclipsehint">package explorer -> Configure -> Convert to Symfony project</span>).</p>
-	</div>
-	
-	<div class="faq" id="no-service-completion">					
-		<h2 class="question"><a href="#no-service-completion">Service XYZ is not being completed at all, but others are. How come?</a></h2>
-		<p class="answer">The plugin cannot infer types of synthetic services - services which are dynamically injected during runtime. For those cases, there's a preference page called <b>Services</b> where the id/class mapping can be stored. After that, the plugin should complete the service properly.</p>	
-	</div>				
-	
-
-	<div class="faq" id="no-codeassist">					
-		<h2 class="question"><a href="#no-codeassist">There's no additional codeassistance showing up, what can i do?</a></h2>
-		<p class="answer">The plugin indexes services and annotation during the build process. Try to clean the project (<span class="eclipsehint">project -> clean</span>). If it's still not working, check if the project has a Symfony nature.</p>					
-	</div>
-	
-	<div class="faq" id="no-codeassist2">					
-		<h2 class="question"><a href="#no-codeassist2">Still no code assist, what now?</a></h2>
-		<p class="answer">Check your build-path - <span class="eclipsehint"> project -> properties -> PHP build path</span> - and ensure that all your source folders are in the build path. Also make sure that none of your sourcefolders are excluded.</p>					
-	</div>
-	
-	<div class="faq" id="troubleshooting">					
-		<h2 class="question"><a href="#troubleshooting">When reporting an issue, how can get stacktraces to ease debugging?</a></h2>
-		<p class="answer">Eclipse can be started with various debugging options. This can be turned on/off for each installed plugin independently. To debug the symfony plugin, create a file called <span class="code">.options</span> in your Eclipse installation folder. The file should contain the following lines:
-			
-			<p class="code indent-1">				
-				org.eclipse.dltk.core/debug=true<br/>			
-				com.dubture.symfony.core/debug=true<br/>
-				com.dubture.symfony.annotation/debug=true<br/>				
-				com.dubture.symfony.index/debug=true<br/>
-				com.dubture.symfony.ui/debug=true<br/>
+	  	<div class="faq">  		
+			<h2 class="question">I can't install because of missing <span class="code">org.apache.commons.lang</span> lib. Where can i get this?</h2>
+			<p class="answer"> 
+				See this <a href="https://github.com/pulse00/Symfony-2-Eclipse-Plugin/issues/98" target="_blank">github issue</a> for an answer.
 			</p>
-			
-			Then restart eclipse from the commandline with these flags: <span class="code">eclipse -debug .options</span>						
-			<p>Try to reproduce the problem and monitor the commandline - please provide these stacktraces in your github issues.</p>
-			</p>
-	</div>
-	
-	<div class="faq" id="plugin-version">					
-		<h2 class="question"><a href="#plugin-version">How do i know which version of the plugin is installed?</a></h2>
-		<p class="answer"> <span class="eclipsehint">Eclipse(Mac) / Help(Windows/Linux) -> About Eclipse -> SDK -> Installation Details -> Plugins </span> lists all installed plugins and their version. Note that the Symfony eclipse Feature actually consists of multiple plugins listed on that page.</p>
-	</div>				
-</div>			
+	  	</div>  
+	  
+		
+		<div class="faq" id="symfonyaware">					
+			<h2 class="question"><a href="#symfonyaware">How do i know a PHP project is symfony-aware?</a></h2>
+			<p class="answer">Your project icon in the PHP package explorer will have a small Symfony logo attached to it. Also, if you open the properties of your project and see the <code>Builders</code> section, you should see a Symfony builder.</p>
+		</div>
+		
+		<div class="faq" id="no-service-completion">					
+			<h2 class="question"><a href="#no-service-completion">Service XYZ is not being completed at all, but others are. How come?</a></h2>
+			<p class="answer">The plugin cannot infer types of synthetic services - services which are dynamically injected during runtime. For those cases, there's a preference page called <b>Services</b> where the id/class mapping can be stored. After that, the plugin should complete the service properly.</p>	
+		</div>				
+		
+
+		<div class="faq" id="no-codeassist">					
+			<h2 class="question"><a href="#no-codeassist">There's no additional codeassistance showing up, what can i do?</a></h2>
+			<p class="answer">The plugin indexes services and annotation during the build process. Try to clean the project (<code>project -> clean</code>). If it's still not working, check if the project has a Symfony nature.</p>					
+		</div>
+		
+		<div class="faq" id="no-codeassist2">					
+			<h2 class="question"><a href="#no-codeassist2">Still no code assist, what now?</a></h2>
+			<p class="answer">Check your build-path - <code> project -> properties -> PHP build path</code> - and ensure that all your source folders are in the build path. Also make sure that none of your sourcefolders are excluded.</p>					
+		</div>
+		
+		<div class="faq" id="troubleshooting">					
+			<h2 class="question"><a href="#troubleshooting">When reporting an issue, how can get stacktraces to ease debugging?</a></h2>
+			<p class="answer">Eclipse can be started with various debugging options. This can be turned on/off for each installed plugin independently. To debug the symfony plugin, create a file called <span class="code">.options</span> in your Eclipse installation folder. The file should contain the following lines:
+				
+				<pre>
+					org.eclipse.dltk.core/debug=true		
+					com.dubture.symfony.core/debug=true
+					com.dubture.symfony.annotation/debug=true
+					com.dubture.symfony.index/debug=true
+					com.dubture.symfony.ui/debug=true
+				</pre>
+				
+				Then restart eclipse from the commandline with these flags: <span class="code">eclipse -debug .options</span>						
+				<p>Try to reproduce the problem and monitor the commandline - please provide these stacktraces in your github issues.</p>
+				</p>
+		</div>
+		
+		<div class="faq" id="plugin-version">					
+			<h2 class="question"><a href="#plugin-version">How do i know which version of the plugin is installed?</a></h2>
+			<p class="answer"> <code>Eclipse(Mac) / Help(Windows/Linux) -> About Eclipse -> SDK -> Installation Details -> Plugins </code> lists all installed plugins and their version. Note that the Symfony eclipse Feature actually consists of multiple plugins listed on that page.</p>
+		</div>				
+	</div>			
+
+</div>

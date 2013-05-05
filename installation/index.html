@@ -3,46 +3,55 @@ layout: default
 title: Symfony2 Eclipse Plugin - Installation
 ---
 
-<div id="tabs-2" class="tabdiv">
-	<h2 class="first">Installation via Updatesite</h2>
+<div class="container">
 
+	<header class="jumbotron subhead">
+	    <div class="row">
+	        <div class="span8">
+	            <h1>Installation</h1>
+	        </div>
+	    </div>
+	</header>
 
-<p>You can choose between the stable and the nightly build. Stable version is released in sync with <a target="_blank" href="http://www.eclipse.org/projects/project.php?id=tools.pdt">PDT</a> (next scheduled release: 3.1.2 / 22 Feb 13).
-<br/>
-The nightly updatesite is built once a day automatically and published if all tests succeed. I'm using the nightly version myself for my production projects, so you can be quite
-certain that no major bugs make it into the nightly updatesite ;)
+	<div class="row">                
+	    <div class="span12">
+	        <div class="connection span6 offset2">
+	            <div class="inner">
+	                <div class="span siteheader">                    
+	                    <h2 class="">Updatesites</h2>
+	                </div>
+	                <div class="updatesite">
+	                    <a class="span5 btn btn-info btn-large site" data-trigger="hover" data-placement="top" data-toggle="popover" data-content="This is an Eclipse Updatesite URL which you need to paste into the Updatesite manager in Eclipse." title data-original-title="Right-Click and copy the Link" href="http://p2.dubture.com/">Latest Release</a>
+	                </div>
+	                <div class="updatesite">
+	                    <a class="span5 btn btn-info btn-large site" data-trigger="hover" data-placement="top" href="http://p2-dev.pdt-extensions.org/" data-toggle="popover" data-content="This is an Eclipse Updatesite URL which you need to paste into the Updatesite manager in Eclipse."  title data-original-title="Right-Click and copy the Link">Latest Milestone</a>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
 
-If you want to use the nightly build, make sure to also add the <b>PDT nightly updatesite:</b> <a href="http://download.eclipse.org/tools/pdt/updates/nightly">http://download.eclipse.org/tools/pdt/updates/nightly</a>
+	<div class="clearfix"></div>
 
+	<div class="row">
+	    <div class="span12">
+	        <h3>Installation Instructions</h3>
+	        <p>
+	            <ol>
+	                <li>Choose <b>Help -> Install New Software...</b> from the menu bar and <b>Add...</b> one of the above links.</li>
+	                <li>Select the <b>Symfony Feature</b>  from the <b>Frameworks / Content Management</b> Category of the updatesite.</li>
+	                <li>Eclipse will download and install the plugin, and after a restart it's ready to use.</li>
+	            </ol>
+	        </p>
+	    </div>
+	</div>
 
-<h2>Stable Updatesite</h2>
+	<div class="row alert">
+	    <div class="span12">	        
+	          <h4 class="alert-heading">Important Notice!</h4>
+	          <p>To make full use of the plugin you need to make sure to have a valid PHP executable configured. You can do this using <code>Preferences -> PHP -> PHP Executables</code>.</p>
+	        </div>
+	    </div>
+	</div>	
 
-
-<div class="p2wrapper">
-    <span class="updatelink"><a href="http://p2.dubture.com">http://p2.dubture.com</a></span>
 </div>
-
-<h2>Nightly build</h2>
-
-The nightly build is provided by the <a href="https://github.com/pdt-eg">PDT Extension group</a> mirror:<br/><br/>
-
-<div class="p2wrapper">
-    <span class="updatelink"> <a href="http://p2-dev.pdt-extensions.org/">http://p2-dev.pdt-extensions.org</a></span>
-</div>
-
-		<h2>Usage</h2>
-
-		<p>For new Symfony projects you can simply use the "New Symfony Project" wizard which sets up the project correctly.</p>
-		
-		<p>To make your existing PHP projects Symfony aware, add the SymfonyNature by right-clicking on the project in the <span class="eclipsehint">PHP explorer -> Symfony -> Add/Remove Symfony Nature.</span> This will add the Symfony 
-			<a href="http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fextension-points%2Forg_eclipse_core_resources_natures.html">project nature</a> and trigger the indexing mechanism of DLTK/PDT/Symfony (see the status bar at the bottom). <br/></p>
-							
-		<p>The plugin indexes all PHP, XML and YML files which are on the PHP buildpath. To ensure it can find all relevant sources, your buildpath should look like this ( screenshot from the Symfony Standard Edition):</p>
-		
-		<div class="centered">
-			<a class="lightbox" href="/images/screenshots/buildpath.png"><img src="/images/screenshots/buildpath_thumb.png"></img></a>
-		</div>
-		<p>Note that the <span class="code">app/cache</span> and <span class="code">vendor/...GeneratorBundle.../skeleton</span> folders are excluded to avoid build errors(skeleton) and duplicate codeassist entries (cache)</p>
-		
-</div>
-			

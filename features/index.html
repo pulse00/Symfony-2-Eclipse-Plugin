@@ -3,20 +3,373 @@ layout: default
 title: Symfony2 Eclipse Plugin - Features
 ---
 
-<div id="tabs-3" class="tabdiv">
-	<div id="featurestab">
-		<ul id="featureul">
-			<li class="ftli"><a title="codeassist" href="codeassist">Codeassist</a></li>
-			<li class="ftli"><a title="hyperlinks" href="hyperlinks">Hyperlinks</a></li>
-			<li class="ftli"><a title="tooltips" href="tooltips">Tooltips</a></li>						
-			<li class="ftli"><a title="highlight" href="highlight">Highlighting</a></li>
-			<li class="ftli"><a title="validation" href="validation">Validation</a></li>
-			<li class="ftli"><a title="formatting" href="formatting">Formatting</a></li>						
-			<li class="ftli"><a title="wizards" href="wizards">Wizards</a></li>						
-			<li class="ftli"><a title="views" href="views">Views</a></li>						
-			<li class="ftli"><a title="dialogs" href="dialogs">Dialogs</a></li>
-			<li class="ftli"><a title="debug" href="debug">Debug</a></li>
-			<li class="ftli"><a title="experimental" href="experimental">Experimental</a></li>
-		</ul>		
-	</div>
+<div class="container">
+	
+	<header class="jumbotron subhead" id="overview">
+		<div class="row">
+			<div class="span6">				
+				<h1>Features</h1>
+			</div>
+		</div>
+		<div class="subnav">
+			<ul class="nav nav-pills">
+				<li class="active"><a href="#codeassist">Codeassist</a></li>
+				<li><a href="#hyperlinks">Hyperlinks</a></li>
+				<li><a href="#tooltips">Tooltips</a></li>
+				<li><a href="#validation">Validation</a></li>
+				<li><a href="#wizards">Wizards</a></li>
+				<li><a href="#views">Views</a></li>
+				<li><a href="#dialogs">Dialogs</a></li>
+			</ul>
+		</div>
+	</header>
+
+
+	<section id="codeassist" class="row">
+		
+			<h2>Codeassist</h2>
+
+			<ul class="thumbnails">
+
+				<li class="span3">
+					<div class="thumbnail">			
+						<a href="#routeLightbox" class="thumbnail" data-toggle="lightbox">
+							<img class="thumb" src="/images/screenshots/route_proposal.png" alt="">
+						</a>
+						<div id="routeLightbox" class="lightbox hide fade"  tabindex="-1" role="dialog" aria-hidden="true">
+							<div class='lightbox-content'>
+								<img src="/images/screenshots/route_proposal.png">
+							</div>
+						</div>
+						<div class="caption">
+							<h3>Routes</h3>
+							<p>Methods which accept routes will display a list of available routes, including additional information like the viewpath, bundle, controller etc.</p>
+						</div>
+					</div>
+				</li>
+
+				<li class="span3">
+					<div class="thumbnail">			
+						<a href="#serviceLightbox" class="thumbnail" data-toggle="lightbox">
+							<img class="thumb" src="/images/screenshots/service_proposal.gif" alt="">
+						</a>
+						<div id="serviceLightbox" class="lightbox hide fade"  tabindex="-1" role="dialog" aria-hidden="true">
+							<div class='lightbox-content'>
+								<img src="/images/screenshots/service_proposal.gif">
+							</div>
+						</div>
+						<div class="caption">
+							<h3>Services</h3>
+							<p>If the current class implements the ContainerAwareInterface, you will see a list of available services when staying in a parameter of service-retrieval methods.</p>
+						</div>
+					</div>
+				</li>
+
+				<li class="span3">
+					<div class="thumbnail">			
+						<a href="#serviceTI" class="thumbnail" data-toggle="lightbox">
+							<img class="thumb" src="/images/screenshots/servicetypeinference.png" alt="">
+						</a>
+						<div id="serviceTI" class="lightbox hide fade"  tabindex="-1" role="dialog" aria-hidden="true">
+							<div class='lightbox-content'>
+								<img src="/images/screenshots/servicetypeinference.png">
+							</div>
+						</div>
+						<div class="caption">
+							<h3>Service inference</h3>
+							<p>The plugin helps eclipse with type inference for objects managed by the service container so you will get full codeassist for your services.</p>
+						</div>
+					</div>
+				</li>
+
+				<li class="span3">
+					<div class="thumbnail">			
+						<a href="#twigLB" class="thumbnail" data-toggle="lightbox">
+							<img class="thumb" src="/images/screenshots/route_proposal.png" alt="">
+						</a>
+						<div id="twigLB" class="lightbox hide fade"  tabindex="-1" role="dialog" aria-hidden="true">
+							<div class='lightbox-content'>
+								<img src="/images/screenshots/route_proposal.png">
+							</div>
+						</div>
+						<div class="caption">
+							<h3>Twig blocks</h3>
+							<p>Triggering codeassist in a twig block tag will show you the available blocks from the parent template.</p>
+						</div>
+					</div>
+				</li>
+
+
+				<li class="span3">
+					<div class="thumbnail">			
+						<a href="#pathLB" class="thumbnail" data-toggle="lightbox">
+							<img class="thumb" src="/images/screenshots/route_proposal.png" alt="">
+						</a>
+						<div id="pathLB" class="lightbox hide fade"  tabindex="-1" role="dialog" aria-hidden="true">
+							<div class='lightbox-content'>
+								<img src="/images/screenshots/route_proposal.png">
+							</div>
+						</div>
+						<div class="caption">
+							<h3>Template paths</h3>
+							<p>In methods that accept a view parameter ie. Controller::render($view), you'll get for viewpath parts.</p>
+						</div>
+					</div>
+				</li>
+
+				<li class="span3">
+					<div class="thumbnail">			
+						<a href="#annotaionTh" class="thumbnail" data-toggle="lightbox">
+							<img class="thumb" src="/images/screenshots/annotationcompletion.png" alt="">
+						</a>
+						<div id="annotaionTh" class="lightbox hide fade"  tabindex="-1" role="dialog" aria-hidden="true">
+							<div class='lightbox-content'>
+								<img src="/images/screenshots/annotationcompletion.png">
+							</div>
+						</div>
+						<div class="caption">
+							<h3>Annotations</h3>
+							<p>You will get codeassist for PHPDoc Annotations and automatic injection of the corresponding UseStatement.</p>
+						</div>
+					</div>
+				</li>
+
+
+				<li class="span3">
+					<div class="thumbnail">			
+						<a href="#bundleTH" class="thumbnail" data-toggle="lightbox">
+							<img class="thumb" src="/images/screenshots/repo_bundle_assist.png" alt="">
+						</a>
+						<div id="bundleTH" class="lightbox hide fade"  tabindex="-1" role="dialog" aria-hidden="true">
+							<div class='lightbox-content'>
+								<img src="/images/screenshots/repo_bundle_assist.png">
+							</div>
+						</div>
+						<div class="caption">
+							<h3>Doctrine Entities</h3>
+							<p>Repository retrieval will aid with some hints for Bundles and Entities.</p>
+						</div>
+					</div>
+				</li>
+
+				<li class="span3">
+					<div class="thumbnail">			
+						<a href="#repoTH" class="thumbnail" data-toggle="lightbox">
+							<img class="thumb" src="/images/screenshots/repo_type_inference.png" alt="">
+						</a>
+						<div id="repoTH" class="lightbox hide fade"  tabindex="-1" role="dialog" aria-hidden="true">
+							<div class='lightbox-content'>
+								<img src="/images/screenshots/repo_type_inference.png">
+							</div>
+						</div>
+						<div class="caption">
+							<h3>Repo inference</h3>
+							<p>Repository classes can be fully resolved by the type inference engine.</p>
+						</div>
+					</div>
+				</li>
+
+				<li class="span3">
+					<div class="thumbnail">			
+						<a href="#repoTH" class="thumbnail" data-toggle="lightbox">
+							<img class="thumb" src="/images/screenshots/translations.png" alt="">
+						</a>
+						<div id="repoTH" class="lightbox hide fade"  tabindex="-1" role="dialog" aria-hidden="true">
+							<div class='lightbox-content'>
+								<img src="/images/screenshots/translations.png">
+							</div>
+						</div>
+						<div class="caption">
+							<h3>Translations</h3>
+							<p>If you're inside a translation context, you'll get a list of available translation units including the translation for every available language. This will work in twig templates but also PHP methods expecting translation keys.</p>
+						</div>
+					</div>
+				</li>
+			</ul>
+	</section>
+
+
+	<section id="hyperlinks" class="row">
+		<div class="span12">
+			<h2>Hyperlinks</h2>
+
+			<div id="hyperlinkf" class="featurediv">
+				<p>To ease naviation in your Symfony project, the plugin offers hyperlinks for Symfony elements. When ctrl+clicking on such elements, PDT will know
+					where to go and open the corresponding resource. <br/><br/>For example ctrl+clicking on <span class="code">'session'</span> in the method call <span class="code">$this->get('session');</span> will open the declaring type of the session service.</p>
+					
+				<p>Currently supported elements:</p>
+				
+				<ul class="indent-1">							
+					<li> - <b>Twig Blocks</b>: open the corresponding block in the parent template when ctrl+clicking on a block tag name e.g. <span class="code" id="vpspan"> {% raw %} {% block body %} {% endraw %}</span></li>
+					<li> - <b>Twig tags/functions/filters</b>: open the corresponding php implementation when ctrl+clicking on a function/filter/tag name e.g. <span class="code" id="vpspan"> {% raw %}{% my_date|date('Y-m-d') %}{% endraw %}</span></li>		
+					<li> - <b>Services</b>: open the declaring PHP type of the service </li>
+					<li> - <b>Routes</b>: open the corresponding controller when ctrl+click on a route in a template</li>
+					<li> - <b>Assets</b>: open the corresponding css/js file</li>														
+					<li> - <b>Template variables</b>: open the corresponding controller(s) when ctrl-clicked</li>
+					<li> - <b>ViewPaths</b>: open the template when ctrl+clicking on a viewpath e.g. <span class="code" id="vpspan"> $this->render('MyBundle:Controller:index.html.twig')</span></li>
+				</ul>
+				
+				<p>Note that some of these hyperlink features are also available in XML/Yaml files.</p>
+
+				<div class="thumbnail">
+					<img src="/images/gifs/hyperlinking.gif" alt="Symfony eclipse hyperlinking">
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+
+	<section id="tooltips" class="row">
+		<div class="span12">	
+			<h2>Tooltips</h2>
+			<p>The plugin will show tooltips for various Symfony elements. Currently only routes are implemented.</p>
+
+			<a href="#tooltipTH" class="thumbnail" data-toggle="lightbox">
+				<img class="thumb" src="/images/screenshots/hover.gif" alt="">
+			</a>
+			<div id="tooltipTH" class="lightbox hide fade"  tabindex="-1" role="dialog" aria-hidden="true">
+				<div class='lightbox-content'>
+					<img src="/images/screenshots/hover.gif">
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="validation" class="row">
+		<div class="span12">
+			<h2>Validation</h2>
+			<h3>XML Validation</h3>
+			<p>The plugin validates your XML service definitions for missing classes. If a service class does not exist, you will see a warning in the line of its definition. Press Cmd+1 (Mac) or Ctrl+1 (Win/Linux) to show the quickFix proposals. If you select Create class the New PHP Class Wizard will show up with the pre-filled values of your new class.</p>
+			<div id="validatorCarousel" class="carousel slide">
+			  <!-- Carousel items -->
+			  <div class="carousel-inner">
+			    <div class="active item">			    	
+			    	<img src="/images/screenshots/xmlvalidator1.png" alt="">
+			    </div>
+			    <div class="item">
+			    	<img src="/images/screenshots/xmlvalidator2.png" alt="">
+			    </div>
+			    <div class="item">
+			    	<img src="/images/screenshots/xmlvalidator3.png" alt="">
+			    </div>
+			  </div>
+			  <!-- Carousel nav -->
+			  <a class="carousel-control left" href="#validatorCarousel" data-slide="prev">&lsaquo;</a>
+			  <a class="carousel-control right" href="#validatorCarousel" data-slide="next">&rsaquo;</a>
+			</div>
+		</div>
+	</section>
+
+
+	<section id="wizards" class="row">
+		<div class="span12">		
+			<h2>Wizards</h2>
+
+			<div class="row">
+				
+				<div class="span12">					
+					<h3>New Symfony project</h3>
+					<p>The  first page of the <strong>New Symfony project</strong> will let you choose if you want to create the new project inside your workspace, or on your local server.</p>
+					<div class="thumbnail">
+						<img src="/images/wizards/new_project_first_page.png" alt="New Symfony eclipse wizard first page">
+					</div>
+					<div class="alert">
+						<strong>Note:</strong> You need to configure at least 1 server on your <strong>Server</strong> preference page inside the PHP preferences including the path you your local webroot.
+					</div>
+					<p>The wizard will also create a new debug/run configuration with the correct settings and paths, so you can debug your project using xdebug right away:</p>
+					<div class="thumbnail">
+						<img src="/images/wizards/debug_config.png" alt="">
+					</div>
+
+					<p>The second side of the Wizard will allow you to override the composer.json values of the Symfony-Standard-Edition:</p>
+					<div class="thumbnail">
+						<img src="/images/wizards/new_project_second.png" alt="New Symfony eclipse wizard second page">						
+					</div>
+
+				</div>
+			</div>
+
+			<div class="row">
+				
+				<div class="span12">					
+					<h3>Import Symfony project</h3>
+					<p>The <strong>Import Symfony project</strong> wizard will allow you to import existing Symfony projects into your workspace.</p>					
+					<div class="thumbnail">
+						<img src="/images/wizards/import_project.png" alt="Import Symfony eclipse wizard first page">
+					</div>
+
+					<p>The wizard will automatically configure your buildpaths accordingly. It lets you configure the following elements:</p>
+
+					<h5>Dumped container</h5>
+					<p>The plugin needs to parse your dumped service container to provide codeassist. The wizard will try to detect the dumped container, but you can select a different one in the wizard.</p>
+
+					<h5>Symfony console</h5>
+					<p>The Symfony console script to use for executing Symfony commands.</p>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<section id="views" class="row">
+		<div class="span12">
+			<h2>Views</h2>
+			<p>The Services view provides an overview of all your Symfony services. You can switch between flat or bundle presentation and filter by all available service tags.</p>
+			<div class="row">
+				<div class="span12 views">
+					<img src="/images/screenshots/flat_view.png" alt="">
+					<img src="/images/screenshots/bundle_view.png" alt="">
+					<img src="/images/screenshots/tag_filter.png" alt="">
+				</div>
+			</div>
+
+		</div>
+
+	</section>
+
+	<section id="dialogs" class="row">
+		<div class="span12">		
+			<h2>Dialogs</h2>
+
+			<div class="row">				
+				<div class="span12">					
+					<h3>Insert route</h3>
+					<p>Press Cmd+R (Mac) or Ctrl+R (Win/Linux) to open the route insertion dialog (also available via the main menu Source -> Insert Symfony route).</p>
+					<div class="thumbnail">
+						<img src="/images/screenshots/routeDialog.png" alt="Insert Symfony route">
+					</div>
+				</div>
+			</div>
+
+			<div class="row">				
+				<div class="span12">					
+					<h3>Insert Service ID</h3>
+					<p>Press Cmd+Shift+S (Mac) or Ctrl+Shift+S (Win/Linux) to open the service insertion dialog (also available via the main menu Source -> Insert Symfony service ID).</p>
+					<div class="thumbnail">
+						<img src="/images/screenshots/serviceDialog.png" alt="Insert Symfony route">
+					</div>
+				</div>
+			</div>
+
+			<div class="row">				
+				<div class="span12">					
+					<h3>Insert container parameter</h3>
+					<p>Press Cmd+Shift+P (Mac) or Ctrl+Shift+P (Win/Linux) to open the parameter insertion dialog (also available via the main menu Source -> Insert Symfony container parameter).</p>
+					<div class="thumbnail">
+						<img src="/images/screenshots/insert_parameter.png" alt="Insert Symfony route">
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<p>Note that these dialogs are available in any editor - e.g. for inserting service IDs inside your XML configuration.</p>
+			</div>
+			
+
+		</div>
+	</section>
+
+
+
 </div>
