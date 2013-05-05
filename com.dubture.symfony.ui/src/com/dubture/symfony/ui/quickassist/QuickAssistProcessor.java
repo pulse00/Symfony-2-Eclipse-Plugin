@@ -33,84 +33,69 @@ import com.dubture.symfony.core.resources.SymfonyMarker;
  * 
  */
 @SuppressWarnings("restriction")
-public class QuickAssistProcessor implements IQuickAssistProcessor
-{
+public class QuickAssistProcessor implements IQuickAssistProcessor {
 
-    @Override
-    public String getErrorMessage()
-    {
-        return null;
-    }
+	@Override
+	public String getErrorMessage() {
+		return null;
+	}
 
-    @Override
-    public boolean canFix(Annotation annotation)
-    {
-        return false;
-    }
+	@Override
+	public boolean canFix(Annotation annotation) {
+		return false;
+	}
 
-    @Override
-    public boolean canAssist(IQuickAssistInvocationContext invocationContext)
-    {
-        return true;
-    }
+	@Override
+	public boolean canAssist(IQuickAssistInvocationContext invocationContext) {
+		return true;
+	}
 
-    @Override
-    @SuppressWarnings("rawtypes")
-    public ICompletionProposal[] computeQuickAssistProposals(
-            IQuickAssistInvocationContext invocationContext)
-    {
+	@Override
+	@SuppressWarnings("rawtypes")
+	public ICompletionProposal[] computeQuickAssistProposals(IQuickAssistInvocationContext invocationContext) {
 
-        if (invocationContext.getSourceViewer() instanceof StructuredTextViewer) {
-            StructuredTextViewer viewer = (StructuredTextViewer) invocationContext
-                    .getSourceViewer();
+		if (!(invocationContext.getSourceViewer() instanceof StructuredTextViewer)) {
+			return null;
+		}
+		
+		StructuredTextViewer viewer = (StructuredTextViewer) invocationContext.getSourceViewer();
 
-            int line = -1;
+		int line = -1;
 
-            try {
-                line = viewer.getDocument().getLineOfOffset(
-                        invocationContext.getOffset());
-                // the document counts 0 indexed, the marker 1 indexed
-                line += 1;
-            } catch (BadLocationException e1) {
-                Logger.logException(e1);
-            }
+		try {
+			line = viewer.getDocument().getLineOfOffset(invocationContext.getOffset());
+			// the document counts 0 indexed, the marker 1 indexed
+			line += 1;
+		} catch (BadLocationException e1) {
+			Logger.logException(e1);
+		}
 
-            if (viewer.getAnnotationModel() instanceof StructuredResourceMarkerAnnotationModel) {
-                StructuredResourceMarkerAnnotationModel model = (StructuredResourceMarkerAnnotationModel) viewer
-                        .getAnnotationModel();
+		if (viewer.getAnnotationModel() instanceof StructuredResourceMarkerAnnotationModel) {
+			
+			StructuredResourceMarkerAnnotationModel model = (StructuredResourceMarkerAnnotationModel) viewer.getAnnotationModel();
+			Iterator iterator = model.getAnnotationIterator();
 
-                Iterator iterator = model.getAnnotationIterator();
+			while (iterator.hasNext()) {
+				Object next = iterator.next();
 
-                while (iterator.hasNext()) {
-                    Object next = iterator.next();
+				if (next instanceof StructuredMarkerAnnotation) {
+					StructuredMarkerAnnotation annotation = (StructuredMarkerAnnotation) next;
 
-                    if (next instanceof StructuredMarkerAnnotation) {
-                        StructuredMarkerAnnotation annotation = (StructuredMarkerAnnotation) next;
-
-                        try {
-
-                            IMarker marker = annotation.getMarker();
-
-                            if (marker != null
-                                    && SymfonyMarker.MISSING_SERVICE_CLASS
-                                            .equals(marker.getType())) {
-
-                                int markerLine = MarkerUtilities
-                                        .getLineNumber(marker);
-
-                                if (markerLine == line) {
-                                    return new ICompletionProposal[]{new CreateClassCompletionProposal(
-                                            marker)};
-                                }
-                            }
-                        } catch (CoreException e) {
-                            Logger.logException(e);
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
+					try {
+						IMarker marker = annotation.getMarker();
+						if (marker != null && SymfonyMarker.MISSING_SERVICE_CLASS.equals(marker.getType())) {
+							int markerLine = MarkerUtilities.getLineNumber(marker);
+							if (markerLine == line) {
+								return new ICompletionProposal[] { new CreateClassCompletionProposal(marker) };
+							}
+						}
+					} catch (CoreException e) {
+						Logger.logException(e);
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
 }
