@@ -1,15 +1,32 @@
+div.brand a.github-icon {
+	margin-left: 20px;
+}
+
+div.brand a.icon {
+	color: #777;
+}
+
+div.brand a.icon:hover {
+	text-decoration: none;
+	color: #333;
+}
+
+#flattr {
+	margin-right: 20px;
+
+}
+.subnav .nav > li > a {
+
+
+}
+
+.nav-pills a:hover {
+
+}
+
 div.about p {
 
 	height: 60px;
-}
-
-a {
-	color: #CC3333;
-}
-
-a:hover {
-
-	color: #CC3333;
 }
 
 div.faq h2 {
@@ -88,7 +105,8 @@ ul.thumbnails li div.caption p {
 
 .carousel .item {
 
-	min-height: 570px;
+	min-height: 430px;
+	
 
 }
 
@@ -137,6 +155,7 @@ section {
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
 	border-radius: 0;
+	color: #777;
 }
 
 .subnav .nav > .active > a,
