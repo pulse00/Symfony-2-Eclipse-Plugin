@@ -124,7 +124,7 @@ public class SymfonyImportFirstPage extends WizardPage {
 
 				try {
 					FileDialog dialog = new FileDialog(getShell());
-					dialog.setFilterExtensions(new String[]{"xml"});
+					//dialog.setFilterExtensions(new String[]{"xml"});
 					String result = dialog.open();
 					String relativePath = getRelativePath(result);
 					if (result != null && relativePath != null) {
@@ -185,7 +185,7 @@ public class SymfonyImportFirstPage extends WizardPage {
 			return null;
 		}
 		
-		return container.removeFirstSegments(sourcePath.segmentCount()).toOSString();
+		return container.setDevice(null).removeFirstSegments(sourcePath.segmentCount()).toOSString();
 	}
 	
 	protected void enableButtons() {
@@ -212,13 +212,13 @@ public class SymfonyImportFirstPage extends WizardPage {
 		if (scanner.getConsole() != null && scanner.getConsole().exists()) {
 			IPath newConsolePath = new Path(scanner.getConsole().getAbsolutePath());
 			newConsolePath = newConsolePath.removeFirstSegments(sourcePath.segmentCount());
-			consoleButton.setText(newConsolePath.toOSString());
+			consoleButton.setText(newConsolePath.setDevice(null).toOSString());
 			consolePath = newConsolePath;
 		}
 		
 		if (scanner.getContainer() != null && scanner.getContainer().exists()) {
 			IPath newContainerPath = new Path(scanner.getContainer().getAbsolutePath());
-			newContainerPath = newContainerPath.removeFirstSegments(sourcePath.segmentCount());
+			newContainerPath = newContainerPath.setDevice(null).removeFirstSegments(sourcePath.segmentCount());
 			containerButton.setText(newContainerPath.toOSString());
 			containerPath = newContainerPath;
 		}
