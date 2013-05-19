@@ -339,11 +339,6 @@
  </extension>
  -->
  <extension
-       point="org.pdtextensions.core.ui.formatterProfileContributor">
-    <contributor
-          class="com.dubture.symfony.ui.formatter.FormatterProfileContributor"></contributor>
- </extension>
- <extension
        point="org.eclipse.ui.handlers">
     <handler
           class="com.dubture.symfony.ui.actions.InsertRouteHandler"
