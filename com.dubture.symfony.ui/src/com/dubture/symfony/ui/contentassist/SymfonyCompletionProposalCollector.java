@@ -17,10 +17,15 @@ import org.eclipse.dltk.ui.text.completion.ProposalInfo;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.codeassist.ICompletionContextResolver;
+import org.eclipse.php.core.codeassist.ICompletionStrategyFactory;
+import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestorExtension;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposalCollector;
 import org.eclipse.swt.graphics.Image;
 
 import com.dubture.symfony.core.builder.SymfonyNature;
+import com.dubture.symfony.core.codeassist.SymfonyCompletionContextResolver;
+import com.dubture.symfony.core.codeassist.SymfonyCompletionStrategyFactory;
 
 /**
  * The {@link SymfonyCompletionProposalCollector} is
@@ -33,7 +38,7 @@ import com.dubture.symfony.core.builder.SymfonyNature;
  */
 @SuppressWarnings("restriction")
 public class SymfonyCompletionProposalCollector extends
-        PHPCompletionProposalCollector {
+        PHPCompletionProposalCollector implements IPHPCompletionRequestorExtension {
 
     private SymfonyCompletionProposalLabelProvider labelProvider;
 
@@ -99,4 +104,20 @@ public class SymfonyCompletionProposalCollector extends
     protected String getNatureId() {
         return SymfonyNature.NATURE_ID;
     }
+
+
+	@Override
+	public ICompletionContextResolver[] getContextResolvers() {
+		return new ICompletionContextResolver[] {
+			new SymfonyCompletionContextResolver()
+		};
+	}
+
+
+	@Override
+	public ICompletionStrategyFactory[] getStrategyFactories() {
+		return new ICompletionStrategyFactory[] {
+			new SymfonyCompletionStrategyFactory()
+		};
+	}
 }

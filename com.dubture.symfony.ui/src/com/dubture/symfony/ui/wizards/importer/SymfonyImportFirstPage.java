@@ -34,6 +34,7 @@ import org.eclipse.ui.PlatformUI;
 import com.dubture.getcomposer.core.ComposerPackage;
 import com.dubture.getcomposer.core.VersionedPackage;
 import com.dubture.getcomposer.core.collection.Dependencies;
+import com.dubture.getcomposer.json.ParseException;
 import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.ui.SymfonyPluginImages;
@@ -55,14 +56,14 @@ public class SymfonyImportFirstPage extends WizardPage {
 	private StringButtonDialogField sourceButton;
 	private StringButtonDialogField containerButton;
 	private StringButtonDialogField consoleButton;
-	
+
 	protected IPath sourcePath;
 	protected IPath consolePath;
 	protected IPath containerPath;
 	protected String projectName;
 	protected PHPVersion phpVersion;
 	protected SymfonyVersion symfonyVersion;
-	
+
 	private SymfonyProjectScanner scanner;
 	private StringDialogField projectNameField;
 	private IWorkspace workspace;
@@ -87,14 +88,14 @@ public class SymfonyImportFirstPage extends WizardPage {
 		projectNameField.setLabelText("Project name");
 		projectNameField.doFillIntoGrid(container, 3);
 		projectNameField.setDialogFieldListener(new IDialogFieldListener() {
-			
+
 			@Override
 			public void dialogFieldChanged(DialogField field) {
 				projectName = projectNameField.getText();
 				validateSettings();
 			}
 		});
-		
+
 		sourceButton = new StringButtonDialogField(new IStringButtonAdapter() {
 			@Override
 			public void changeControlPressed(DialogField field) {
@@ -130,15 +131,15 @@ public class SymfonyImportFirstPage extends WizardPage {
 					if (result != null && relativePath != null) {
 						containerButton.setText(relativePath);
 						containerPath= new Path(relativePath);
-						validateSettings();						
+						validateSettings();
 					}
 				} catch (Exception e) {
 					Logger.logException(e);
 				}
-				
+
 			}
 		});
-		
+
 		LayoutUtil.setHorizontalGrabbing(sourceButton.getTextControl(null));
 
 		containerButton.setButtonLabel("Browse");
@@ -154,48 +155,48 @@ public class SymfonyImportFirstPage extends WizardPage {
 				if (result != null && relativePath != null) {
 					consoleButton.setText(relativePath);
 					consolePath = new Path(relativePath);
-					validateSettings();					
+					validateSettings();
 				}
 			}
 		});
-		
+
 		LayoutUtil.setHorizontalGrabbing(containerButton.getTextControl(null));
 
 		consoleButton.setButtonLabel("Browse");
 		consoleButton.setLabelText("Symfony console");
 		consoleButton.doFillIntoGrid(container, 3);
-		
+
 		LayoutUtil.setHorizontalGrabbing(consoleButton.getTextControl(null));
-		
+
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(container, SymfonyUiPlugin.PLUGIN_ID + "." + "import_firstpage");
-		
+
 		disableButtons();
-		
+
 		setControl(container);
 	}
-	
+
 	protected String getRelativePath(String path) {
-		
+
 		if (path == null) {
 			return null;
 		}
-		
+
 		IPath container = new Path(path);
 		if (!sourcePath.isPrefixOf(container)) {
 			return null;
 		}
-		
+
 		return container.setDevice(null).removeFirstSegments(sourcePath.segmentCount()).toOSString();
 	}
-	
+
 	protected void enableButtons() {
 		consoleButton.setEnabled(true);
 		consoleButton.getTextControl(null).setEnabled(false);
-		
+
 		containerButton.setEnabled(true);
 		containerButton.getTextControl(null).setEnabled(false);
 	}
-	
+
 	protected void disableButtons() {
 		consoleButton.setEnabled(false);
 		containerButton.setEnabled(false);
@@ -206,24 +207,24 @@ public class SymfonyImportFirstPage extends WizardPage {
 		if (sourcePath == null) {
 			return;
 		}
-		
+
 		getWizard().getContainer().run(true, true, scanner);
-		
+
 		if (scanner.getConsole() != null && scanner.getConsole().exists()) {
 			IPath newConsolePath = new Path(scanner.getConsole().getAbsolutePath());
 			newConsolePath = newConsolePath.removeFirstSegments(sourcePath.segmentCount());
 			consoleButton.setText(newConsolePath.setDevice(null).toOSString());
 			consolePath = newConsolePath;
 		}
-		
+
 		if (scanner.getContainer() != null && scanner.getContainer().exists()) {
 			IPath newContainerPath = new Path(scanner.getContainer().getAbsolutePath());
 			newContainerPath = newContainerPath.setDevice(null).removeFirstSegments(sourcePath.segmentCount());
 			containerButton.setText(newContainerPath.toOSString());
 			containerPath = newContainerPath;
 		}
-		
-		validateSettings();		
+
+		validateSettings();
 	}
 
 	protected class SymfonyProjectScanner implements IRunnableWithProgress {
@@ -274,12 +275,12 @@ public class SymfonyImportFirstPage extends WizardPage {
 				}
 			}
 		}
-		
-		protected void scanVersions() throws IOException {
+
+		protected void scanVersions() throws IOException, ParseException {
 			IPath composerPath = sourcePath.append("composer.json");
 			ComposerPackage composer = new ComposerPackage(composerPath.toFile());
 			Dependencies require = composer.getRequire();
-			
+
 			for (VersionedPackage versioned: require) {
 				if ("symfony/symfony".equals(versioned.getName())) {
 					if (versioned.getVersion().startsWith("2.1")) {
@@ -297,15 +298,15 @@ public class SymfonyImportFirstPage extends WizardPage {
 				}
 			}
 		}
-		
+
 		protected void scanForExistingProjectFile() throws IOException {
-			
+
 			IPath projectPath = sourcePath.append(".project");
-			
+
 			if (projectPath.toFile().exists()) {
 				ProjectDescriptionReader reader = new ProjectDescriptionReader();
 				final ProjectDescription projectDescription = reader.read(projectPath);
-				
+
 				if (projectDescription != null && projectDescription.getName() != null) {
 					getShell().getDisplay().asyncExec(new Runnable() {
 						@Override
@@ -330,29 +331,29 @@ public class SymfonyImportFirstPage extends WizardPage {
 	public IPath getSourcePath() {
 		return sourcePath;
 	}
-	
+
 	public IPath getContainerPath() {
 		return containerPath;
 	}
-	
+
 	public IPath getConsolePath() {
 		return consolePath;
 	}
-	
+
 	public String getProjectName() {
 		return projectName;
 	}
-	
+
 	public PHPVersion getPHPVersion() {
 		return phpVersion;
 	}
-	
+
 	public SymfonyVersion getSymfonyVersion() {
 		return symfonyVersion;
 	}
-	
+
 	public void validateProjectName() throws ValidationException {
-		
+
 		try {
 			IProject project = workspace.getRoot().getProject(projectName);
 			if (project != null && project.exists()) {
@@ -362,7 +363,7 @@ public class SymfonyImportFirstPage extends WizardPage {
 			throw new ValidationException(e.getMessage());
 		}
 	}
-	
+
 	public void validateContainerPath() throws ValidationException {
 		try {
 			validatePath(containerPath.toOSString());
@@ -370,7 +371,7 @@ public class SymfonyImportFirstPage extends WizardPage {
 			throw new ValidationException("The selected service container does not exist.");
 		}
 	}
-	
+
 	public void validateConsolePath() throws ValidationException {
 		try {
 			validatePath(consolePath.toOSString());
@@ -378,20 +379,20 @@ public class SymfonyImportFirstPage extends WizardPage {
 			throw new ValidationException("The selected Symfony console does not exist.");
 		}
 	}
-	
+
 	public void validatePath(String path) throws ValidationException {
 
 		if (sourcePath == null) {
 			throw new ValidationException("");
 		}
-		
+
 		File absolute = new File(sourcePath.toOSString(), path);
-		
+
 		if (absolute.exists() == false) {
-			throw new ValidationException("");			
+			throw new ValidationException("");
 		}
 	}
-	
+
 	public void validateSettings() {
 
 		try {
@@ -402,7 +403,7 @@ public class SymfonyImportFirstPage extends WizardPage {
 			setPageComplete(false);
 			return;
 		}
-		
+
 		setPageComplete(true);
 		setErrorMessage(null);
 	}

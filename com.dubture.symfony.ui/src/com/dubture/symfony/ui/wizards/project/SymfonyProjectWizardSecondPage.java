@@ -54,6 +54,7 @@ import com.dubture.composer.ui.wizard.AbstractWizardFirstPage;
 import com.dubture.composer.ui.wizard.AbstractWizardSecondPage;
 import com.dubture.composer.ui.wizard.project.BasicSettingsGroup;
 import com.dubture.getcomposer.core.ComposerPackage;
+import com.dubture.getcomposer.json.ParseException;
 import com.dubture.symfony.core.SymfonyCorePlugin;
 import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.facet.FacetManager;
@@ -64,9 +65,9 @@ import com.dubture.symfony.ui.SymfonyUiPlugin;
 import com.dubture.symfony.ui.job.NopJob;
 
 /**
- * 
+ *
  * @author Robert Gruendler <r.gruendler@gmail.com>
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
@@ -80,12 +81,12 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		
+
 	}
-	
+
 	@Override
 	public void createControl(Composite parent) {
-		
+
 		final Composite composite = new Composite(parent, SWT.NULL);
 		composite.setFont(parent.getFont());
 
@@ -93,10 +94,10 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
 		layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
 		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
-		
+
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
-		
+
 		overrideComposer = new SelectionButtonDialogField(SWT.CHECK);
 		overrideComposer.setLabelText("Override composer.json values");
 		overrideComposer.doFillIntoGrid(composite, 3);
@@ -106,13 +107,13 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 				settingsGroup.setEnabled(overrideComposer.isSelected());
 			}
 		});
-		
+
 		settingsGroup = new BasicSettingsGroup(composite, getShell());
 		settingsGroup.addObserver(this);
 		settingsGroup.setEnabled(false);
-		
+
 		setControl(composite);
-		
+
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, SymfonyUiPlugin.PLUGIN_ID + "." + "newproject_secondpage");
 	}
 
@@ -130,13 +131,13 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 	protected void beforeFinish(IProgressMonitor monitor) throws Exception {
 
 		final CountDownLatch latch = new CountDownLatch(1);
-		
+
 		SymfonyProjectWizardFirstPage symfonyPage = (SymfonyProjectWizardFirstPage) firstPage;
 		monitor.beginTask("Initializing Symfony project", 2);
 		monitor.setTaskName("Running create-project command...");
 		monitor.worked(1);
 		IPath path = null;
-		
+
 		if (symfonyPage.isInLocalServer()) {
 			path = symfonyPage.getPath().removeLastSegments(1);
 		} else {
@@ -159,28 +160,28 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 				latch.countDown();
 			}
 		});
-		
+
 		projectJob.addJobChangeListener(new JobChangeAdapter() {
-			
+
 			@Override
 			public void done(IJobChangeEvent event) {
-				
+
 				if (event.getResult() == null || event.getResult().getCode() == Status.ERROR) {
 					Logger.log(Logger.ERROR, "Could not run composer create-project");
 					return;
 				}
-				
+
 				if (getProject() == null || getProject().getName() == null) {
 					Logger.log(Logger.ERROR, "Unable to initialize symfony project, cannot retrieve project");
 					return;
 				}
-				
+
 				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(getProject().getName());
 				if (project == null) {
 					Logger.log(Logger.WARNING, "Unable to retrieve project for running the console after project initialization");
 					return;
 				}
-				
+
 				refreshProject(getProject().getName());
 				NopJob job = new NopJob();
 				job.setProject(project);
@@ -193,14 +194,14 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 							Logger.log(Logger.WARNING, "Could not retrieve project for saving the debug container");
 							return;
 						}
-						
+
 						IFile dumpedContainer = project.getFile(SymfonyCoreConstants.DEFAULT_CONTAINER);
-						
+
 						if (dumpedContainer == null || dumpedContainer.exists() == false) {
 							Logger.log(Logger.WARNING, "Could not retrieve project for saving the debug container");
 							return;
 						}
-						
+
 						try {
 							Logger.debugMSG("Setting dumped service container");
 							IEclipsePreferences node = new ProjectScope(project).getNode(SymfonyCorePlugin.ID);
@@ -211,81 +212,81 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 						}
 					}
 				});
-				
+
 				job.schedule();
 			}
 		});
-		
+
 		projectJob.schedule();
-		
+
 		try {
 			latch.await();
 		} catch (InterruptedException e) {
-			
+
 		}
-		
+
 		monitor.worked(1);
 	}
 
 	@Override
 	protected void finishPage(IProgressMonitor monitor) throws Exception {
-		
+
 		IPath vendorPath = getSymfonyFolderPath(getProject(), SymfonyCoreConstants.VENDOR_PATH);
-		
+
 		IBuildpathEntry sourceEntry = DLTKCore.newSourceEntry(vendorPath, new IPath[] {
 			new Path(SymfonyCoreConstants.SKELETON_PATTERN),
 			new Path(SymfonyCoreConstants.TEST_PATTERN),
 			new Path(SymfonyCoreConstants.CG_FIXTURE_PATTERN)
-		});        
-	        
+		});
+
         BuildPathManager.setExclusionPattern(getScriptProject(), sourceEntry);
         String version = ((SymfonyProjectWizardFirstPage)firstPage).getSymfonyVersion();
         SymfonyVersion symfonyVersion = SymfonyVersion.Symfony2_2_1;
         if (version.startsWith("v2.1")) {
         	symfonyVersion = SymfonyVersion.Symfony2_1_9;
         }
-        
+
         try {
-        	
+
         	FacetManager.installFacets(getProject(), firstPage.getPHPVersionValue(), symfonyVersion, monitor);
-        	
+
         	if (overrideComposer.isSelected()) {
         		updateComposerJson(monitor);
         	}
-        	
+
         	createProjectSettings();
-        	
+
         	if (!firstPage.isInLocalServer()) {
         		return;
         	}
-        	
+
         	Server server = createServer();
         	LaunchConfigurationHelper.createLaunchConfiguration(getProject(), server, getProject().getFile(new Path("web/app_dev.php")));
-        	
+
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
 	}
-	
+
 	protected void createProjectSettings() throws BackingStoreException {
-		
+
 		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(SymfonyCorePlugin.ID);
 		String executable = preferences.get(Keys.PHP_EXECUTABLE, null);
-		
+
 		IEclipsePreferences node = new ProjectScope(getProject()).getNode(SymfonyCorePlugin.ID);
 		node.put(Keys.PHP_EXECUTABLE, executable);
 		node.put(Keys.CONSOLE, SymfonyCoreConstants.DEFAULT_CONSOLE);
 		node.put(Keys.USE_PROJECT_PHAR, Boolean.FALSE.toString());
 		node.flush();
-		
+
 	}
-	
-    private void updateComposerJson(IProgressMonitor monitor) throws IOException, CoreException {
+
+    private void updateComposerJson(IProgressMonitor monitor) throws IOException, CoreException, ParseException {
 
     	IFile composerJson = getProject().getFile("composer.json");
     	ComposerPackage composerPackage = new ComposerPackage(composerJson.getRawLocation().makeAbsolute().toFile());
-		String2KeywordsConverter keywordConverter = new String2KeywordsConverter(composerPackage);    	
-    	
+		String2KeywordsConverter keywordConverter = new String2KeywordsConverter(composerPackage);
+
 		if (settingsGroup.getVendor() != null && firstPage.nameGroup.getName() != null) {
 			composerPackage.setName(String.format("%s/%s", settingsGroup.getVendor(), firstPage.nameGroup.getName()));
 		}
@@ -309,11 +310,11 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 
 		String json = composerPackage.toJson();
 		ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes());
-		
+
 		monitor.beginTask("Updating composer.json", 1);
 		composerJson.setContents(bis, IResource.FORCE, monitor);
 		monitor.worked(1);
-    	
+
 	}
 
 	private IPath getSymfonyFolderPath(IProject project, String folderPath) {
@@ -324,7 +325,7 @@ public class SymfonyProjectWizardSecondPage extends AbstractWizardSecondPage {
 
         return null;
     }
-    
+
     protected Server createServer() throws MalformedURLException {
     	Server server = ServersManager.createServer(getProject().getName(), ((SymfonyProjectWizardFirstPage)firstPage).getVirtualHost());
     	server.setDocumentRoot(getProject().getRawLocation().append("web").toOSString());
