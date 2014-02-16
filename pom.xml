@@ -10,7 +10,7 @@
     <prerequisites>
         <maven>3.0</maven>
     </prerequisites>
-    
+
     <modules>
         <module>com.dubture.symfony.core</module>
         <module>com.dubture.symfony.debug</module>
@@ -34,9 +34,14 @@
 		<url>http://dzwiupza59who.cloudfront.net/repository</url>
 	</repository>
         <repository>
-            <id>dltk</id>
+            <id>dltk-snaphot</id>
             <layout>p2</layout>
             <url>https://hudson.eclipse.org/hudson/job/dltk-nightly/lastSuccessfulBuild/artifact/org.eclipse.dltk.releng/build/update.site/target/site/</url>
+        </repository>
+        <repository>
+            <id>dltk-stable</id>
+            <layout>p2</layout>
+            <url>http://download.eclipse.org/technology/dltk/updates-dev/5.0/</url>
         </repository>
         <repository>
             <id>pex</id>
@@ -59,7 +64,7 @@
         <repository>
             <id>orbit</id>
             <layout>p2</layout>
-            <url>http://download.eclipse.org/tools/orbit/downloads/drops/S20130427215344/repository</url>
+            <url>http://download.eclipse.org/tools/orbit/downloads/drops/R20140114142710/repository</url>
         </repository>
 
     </repositories>
@@ -96,7 +101,7 @@
 				<version>${tycho-version}</version>
 				<configuration>
 
-					<pomDependencies>consider</pomDependencies>				
+					<pomDependencies>consider</pomDependencies>
 					<environments>
 						<environment>
 							<os>linux</os>
