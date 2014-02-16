@@ -14,5 +14,5 @@ class SomeController {
 }
 ?>
 --EXPECT--
-type(Route)
 keyword(return)
+type(Route)

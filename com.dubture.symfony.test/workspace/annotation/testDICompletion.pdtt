@@ -14,7 +14,7 @@ class SomeController {
 }
 ?>
 --EXPECT--
-type(Inject)
 keyword(ignore)
 keyword(internal)
+type(Inject)
 
