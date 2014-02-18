@@ -16,7 +16,7 @@
             id="com.dubture.symfony.core.symfonyBuilder">
       </builder>
    </extension>
-   
+
    <!-- The Symfony2 core builder - visits xml and yml files to parse the configuration -->
    <extension
          point="org.eclipse.dltk.core.language">
@@ -25,7 +25,7 @@
             nature="org.eclipse.php.core.PHPNature"
             priority="100">
       </language>
-   </extension> 
+   </extension>
    <extension
          id="symfonyBuilder"
          name="Symfony Builder"
@@ -37,16 +37,16 @@
          </run>
       </builder>
    </extension>
-   
-   
+
+
 	<!-- Preferences -->
 	<extension point="org.eclipse.core.runtime.preferences">
     	<initializer class="com.dubture.symfony.core.preferences.PreferenceInitializer">
     	</initializer>
- 	</extension>   
- 	
-	<!-- The Symfony2 dltk builder - traverses AST nodes during building to parse model elements like Bundles/AppKernel etc. -->	
-	
+ 	</extension>
+
+	<!-- The Symfony2 dltk builder - traverses AST nodes during building to parse model elements like Bundles/AppKernel etc. -->
+
 	<!-- org.eclipse.php.core.PHPNature -->
    <extension
          point="org.eclipse.dltk.core.buildParticipant">
@@ -55,6 +55,9 @@
             id="com.dubture.symfony.core.buildParticipant"
             name="Symfony Builder"
             nature="org.eclipse.php.core.PHPNature">
+         <requires
+               id="org.eclipse.php.core.buildParticipant.parser">
+         </requires>
       </buildParticipant>
    </extension>
    <extension
@@ -65,8 +68,8 @@
             targetId="org.eclipse.dltk.core.index.sql.indexer">
       </indexerParticipant>
    </extension>
-   
-   
+
+
    <!-- The Symfony2 indexing visitor - traverses the AST nodes to contribute model elements to the index like Routings and Annotations -->
    <extension
          point="org.eclipse.php.core.phpIndexingVisitors">
@@ -74,31 +77,16 @@
             class="com.dubture.symfony.core.index.SymfonyIndexingVisitorExtension">
       </visitor>
    </extension>
-   
 
-	<!-- PDT SourceElementRequestor - not used at the moment -->   
+
+	<!-- PDT SourceElementRequestor - not used at the moment -->
    <extension
          point="org.eclipse.php.core.phpSourceElementRequestors">
       <requestor
             class="com.dubture.symfony.core.compiler.SourceElementRequestor">
       </requestor>
    </extension>
-   
 
-	<!-- Code assist -->   
-   <extension
-         point="org.eclipse.php.core.completionStrategyFactories">
-      <factory
-            class="com.dubture.symfony.core.codeassist.SymfonyCompletionStrategyFactory">
-      </factory>
-   </extension>
-   
-   <extension
-         point="org.eclipse.php.core.completionContextResolvers">
-      <resolver
-            class="com.dubture.symfony.core.codeassist.SymfonyCompletionContextResolver"></resolver>
-   </extension>
-   
    <extension
          point="org.eclipse.php.core.goalEvaluatorFactories">
       <factory
@@ -124,9 +112,9 @@
             class="com.dubture.symfony.core.goals.SymfonyEntityResolver">
       </resolver>
    </extension>
-   
+
    <!-- End code assist -->
-   
+
     <extension id="serviceMarker" point="org.eclipse.core.resources.markers" name="Service Marker">
      <super
            type="org.eclipse.core.resources.problemmarker">
