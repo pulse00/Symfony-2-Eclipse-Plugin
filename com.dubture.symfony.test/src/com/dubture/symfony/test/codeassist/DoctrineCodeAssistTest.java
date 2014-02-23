@@ -1,9 +1,11 @@
 package com.dubture.symfony.test.codeassist;
 
 import org.junit.Test;
+import org.junit.Ignore;
 
 import com.dubture.symfony.test.AbstractCodeAssistTest;
 
+@Ignore
 public class DoctrineCodeAssistTest extends AbstractCodeAssistTest {
 
 	public DoctrineCodeAssistTest() {
