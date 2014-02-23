@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.dubture.symfony.debug;singleton:=true
-Bundle-Version: 1.0.94.qualifier
+Bundle-Version: 1.0.95.qualifier
 Bundle-Activator: com.dubture.symfony.debug.SymfonyDebugPlugin
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.core.runtime,
@@ -25,9 +25,7 @@ Require-Bundle: org.eclipse.core.runtime,
  com.dubture.symfony.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: com.dubture.symfony.debug,
- com.dubture.symfony.debug.launch,
- com.dubture.symfony.debug.server,
- com.dubture.symfony.debug.util
+Export-Package: com.dubture.symfony.debug,com.dubture.symfony.debug.la
+ unch,com.dubture.symfony.debug.server,com.dubture.symfony.debug.util
 Bundle-ClassPath: .
 Eclipse-RegisterBuddy: org.eclipse.php.debug.core

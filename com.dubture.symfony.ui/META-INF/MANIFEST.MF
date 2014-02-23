@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.dubture.symfony.ui;singleton:=true
-Bundle-Version: 1.0.94.qualifier
+Bundle-Version: 1.0.95.qualifier
 Bundle-Activator: com.dubture.symfony.ui.SymfonyUiPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -48,23 +48,14 @@ Require-Bundle: org.eclipse.ui,
  org.apache.commons.io
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: com.dubture.symfony.core.model,
- com.dubture.symfony.ui,
- com.dubture.symfony.ui.actions,
- com.dubture.symfony.ui.console,
- com.dubture.symfony.ui.contentassist,
- com.dubture.symfony.ui.editor,
- com.dubture.symfony.ui.editor.highlighting,
- com.dubture.symfony.ui.editor.hover,
- com.dubture.symfony.ui.editor.hyperlink,
- com.dubture.symfony.ui.editor.template,
- com.dubture.symfony.ui.listener,
- com.dubture.symfony.ui.preferences,
- com.dubture.symfony.ui.quickassist,
- com.dubture.symfony.ui.utils,
- com.dubture.symfony.ui.views,
- com.dubture.symfony.ui.viewsupport,
- com.dubture.symfony.ui.wizards,
- com.dubture.symfony.ui.wizards.project
+Export-Package: com.dubture.symfony.core.model,com.dubture.symfony.ui,
+ com.dubture.symfony.ui.actions,com.dubture.symfony.ui.console,com.dub
+ ture.symfony.ui.contentassist,com.dubture.symfony.ui.editor,com.dubtu
+ re.symfony.ui.editor.highlighting,com.dubture.symfony.ui.editor.hover
+ ,com.dubture.symfony.ui.editor.hyperlink,com.dubture.symfony.ui.edito
+ r.template,com.dubture.symfony.ui.listener,com.dubture.symfony.ui.pre
+ ferences,com.dubture.symfony.ui.quickassist,com.dubture.symfony.ui.ut
+ ils,com.dubture.symfony.ui.views,com.dubture.symfony.ui.viewsupport,c
+ om.dubture.symfony.ui.wizards,com.dubture.symfony.ui.wizards.project
 Bundle-ClassPath: .
 Bundle-Vendor: https://github.com/pulse00
