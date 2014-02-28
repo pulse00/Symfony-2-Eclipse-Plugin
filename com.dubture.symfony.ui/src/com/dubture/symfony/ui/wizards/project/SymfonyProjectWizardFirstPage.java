@@ -20,6 +20,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
+import org.pdtextensions.core.exception.ExecutableNotFoundException;
+import org.pdtextensions.core.util.LaunchUtil;
 
 import com.dubture.composer.core.ComposerPlugin;
 import com.dubture.composer.ui.converter.String2KeywordsConverter;
@@ -72,8 +74,17 @@ public class SymfonyProjectWizardFirstPage extends PackageProjectWizardFirstPage
 				IPreferenceStore store = ComposerPlugin.getDefault().getPreferenceStore();
 				PreferencesSupport prefSupport = new PreferencesSupport(ComposerPlugin.ID, store);
 				String executable = prefSupport.getPreferencesValue(Keys.PHP_EXECUTABLE, null, null);
-				if (executable == null || executable.length() == 0) {
-					throw new ValidationException("No PHP executable defined. Please specify a valid executable in the PHP Executables preference page.", Severity.ERROR);
+				
+				if (executable == null || executable.isEmpty()) {
+					// the user has not set any preference for PHP executable yet,
+					// so try finding any PHP executable, e.g. contributed via the
+					// phpExe extension point
+					try {
+						executable = LaunchUtil.getPHPExecutable();
+					} catch (ExecutableNotFoundException e) {
+						// still no php exe found
+						throw new ValidationException("No PHP executable defined. Please specify a valid executable in the PHP Executables preference page.", Severity.ERROR);
+					}
 				}
 			}
 		};
