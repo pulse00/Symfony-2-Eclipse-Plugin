@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of the Symfony eclipse plugin.
- * 
+ *
  * (c) Robert Gruendler <r.gruendler@gmail.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
@@ -20,11 +20,11 @@ public class SymfonyIndexPreferences extends AbstractPreferenceInitializer {
 	public static final String DB_LOCK_MODE = "db_lock_mode";
 	public static final String DB_CACHE_TYPE = "db_cache_type";
 	public static final String DB_CACHE_SIZE = "db_cache_size";
-	public static final String SCHEMA_VERSION = "0.1";
-	
-	
+	public static final String SCHEMA_VERSION = "0.2";
+
+
 	@Override
-	@SuppressWarnings("deprecation")	
+	@SuppressWarnings("deprecation")
 	public void initializeDefaultPreferences() {
 
 		IEclipsePreferences p = ((IScopeContext) new DefaultScope())
@@ -33,8 +33,8 @@ public class SymfonyIndexPreferences extends AbstractPreferenceInitializer {
 		p.putInt(DB_CACHE_SIZE, 32000); // 32Mb
 		p.put(DB_CACHE_TYPE, "LRU");
 		p.putInt(DB_LOCK_MODE, 0); // no transaction isolation
-		
-		
+
+
 	}
 
 }
