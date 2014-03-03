@@ -12,13 +12,11 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
-import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -26,10 +24,8 @@ import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
 import com.dubture.symfony.core.builder.SymfonyNature;
-import com.dubture.symfony.core.goals.evaluator.ContainerMethodReturnTypeEvaluator;
 import com.dubture.symfony.core.goals.evaluator.ServiceGoalEvaluator;
-import com.dubture.symfony.core.model.Service;
-import com.dubture.symfony.core.model.SymfonyModelAccess;
+import com.dubture.symfony.core.goals.evaluator.ServiceTypeGoalEvaluator;
 
 
 /**
@@ -67,10 +63,8 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
             } else {
             	return null;
             }
-            GoalEvaluator evaluator = evaluateServiceCalls(goal);
-
             //TODO: add more evaluators...
-            return evaluator;
+            return evaluateServiceCalls(goal);
 
         } catch (Exception e) {
             return null;
@@ -103,10 +97,7 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
         // MethodContext context = (MethodContext) goal.getContext();
         // PHPClassType classType = (PHPClassType) context.getInstanceType();
 
-
         if (goalClass == ExpressionTypeGoal.class) {
-
-
             ExpressionTypeGoal expGoal = (ExpressionTypeGoal) goal;
             ASTNode expression = expGoal.getExpression();
 
@@ -122,6 +113,8 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
             }
         // we're checking a PHPDocMethodReturnTypeGoal like $em = $this->get('doctrine')->|
         // to support fluent interfaces.
+        } else if (goalClass == ServiceTypeGoal.class) {
+        	return new ServiceTypeGoalEvaluator((ServiceTypeGoal)goal);
         }
 
         // Give the control to the default PHP goal evaluator
@@ -142,11 +135,10 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
             if (first instanceof Scalar && ((Scalar)first).getScalarType() == Scalar.TYPE_STRING) {
 
                 String serviceName = ASTUtils.stripQuotes(((Scalar)first).getValue());
-                //Service service = SymfonyModelAccess.getDefault().findService(className,context.getSourceModule().getScriptProject().getPath());
 
                 // we got a service match, return the goalevaluator.
                 if (serviceName != null) {
-                    return new ServiceGoalEvaluator(goal, serviceName, context.getSourceModule());
+                    return new ServiceGoalEvaluator(goal, serviceName);
                 }
             }
         }

@@ -20,11 +20,13 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.strategies.ClassMembersStrategy;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 import com.dubture.symfony.core.codeassist.contexts.ServiceReturnTypeContext;
 import com.dubture.symfony.core.model.Service;
@@ -51,7 +53,6 @@ public class ServiceReturnTypeCompletionStrategy extends ClassMembersStrategy {
 
 	public ServiceReturnTypeCompletionStrategy(ICompletionContext context) {
 		super(context);
-
 	}
 
 	@Override
@@ -87,7 +88,7 @@ public class ServiceReturnTypeCompletionStrategy extends ClassMembersStrategy {
 		String prefix = context.getPrefix();
 
 		for(IMethod method : type.getMethods()) {
-			if (CodeAssistUtils.startsWithIgnoreCase(method.getElementName(), prefix)) {
+			if (!PHPModelUtils.isConstructor(method) && PHPFlags.isPublic(method.getFlags()) && CodeAssistUtils.startsWithIgnoreCase(method.getElementName(), prefix)) {
 				reporter.reportMethod(method, "", range);
 			}
 		}

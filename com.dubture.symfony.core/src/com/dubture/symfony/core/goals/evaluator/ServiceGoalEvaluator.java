@@ -9,33 +9,28 @@
 package com.dubture.symfony.core.goals.evaluator;
 
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ti.GoalState;
+import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 
+import com.dubture.symfony.core.goals.ServiceTypeGoal;
 import com.dubture.symfony.core.log.Logger;
-import com.dubture.symfony.core.model.Service;
-import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 
 /**
  *
- *
- *
  * @author Robert Gruendler <r.gruendler@gmail.com>
- *
  */
 @SuppressWarnings("restriction")
 public class ServiceGoalEvaluator extends GoalEvaluator {
@@ -45,6 +40,8 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 	private final static int STATE_INIT = 0;
 	private final static int STATE_WAITING_RECEIVER = 1;
 	private final static int STATE_GOT_RECEIVER = 2;
+	private final static int STATE_WAITING_SERVICE_TYPE = 3;
+	private final static int STATE_GOT_SERVICE_TYPE = 4;
 
 	private IEvaluatedType receiverType;
 	private IEvaluatedType result;
@@ -53,10 +50,12 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 
 	private String serviceName;
 
-	public ServiceGoalEvaluator(IGoal goal, String serviceName, ISourceModule sourceModule) {
+	public ServiceGoalEvaluator(IGoal goal, String serviceName) {
 		super(goal);
-		this.sourceModule = sourceModule;
 		this.serviceName = serviceName;
+		if (goal.getContext() instanceof ISourceModuleContext) {
+			sourceModule = ((ISourceModuleContext)goal.getContext()).getSourceModule();
+		}
 	}
 
 	@Override
@@ -72,7 +71,9 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 			IEvaluatedType previousResult, GoalState goalState) {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		CallExpression expression = (CallExpression) typedGoal.getExpression();
-
+		if (sourceModule == null) {
+			return null;
+		}
 		// just starting to evaluate method, evaluate method receiver first:
 		if (state == STATE_INIT) {
 			ASTNode receiver = expression.getReceiver();
@@ -93,9 +94,9 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 			state = STATE_GOT_RECEIVER;
 		}
 
-		if (state == STATE_GOT_RECEIVER) {
+		if (state == STATE_GOT_RECEIVER && receiverType != null) {
 			if (receiverType.getTypeName().equals(SymfonyCoreConstants.CONTAINER_INTERFACE) || receiverType.getTypeName().equals(SymfonyCoreConstants.CONTROLLER_PARENT)) {
-				setResult();
+				return generateServiceTypeGoal();
 			} else {
 				IModelAccessCache accessCache = null;
 				if (goal.getContext() instanceof IModelCacheContext) {
@@ -105,14 +106,12 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 					IType[] types = PHPModelUtils.getTypes(receiverType.getTypeName(), sourceModule, 0, accessCache, null);
 					for (IType type : types) {
 						if (type.getFullyQualifiedName("\\").equals(SymfonyCoreConstants.CONTAINER_INTERFACE) || type.getFullyQualifiedName("\\").equals(SymfonyCoreConstants.CONTROLLER_PARENT)) {
-							setResult();
-							break;
+							return generateServiceTypeGoal();
 						}
 						IType[] superClasses = PHPModelUtils.getSuperClasses(type, accessCache != null ? accessCache.getSuperTypeHierarchy(type, null) : null);
 						for (IType sc : superClasses) {
 							if (sc.getFullyQualifiedName("\\").equals(SymfonyCoreConstants.CONTAINER_INTERFACE) || sc.getFullyQualifiedName("\\").equals(SymfonyCoreConstants.CONTROLLER_PARENT)) {
-								setResult();
-								return null;
+								return generateServiceTypeGoal();
 							}
 						}
 
@@ -122,15 +121,17 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 				}
 			}
 		}
+		if (state == STATE_WAITING_SERVICE_TYPE) {
+			result = previousResult;
+			state = STATE_GOT_SERVICE_TYPE;
+		}
 
 		return null;
 	}
 
-	private void setResult() {
-		// TODO do it as next Goal
-		Service findService = SymfonyModelAccess.getDefault().findService(serviceName,sourceModule.getScriptProject().getPath());
-		if (findService != null)
-			result = new PHPClassType(findService.getFullyQualifiedName());
+	private IGoal generateServiceTypeGoal() {
+		state = STATE_WAITING_SERVICE_TYPE;
+		return new ServiceTypeGoal(goal.getContext(), serviceName);
 	}
 
 	@Override
