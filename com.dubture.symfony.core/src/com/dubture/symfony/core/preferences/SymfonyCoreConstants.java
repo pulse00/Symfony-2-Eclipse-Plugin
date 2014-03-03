@@ -64,7 +64,7 @@ public class SymfonyCoreConstants {
     public static final String VENDOR_PATH           = "vendor";
     public static final String CACHE_PATH            = "app/cache";
     public static final String LOG_PATH              = "app/logs";
-    
+
     public static final String CACHE_PATTERN         = "**/cache/";
     public static final String LOG_PATTERN           = "**/logs/";
     public static final String SKELETON_PATTERN      = "**/skeleton/";
@@ -84,6 +84,10 @@ public class SymfonyCoreConstants {
     public static final String XML                   = "xml";
 
 	public static final String SYMFONY_STANDARD_EDITION = "symfony/framework-standard-edition";
+
+	public static final String CONTROLLER_PARENT     = "Symfony\\Bundle\\FrameworkBundle\\Controller\\Controller";
+
+	public static final String CONTAINER_INTERFACE   = "Symfony\\Component\\DependencyInjection\\ContainerInterface";
 
 
 
