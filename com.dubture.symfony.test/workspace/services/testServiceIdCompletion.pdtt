@@ -3,7 +3,7 @@ Should complete methods from the session service
 --FILE--
 <?
 namespace NS;
-class A {
+class A implements \Symfony\Component\DependencyInjection\ContainerInterface {
 	function goo() {
 		$this->get('|');
 	}

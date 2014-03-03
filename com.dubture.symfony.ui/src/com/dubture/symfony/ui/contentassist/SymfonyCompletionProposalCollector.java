@@ -80,8 +80,7 @@ public class SymfonyCompletionProposalCollector extends
             return symfonyProposal;
         }
 
-        // don't complete anything else or we'll get duplicate entries
-        return null;
+        return super.createScriptCompletionProposal(proposal);
     }
 
     private ScriptCompletionProposal generateSymfonyProposal(CompletionProposal typeProposal, ImageDescriptor descriptor) {

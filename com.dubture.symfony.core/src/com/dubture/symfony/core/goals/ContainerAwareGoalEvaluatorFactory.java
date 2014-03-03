@@ -10,17 +10,23 @@ package com.dubture.symfony.core.goals;
 
 import java.util.List;
 
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
+import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
+import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
+import com.dubture.symfony.core.builder.SymfonyNature;
+import com.dubture.symfony.core.goals.evaluator.ContainerMethodReturnTypeEvaluator;
 import com.dubture.symfony.core.goals.evaluator.ServiceGoalEvaluator;
 import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
@@ -52,9 +58,15 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
         try {
 
             this.goal = goal;
-            //TODO: find a way to check project nature
-            // and return null if it's not a symfonyNature
-            // goal.getContext().getLangNature() always returns the PHPNature...
+            if (goal.getContext() instanceof ISourceModuleContext) {
+            	ISourceModuleContext context = (ISourceModuleContext) goal.getContext();
+            	IProjectNature nature = context.getSourceModule().getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID);
+            	if(!(nature instanceof SymfonyNature)) {
+					return null;
+				}
+            } else {
+            	return null;
+            }
             GoalEvaluator evaluator = evaluateServiceCalls(goal);
 
             //TODO: add more evaluators...
@@ -101,39 +113,15 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
 
             // we're inside a call expression in the form $em->|
             if (expression instanceof PHPCallExpression) {
-
-
-
                 PHPCallExpression exp = (PHPCallExpression) expression;
 
-                ASTNode receiver = exp.getReceiver();
-
                 // are we calling a method named "get" ?
-                if (exp.getName().equals("get") && receiver instanceof VariableReference) {
-
-                    VariableReference ref = (VariableReference) receiver;
-
-                    // is the receiver an object instance ?
-                    if (ref.getName().equals("$this")) {
-                        return getEvaluator(exp);
-                    }
-                } else if (exp.getName().equals("get") && receiver instanceof PHPCallExpression) {
-
-                    PHPCallExpression call = (PHPCallExpression) receiver;
-
-                    if (call.getName().equals("getContainer")) {
-                        return getEvaluator(exp);
-                    }
+                if (exp.getName().equals("get")) {
+                	return getEvaluator(exp);
                 }
             }
         // we're checking a PHPDocMethodReturnTypeGoal like $em = $this->get('doctrine')->|
         // to support fluent interfaces.
-        }  else if (goalClass == PHPDocMethodReturnTypeGoal.class) {
-
-//            PHPDocMethodReturnTypeGoal mGoal = (PHPDocMethodReturnTypeGoal) goal;
-//            if (mGoal.getMethodName().equals("get")) {
-//                return new ContainerMethodReturnTypeEvaluator(mGoal);
-//            }
         }
 
         // Give the control to the default PHP goal evaluator
@@ -146,21 +134,19 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
 
         List args = exp.getArgs().getChilds();
 
-        // does the get() method have exact one argument?
-        if (args.size() == 1) {
+        // does the get() method have minimum one argument?
+        if (args.size() >= 1) {
 
             Object first = args.get(0);
-
+            // TODO resolve quotes
             if (first instanceof Scalar && ((Scalar)first).getScalarType() == Scalar.TYPE_STRING) {
 
-                //TODO: check if there are PDT utils for stripping away quotes from
-                // string literals.
-                String className = ((Scalar)first).getValue().replace("'", "").replace("\"", "");
-                Service service = SymfonyModelAccess.getDefault().findService(className,context.getSourceModule().getScriptProject().getPath());
+                String serviceName = ASTUtils.stripQuotes(((Scalar)first).getValue());
+                //Service service = SymfonyModelAccess.getDefault().findService(className,context.getSourceModule().getScriptProject().getPath());
 
                 // we got a service match, return the goalevaluator.
-                if (service != null) {
-                    return new ServiceGoalEvaluator(goal, service);
+                if (serviceName != null) {
+                    return new ServiceGoalEvaluator(goal, serviceName, context.getSourceModule());
                 }
             }
         }
