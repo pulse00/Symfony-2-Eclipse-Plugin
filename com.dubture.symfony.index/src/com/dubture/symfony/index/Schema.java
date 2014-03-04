@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of the Symfony eclipse plugin.
- * 
+ *
  * (c) Robert Gruendler <r.gruendler@gmail.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
@@ -32,11 +32,11 @@ import com.dubture.symfony.index.preferences.SymfonyIndexPreferences;
  */
 public class Schema {
 
-	public static final String VERSION = "0.8"; //$NON-NLS-1$
+	public static final String VERSION = "0.10"; //$NON-NLS-1$
 
 	/**
 	 * Creates the database schema using given connection.
-	 * 
+	 *
 	 * @param connection
 	 *            Database connection
 	 * @throws SQLException
