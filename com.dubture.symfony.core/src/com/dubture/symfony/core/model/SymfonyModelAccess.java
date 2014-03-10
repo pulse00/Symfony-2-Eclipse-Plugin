@@ -88,6 +88,8 @@ public class SymfonyModelAccess extends PhpModelAccess {
     private LRUCache entityCache = new LRUCache();
     private LRUCache bundleCache = new LRUCache();
 
+    private static final String NULL_ENTRY = "$$THIS_IS_NULL_ENTRY$$";
+
     private SymfonyModelAccess() {
 
         try {
@@ -309,7 +311,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 
         return null;
     }
-    
+
     public List<Parameter> findParameters(IScriptProject project) {
     	return index.findParameters(project.getPath());
     }
@@ -329,7 +331,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
 
         return index.findRoutes(project.getPath());
     }
-    
+
     /**
     * Find routes by prefix.
     *
@@ -623,7 +625,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
         String key = id + path.toString();
 
         if (serviceCache2.get(key) != null) {
-            return (Service) serviceCache2.get(key);
+            return serviceCache2.get(key) == NULL_ENTRY ? null : (Service) serviceCache2.get(key);
         }
 
         final List<Service> services = new ArrayList<Service>();
@@ -667,6 +669,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
             serviceCache2.put(key, service);
             return service;
         }
+        serviceCache2.put(key, NULL_ENTRY);
 
         return null;
     }
@@ -758,7 +761,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
         String key = bundle + controller + name;
 
         if ( (controllerCache.get(key)) != null) {
-            return (IType) controllerCache.get(key);
+            return controllerCache.get(key) == NULL_ENTRY ? null : (IType) controllerCache.get(key);
         }
 
         ScriptFolder bundleFolder = findBundleFolder(bundle, scriptProject);
@@ -778,6 +781,8 @@ public class SymfonyModelAccess extends PhpModelAccess {
             controllerCache.put(key, controllers[0]);
             return controllers[0];
         }
+
+        controllerCache.put(key, NULL_ENTRY);
 
         return null;
 
@@ -1043,7 +1048,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
     public Bundle findBundle(String bundleAlias, IScriptProject scriptProject) {
         String key = bundleAlias + scriptProject.getElementName();
         if (bundleCache.get(key) != null) {
-            return (Bundle) bundleCache.get(key);
+            return bundleCache.get(key) == NULL_ENTRY ? null :(Bundle) bundleCache.get(key);
         }
 
         IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
@@ -1068,6 +1073,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
             bundleCache.put(key, b);
             return b;
         }
+        bundleCache.put(key, NULL_ENTRY);
 
         return null;
     }
@@ -1082,14 +1088,14 @@ public class SymfonyModelAccess extends PhpModelAccess {
     public IType findEntity(EntityAlias alias, IScriptProject scriptProject) {
 
         String key = alias + scriptProject.getElementName();
-
         if (entityCache.get(key) != null) {
-            return (IType) entityCache.get(key);
+            return entityCache.get(key) == NULL_ENTRY ? null : (IType) entityCache.get(key);
         }
 
         Bundle bundle = findBundle(alias.getBundleAlias(), scriptProject);
 
         if (bundle == null) {
+        	entityCache.put(key, NULL_ENTRY);
             return null;
         }
 
@@ -1101,8 +1107,10 @@ public class SymfonyModelAccess extends PhpModelAccess {
             return null;
         }
 
-        if (ns == null)
+        if (ns == null) {
+        	entityCache.put(key, NULL_ENTRY);
             return null;
+        }
 
 
         String[] entityNS = new String[ns.getStrings().length + 1];
@@ -1142,7 +1150,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
             entityCache.put(key, t);
             return t;
         }
-
+        entityCache.put(key, NULL_ENTRY);
         return null;
     }
 
