@@ -12,15 +12,19 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
+import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
+import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocMethodReturnTypeEvaluator;
+import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
 import com.dubture.symfony.core.builder.SymfonyNature;
@@ -96,23 +100,11 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
 
         // MethodContext context = (MethodContext) goal.getContext();
         // PHPClassType classType = (PHPClassType) context.getInstanceType();
-
-        if (goalClass == ExpressionTypeGoal.class) {
-            ExpressionTypeGoal expGoal = (ExpressionTypeGoal) goal;
-            ASTNode expression = expGoal.getExpression();
-
-
-            // we're inside a call expression in the form $em->|
-            if (expression instanceof PHPCallExpression) {
-                PHPCallExpression exp = (PHPCallExpression) expression;
-
-                // are we calling a method named "get" ?
-                if (exp.getName().equals("get")) {
-                	return getEvaluator(exp);
-                }
-            }
-        // we're checking a PHPDocMethodReturnTypeGoal like $em = $this->get('doctrine')->|
-        // to support fluent interfaces.
+        if (goalClass == MethodElementReturnTypeGoal.class) {
+        	MethodElementReturnTypeGoal g = (MethodElementReturnTypeGoal) goal;
+        	if (g.getMethodName().equals("get") && g.getArgNames() != null && g.getArgNames().length > 0 && g.getArgNames()[0] != null) {
+        		return new ServiceGoalEvaluator(g, ASTUtils.stripQuotes(g.getArgNames()[0]));
+        	}
         } else if (goalClass == ServiceTypeGoal.class) {
         	return new ServiceTypeGoalEvaluator((ServiceTypeGoal)goal);
         }
@@ -138,7 +130,7 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
 
                 // we got a service match, return the goalevaluator.
                 if (serviceName != null) {
-                    return new ServiceGoalEvaluator(goal, serviceName);
+                    ;
                 }
             }
         }
