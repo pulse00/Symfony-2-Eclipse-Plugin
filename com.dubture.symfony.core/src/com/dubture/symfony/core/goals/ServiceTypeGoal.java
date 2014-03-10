@@ -26,8 +26,6 @@ public class ServiceTypeGoal extends AbstractGoal{
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
-		} else if (!super.equals(obj)) {
-			return false;
 		} else if (this.getClass() != obj.getClass()) {
 			return false;
 		}
@@ -37,7 +35,7 @@ public class ServiceTypeGoal extends AbstractGoal{
 
 	@Override
 	public int hashCode() {
-		return 41 * super.hashCode() + serviceId.hashCode();
+		return 41 * serviceId.hashCode();
 	}
 
 	public String getServiceId() {
