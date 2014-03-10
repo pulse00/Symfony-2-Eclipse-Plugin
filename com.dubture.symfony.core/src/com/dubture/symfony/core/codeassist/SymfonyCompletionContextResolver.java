@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of the Symfony eclipse plugin.
- * 
+ *
  * (c) Robert Gruendler <r.gruendler@gmail.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
@@ -22,29 +22,28 @@ import com.dubture.symfony.core.codeassist.contexts.TransUnitCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.ViewPathArgumentContext;
 
 /**
- *  
+ *
  * Context resolver for Symfony2.
- * 
+ *
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
 @SuppressWarnings("restriction")
-public class SymfonyCompletionContextResolver extends CompletionContextResolver 
+public class SymfonyCompletionContextResolver extends CompletionContextResolver
 	implements ICompletionContextResolver {
 
 
 	@Override
 	public ICompletionContext[] createContexts() {
-		
-		return new ICompletionContext[] { 
+
+		return new ICompletionContext[] {
 				new AnnotationCompletionContext(),
 				new ServiceContainerContext(),
-				new ServiceReturnTypeContext(),
 				new TemplateVariableContext(),
 				new RouteCompletionContext(),
 				new ViewPathArgumentContext(),
 				new EntityCompletionContext(),
 				new TransUnitCompletionContext(),
-		};		
+		};
 	}
 }
