@@ -58,7 +58,7 @@
         <repository>
             <id>pdt-nightly</id>
             <layout>p2</layout>
-            <url>http://download.eclipse.org/tools/pdt/updates/3.2-nightly/</url>
+            <url>http://download.eclipse.org/tools/pdt/updates/3.3-nightly/</url>
         </repository>
 
         <repository>
