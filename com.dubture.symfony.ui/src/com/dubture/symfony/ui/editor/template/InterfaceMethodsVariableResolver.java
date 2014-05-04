@@ -24,6 +24,7 @@ import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
 import org.eclipse.php.internal.core.ast.rewrite.IndentManipulation;
 import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
+import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.ui.CodeGeneration;
 
 import com.dubture.symfony.core.log.Logger;
@@ -63,7 +64,8 @@ public class InterfaceMethodsVariableResolver extends TemplateVariableResolver {
 		IScriptProject scriptProject =symfonyContext.getSourceModule().getScriptProject();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);		
 
-		indentChar = FormatPreferencesSupport.getInstance().getIndentationChar(symfonyContext.getDocument());
+		indentChar = FormatterUtils
+				.getFormatterCommonPrferences().getIndentationChar(symfonyContext.getDocument());
 		indendation = String.valueOf(indentChar);
 		
 		try {
