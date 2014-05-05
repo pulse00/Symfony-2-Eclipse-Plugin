@@ -46,16 +46,11 @@ public class TranslationCompletionContext extends AbstractCompletionContext {
 	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
-
-		try {
-		    if (TwigModelUtils.isTwigTemplate(sourceModule.getUnderlyingResource().getName()) == false) {
-		        return false;
-		    }
-		} catch (ModelException e) {
-			Logger.logException(e);
-			return false;
-		}
-
+		
+	    if (sourceModule.getResource() == null || TwigModelUtils.isTwigTemplate(sourceModule.getResource().getName()) == false) {
+	        return false;
+	    }
+	    
 		super.isValid(sourceModule, offset, requestor);
 		
         if (!requestor.getClass().getName().contains("Twig")) {
