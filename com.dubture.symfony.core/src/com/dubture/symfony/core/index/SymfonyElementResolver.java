@@ -18,6 +18,7 @@ import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceType;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.index.IPHPDocAwareElement;
 import org.eclipse.php.internal.core.index.PhpElementResolver;
 import org.json.simple.JSONObject;
@@ -168,7 +169,7 @@ public class SymfonyElementResolver extends PhpElementResolver {
 		}
 
 		public boolean isDeprecated() {
-			return PhpElementResolver.isDeprecated(doc);
+			return PHPFlags.isDeprecated(flags);
 		}
 
 		public String[] getReturnTypes() {

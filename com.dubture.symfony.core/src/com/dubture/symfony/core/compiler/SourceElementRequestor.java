@@ -54,7 +54,7 @@ public class SourceElementRequestor extends PHPSourceElementRequestorExtension {
         super.setSourceModule(sourceModule);
 
         try {
-            isSymfonySource = sourceModule.getModelElement().getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID) != null;
+            isSymfonySource = sourceModule.getModelElement().getScriptProject().getProject().exists() && sourceModule.getModelElement().getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID) != null;
         } catch (CoreException e) {
             isSymfonySource = false;
             Logger.logException(e);
