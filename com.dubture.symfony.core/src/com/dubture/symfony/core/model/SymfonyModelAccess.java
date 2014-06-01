@@ -9,6 +9,7 @@
 package com.dubture.symfony.core.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,6 +51,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 
 import com.dubture.symfony.core.SymfonyLanguageToolkit;
 import com.dubture.symfony.core.index.SymfonyElementResolver.TemplateField;
@@ -106,18 +108,27 @@ public class SymfonyModelAccess extends PhpModelAccess {
 
         return modelInstance;
     }
-
-
-    public TemplateVariable createTemplateVariableByReturnType(PHPMethodDeclaration controllerMethod, SimpleReference callName,
+    
+    public TemplateVariable createTemplateVariableByReturnType(ISourceModule sourceModule, PHPMethodDeclaration controllerMethod, SimpleReference callName,
             String className, String namespace, String variableName) {
+    	return createTemplateVariableByReturnType(sourceModule, controllerMethod, callName, className, namespace, variableName, null);
+    }
 
-        IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
 
-        if (scope == null)
-            return null;
-
-        IType[] types = findTypes(namespace, className, MatchRule.EXACT, 0, 0, scope, null);
-
+    public TemplateVariable createTemplateVariableByReturnType(ISourceModule sourceModule, PHPMethodDeclaration controllerMethod, SimpleReference callName,
+            String className, String namespace, String variableName, IModelAccessCache cache) {
+    	IType[] types = null;
+    	if (cache != null) {
+    		Collection<IType> typesList = cache.getTypes(sourceModule, className, namespace, null);
+    		types = typesList.toArray(new IType[typesList.size()]);
+    	} else {
+	        IDLTKSearchScope scope = createSearchScope(sourceModule);
+	
+	        if (scope == null)
+	            return null;
+	
+	        types = findTypes(namespace, className, MatchRule.EXACT, 0, 0, scope, null);
+    	}
         if (types.length != 1)
             return null;
 
