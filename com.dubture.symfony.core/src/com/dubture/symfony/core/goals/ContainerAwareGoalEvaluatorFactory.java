@@ -48,8 +48,6 @@ import com.dubture.symfony.core.goals.evaluator.ServiceTypeGoalEvaluator;
 public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 
 
-    private IGoal goal;
-    private MethodContext context;
 
 
     @Override
@@ -57,7 +55,6 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
 
         try {
 
-            this.goal = goal;
             if (goal.getContext() instanceof ISourceModuleContext) {
             	ISourceModuleContext context = (ISourceModuleContext) goal.getContext();
             	IProjectNature nature = context.getSourceModule().getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID);
@@ -72,10 +69,6 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
 
         } catch (Exception e) {
             return null;
-        } finally {
-        	// cleanup
-        	this.goal = null;
-        	this.context = null;
         }
     }
 
@@ -100,8 +93,6 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
             return null;
         }
 
-        context = (MethodContext) goal.getContext();
-
         // MethodContext context = (MethodContext) goal.getContext();
         // PHPClassType classType = (PHPClassType) context.getInstanceType();
         if (goalClass == MethodElementReturnTypeGoal.class) {
@@ -114,31 +105,6 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
         }
 
         // Give the control to the default PHP goal evaluator
-        return null;
-    }
-
-
-    @SuppressWarnings("rawtypes")
-    private ServiceGoalEvaluator getEvaluator(PHPCallExpression exp) {
-
-        List args = exp.getArgs().getChilds();
-
-        // does the get() method have minimum one argument?
-        if (args.size() >= 1) {
-
-            Object first = args.get(0);
-            // TODO resolve quotes
-            if (first instanceof Scalar && ((Scalar)first).getScalarType() == Scalar.TYPE_STRING) {
-
-                String serviceName = ASTUtils.stripQuotes(((Scalar)first).getValue());
-
-                // we got a service match, return the goalevaluator.
-                if (serviceName != null) {
-                    ;
-                }
-            }
-        }
-
         return null;
     }
 }

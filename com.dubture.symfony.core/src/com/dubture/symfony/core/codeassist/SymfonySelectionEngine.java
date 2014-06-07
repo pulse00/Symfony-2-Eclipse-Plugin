@@ -59,11 +59,11 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
     @Override
     public IModelElement[] select(IModuleSource sourceUnit, final int offset, int end) {
 
-        IModelElement[] result = super.select(sourceUnit, offset, end);
+        //IModelElement[] result = super.select(sourceUnit, offset, end);
 
-        if (result.length > 0) {
-            return result;
-        }
+        //if (result.length > 0) {
+        //    return result;
+        //}
 
         ISourceModule sourceModule = (ISourceModule) sourceUnit
                 .getModelElement();
