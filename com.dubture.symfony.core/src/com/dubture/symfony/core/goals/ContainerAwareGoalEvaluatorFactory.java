@@ -72,6 +72,10 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
 
         } catch (Exception e) {
             return null;
+        } finally {
+        	// cleanup
+        	this.goal = null;
+        	this.context = null;
         }
     }
 
