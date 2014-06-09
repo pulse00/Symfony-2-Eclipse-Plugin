@@ -8,6 +8,7 @@
  ******************************************************************************/
 package com.dubture.symfony.core.codeassist.strategies;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.dltk.core.IScriptProject;
@@ -23,6 +24,9 @@ import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 
 import com.dubture.doctrine.core.model.DoctrineModelAccess;
 import com.dubture.doctrine.core.model.Entity;
@@ -47,6 +51,7 @@ import com.dubture.symfony.core.model.SymfonyModelAccess;
  */
 @SuppressWarnings({ "restriction", "deprecation" })
 public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
+	private final static IType[] EMPTY_TYPES = new IType[0];
 
     public EntityCompletionStrategy(ICompletionContext context) {
         super(context);
@@ -62,14 +67,25 @@ public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
         SourceRange range = getReplacementRange(context);
         IDLTKSearchScope projectScope = SearchEngine.createSearchScope(context.getSourceModule().getScriptProject());
         DoctrineModelAccess doctrineModel =  DoctrineModelAccess.getDefault();
-
+        IModelAccessCache cache = null;
+        if (context instanceof IModelCacheContext) {
+        	cache = ((IModelCacheContext) context).getCache();
+        }
         EntityAlias alias = context.getAlias();
         String prefix = context.getPrefix();
         
         if (alias.hasBundle() == false) {
             List<Bundle> bundles = model.findBundles(project);
             for (Bundle b : bundles) {
-                IType[] bundleTypes = PhpModelAccess.getDefault().findTypes(b.getElementName(), MatchRule.EXACT, 0, 0, projectScope, null);
+                IType[] bundleTypes = EMPTY_TYPES;
+                if (cache != null) {
+                	Collection<IType> types = cache.getTypes(context.getSourceModule(), b.getElementName(), null, null);
+                	if (types != null) {
+                		bundleTypes = types.toArray(new IType[types.size()]);
+                	}
+                } else {
+                	bundleTypes = PhpModelAccess.getDefault().findTypes(b.getElementName(), MatchRule.EXACT, 0, 0, projectScope, null);
+                }
                 if (bundleTypes.length == 1) {
                     ModelElement bType = (ModelElement) bundleTypes[0];
                     if (CodeAssistUtils.startsWithIgnoreCase(bType.getElementName(), prefix)) {

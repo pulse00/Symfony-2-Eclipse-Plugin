@@ -28,6 +28,7 @@ import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnType
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
 import com.dubture.symfony.core.builder.SymfonyNature;
+import com.dubture.symfony.core.goals.evaluator.DoctrineManagerGoalEvaluator;
 import com.dubture.symfony.core.goals.evaluator.ServiceGoalEvaluator;
 import com.dubture.symfony.core.goals.evaluator.ServiceTypeGoalEvaluator;
 
@@ -92,13 +93,17 @@ public class ContainerAwareGoalEvaluatorFactory implements IGoalEvaluatorFactory
         if (!(goal.getContext() instanceof MethodContext)) {
             return null;
         }
-
+ 
         // MethodContext context = (MethodContext) goal.getContext();
         // PHPClassType classType = (PHPClassType) context.getInstanceType();
         if (goalClass == MethodElementReturnTypeGoal.class) {
         	MethodElementReturnTypeGoal g = (MethodElementReturnTypeGoal) goal;
-        	if (g.getMethodName().equals("get") && g.getArgNames() != null && g.getArgNames().length > 0 && g.getArgNames()[0] != null) {
-        		return new ServiceGoalEvaluator(g, ASTUtils.stripQuotes(g.getArgNames()[0]));
+        	if (g.getArgNames() != null && g.getArgNames().length > 0 && g.getArgNames()[0] != null) {
+        		if (g.getMethodName().equals("get")) {
+        			return new ServiceGoalEvaluator(g, ASTUtils.stripQuotes(g.getArgNames()[0]));
+        		} else if (g.getMethodName().equals("getManager")) {
+        			return new DoctrineManagerGoalEvaluator(g, ASTUtils.stripQuotes(g.getArgNames()[0]));
+        		}
         	}
         } else if (goalClass == ServiceTypeGoal.class) {
         	return new ServiceTypeGoalEvaluator((ServiceTypeGoal)goal);

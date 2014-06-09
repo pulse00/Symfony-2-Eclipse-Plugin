@@ -88,6 +88,8 @@ public class SymfonyCoreConstants {
 	public static final String CONTROLLER_PARENT     = "Symfony\\Bundle\\FrameworkBundle\\Controller\\Controller";
 
 	public static final String CONTAINER_INTERFACE   = "Symfony\\Component\\DependencyInjection\\ContainerInterface";
+	
+	public static final String DOCTRINE_REGISTRY_NAME         = "Doctrine\\Bundle\\DoctrineBundle\\Registry";
 
 
 
