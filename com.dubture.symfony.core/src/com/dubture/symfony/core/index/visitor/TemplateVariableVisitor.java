@@ -33,6 +33,8 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.php.internal.core.model.PerFileModelAccessCache;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
 import com.dubture.doctrine.annotation.model.Annotation;
@@ -84,6 +86,7 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
     private ISourceModule source;
 
     private AnnotationCommentParser parser;
+    private IModelAccessCache cache;
 
     public TemplateVariableVisitor(List<UseStatement> useStatements, NamespaceDeclaration namespace, ISourceModule source) {
         this.namespace = namespace;
@@ -91,6 +94,7 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 
         this.source = source;
         this.parser = AnnotationUtils.createParser();
+        this.cache = new PerFileModelAccessCache(source);
 
         bundle = ModelUtils.extractBundleName(namespace);
     }
@@ -325,9 +329,9 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
                         if (deferred.getName().equals(varRef.getName())) {
 
                             TemplateVariable tempVar = SymfonyModelAccess.getDefault()
-                                    .createTemplateVariableByReturnType(currentMethod,
+                                    .createTemplateVariableByReturnType(source, currentMethod,
                                             callName, deferred.getClassName(), deferred.getNamespace(),
-                                            varRef.getName());
+                                            varRef.getName(), cache);
 
                             templateVariables.put(tempVar, viewPath);
                             break;
@@ -427,8 +431,8 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
                         TemplateVariable tempVar = null;
 
                             tempVar = SymfonyModelAccess.getDefault()
-                                    .createTemplateVariableByReturnType(currentMethod, callName,
-                                            service.getClassName(), fqsn, var.getName());
+                                    .createTemplateVariableByReturnType(source, currentMethod, callName,
+                                            service.getClassName(), fqsn, var.getName(), cache);
 
                         if (tempVar != null) {
 
@@ -446,7 +450,7 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
                             if (tempVar.getName().equals(varRef.getName())) {
 
                                 TemplateVariable tVar = SymfonyModelAccess.getDefault()
-                                        .createTemplateVariableByReturnType(currentMethod, ref, tempVar.getClassName(), tempVar.getNamespace(), var.getName());
+                                        .createTemplateVariableByReturnType(source, currentMethod, ref, tempVar.getClassName(), tempVar.getNamespace(), var.getName(), cache);
 
                                 if (tVar != null) {
                                     deferredVariables.push(tVar);

@@ -29,7 +29,7 @@ import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  */
 @SuppressWarnings("restriction")
-public class ServiceGoalEvaluator extends GoalEvaluator {
+public class DoctrineManagerGoalEvaluator extends GoalEvaluator {
 
 	private final static int STATE_INIT = 0;
 	private final static int STATE_GOT_RECEIVER = 2;
@@ -37,16 +37,18 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 	private final static int STATE_GOT_SERVICE_TYPE = 4;
 	
 	private final static String SLASH = "\\"; //$NON-NLS-1$
+	private final static String ENTITY_MANAGER_PREFIX = "doctrine.orm."; //$NON-NLS-1$
+	private final static String ENTITY_MANAGER_SUFIX = "_entity_manger"; //$NON-NLS-1$
 
 	private IEvaluatedType result;
 
 	private int state = STATE_INIT;
 
-	private String serviceName;
+	private String managerName;
 
-	public ServiceGoalEvaluator(IGoal goal, String serviceName) {
+	public DoctrineManagerGoalEvaluator(IGoal goal, String managerName) {
 		super(goal);
-		this.serviceName = serviceName;
+		this.managerName = managerName;
 	}
 
 	@Override
@@ -105,18 +107,18 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 	}
 	
 	private IGoal checkName(String fq) {
-		if (fq.equals(SymfonyCoreConstants.CONTAINER_INTERFACE) || fq.equals(SymfonyCoreConstants.CONTROLLER_PARENT)) {
-			return generateServiceTypeGoal();
+		if (fq.equals(SymfonyCoreConstants.DOCTRINE_REGISTRY_NAME)) {
+			return generateRegistryTypeGoal();
 		}
 		
 		return null;
 	}
 
-	private IGoal generateServiceTypeGoal() {
+	private IGoal generateRegistryTypeGoal() {
 		state = STATE_WAITING_SERVICE_TYPE;
-		return new ServiceTypeGoal(goal.getContext(), serviceName);
+		return new ServiceTypeGoal(goal.getContext(), ENTITY_MANAGER_PREFIX + managerName + ENTITY_MANAGER_SUFIX);
 	}
-	
+
 	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		IGoal goal = produceNextSubgoal(subgoal, (IEvaluatedType) result, state);
