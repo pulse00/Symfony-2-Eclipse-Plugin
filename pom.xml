@@ -1,92 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.dubture.symfony</groupId>
-    <artifactId>parent</artifactId>
-    <version>1.0.95-SNAPSHOT</version>
-    <packaging>pom</packaging>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.dubture.symfony</groupId>
+	<artifactId>parent</artifactId>
+	<version>1.0.95-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
-    <prerequisites>
-        <maven>3.0</maven>
-    </prerequisites>
+	<prerequisites>
+		<maven>3.0</maven>
+	</prerequisites>
 
-    <modules>
-        <module>com.dubture.symfony.core</module>
-        <module>com.dubture.symfony.debug</module>
-        <module>com.dubture.symfony.index</module>
-        <module>com.dubture.symfony.twig</module>
-        <module>com.dubture.symfony.ui</module>
-        <module>com.dubture.symfony.test</module>
-        <module>com.dubture.symfony.feature</module>
-    </modules>
+	<modules>
+		<module>com.dubture.symfony.core</module>
+		<module>com.dubture.symfony.debug</module>
+		<module>com.dubture.symfony.index</module>
+		<module>com.dubture.symfony.twig</module>
+		<module>com.dubture.symfony.ui</module>
+		<module>com.dubture.symfony.test</module>
+		<module>com.dubture.symfony.feature</module>
+	</modules>
 
-    <properties>
-        <tycho-version>0.20.0</tycho-version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+	<properties>
+		<tycho-version>0.19.0</tycho-version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-    <repositories>
-        <repository>
-            <id>dltk-snaphot</id>
-            <layout>p2</layout>
-            <url>https://hudson.eclipse.org/hudson/job/dltk-nightly/lastSuccessfulBuild/artifact/org.eclipse.dltk.releng/build/update.site/target/site/</url>
-        </repository>
-        <repository>
-            <id>dltk-stable</id>
-            <layout>p2</layout>
-            <url>http://download.eclipse.org/technology/dltk/updates-dev/5.0/</url>
-        </repository>
-        <repository>
-            <id>pex</id>
-            <layout>p2</layout>
-            <url>http://p2-dev.pdt-extensions.org/</url>
-        </repository>
+	<repositories>
+		<repository>
+			<id>dltk-snaphot</id>
+			<layout>p2</layout>
+			<url>https://hudson.eclipse.org/hudson/job/dltk-nightly/lastSuccessfulBuild/artifact/org.eclipse.dltk.releng/build/update.site/target/site/</url>
+		</repository>
+		<repository>
+			<id>dltk-stable</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/technology/dltk/updates-dev/5.0/</url>
+		</repository>
+		<!-- repository>
+			<id>pex</id>
+			<layout>p2</layout>
+			<url>http://p2-dev.pdt-extensions.org/</url>
+		</repository-->
+		<repository>
+			<id>luna</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/releases/luna</url>
+		</repository>
+		<repository>
+		  <id>yedit</id>
+		  <layout>p2</layout>
+		  <url>http://dadacoalition.org/yedit</url>
+		</repository>
 
-        <repository>
-            <id>luna</id>
-            <layout>p2</layout>
-            <url>http://download.eclipse.org/releases/luna</url>
-        </repository>
+		<repository>
+			<id>pdt-nightly</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/tools/pdt/updates/3.3-nightly/</url>
+		</repository>
 
-        <repository>
-            <id>pdt-nightly</id>
-            <layout>p2</layout>
-            <url>http://download.eclipse.org/tools/pdt/updates/3.3-nightly/</url>
-        </repository>
+		<repository>
+			<id>orbit</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20140114142710/repository</url>
+		</repository>
+		<repository>
+			<id>Sonatype-public</id>
+			<name>SnakeYAML repository</name>
+			<url>http://oss.sonatype.org/content/groups/public/</url>
+		</repository>
+	</repositories>
 
-        <repository>
-            <id>orbit</id>
-            <layout>p2</layout>
-            <url>http://download.eclipse.org/tools/orbit/downloads/drops/R20140114142710/repository</url>
-        </repository>
-
-    </repositories>
-
-        <dependencies>
-                <dependency>
-                        <groupId>com.dubture</groupId>
-                        <artifactId>composer-java-api</artifactId>
-                        <version>0.0.5-SNAPSHOT</version>
-                </dependency>
-        </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.eclipse.tycho</groupId>
-                <artifactId>tycho-maven-plugin</artifactId>
-                <version>${tycho-version}</version>
-                <extensions>true</extensions>
-            </plugin>
-            <plugin>
-                <groupId>org.eclipse.tycho</groupId>
-                <artifactId>tycho-compiler-plugin</artifactId>
-                <version>${tycho-version}</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
+	<dependencies>
+		<dependency>
+			<groupId>com.dubture</groupId>
+			<artifactId>composer-java-api</artifactId>
+			<version>0.0.5-SNAPSHOT</version>
+		</dependency>
+		<dependency> <groupId>org.yaml</groupId> <artifactId>snakeyaml</artifactId> 
+			<version>1.13</version> </dependency>
+		<!-- dependency>
+			<groupId>com.dubture.osgi</groupId>
+			<artifactId>org.yaml.snakeyaml</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency-->
+		<dependency>
+			<groupId>com.dubture.osgi</groupId>
+			<artifactId>org.json.simple</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-compiler-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
 
 
 			<plugin>
@@ -132,7 +152,7 @@
 			</plugin>
 
 
-        </plugins>
-    </build>
+		</plugins>
+	</build>
 
 </project>
