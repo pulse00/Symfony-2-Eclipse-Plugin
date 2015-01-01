@@ -11,7 +11,9 @@
 
 	<artifactId>com.dubture.symfony.test</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
-
+  <properties>
+    <test.vmargs>-Xmx512m -XX:MaxPermSize=256m</test.vmargs>
+  </properties>
 	<build>
 		<plugins>
 			<plugin>
@@ -31,7 +33,19 @@
 					</dependencies>
 				</configuration>
 			</plugin>
-		</plugins>
+    </plugins>
+    <pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-surefire-plugin</artifactId>
+					<version>${tycho-version}</version>
+					<configuration>
+						<argLine>${test.vmargs}</argLine>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<profiles>
@@ -51,7 +65,7 @@
 							<artifactId>tycho-surefire-plugin</artifactId>
 							<version>${tycho-version}</version>
 							<configuration>
-								<argLine>-XstartOnFirstThread</argLine>
+								<argLine>-XstartOnFirstThread ${test.vmargs}</argLine>
 							</configuration>
 						</plugin>
 					</plugins>
