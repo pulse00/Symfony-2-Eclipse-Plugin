@@ -6,6 +6,6 @@ Symfony Eclipse Plugin
 ### Minimum Requirements
 
 - Java 6
-- Eclipse 4.2 (Juno)
+- Eclipse 4.3 (Kepler)
 
 For a full list of features and the Updatesite link see http://symfony.dubture.com.

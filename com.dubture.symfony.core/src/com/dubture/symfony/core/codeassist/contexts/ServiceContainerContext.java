@@ -11,7 +11,6 @@ package com.dubture.symfony.core.codeassist.contexts;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.internal.core.codeassist.contexts.QuotesContext;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 import com.dubture.symfony.core.builder.SymfonyNature;
@@ -35,7 +34,7 @@ import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
  */
 @SuppressWarnings("restriction")
 public class ServiceContainerContext extends
-	QuotesContext {
+	QuoteIdentifierContext {
 	
 	
 	@Override

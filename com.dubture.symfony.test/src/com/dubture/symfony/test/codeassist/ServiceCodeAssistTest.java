@@ -16,6 +16,11 @@ public class ServiceCodeAssistTest extends AbstractCodeAssistTest {
 	}
 	
 	@Test
+	public void testServiceIdCompletion2() throws Exception {
+		runPdttTest("testServiceIdCompletion2.pdtt");
+	}
+	
+	@Test
 	public void testServiceMethodCompletion() throws Exception {
 		runPdttTest("testServiceMethodCompletion.pdtt");
 	}
