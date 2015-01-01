@@ -35,13 +35,13 @@
 		<repository>
 			<id>dltk-stable</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/technology/dltk/updates-dev/5.0/</url>
+			<url>http://download.eclipse.org/technology/dltk/updates-dev/5.1/</url>
 		</repository>
-		<!-- repository>
+		<repository>
 			<id>pex</id>
 			<layout>p2</layout>
 			<url>http://p2-dev.pdt-extensions.org/</url>
-		</repository-->
+		</repository>
 		<repository>
 			<id>luna</id>
 			<layout>p2</layout>
@@ -56,7 +56,7 @@
 		<repository>
 			<id>pdt-nightly</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/tools/pdt/updates/3.3-nightly/</url>
+			<url>http://download.eclipse.org/tools/pdt/updates/latest-nightly/</url>
 		</repository>
 
 		<repository>
