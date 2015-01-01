@@ -218,5 +218,11 @@
              id="com.dubture.symfony.core.launcherfactory">
        </environmentFactory>
     </extension>
-
+    <extension
+          point="org.eclipse.core.contenttype.contentTypes">
+       <file-association
+             content-type="org.eclipse.core.runtime.xml"
+             file-extensions="xliff">
+       </file-association>
+    </extension>
 </plugin>
