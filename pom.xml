@@ -38,11 +38,6 @@
 			<url>http://download.eclipse.org/technology/dltk/updates-dev/5.1/</url>
 		</repository>
 		<repository>
-			<id>pex</id>
-			<layout>p2</layout>
-			<url>http://p2-dev.pdt-extensions.org/</url>
-		</repository>
-		<repository>
 			<id>luna</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/luna</url>
@@ -150,9 +145,19 @@
 					</environments>
 				</configuration>
 			</plugin>
-
-
 		</plugins>
 	</build>
-
+    <profiles>
+        <profile>
+            <!-- this profile simpplify contributing -->
+            <id>individual</id>
+            <repositories>
+                <repository>
+		            <id>pex</id>
+		            <layout>p2</layout>
+		            <url>http://p2-dev.pdt-extensions.org/</url>
+		        </repository>
+            </repositories>
+        </profile>
+    </profiles>
 </project>
