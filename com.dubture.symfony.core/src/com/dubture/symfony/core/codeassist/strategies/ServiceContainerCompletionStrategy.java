@@ -19,6 +19,7 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
+import org.pdtextensions.core.log.Logger;
 
 import com.dubture.symfony.core.codeassist.contexts.ServiceContainerContext;
 import com.dubture.symfony.core.model.Service;
@@ -62,23 +63,13 @@ public class ServiceContainerCompletionStrategy extends
         SourceRange range = getReplacementRange(context);
 
         String prefix = context.getPrefix();
-
         if (services == null) {
             return;
         }
 
         for(Service service : services) {
             if (CodeAssistUtils.startsWithIgnoreCase(service.getId(), prefix)) {
-            	
-                IType[] serviceTypes = model.findServiceTypes(service, project);
-                ModelElement parent = null;
-                
-                if (serviceTypes.length > 0) {
-                    parent = (ModelElement) serviceTypes[0];
-                } else {
-                    parent = (ModelElement) context.getSourceModule();
-                }
-
+                ModelElement parent = (ModelElement) context.getSourceModule();
                 Service s = new Service(parent, service.getElementName());
                 s.setId(service.getId());
                 reporter.reportType(s, "", range);
