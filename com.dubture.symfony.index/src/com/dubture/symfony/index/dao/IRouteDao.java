@@ -8,6 +8,7 @@
  ******************************************************************************/
 package com.dubture.symfony.index.dao;
 
+import java.sql.Connection;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
@@ -21,7 +22,7 @@ import com.dubture.symfony.index.model.Route;
  */
 public interface IRouteDao extends IDao {
 	
-	void insert(String name, String pattern, String controller, String bundle, String action, IPath path) throws Exception;
+	void insert(Connection connection, String name, String pattern, String controller, String bundle, String action, IPath path) throws Exception;
 
 	void deleteRoutesByPath(String name, IPath path);
 

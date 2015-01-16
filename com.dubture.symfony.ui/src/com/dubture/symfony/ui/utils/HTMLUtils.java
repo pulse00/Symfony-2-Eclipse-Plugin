@@ -293,7 +293,7 @@ public class HTMLUtils {
         StringBuffer content = new StringBuffer();
 
         content.append("<b>Pattern:</b> ");
-        content.append(route.getPattern());
+        content.append(route.getPattern() == null ? "<i>empty</i>" : route.getPattern());
 
         content.append("<br/><br/><b>Parameters:</b><br/>");
 

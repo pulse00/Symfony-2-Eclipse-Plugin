@@ -17,6 +17,7 @@ import java.sql.Statement;
 import org.eclipse.osgi.util.NLS;
 
 import com.dubture.symfony.index.Schema;
+import com.dubture.symfony.index.SymfonyDbFactory;
 import com.dubture.symfony.index.dao.ITransUnitDao;
 import com.dubture.symfony.index.handler.ITranslationHandler;
 import com.dubture.symfony.index.log.Logger;
@@ -27,13 +28,17 @@ public class TransUnitDao extends BaseDao implements ITransUnitDao {
 
 	private static final String Q_INSERT_DECL = Schema.readSqlFile("Resources/index/translations/insert_decl.sql"); //$NON-NLS-1$
 
-	public TransUnitDao(Connection connection) {
-		super(connection);
+	private static final String QUERY_FIND_BY_PATH = "SELECT NAME, VALUE, LANGUAGE, PATH FROM TRANSUNIT WHERE PATH LIKE ?"; //$NON-NLS-1$
+	private static final String QUERY_FIND_BY_NAME_PATH = "SELECT NAME, VALUE, LANGUAGE, PATH FROM TRANSUNIT WHERE NAME = ? AND PATH LIKE ?"; //$NON-NLS-1$+
+
+	private static final String QUERY_DELETE_BY_NAME_PATH_LANGUAGE = "DELETE FROM TRANSUNIT WHERE NAME = ? AND PATH = ? AND LANGUAGE = ?";
+
+	public TransUnitDao() {
+		super();
 	}
 
-	public void insert(String path, String name, String value, String language, int timestamp)
-			throws Exception {
-
+	@Override
+	public void insert(Connection connection, String path, String name, String value, String language, int timestamp) throws Exception {
 		String tableName = TABLENAME;
 		String query;
 
@@ -53,8 +58,7 @@ public class TransUnitDao extends BaseDao implements ITransUnitDao {
 		}
 	}
 
-	private void insertBatch(PreparedStatement statement, String path, String name, String value, String language,
-			int timestamp) throws SQLException {
+	private void insertBatch(PreparedStatement statement, String path, String name, String value, String language, int timestamp) throws SQLException {
 
 		int param = 0;
 
@@ -64,23 +68,17 @@ public class TransUnitDao extends BaseDao implements ITransUnitDao {
 		statement.setString(++param, language);
 		statement.setInt(++param, timestamp);
 		statement.addBatch();
-
-		// Logger.debugMSG(statement.toString());
-
-		//
-		// if (!isReference) {
-		// H2Cache.addElement(new Element(type, flags, offset, length,
-		// nameOffset, nameLength, name, camelCaseName, metadata, doc,
-		// qualifier, parent, fileId, isReference));
-		// }
 	}
 
 	@Override
 	public void findTranslations(String path, ITranslationHandler iTranslationHandler) {
+		Connection connection = null;
 		try {
-			Statement statement = connection.createStatement();
-			String query = "SELECT NAME, VALUE, LANGUAGE, PATH FROM TRANSUNIT WHERE PATH LIKE '" + path + "%'";
-			ResultSet result = statement.executeQuery(query.toString());
+			connection = SymfonyDbFactory.getInstance().createConnection();
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_BY_PATH);
+			statement.setString(1, escapeLikePattern(path) + LIKE_WILDCARD);
+
+			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				int columnIndex = 0;
 				String name = result.getString(++columnIndex);
@@ -91,16 +89,20 @@ public class TransUnitDao extends BaseDao implements ITransUnitDao {
 			}
 		} catch (Exception e) {
 			Logger.logException(e);
+		} finally {
+			closeIfExists(connection);
 		}
 	}
 
 	public void findTranslations(String name, String path, ITranslationHandler handler) {
+		Connection connection = null;
 		try {
-			Statement statement = connection.createStatement();
-			String query = "SELECT NAME, VALUE, LANGUAGE, PATH FROM TRANSUNIT WHERE NAME = '" + name
-					+ "' AND PATH LIKE '" + path + "%'";
+			connection = SymfonyDbFactory.getInstance().createConnection();
 
-			ResultSet result = statement.executeQuery(query.toString());
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_BY_NAME_PATH);
+			statement.setString(1, name);
+			statement.setString(2, escapeLikePattern(path) + LIKE_WILDCARD);
+			ResultSet result = statement.executeQuery();
 
 			while (result.next()) {
 				int columnIndex = 0;
@@ -112,18 +114,26 @@ public class TransUnitDao extends BaseDao implements ITransUnitDao {
 			}
 		} catch (Exception e) {
 			Logger.logException(e);
+		} finally {
+			closeIfExists(connection);
 		}
 	}
 
 	@Override
 	public void deleteRoutesByPath(String name, String language, String path) {
+		Connection connection = null;
 		try {
-			Statement statement = connection.createStatement();
-			statement.execute("DELETE FROM TRANSUNIT WHERE NAME = '" + name + "' AND PATH = '" + path
-					+ "' AND LANGUAGE = '" + language + "'");
+			connection = SymfonyDbFactory.getInstance().createConnection();
+			PreparedStatement statement = connection.prepareStatement(QUERY_DELETE_BY_NAME_PATH_LANGUAGE);
+			statement.setString(1, name);
+			statement.setString(2, language);
+			statement.setString(3, path);
+			statement.execute();
 			connection.commit();
 		} catch (SQLException e) {
 			Logger.logException(e);
+		} finally {
+			closeIfExists(connection);
 		}
 	}
 }

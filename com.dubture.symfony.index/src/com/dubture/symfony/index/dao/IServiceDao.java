@@ -8,6 +8,7 @@
  ******************************************************************************/
 package com.dubture.symfony.index.dao;
 
+import java.sql.Connection;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
@@ -25,7 +26,7 @@ import com.dubture.symfony.index.model.Service;
  */
 public interface IServiceDao extends IDao {
 	
-	void insert(String id, String phpClass, String _public, List<String> tags, String path, int timestamp) throws Exception;
+	void insert(Connection connection, String id, String phpClass, String _public, List<String> tags, String path, int timestamp) throws Exception;
 	
 	void delete(String id, String path);
 

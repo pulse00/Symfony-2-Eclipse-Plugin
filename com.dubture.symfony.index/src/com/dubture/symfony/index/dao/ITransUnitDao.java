@@ -8,11 +8,13 @@
  ******************************************************************************/
 package com.dubture.symfony.index.dao;
 
+import java.sql.Connection;
+
 import com.dubture.symfony.index.handler.ITranslationHandler;
 
 public interface ITransUnitDao extends IDao {
 
-	void insert(String path, String name, String value, String language, int timestamp) throws Exception;
+	void insert(Connection connection, String path, String name, String value, String language, int timestamp) throws Exception;
 	
 	void findTranslations(String path, ITranslationHandler iTranslationHandler);
 	

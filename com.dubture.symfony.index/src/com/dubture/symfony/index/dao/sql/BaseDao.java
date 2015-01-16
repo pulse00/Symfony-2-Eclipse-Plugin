@@ -10,20 +10,21 @@ package com.dubture.symfony.index.dao.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.dubture.symfony.index.dao.IDao;
+import com.dubture.symfony.index.log.Logger;
 
 abstract public class BaseDao implements IDao {
 	
 	/** Cache for insert element reference queries */
 	protected static final Map<String, String> D_INSERT_QUERY_CACHE = new HashMap<String, String>();
 	protected final Map<String, PreparedStatement> batchStatements;
-	protected Connection connection;
+	protected final String LIKE_WILDCARD = "%"; //$NON-NLS-1$
 	
-	public BaseDao(Connection connection) {
-		this.connection = connection;
+	public BaseDao() {
 		this.batchStatements = new HashMap<String, PreparedStatement>();
 	}
 	
@@ -42,4 +43,18 @@ abstract public class BaseDao implements IDao {
 			}
 		}
 	}		
+	
+	protected String escapeLikePattern(String pattern) {
+		return pattern.replaceAll("[\\\\%_]", "\\\\$0"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+	
+	protected void closeIfExists(Connection connection) {
+		if (connection != null) {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				Logger.logException(e);
+			}
+		}
+	}
 }

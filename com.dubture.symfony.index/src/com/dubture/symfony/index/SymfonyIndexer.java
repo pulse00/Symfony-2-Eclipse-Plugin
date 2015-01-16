@@ -8,6 +8,8 @@
  ******************************************************************************/
 package com.dubture.symfony.index;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
@@ -46,6 +48,7 @@ public class SymfonyIndexer {
 	private IResourceDao resourceDao;
 	private ITransUnitDao transDao;
 	private IParameterDao paramDao;
+	private Connection connection;
 	
 	private SymfonyIndexer() throws Exception {
 		factory = SymfonyDbFactory.getInstance();
@@ -54,6 +57,8 @@ public class SymfonyIndexer {
 		transDao = factory.getTransDao();
 		resourceDao = factory.getResourceDao();
 		paramDao = factory.getParamDao();
+		
+		connection = SymfonyDbFactory.getInstance().createConnection();
 	}
 	
 	public static SymfonyIndexer getInstance() throws Exception {
@@ -71,7 +76,7 @@ public class SymfonyIndexer {
 	public void addRoute(String name, String pattern, String controller, String bundle, String action, IPath path) {
 		try {
 			routeDao.deleteRoutesByPath(name, path);
-			routeDao.insert(name, pattern, controller, bundle, action, path);
+			routeDao.insert(connection, name, pattern, controller, bundle, action, path);
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
@@ -80,7 +85,7 @@ public class SymfonyIndexer {
 	public void addService(String id, String phpClass, String _public, List<String> tags, String path, int timestamp) {
 		try {			
 		    serviceDao.delete(id, path);
-			serviceDao.insert(id, phpClass, _public, tags, path, timestamp);
+			serviceDao.insert(connection, id, phpClass, _public, tags, path, timestamp);
 		} catch (Exception e) {
 			Logger.logException(e);
 		}		
@@ -93,6 +98,7 @@ public class SymfonyIndexer {
 	public void enterServices(String path) {
 		serviceDao.deleteServices(path);
 		paramDao.deleteParameters(path);
+		
 	}
 	
 	public void exitServices() {
@@ -101,7 +107,7 @@ public class SymfonyIndexer {
 			paramDao.commitInsertions();
 		} catch (Exception e) {
 			Logger.logException(e);
-		}		
+		}
 	}
 	
 	public void findServices(String string, IServiceHandler iServiceHandler) {
@@ -163,7 +169,7 @@ public class SymfonyIndexer {
 	public void addTranslation(TransUnit unit, String path, int timestamp) {
 		try {
 			transDao.deleteRoutesByPath(unit.name, unit.language, path);
-			transDao.insert(path, unit.name, unit.value, unit.language, timestamp);
+			transDao.insert(connection, path, unit.name, unit.value, unit.language, timestamp);
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
@@ -171,7 +177,7 @@ public class SymfonyIndexer {
 	
 	public void addParameter(String key, String value, IPath path) {
 		try {
-			paramDao.insert(key, value, path);
+			paramDao.insert(connection, key, value, path);
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
@@ -204,7 +210,7 @@ public class SymfonyIndexer {
 	public void addResource(RoutingResource resource, IPath fullPath) {
 		try {
 //			routeDao.deleteRoutesByPath(name, path);
-			resourceDao.insert(resource.getPath(), resource.getType(), resource.getPrefix(), fullPath);
+			resourceDao.insert(connection, resource.getPath(), resource.getType(), resource.getPrefix(), fullPath);
 		} catch (Exception e) {
 			Logger.logException(e);
 		}

@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.osgi.util.NLS;
 
 import com.dubture.symfony.index.Schema;
+import com.dubture.symfony.index.SymfonyDbFactory;
 import com.dubture.symfony.index.dao.IParameterDao;
 import com.dubture.symfony.index.handler.IParameterHandler;
 import com.dubture.symfony.index.log.Logger;
@@ -29,14 +30,18 @@ public class ParameterDao extends BaseDao implements IParameterDao {
 
 	private static final String TABLENAME = "PARAMETERS";
 	private static final String Q_INSERT_DECL = Schema.readSqlFile("Resources/index/parameters/insert_decl.sql"); //$NON-NLS-1$
+	
+	private static final String QUERY_FIND_ALL = "SELECT KEY, VALUE, PATH FROM PARAMETERS"; //$NON-NLS-1$
+	private static final String QUERY_FIND_BY_PATH = "SELECT KEY, VALUE, PATH FROM PARAMETERS WHERE PATH LIKE ?"; //$NON-NLS-1$
+	
+	private static final String QUERY_DELETE_BY_PATH = "DELETE FROM PARAMETERS WHERE PATH = ?"; //$NON-NLS-1$
 
-	public ParameterDao(Connection connection) {
-		super(connection);
+	public ParameterDao() {
+		super();
 	}
 
 	@Override
-	public void insert(String key, String value, IPath path) throws Exception {
-
+	public void insert(Connection connection, String key, String value, IPath path) throws Exception {
 		String tableName = TABLENAME;
 		String query;
 
@@ -63,12 +68,6 @@ public class ParameterDao extends BaseDao implements IParameterDao {
 		statement.setString(++param, path.toString());
 		statement.addBatch();
 		
-		//
-		// if (!isReference) {
-		// H2Cache.addElement(new Element(type, flags, offset, length,
-		// nameOffset, nameLength, name, camelCaseName, metadata, doc,
-		// qualifier, parent, fileId, isReference));
-		// }
 	}
 
 	@Override
@@ -78,10 +77,11 @@ public class ParameterDao extends BaseDao implements IParameterDao {
 
 	@Override
 	public void findAll(IParameterHandler handler) {
+		Connection connection = null;
 		try {
+			connection = SymfonyDbFactory.getInstance().createConnection();
 			Statement statement = connection.createStatement();
-			String query = "SELECT KEY, VALUE, PATH FROM PARAMETERS";
-			ResultSet result = statement.executeQuery(query.toString());
+			ResultSet result = statement.executeQuery(QUERY_FIND_ALL);
 			while (result.next()) {
 				int columnIndex = 0;
 				String key = result.getString(++columnIndex);
@@ -91,33 +91,41 @@ public class ParameterDao extends BaseDao implements IParameterDao {
 			}
 		} catch (Exception e) {
 			Logger.logException(e);
+		} finally {
+			closeIfExists(connection);
 		}
 	}
 
 	public List<Parameter> findParameters(IPath path) throws Exception {
-		return searchParameters("SELECT KEY, VALUE, PATH FROM PARAMETERS WHERE PATH LIKE '" + path + "%'");
-	}
-
-	private List<Parameter> searchParameters(String sql) throws Exception {
-
 		final List<Parameter> params = new ArrayList<Parameter>();
-		Statement statement = connection.createStatement();
-		ResultSet result = statement.executeQuery(sql);
-		while (result.next()) {
-			int columnIndex = 0;
-			String key = result.getString(++columnIndex);
-			String value = result.getString(++columnIndex);
-			params.add(new Parameter(key, value));
+		Connection connection = null;
+		try {
+			connection = SymfonyDbFactory.getInstance().createConnection();
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_BY_PATH);
+			statement.setString(1, escapeLikePattern(path.toString()) + LIKE_WILDCARD);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				int columnIndex = 0;
+				String key = result.getString(++columnIndex);
+				String value = result.getString(++columnIndex);
+				params.add(new Parameter(key, value));
+			}
+		} finally {
+			closeIfExists(connection);
 		}
 
 		return params;
 	}
 
+
 	@Override
 	public void deleteParameters(String path) {
+		Connection connection = null;
 		try {
-			Statement statement = connection.createStatement();
-			statement.execute("DELETE FROM PARAMETERS WHERE PATH = '" + path + "'");
+			connection = SymfonyDbFactory.getInstance().createConnection();
+			PreparedStatement statement = connection.prepareStatement(QUERY_DELETE_BY_PATH);
+			statement.setString(1, path);
+			statement.execute();
 			connection.commit();
 		} catch (SQLException e) {
 			Logger.logException(e);

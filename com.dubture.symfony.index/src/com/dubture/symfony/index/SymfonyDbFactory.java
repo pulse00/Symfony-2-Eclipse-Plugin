@@ -49,6 +49,12 @@ public class SymfonyDbFactory  {
 	private static final String DB_PASS = ""; //$NON-NLS-1$
 	private JdbcConnectionPool pool;
 	private static SymfonyDbFactory instance = null;
+	
+	private ServiceDao serviceDao = new ServiceDao();
+	private ParameterDao parameterDao = new ParameterDao();
+	private RouteDao routeDao = new RouteDao();
+	private ResourceDao resourceDao = new ResourceDao();
+	private TransUnitDao transUnitDao = new TransUnitDao();
 
 	public static SymfonyDbFactory getInstance() {
 
@@ -93,6 +99,7 @@ public class SymfonyDbFactory  {
 		IPath dbPath = SymfonyIndex.getDefault().getStateLocation();
 		String connString = getConnectionString(dbPath);
 		pool = JdbcConnectionPool.create(connString, DB_USER, DB_PASS);
+		pool.setMaxConnections(100);
 		Schema schema = new Schema();
 		boolean initializeSchema = false;
 
@@ -124,6 +131,7 @@ public class SymfonyDbFactory  {
 
 						pool = JdbcConnectionPool.create(connString, DB_USER,
 								DB_PASS);
+						pool.setMaxConnections(100);
 						connection = pool.getConnection();
 						schema.initialize(connection);
 					}
@@ -143,6 +151,7 @@ public class SymfonyDbFactory  {
 				}
 			}
 		} while (connection == null && --tries > 0);
+		
 	}
 
 	/**
@@ -172,6 +181,18 @@ public class SymfonyDbFactory  {
 		buf.append(";CACHE_SIZE=").append(
 				preferencesService.getInt(SymfonyIndex.PLUGIN_ID,
 						SymfonyIndexPreferences.DB_CACHE_SIZE, 0, null));
+		
+		buf.append(";QUERY_CACHE_SIZE=").append(
+				preferencesService.getInt(SymfonyIndex.PLUGIN_ID,
+						SymfonyIndexPreferences.DB_QUERY_CACHE_SIZE, 0, null));
+
+		buf.append(";LARGE_RESULT_BUFFER_SIZE=").append(
+				preferencesService
+						.getInt(SymfonyIndex.PLUGIN_ID,
+								SymfonyIndexPreferences.DB_LARGE_RESULT_BUFFER_SIZE,
+								0, null));
+		
+		buf.append(";FILE_LOCK=NO");
 
 		return buf.toString();
 	}
@@ -189,22 +210,22 @@ public class SymfonyDbFactory  {
 	}
 
 	public IServiceDao getServiceDao() throws SQLException {
-		return new ServiceDao(createConnection());
+		return serviceDao;
 	}
 
 	public IRouteDao getRouteDao() throws SQLException {
-		return new RouteDao(createConnection());
+		return routeDao;
 	}
 	
 	public ITransUnitDao getTransDao() throws SQLException {
-		return new TransUnitDao(createConnection());
+		return transUnitDao;
 	}
 
 	public IResourceDao getResourceDao() throws SQLException {
-		return new ResourceDao(createConnection());
+		return resourceDao;
 	}
 	
 	public IParameterDao getParamDao() throws SQLException {
-		return new ParameterDao(createConnection());
+		return parameterDao;
 	}
 }

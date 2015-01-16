@@ -33,7 +33,9 @@ public class Route {
 		this.controller = controller;
 		this.action = action;
 		this.name = name;
-		this.pattern = pattern.replace("\"", "").replace("'", "");
+		if (pattern != null) {
+			this.pattern = pattern.replace("\"", "").replace("'", "");
+		}
 	}
 
 	public Route(String name, String pattern, String viewPath) {
@@ -82,7 +84,7 @@ public class Route {
 	}
 
 	public boolean hasParameters() {
-		return pattern.contains(RouteParameter.LEFT_DELIM);
+		return pattern != null && pattern.contains(RouteParameter.LEFT_DELIM);
 	}
 
 	public Map<String, RouteParameter> getParameters() {
@@ -92,14 +94,16 @@ public class Route {
 
 		parameters = new HashMap<String, RouteParameter>();
 
-		String route = pattern;
-		String[] parts = route.split("\\/");
-
-		for (String part : parts) {
-			if (part.startsWith(RouteParameter.LEFT_DELIM)) {
-
-				RouteParameter param = new RouteParameter(part);
-				parameters.put(param.getName(), param);
+		if (pattern != null) {
+			String route = pattern;
+			String[] parts = route.split("\\/");
+	
+			for (String part : parts) {
+				if (part.startsWith(RouteParameter.LEFT_DELIM)) {
+	
+					RouteParameter param = new RouteParameter(part);
+					parameters.put(param.getName(), param);
+				}
 			}
 		}
 
@@ -107,6 +111,9 @@ public class Route {
 	}
 
 	public String getURL(Collection<RouteParameter> collection, String prefix) {
+		if (pattern == null) {
+			return ""; // XXX return null
+		}
 		String url = pattern;
 		for (RouteParameter param : collection) {
 			String regex = String.format("{%s}", param.getName());

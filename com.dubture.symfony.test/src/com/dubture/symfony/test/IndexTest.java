@@ -67,12 +67,13 @@ public class IndexTest extends TestCase {
 	public void test() {
 
 		try {
-			
-			serviceDao.insert("request", "Symfony\\Request\\Request", "true", null, "/foo/bar", 0);
-			serviceDao.insert("many", "Symfony\\Doctrine\\ORM\\ManyToOne", "true", null, "/moo/lar", 0);
-			serviceDao.insert("kernel", "Symfony\\Http\\Kernel", "false", null, "/sy/ror", 0);
+			Connection connection = SymfonyDbFactory.getInstance().createConnection();
+			serviceDao.insert(connection, "request", "Symfony\\Request\\Request", "true", null, "/foo/bar", 0);
+			serviceDao.insert(connection, "many", "Symfony\\Doctrine\\ORM\\ManyToOne", "true", null, "/moo/lar", 0);
+			serviceDao.insert(connection, "kernel", "Symfony\\Http\\Kernel", "false", null, "/sy/ror", 0);
 			serviceDao.commitInsertions();
 			connection.commit();
+			connection.close();
 
 			final Stack<Service> services = new Stack<Service>();
 			

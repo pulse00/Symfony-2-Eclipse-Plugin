@@ -32,7 +32,7 @@ import com.dubture.symfony.index.preferences.SymfonyIndexPreferences;
  */
 public class Schema {
 
-	public static final String VERSION = "0.10"; //$NON-NLS-1$
+	public static final String VERSION = "0.11"; //$NON-NLS-1$
 
 	/**
 	 * Creates the database schema using given connection.
@@ -44,7 +44,7 @@ public class Schema {
 	public void initialize(Connection connection) throws SQLException {
 		try {
 			Statement statement = connection.createStatement();
-			try {
+			try { 
 				statement.executeUpdate(readSqlFile("Resources/index/basic.sql")); //$NON-NLS-1$
 				statement.executeUpdate(readSqlFile("Resources/index/routes/basic.sql")); //$NON-NLS-1$
 				statement.executeUpdate(readSqlFile("Resources/index/parameters/basic.sql")); //$NON-NLS-1$
