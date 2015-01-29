@@ -26,10 +26,9 @@ public class SymfonyIndexPreferences extends AbstractPreferenceInitializer {
 
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void initializeDefaultPreferences() {
 
-		IEclipsePreferences p = ((IScopeContext) new DefaultScope())
+		IEclipsePreferences p = DefaultScope.INSTANCE
 				.getNode(SymfonyIndex.PLUGIN_ID);
 
 		p.putInt(DB_CACHE_SIZE, 32000); // 32Mb

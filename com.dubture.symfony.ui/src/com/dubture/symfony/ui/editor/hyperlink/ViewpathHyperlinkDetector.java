@@ -109,6 +109,7 @@ public class ViewpathHyperlinkDetector extends StringHyperlinkDetector {
 		input = EditorUtility.getEditorInputModelElement(editor, false);
 		
 		if (input == null) {
+			editor = null;
 			return null;
 		}
 
@@ -119,8 +120,9 @@ public class ViewpathHyperlinkDetector extends StringHyperlinkDetector {
 
 			IRegion wordRegion = findWord(document, offset);
 			
-			if (wordRegion == null)
+			if (wordRegion == null) {
 				return null;
+			}
 
 			String path = document.get(wordRegion.getOffset(), wordRegion.getLength());
 			ViewPath viewPath = new ViewPath(path);
@@ -173,6 +175,9 @@ public class ViewpathHyperlinkDetector extends StringHyperlinkDetector {
 						
 		} catch (Exception e) {			
 			Logger.logException(e);
+		} finally {
+			input = null;
+			editor = null;
 		}
 
 		return null;
