@@ -15,14 +15,12 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.core.codeassist.ICompletionStrategyFactory;
 
-import com.dubture.symfony.core.codeassist.contexts.AnnotationCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.EntityCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.RouteCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.ServiceContainerContext;
 import com.dubture.symfony.core.codeassist.contexts.TemplateVariableContext;
 import com.dubture.symfony.core.codeassist.contexts.TransUnitCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.ViewPathArgumentContext;
-import com.dubture.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
 import com.dubture.symfony.core.codeassist.strategies.EntityCompletionStrategy;
 import com.dubture.symfony.core.codeassist.strategies.RouteCompletionStrategy;
 import com.dubture.symfony.core.codeassist.strategies.ServiceContainerCompletionStrategy;
@@ -51,11 +49,7 @@ public class SymfonyCompletionStrategyFactory implements ICompletionStrategyFact
 
 			Class contextClass = context.getClass();
 
-			if (contextClass == AnnotationCompletionContext.class) {
-
-				result.add(new AnnotationCompletionStrategy(context));
-
-			} else if (contextClass == ServiceContainerContext.class) {
+			if (contextClass == ServiceContainerContext.class) {
 
 				result.add(new ServiceContainerCompletionStrategy(context));
 

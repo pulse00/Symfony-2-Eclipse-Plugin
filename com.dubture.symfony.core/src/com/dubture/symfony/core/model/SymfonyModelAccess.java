@@ -362,30 +362,6 @@ public class SymfonyModelAccess extends PhpModelAccess {
         return index.findRoutes(project.getPath(), prefix);
 
     }
-
-
-    public Map<String, String> findAnnotationClasses(IScriptProject project) {
-        IDLTKSearchScope scope = SearchEngine.createSearchScope(project.getScriptProject());
-        ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
-
-        final Map<String, String> annotations = new HashMap<String, String>();
-        if (scope == null || engine == null) {
-            return annotations;
-        }
-
-        engine.search(ISymfonyModelElement.ANNOTATION, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
-            @Override
-            public void match(int elementType, int flags, int offset, int length,
-                    int nameOffset, int nameLength, String elementName,
-                    String metadata, String doc, String qualifier, String parent,
-                    ISourceModule sourceModule, boolean isReference) {
-                annotations.put(elementName, qualifier);
-            }
-        }, null);
-
-        return annotations;
-    }
-
     /**
     *
     * Retrieve all bundles inside a Project.
@@ -785,7 +761,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
             return null;
 
         IDLTKSearchScope controllerScope = SearchEngine.createSearchScope(controllerSource);
-
+        
         IType[] controllers = findTypes(controller, MatchRule.PREFIX, 0, 0, controllerScope, null);
 
         if(controllers.length == 1) {

@@ -54,6 +54,8 @@ import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.osgi.framework.Bundle;
 
 import com.dubture.doctrine.core.DoctrineNature;
+import com.dubture.doctrine.core.codeassist.DoctrineCompletionContextResolver;
+import com.dubture.doctrine.core.codeassist.DoctrineCompletionStrategyFactory;
 import com.dubture.symfony.core.SymfonyCorePlugin;
 import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.builder.SymfonyNature;
@@ -193,6 +195,7 @@ abstract public class AbstractCodeAssistTest extends TestCase {
 		@Override
 		public ICompletionContextResolver[] getContextResolvers() {
 			List<ICompletionContextResolver> asList = new ArrayList<ICompletionContextResolver>(Arrays.asList(CompletionContextResolver.getActive()));
+			asList.add(new DoctrineCompletionContextResolver());
 			asList.add(new SymfonyCompletionContextResolver());
 			return asList.toArray(new ICompletionContextResolver[asList.size()]);
 		}
@@ -200,6 +203,7 @@ abstract public class AbstractCodeAssistTest extends TestCase {
 		@Override
 		public ICompletionStrategyFactory[] getStrategyFactories() {
 			List<ICompletionStrategyFactory> asList = new ArrayList<ICompletionStrategyFactory>(Arrays.asList(CompletionStrategyFactory.getActive()));
+			asList.add(new DoctrineCompletionStrategyFactory());
 			asList.add(new SymfonyCompletionStrategyFactory());
 			return asList.toArray(new ICompletionStrategyFactory[asList.size()]);
 		}

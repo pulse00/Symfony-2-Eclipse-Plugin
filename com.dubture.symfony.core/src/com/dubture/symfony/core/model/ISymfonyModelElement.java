@@ -31,7 +31,6 @@ public interface ISymfonyModelElement {
 	int ROUTE_METHOD = 301;
 	
 	// misc
-	int ANNOTATION = 400;	
 	int ENVIRONMENT = 401;
 	int TEMPLATE_VARIABLE = 402;
 	int ROUTE = 403;

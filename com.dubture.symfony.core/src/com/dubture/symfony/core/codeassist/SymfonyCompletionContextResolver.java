@@ -12,7 +12,6 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionContextResolver;
 import org.eclipse.php.internal.core.codeassist.contexts.CompletionContextResolver;
 
-import com.dubture.symfony.core.codeassist.contexts.AnnotationCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.EntityCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.RouteCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.ServiceContainerContext;
@@ -37,7 +36,6 @@ public class SymfonyCompletionContextResolver extends CompletionContextResolver
 	public ICompletionContext[] createContexts() {
 
 		return new ICompletionContext[] {
-				new AnnotationCompletionContext(),
 				new ServiceContainerContext(),
 				new TemplateVariableContext(),
 				new RouteCompletionContext(),

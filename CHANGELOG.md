@@ -1,3 +1,7 @@
+1.1.0
+
+* Doctrine become standalone feature
+
 1.0.94
 
 * Project wizard now uses composers `create-project` command

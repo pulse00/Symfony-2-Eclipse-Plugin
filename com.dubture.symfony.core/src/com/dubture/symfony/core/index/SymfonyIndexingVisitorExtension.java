@@ -232,7 +232,6 @@ PhpIndexingVisitorExtension {
         if (s instanceof ClassDeclaration) {
 
             currentClass = (ClassDeclaration) s;
-            parseAnnotation(currentClass);
 
             for (Object o : currentClass.getSuperClasses().getChilds()) {
 
@@ -278,52 +277,6 @@ PhpIndexingVisitorExtension {
         return true;
     }
 
-    /**
-    *
-    * Check if the class is tagged to be used as an annotation.
-    *
-    */
-    private void parseAnnotation(ClassDeclaration clazz) {
-
-        PHPDocBlock block = clazz.getPHPDoc();
-        
-        if (block == null) {
-            return;
-        }
-
-        boolean isAnnotation = false;
-        if (block.getCommentType() == Comment.TYPE_PHPDOC) {
-            
-            List<Annotation> annotations = null;
-            if (org.apache.commons.lang.StringUtils.isNotBlank(block.getLongDescription())) {
-            	annotations = parser.parse(block.getLongDescription());
-            } else if (org.apache.commons.lang.StringUtils.isNotBlank(block.getShortDescription())) {
-            	annotations = parser.parse(block.getShortDescription());
-            }
-            
-            if (annotations != null) {
-            	for (Annotation annotation : annotations) {
-            		if (annotation.getClassName().equals("Annotation")) {
-            			isAnnotation = true;
-            			break;
-            		}
-            	}
-            }
-        }
-
-        if (!isAnnotation) {
-            return;
-        }
-
-        String ns = "";
-        if (namespace != null) {
-            ns = namespace.getName();
-        }
-
-        Logger.debugMSG("indexing annotation class: " + clazz.getName() + " " + ns);
-        ReferenceInfo info = new ReferenceInfo(ISymfonyModelElement.ANNOTATION, clazz.sourceStart(), clazz.sourceEnd(), clazz.getName(), null, ns);
-        requestor.addReference(info);
-    }
 
 
     @Override

@@ -28,7 +28,6 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import com.dubture.doctrine.annotation.model.Annotation;
 import com.dubture.doctrine.annotation.parser.AnnotationCommentParser;
 import com.dubture.doctrine.annotation.parser.antlr.SourcePosition;
-import com.dubture.symfony.core.codeassist.strategies.AnnotationCompletionStrategy;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.core.preferences.SymfonyCorePreferences;
 import com.dubture.symfony.core.util.AnnotationUtils;
@@ -41,7 +40,7 @@ import com.dubture.symfony.core.util.AnnotationUtils;
  * This will mainly be used for error reporting purposes
  * and maybe syntax highlighting.
  *
- * For code-assistance in annotations, see {@link AnnotationCompletionStrategy}
+ * For code-assistance in annotations, see 
  *
  * @see http://symfony.com/blog/symfony2-annotations-gets-better
  * @author Robert Gruendler <r.gruendler@gmail.com>
