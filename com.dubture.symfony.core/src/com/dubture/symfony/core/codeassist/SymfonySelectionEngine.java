@@ -69,7 +69,7 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
                 .getModelElement();
 
         String content = sourceUnit.getSourceContents();
-        if (content.length() < offset) {
+        if (content.length() <= offset) {
         	return NONE;
         }
         int startOffset = SymfonyTextSequenceUtilities.readLiteralStartIndex(content, offset);
