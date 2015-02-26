@@ -28,9 +28,9 @@
 
 	<repositories>
 		<repository>
-			<id>dltk-snaphot</id>
+			<id>dltk-tests</id>
 			<layout>p2</layout>
-			<url>https://hudson.eclipse.org/hudson/job/dltk-nightly/lastSuccessfulBuild/artifact/org.eclipse.dltk.releng/build/update.site/target/site/</url>
+			<url>https://hudson.eclipse.org/dltk/job/dltk-nightly/lastSuccessfulBuild/artifact/org.eclipse.dltk.releng/build/update.site/target/repository/</url>
 		</repository>
 		<repository>
 			<id>dltk-stable</id>
@@ -43,9 +43,9 @@
 			<url>http://download.eclipse.org/releases/luna</url>
 		</repository>
 		<repository>
-		  <id>yedit</id>
-		  <layout>p2</layout>
-		  <url>http://dadacoalition.org/yedit</url>
+			<id>yedit</id>
+			<layout>p2</layout>
+			<url>http://dadacoalition.org/yedit</url>
 		</repository>
 
 		<repository>
@@ -72,13 +72,13 @@
 			<artifactId>composer-java-api</artifactId>
 			<version>0.0.5-SNAPSHOT</version>
 		</dependency>
-		<dependency> <groupId>org.yaml</groupId> <artifactId>snakeyaml</artifactId> 
-			<version>1.13</version> </dependency>
-		<!-- dependency>
-			<groupId>com.dubture.osgi</groupId>
-			<artifactId>org.yaml.snakeyaml</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency-->
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.13</version>
+		</dependency>
+		<!-- dependency> <groupId>com.dubture.osgi</groupId> <artifactId>org.yaml.snakeyaml</artifactId> 
+			<version>0.0.1-SNAPSHOT</version> </dependency -->
 		<dependency>
 			<groupId>com.dubture.osgi</groupId>
 			<artifactId>org.json.simple</artifactId>
@@ -147,17 +147,17 @@
 			</plugin>
 		</plugins>
 	</build>
-    <profiles>
-        <profile>
-            <!-- this profile simpplify contributing -->
-            <id>individual</id>
-            <repositories>
-                <repository>
-		            <id>pex</id>
-		            <layout>p2</layout>
-		            <url>http://p2-dev.pdt-extensions.org/</url>
-		        </repository>
-            </repositories>
-        </profile>
-    </profiles>
+	<profiles>
+		<profile>
+			<!-- this profile simpplify contributing -->
+			<id>individual</id>
+			<repositories>
+				<repository>
+					<id>pex</id>
+					<layout>p2</layout>
+					<url>http://p2-dev.pdt-extensions.org/</url>
+				</repository>
+			</repositories>
+		</profile>
+	</profiles>
 </project>
