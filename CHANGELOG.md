@@ -320,3 +320,7 @@
 1.0.2
 
 * added twig support feature
+
+1.1.0
+
+* annotation support moved to doctrine plugin
