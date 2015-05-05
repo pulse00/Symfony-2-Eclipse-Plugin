@@ -10,6 +10,7 @@ package com.dubture.symfony.core.codeassist;
 
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.IMethod;
@@ -18,15 +19,26 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.codeassist.PHPSelectionEngine;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 import com.dubture.doctrine.annotation.model.Annotation;
 import com.dubture.doctrine.annotation.parser.AnnotationCommentParser;
+import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.ViewPath;
@@ -34,199 +46,245 @@ import com.dubture.symfony.core.util.AnnotationUtils;
 import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
 import com.dubture.symfony.index.model.Route;
 
-
 /**
  *
  *
- * The {@link SymfonySelectionEngine} helps DLTK to identify
- * symfony model elements for actions like "Open Declaration" - F3 and
- * Hyperlinking.
+ * The {@link SymfonySelectionEngine} helps DLTK to identify symfony model
+ * elements for actions like "Open Declaration" - F3 and Hyperlinking.
  *
- * TODO: I think a cleaner way to implement is to actually provide the
- * model elements as native DLTK model elements somehow, so DLTK knows what
- * a Route/Viewpath etc. is and how to resolve it.
+ * TODO: I think a cleaner way to implement is to actually provide the model
+ * elements as native DLTK model elements somehow, so DLTK knows what a
+ * Route/Viewpath etc. is and how to resolve it.
  *
  *
- * @see http://wiki.eclipse.org/DLTK_IDE_Guide:Step_3._Towards_an_IDE#Open_declaration_feature.
+ * @see http://wiki.eclipse.org/DLTK_IDE_Guide:Step_3._Towards_an_IDE#
+ *      Open_declaration_feature.
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
 @SuppressWarnings("restriction")
 public class SymfonySelectionEngine extends PHPSelectionEngine {
 
-    private static final IModelElement[] NONE = {};
+	private static final IModelElement[] NONE = {};
 
-    @Override
-    public IModelElement[] select(IModuleSource sourceUnit, final int offset, int end) {
+	@Override
+	public IModelElement[] select(IModuleSource sourceUnit, final int offset, int end) {
 
-        //IModelElement[] result = super.select(sourceUnit, offset, end);
+		ISourceModule sourceModule = (ISourceModule) sourceUnit.getModelElement();
 
-        //if (result.length > 0) {
-        //    return result;
-        //}
+		String content = sourceUnit.getSourceContents();
+		if (content.length() <= offset) {
+			return NONE;
+		}
+		IStructuredDocument document = null;
+		IStructuredModel structuredModel = null;
+		try {
+			IFile file = (IFile) sourceUnit.getModelElement().getResource();
+			if (file != null) {
+				if (file.exists()) {
+					structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
+					if (structuredModel != null) {
+						document = structuredModel.getStructuredDocument();
+					} else {
+						document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
+					}
+				} else {
+					document = StructuredModelManager.getModelManager().createNewStructuredDocumentFor(file);
+					document.set(sourceUnit.getSourceContents());
+				}
+			}
+		} catch (Exception e) {
+			Logger.logException(e);
+		} finally {
+			if (structuredModel != null) {
+				structuredModel.releaseFromRead();
+			}
+		}
+		if (document == null) {
+			return NONE;
+		}
 
-        ISourceModule sourceModule = (ISourceModule) sourceUnit
-                .getModelElement();
+		IStructuredDocumentRegion sRegion = document.getRegionAtCharacterOffset(offset);
 
-        String content = sourceUnit.getSourceContents();
-        if (content.length() <= offset) {
-        	return NONE;
-        }
-        int startOffset = SymfonyTextSequenceUtilities.readLiteralStartIndex(content, offset);
-        int endOffset = SymfonyTextSequenceUtilities.readLiteralEndIndex(content, offset);
+		if (sRegion == null) {
+			return NONE;
+		}
 
-        SymfonyModelAccess model = SymfonyModelAccess.getDefault();
-        IScriptProject project = sourceModule.getScriptProject();
+		ITextRegion tRegion = sRegion.getRegionAtCharacterOffset(offset);
 
+		ITextRegionCollection container = sRegion;
+		if (tRegion instanceof ITextRegionContainer) {
+			container = (ITextRegionContainer) tRegion;
+			tRegion = container.getRegionAtCharacterOffset(offset);
+		}
+		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
+			try {
+				tRegion = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+			} catch (BadLocationException e) {
+			}
+			
+			if (tRegion == null) {
+				return NONE;
+			}
+			
+		}
 
-        if (startOffset >= 0 && endOffset != 0 && (endOffset > startOffset)) {
+		int startOffset = SymfonyTextSequenceUtilities.readLiteralStartIndex(content, offset);
+		int endOffset = SymfonyTextSequenceUtilities.readLiteralEndIndex(content, offset);
 
+		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
+		IScriptProject project = sourceModule.getScriptProject();
 
-            String literal = content.substring(startOffset, endOffset);
+		if (startOffset >= 0 && endOffset != 0 && (endOffset > startOffset)) {
 
-            // viewpaths are linked using ViewpathHyperlinkDetector
+			String literal = content.substring(startOffset, endOffset);
 
-//            // try to resolve a viewepath first
-//            ViewPath viewPath = new ViewPath(literal);
-//
-//            if (viewPath.isValid()) {
-//
-//                IModelElement template = model.findTemplate(viewPath, project);
-//
-//                if (template != null) {
-//                    return new IModelElement[] { template };
-//                }
-//            }
+			// viewpaths are linked using ViewpathHyperlinkDetector
 
-            // nope, not a viewpath, check for a route
-            Route route = model.findRoute(literal, project);
+			// // try to resolve a viewepath first
+			// ViewPath viewPath = new ViewPath(literal);
+			//
+			// if (viewPath.isValid()) {
+			//
+			// IModelElement template = model.findTemplate(viewPath, project);
+			//
+			// if (template != null) {
+			// return new IModelElement[] { template };
+			// }
+			// }
 
-            if (route != null) {
+			// nope, not a viewpath, check for a route
+			Route route = model.findRoute(literal, project);
 
-                IMethod method = model.findAction(route, project);
+			if (route != null) {
 
-                if (method != null)
-                    return new IModelElement[] { method };
-            }
+				IMethod method = model.findAction(route, project);
 
-            // next search for a service
-            Service service = model.findService(literal, project.getPath());
+				if (method != null)
+					return new IModelElement[] { method };
+			}
 
-            if (service != null) {
+			// next search for a service
+			Service service = model.findService(literal, project.getPath());
 
-                IType serviceType = model.findServiceType(service, project);
+			if (service != null) {
 
-                if (serviceType != null)
-                    return new IModelElement[] { serviceType };
+				IType serviceType = model.findServiceType(service, project);
 
-            }
+				if (serviceType != null)
+					return new IModelElement[] { serviceType };
 
-        }
+			}
 
-        try {
+		}
 
-            ModuleDeclaration parsedUnit = SourceParserUtil.getModuleDeclaration(
-                    sourceModule, null);
+		try {
 
-            AnnotationPathVisitor visitor = new AnnotationPathVisitor(project, offset);
-            parsedUnit.traverse(visitor);
+			ModuleDeclaration parsedUnit = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 
-            if (visitor.getTemplate() != null) {
-                return new IModelElement[] { visitor.getTemplate() };
-            }
+			AnnotationPathVisitor visitor = new AnnotationPathVisitor(project, offset);
+			parsedUnit.traverse(visitor);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+			if (visitor.getTemplate() != null) {
+				return new IModelElement[] { visitor.getTemplate() };
+			}
 
-        // couldn't find anything
-        return NONE;
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-    /**
-     *
-     * Parses @Template annotations in controllers to link to the corresponding template.
-     *
-     *
-     * @author Robert Gruendler <r.gruendler@gmail.com>
-     *
-     */
-    private static class AnnotationPathVisitor extends PHPASTVisitor {
+		// couldn't find anything
+		return NONE;
+	}
 
-        private static final String[] TEMPLATE_CLASS_NAMES = new String[]{"Template"};
+	/**
+	 *
+	 * Parses @Template annotations in controllers to link to the corresponding
+	 * template.
+	 *
+	 *
+	 * @author Robert Gruendler <r.gruendler@gmail.com>
+	 *
+	 */
+	private static class AnnotationPathVisitor extends PHPASTVisitor {
 
-        private IScriptProject project;
-        private NamespaceDeclaration namespaceDeclaration;
-        private ClassDeclaration classDeclaration;
+		private static final String[] TEMPLATE_CLASS_NAMES = new String[] { "Template" };
 
-        private AnnotationCommentParser parser;
+		private IScriptProject project;
+		private NamespaceDeclaration namespaceDeclaration;
+		private ClassDeclaration classDeclaration;
 
-        private IModelElement template = null;
-        private int offset;
+		private AnnotationCommentParser parser;
 
-        public AnnotationPathVisitor(IScriptProject project, int offset) {
-            this.project = project;
-            this.parser = AnnotationUtils.createParser(TEMPLATE_CLASS_NAMES);
-            this.offset = offset;
-        }
+		private IModelElement template = null;
+		private int offset;
 
-        public IModelElement getTemplate() {
-            return template;
-        }
+		public AnnotationPathVisitor(IScriptProject project, int offset) {
+			this.project = project;
+			this.parser = AnnotationUtils.createParser(TEMPLATE_CLASS_NAMES);
+			this.offset = offset;
+		}
 
-        @Override
-        public boolean visit(NamespaceDeclaration namespaceDeclaration) throws Exception {
-            this.namespaceDeclaration = namespaceDeclaration;
-            return true;
-        }
+		public IModelElement getTemplate() {
+			return template;
+		}
 
-        @Override
-        public boolean visit(ClassDeclaration classDeclaration) throws Exception {
-            this.classDeclaration = classDeclaration;
-            return true;
-        }
+		@Override
+		public boolean visit(NamespaceDeclaration namespaceDeclaration) throws Exception {
+			this.namespaceDeclaration = namespaceDeclaration;
+			return true;
+		}
 
-        @Override
-        public boolean visit(PHPMethodDeclaration methodDeclaration) throws Exception {
-            
-            if (namespaceDeclaration == null || !namespaceDeclaration.getName().endsWith("\\Controller")) {
-                return false;
-            }
-            
-            PHPDocBlock phpDoc = methodDeclaration.getPHPDoc();
-            
-            if (phpDoc == null || (phpDoc.sourceStart() > offset || phpDoc.sourceEnd() < offset)) {
-                return false;
-            }
-            
-            List<Annotation> annotations = AnnotationUtils.extractAnnotations(parser, methodDeclaration);
-            if (annotations.size() < 1) {
-                return false;
-            }
+		@Override
+		public boolean visit(ClassDeclaration classDeclaration) throws Exception {
+			this.classDeclaration = classDeclaration;
+			return true;
+		}
 
-            // We found at least of annotation with class Template, create a view path
-            String bundle = namespaceDeclaration.getName().replace("\\Controller", "").replace("\\", "");
-            String controller = classDeclaration.getName().replace("Controller", "");
-            String action = methodDeclaration.getName().replace("Action", "");
+		@Override
+		public boolean visit(PHPMethodDeclaration methodDeclaration) throws Exception {
 
-            ViewPath path = new ViewPath(String.format("%s:%s:%s", bundle, controller, action));
-            
-            if (!path.isValid()) {
-                return false;
-            }
+			if (namespaceDeclaration == null || !namespaceDeclaration.getName().endsWith("\\Controller")) {
+				return false;
+			}
 
-            IModelElement[] templates = SymfonyModelAccess.getDefault().findTemplates(bundle, controller, project);
-            this.template = null;
-            
-            for (IModelElement template : templates) {
-                if (template.getElementName().startsWith(action)) {
-                    // We found a matching template, set template and return true
-                    this.template = template;
-                    return false;
-                }
-            }
+			PHPDocBlock phpDoc = methodDeclaration.getPHPDoc();
 
-            return false;
-        }
-    }
+			if (phpDoc == null || (phpDoc.sourceStart() > offset || phpDoc.sourceEnd() < offset)) {
+				return false;
+			}
+
+			List<Annotation> annotations = AnnotationUtils.extractAnnotations(parser, methodDeclaration);
+			if (annotations.size() < 1) {
+				return false;
+			}
+
+			// We found at least of annotation with class Template, create a
+			// view path
+			String bundle = namespaceDeclaration.getName().replace("\\Controller", "").replace("\\", "");
+			String controller = classDeclaration.getName().replace("Controller", "");
+			String action = methodDeclaration.getName().replace("Action", "");
+
+			ViewPath path = new ViewPath(String.format("%s:%s:%s", bundle, controller, action));
+
+			if (!path.isValid()) {
+				return false;
+			}
+
+			IModelElement[] templates = SymfonyModelAccess.getDefault().findTemplates(bundle, controller, project);
+			this.template = null;
+
+			for (IModelElement template : templates) {
+				if (template.getElementName().startsWith(action)) {
+					// We found a matching template, set template and return
+					// true
+					this.template = template;
+					return false;
+				}
+			}
+
+			return false;
+		}
+	}
 }
