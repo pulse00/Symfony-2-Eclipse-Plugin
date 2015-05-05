@@ -49,8 +49,9 @@ public class CodeAssistPdttFile extends PdttFile {
 		return expectedProposals;
 	}
 
-	protected void parse(InputStream stream) throws Exception {
-		super.parse(stream, "UTF-8");
+	@Override
+	protected void parse(InputStream stream, String encoding) throws Exception {
+		super.parse(stream, encoding);
 
 		List<ExpectedProposal> expectedProposals = new LinkedList<ExpectedProposal>();
 		String[] lines = getExpected().split("\n");
