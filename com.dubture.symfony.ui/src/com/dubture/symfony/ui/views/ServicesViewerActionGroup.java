@@ -43,7 +43,7 @@ public class ServicesViewerActionGroup extends CompositeActionGroup {
 			super(ScriptMessages.CollapseAllAction_label); 
 			setDescription(ScriptMessages.CollapseAllAction_description); 
 			setToolTipText(ScriptMessages.CollapseAllAction_tooltip); 
-			DLTKPluginImages.setLocalImageDescriptors(this, "collapseall.gif"); //$NON-NLS-1$			
+			DLTKPluginImages.setLocalImageDescriptors(this, "collapseall.png"); //$NON-NLS-1$			
 			
 		}
 		@Override
@@ -59,7 +59,7 @@ public class ServicesViewerActionGroup extends CompositeActionGroup {
 		public FlatViewAction() {
 		
 			setText("Flat");
-			DLTKPluginImages.setLocalImageDescriptors(this, "flatLayout.gif");
+			DLTKPluginImages.setLocalImageDescriptors(this, "flatLayout.png"); //$NON-NLS-1$
 			
 		}
 		
@@ -74,7 +74,7 @@ public class ServicesViewerActionGroup extends CompositeActionGroup {
 		
 		public BundleViewAction() {			
 			setText("Bundles");
-			DLTKPluginImages.setLocalImageDescriptors(this, "hierarchicalLayout.gif");						
+			DLTKPluginImages.setLocalImageDescriptors(this, "hierarchicalLayout.png"); //$NON-NLS-1$
 		}
 		
 		@Override
@@ -88,7 +88,7 @@ public class ServicesViewerActionGroup extends CompositeActionGroup {
 		
 		public PublicFilter() {
 			super("Hide private services", IAction.AS_CHECK_BOX);			
-			DLTKPluginImages.setLocalImageDescriptors(this, "public_co.gif");
+			DLTKPluginImages.setLocalImageDescriptors(this, "public_co.png"); //$NON-NLS-1$
 		}
 		
 		
@@ -105,7 +105,7 @@ public class ServicesViewerActionGroup extends CompositeActionGroup {
 		
 		public SortAction() {
 			super("Sort order", IAction.AS_CHECK_BOX);
-			DLTKPluginImages.setLocalImageDescriptors(this, "alphab_sort_co.gif");			
+			DLTKPluginImages.setLocalImageDescriptors(this, "alphab_sort_co.png"); //$NON-NLS-1$
 			
 			
 		}
