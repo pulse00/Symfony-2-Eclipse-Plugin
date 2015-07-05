@@ -190,8 +190,8 @@ public class SymfonyModelAccess extends PhpModelAccess {
                 if (returnTags.length == 1) {
                     PHPDocTag tag = returnTags[0];
 
-                    if (tag.getReferences().length == 1) {
-                        SimpleReference ref = tag.getReferences()[0];
+                    if (tag.getTypeReferences().size() == 1) {
+                        SimpleReference ref = tag.getTypeReferences().get(0);
                         className = ref.getName();
                         return false;
                     }

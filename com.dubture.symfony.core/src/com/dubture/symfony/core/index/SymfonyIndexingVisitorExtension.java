@@ -386,11 +386,10 @@ PhpIndexingVisitorExtension {
 
                     String value = tag.getValue();
 
-                    if (tag.getReferences().length == 2) {
+                    if (tag.getTypeReferences().size() == 1 && tag.getVariableReference() != null) {
 
-                        SimpleReference[] refs = tag.getReferences();
-                        SimpleReference varName = refs[0];
-                        SimpleReference varType = refs[1];
+                        SimpleReference varName = tag.getVariableReference();
+                        SimpleReference varType = tag.getTypeReferences().get(0);
 
                         if(varName.getName().equals("$view") && varType.getName().equals("string")) {
 

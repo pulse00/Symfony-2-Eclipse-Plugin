@@ -56,309 +56,261 @@ import com.dubture.symfony.debug.server.SymfonyServer;
 import com.dubture.symfony.debug.util.ServerUtils;
 import com.dubture.symfony.index.model.Route;
 
-
-
 @SuppressWarnings("restriction")
 public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 
-    public void launch(ISelection selection, String mode) {
-        if (selection instanceof IStructuredSelection) {
+	public void launch(ISelection selection, String mode) {
+		if (selection instanceof IStructuredSelection) {
 
-            ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
-            ILaunchConfigurationType  configType = lm.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
-            searchAndLaunch(((IStructuredSelection) selection).toArray(), mode,
-                    configType);
-        }
-    }
+			ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
+			ILaunchConfigurationType configType = lm.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
+			searchAndLaunch(((IStructuredSelection) selection).toArray(), mode, configType);
+		}
+	}
 
-    public void launch(IEditorPart editor, String mode) {
-        IEditorInput input = editor.getEditorInput();
-        IFile file = (IFile) input.getAdapter(IFile.class);
-        if (file != null) {
+	public void launch(IEditorPart editor, String mode) {
+		IEditorInput input = editor.getEditorInput();
+		IFile file = (IFile) input.getAdapter(IFile.class);
+		if (file != null) {
 
-            ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
-            ILaunchConfigurationType  configType = lm.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
+			ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
+			ILaunchConfigurationType configType = lm.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
 
-            searchAndLaunch(new Object[] { file }, mode,
-                    configType);
-        }
-    }
+			searchAndLaunch(new Object[] { file }, mode, configType);
+		}
+	}
 
-    static ILaunchConfiguration findLaunchConfiguration(IProject project,
-            String fileName, String selectedURL, Server server, String mode,
-            ILaunchConfigurationType configType, boolean breakAtFirstLine,
-            boolean showDebugDialog, IResource res, Route route, IScriptProject scriptProject) {
-        ILaunchConfiguration config = null;
+	static ILaunchConfiguration findLaunchConfiguration(IProject project, String fileName, String selectedURL, Server server, String mode,
+			ILaunchConfigurationType configType, boolean breakAtFirstLine, boolean showDebugDialog, IResource res, Route route, IScriptProject scriptProject) {
+		ILaunchConfiguration config = null;
 
-        Logger.debugMSG("trying to find launc configuration");
-        try {
-            ILaunchConfiguration[] configs = DebugPlugin.getDefault()
-                    .getLaunchManager().getLaunchConfigurations(configType);
+		Logger.debugMSG("trying to find launc configuration");
+		try {
+			ILaunchConfiguration[] configs = DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurations(configType);
 
-            int numConfigs = configs == null ? 0 : configs.length;
-            for (int i = 0; i < numConfigs; i++) {
+			int numConfigs = configs == null ? 0 : configs.length;
+			for (int i = 0; i < numConfigs; i++) {
 
-                String configuredRouteName = configs[i].getAttribute(
-                        SymfonyServer.ROUTE, (String) null);
+				String configuredRouteName = configs[i].getAttribute(SymfonyServer.ROUTE, (String) null);
 
-                if (configuredRouteName != null)
-                    if (configuredRouteName.equals(route.getName())) {
-                        config = configs[i].getWorkingCopy();
-                        Logger.debugMSG("found existing: " + configuredRouteName);
-                        break;
-                    }
-            }
+				if (configuredRouteName != null)
+					if (configuredRouteName.equals(route.getName())) {
+						config = configs[i].getWorkingCopy();
+						Logger.debugMSG("found existing: " + configuredRouteName);
+						break;
+					}
+			}
 
-            if (config == null) {
-                Logger.debugMSG("no launch config found; create new one");
-                config = createConfiguration(project, fileName, selectedURL,
-                        server, configType, mode, breakAtFirstLine,
-                        showDebugDialog, res, route, scriptProject);
-            }
-        } catch (CoreException ce) {
-            ce.printStackTrace();
-        }
-        return config;
-    }
+			if (config == null) {
+				Logger.debugMSG("no launch config found; create new one");
+				config = createConfiguration(project, fileName, selectedURL, server, configType, mode, breakAtFirstLine, showDebugDialog, res, route,
+						scriptProject);
+			}
+		} catch (CoreException ce) {
+			ce.printStackTrace();
+		}
+		return config;
+	}
 
+	public static void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
+		int entries = search == null ? 0 : search.length;
 
+		// EditorUtility utility = new EditorUtility();
+		Route route = new Route("foo", "bar");
 
-    public static void searchAndLaunch(Object[] search, String mode,
-            ILaunchConfigurationType configType) {
-        int entries = search == null ? 0 : search.length;
+		for (int i = 0; i < entries; i++) {
+			try {
+				String phpPathString = null;
+				IProject project = null;
+				Object obj = search[i];
+				IResource res = null;
+				if (obj instanceof IModelElement) {
+					IModelElement elem = (IModelElement) obj;
 
-        
-//        EditorUtility utility = new EditorUtility();
-        Route route = new Route("foo", "bar");
+					if (elem instanceof ISourceModule) {
+						res = ((ISourceModule) elem).getCorrespondingResource();
+					} else if (elem instanceof IType) {
+						res = ((IType) elem).getUnderlyingResource();
+					} else if (elem instanceof IMethod) {
+						res = ((IMethod) elem).getUnderlyingResource();
+					}
+					if (res instanceof IFile) {
+						obj = (IFile) res;
+					}
+				}
 
-        for (int i = 0; i < entries; i++) {
-            try {
-                String phpPathString = null;
-                IProject project = null;
-                Object obj = search[i];
-                IResource res = null;
-                if (obj instanceof IModelElement) {
-                    IModelElement elem = (IModelElement) obj;
+				if (obj instanceof IFile) {
+					IFile file = (IFile) obj;
+					res = file;
+					project = file.getProject();
+					IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+					if (contentType.isAssociatedWith(file.getName())) {
+						phpPathString = file.getFullPath().toString();
+					}
+				}
 
-                    if (elem instanceof ISourceModule) {
-                        res = ((ISourceModule) elem).getCorrespondingResource();
-                    } else if (elem instanceof IType) {
-                        res = ((IType) elem).getUnderlyingResource();
-                    } else if (elem instanceof IMethod) {
-                        res = ((IMethod) elem).getUnderlyingResource();
-                    }
-                    if (res instanceof IFile) {
-                        obj = (IFile) res;
-                    }
-                }
+				Server defaultServer = ServersManager.getDefaultServer(project);
+				if (defaultServer == null) {
+					// Sould not happen
+					throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, Messages.PHPWebPageLaunchShortcut_0, null));
+				}
 
-                if (obj instanceof IFile) {
-                    IFile file = (IFile) obj;
-                    res = file;
-                    project = file.getProject();
-                    IContentType contentType = Platform.getContentTypeManager()
-                            .getContentType(
-                                    ContentTypeIdForPHP.ContentTypeID_PHP);
-                    if (contentType.isAssociatedWith(file.getName())) {
-                        phpPathString = file.getFullPath().toString();
-                    }
-                }
+				String basePath = PHPProjectPreferences.getDefaultBasePath(project);
 
-                Server defaultServer = ServersManager.getDefaultServer(project);
-                if (defaultServer == null) {
-                    PHPDebugPlugin.createDefaultPHPServer();
-                    defaultServer = ServersManager.getDefaultServer(project);
-                    if (defaultServer == null) {
-                        // Sould not happen
-                        throw new CoreException(new Status(IStatus.ERROR,
-                                PHPDebugUIPlugin.ID, IStatus.OK,
-                                Messages.PHPWebPageLaunchShortcut_0, null));
-                    }
-                }
+				boolean breakAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
+				String selectedURL = null;
+				boolean showDebugDialog = true;
+				if (obj instanceof IScriptProject) {
+					final PHPWebPageLaunchDialog dialog = new PHPWebPageLaunchDialog(mode, (IScriptProject) obj, basePath);
+					final int open = dialog.open();
+					if (open == PHPWebPageLaunchDialog.OK) {
+						defaultServer = dialog.getServer();
+						selectedURL = dialog.getPhpPathString();
+						phpPathString = dialog.getFilename();
+						breakAtFirstLine = dialog.isBreakAtFirstLine();
+						showDebugDialog = false;
+					} else {
+						continue;
+					}
+				}
 
-                String basePath = PHPProjectPreferences
-                        .getDefaultBasePath(project);
+				if (phpPathString == null) {
+					// Could not find target to launch
+					throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, Messages.launch_failure_no_target, null));
+				}
 
-                boolean breakAtFirstLine = PHPProjectPreferences
-                        .getStopAtFirstLine(project);
-                String selectedURL = null;
-                boolean showDebugDialog = true;
-                if (obj instanceof IScriptProject) {
-                    final PHPWebPageLaunchDialog dialog = new PHPWebPageLaunchDialog(
-                            mode, (IScriptProject) obj, basePath);
-                    final int open = dialog.open();
-                    if (open == PHPWebPageLaunchDialog.OK) {
-                        defaultServer = dialog.getServer();
-                        selectedURL = dialog.getPhpPathString();
-                        phpPathString = dialog.getFilename();
-                        breakAtFirstLine = dialog.isBreakAtFirstLine();
-                        showDebugDialog = false;
-                    } else {
-                        continue;
-                    }
-                }
+				// Launch the app
+				/*
+				 * ILaunchConfiguration config =
+				 * findLaunchConfiguration(project, phpPathString, selectedURL,
+				 * defaultServer, mode, configType, breakAtFirstLine,
+				 * showDebugDialog, res, route, utility.getProject()); if
+				 * (config != null) { DebugUITools.launch(config, mode); } else
+				 * { // Could not find launch configuration or the user //
+				 * cancelled. // throw new CoreException(new
+				 * Status(IStatus.ERROR, // PHPDebugUIPlugin.ID, IStatus.OK, //
+				 * PHPDebugUIMessages.launch_failure_no_config, null)); }
+				 */
+			} catch (CoreException ce) {
+				final IStatus stat = ce.getStatus();
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						ErrorDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(), Messages.launch_failure_msg_title,
+								Messages.launch_failure_server_msg_text, stat);
+					}
+				});
+			}
+		}
+	}
 
-                if (phpPathString == null) {
-                    // Could not find target to launch
-                    throw new CoreException(new Status(IStatus.ERROR,
-                            PHPDebugUIPlugin.ID, IStatus.OK,
-                            Messages.launch_failure_no_target, null));
-                }
+	static ILaunchConfiguration createConfiguration(IProject project, String fileName, String selectedURL, Server server, ILaunchConfigurationType configType,
+			String mode, boolean breakAtFirstLine, boolean showDebugDialog, IResource res, Route route, IScriptProject scriptProject) throws CoreException {
 
-                // Launch the app
-                /*
-                ILaunchConfiguration config = findLaunchConfiguration(project,
-                        phpPathString, selectedURL, defaultServer, mode,
-                        configType, breakAtFirstLine, showDebugDialog, res, route, utility.getProject());
-                if (config != null) {
-                    DebugUITools.launch(config, mode);
-                } else {
-                    // Could not find launch configuration or the user
-                    // cancelled.
-                    // throw new CoreException(new Status(IStatus.ERROR,
-                    // PHPDebugUIPlugin.ID, IStatus.OK,
-                    // PHPDebugUIMessages.launch_failure_no_config, null));
-                }
-                */
-            } catch (CoreException ce) {
-                final IStatus stat = ce.getStatus();
-                Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
-                        ErrorDialog.openError(
-                                PHPDebugUIPlugin.getActiveWorkbenchShell(),
-                                Messages.launch_failure_msg_title,
-                                Messages.launch_failure_server_msg_text, stat);
-                    }
-                });
-            }
-        }
-    }
+		ILaunchConfiguration config = null;
+		if (!FileUtils.resourceExists(fileName)) {
+			Logger.debugMSG("file not existing: " + fileName);
+			return null;
+		}
 
+		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(route));
 
-    static ILaunchConfiguration createConfiguration(IProject project,
-            String fileName, String selectedURL, Server server,
-            ILaunchConfigurationType configType, String mode,
-            boolean breakAtFirstLine, boolean showDebugDialog, IResource res, Route route, IScriptProject scriptProject)
-            throws CoreException {
+		// Set the debugger ID and the configuration delegate for this launch
+		// configuration
+		String debuggerID = PHPProjectPreferences.getDefaultDebuggerID(project);
+		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
+		IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerID);
+		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, debuggerConfiguration.getWebLaunchDelegateClass());
 
-        ILaunchConfiguration config = null;
-        if (!FileUtils.resourceExists(fileName)) {
-            Logger.debugMSG("file not existing: " + fileName);
-            return null;
-        }
+		wc.setAttribute(Server.NAME, server.getName());
 
+		wc.setAttribute(Server.FILE_NAME, fileName);
+		wc.setAttribute(Server.BASE_URL, "");
+		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
+		wc.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
+		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakAtFirstLine);
+		if (res != null) {
+			wc.setMappedResources(new IResource[] { res });
+		}
 
-        ILaunchConfigurationWorkingCopy wc = configType.newInstance(null,
-                getNewConfigurationName(route));
+		config = wc.doSave();
+		String URL = null;
+		Logger.debugMSG("getting dev kernel from " + scriptProject.getElementName());
+		AppKernel kernel = SymfonyKernelAccess.getDefault().getDevelopmentKernel(scriptProject);
 
-        // Set the debugger ID and the configuration delegate for this launch
-        // configuration
-        String debuggerID = PHPProjectPreferences.getDefaultDebuggerID(project);
-        wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
-        IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
-                .getDebuggerConfiguration(debuggerID);
-        wc.setAttribute(
-                PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
-                debuggerConfiguration.getWebLaunchDelegateClass());
+		if (kernel == null) {
+			Logger.debugMSG("No kernel found");
+			return null;
+		}
+		Logger.debugMSG("kernel found: " + kernel.getScript());
+		if (selectedURL != null) {
+			Logger.debugMSG("found exisiting url: " + selectedURL);
+			URL = selectedURL;
+		} else {
+			try {
 
-        wc.setAttribute(Server.NAME, server.getName());
+				URL = ServerUtils.constructURL(config, scriptProject, route, kernel);
+				Logger.debugMSG("Generated launch configuration url: " + URL);
+				if (URL == null)
+					URL = "";
+			} catch (Exception e) {
+				// safe as resolved URL is server.getBaseURL()
+				e.printStackTrace();
+				if (URL == null)
+					URL = "";
+			}
+		}
 
-        wc.setAttribute(Server.FILE_NAME, fileName);
-        wc.setAttribute(Server.BASE_URL, "");
-        wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO,
-                PHPDebugPlugin.getDebugInfoOption());
-        wc.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER,
-                PHPDebugPlugin.getOpenInBrowserOption());
-        wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
-                breakAtFirstLine);
-        if (res != null) {
-            wc.setMappedResources(new IResource[] { res });
-        }
+		wc.setAttribute(Server.BASE_URL, URL);
+		wc.setAttribute(SymfonyServer.URL, URL);
 
-        config = wc.doSave();
-        String URL = null;
-        Logger.debugMSG("getting dev kernel from " + scriptProject.getElementName());
-        AppKernel kernel = SymfonyKernelAccess.getDefault().getDevelopmentKernel(scriptProject);
+		// Display a dialog for selecting the route parameters.
+		if (route.hasParameters()) {
 
-        if (kernel == null) {
-            Logger.debugMSG("No kernel found");
-            return null;
-        }
-        Logger.debugMSG("kernel found: " + kernel.getScript());
-        if (selectedURL != null) {
-            Logger.debugMSG("found exisiting url: " + selectedURL);
-            URL = selectedURL;
-        } else {
-            try {
+			String title = "Please insert the required route parameters";
+			SymfonyURLLaunchDialog launchDialog = new SymfonyURLLaunchDialog(wc, title, route);
+			launchDialog.setBlockOnOpen(true);
+			if (launchDialog.open() != PHPWebPageURLLaunchDialog.OK) {
+				deleteLaunchconfig(config);
+				return null;
+			}
+		}
 
-                URL = ServerUtils.constructURL(config, scriptProject, route, kernel);
-                Logger.debugMSG("Generated launch configuration url: " + URL);
-                if (URL == null)
-                    URL = "";
-            } catch (Exception e) {
-                // safe as resolved URL is server.getBaseURL()
-                e.printStackTrace();
-                if (URL == null)
-                    URL = "";
-            }
-        }
+		wc.setAttribute(SymfonyServer.ROUTE, route.getName());
+		wc.setAttribute(SymfonyServer.ENVIRONMENT, kernel.getEnvironment());
+		config = wc.doSave();
+		return config;
+	}
 
-        wc.setAttribute(Server.BASE_URL, URL);
-        wc.setAttribute(SymfonyServer.URL, URL);
+	private static void deleteLaunchconfig(final ILaunchConfiguration launchConfig) {
 
-        // Display a dialog for selecting the route parameters.
-        if (route.hasParameters()) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				ILaunchConfiguration config = launchConfig;
+				try {
+					if (config instanceof ILaunchConfigurationWorkingCopy) {
+						config = ((ILaunchConfigurationWorkingCopy) config).getOriginal();
+					}
+					if (config != null) {
+						config.delete();
+					}
+				} catch (CoreException ce) {
+					// Ignore
+				}
+			}
+		});
+	}
 
-            String title = "Please insert the required route parameters";
-            SymfonyURLLaunchDialog launchDialog = new SymfonyURLLaunchDialog(wc, title, route);
-            launchDialog.setBlockOnOpen(true);
-            if (launchDialog.open() != PHPWebPageURLLaunchDialog.OK) {
-                deleteLaunchconfig(config);
-                return null;
-            }
-        }
+	protected static String getNewConfigurationName(Route route) {
 
+		String configurationName = Messages.PHPWebPageLaunchShortcut_4;
 
-        wc.setAttribute(SymfonyServer.ROUTE, route.getName());
-        wc.setAttribute(SymfonyServer.ENVIRONMENT, kernel.getEnvironment());
-        config = wc.doSave();
-        return config;
-    }
+		try {
+			configurationName = route.getName();
 
-    private static void deleteLaunchconfig(final ILaunchConfiguration launchConfig) {
-
-        Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
-                ILaunchConfiguration config = launchConfig;
-                try {
-                    if (config instanceof ILaunchConfigurationWorkingCopy) {
-                        config = ((ILaunchConfigurationWorkingCopy) config)
-                                .getOriginal();
-                    }
-                    if (config != null) {
-                        config.delete();
-                    }
-                } catch (CoreException ce) {
-                    // Ignore
-                }
-            }
-        });
-    }
-
-
-    protected static String getNewConfigurationName(Route route) {
-
-        String configurationName = Messages.PHPWebPageLaunchShortcut_4;
-
-        try {
-            configurationName = route.getName();
-
-        } catch (Exception e) {
-            Logger.logException(e);
-        }
-        return DebugPlugin.getDefault().getLaunchManager()
-                .generateLaunchConfigurationName(configurationName);
-    }
-
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		return DebugPlugin.getDefault().getLaunchManager().generateLaunchConfigurationName(configurationName);
+	}
 
 }
