@@ -1,0 +1,3 @@
+version = 1 
+artifact.repository.factory.order = compositeArtifacts.xml, ! 
+metadata.repository.factory.order = compositeContent.xml, !
