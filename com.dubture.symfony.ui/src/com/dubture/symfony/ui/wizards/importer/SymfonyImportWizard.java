@@ -36,11 +36,11 @@ import org.osgi.service.prefs.BackingStoreException;
 
 import com.dubture.composer.core.ComposerNature;
 import com.dubture.composer.core.buildpath.BuildPathManager;
-import com.dubture.composer.core.log.Logger;
 import com.dubture.symfony.core.SymfonyCorePlugin;
 import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.facet.FacetManager;
+import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.preferences.CorePreferenceConstants.Keys;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 
@@ -181,7 +181,10 @@ public class SymfonyImportWizard extends Wizard implements IImportWizard {
 		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(SymfonyCorePlugin.ID);
 		String executable = preferences.get(Keys.PHP_EXECUTABLE, null);
 		IEclipsePreferences node = new ProjectScope(project).getNode(SymfonyCorePlugin.ID);
-		node.put(Keys.PHP_EXECUTABLE, executable);
+		if (executable != null) {
+			node.put(Keys.PHP_EXECUTABLE, executable);
+			Logger.log(Logger.WARNING, "Executable not found!");
+		}
 		node.put(Keys.CONSOLE, consolePath);
 		node.put(Keys.USE_PROJECT_PHAR, Boolean.FALSE.toString());
 		node.put(Keys.DUMPED_CONTAINER, containerPath);
