@@ -19,7 +19,7 @@
       <resolver
             class="com.dubture.symfony.twig.codeassist.TwigCompletionContextResolver">
       </resolver>
-   </extension>
+   </extension> 
    <extension
          id="id2"
          point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
@@ -50,7 +50,7 @@
             class="com.dubture.symfony.twig.codeassist.CompletionProposalProvider">
       </proposalProvider>
    </extension>
-   <extension
+   <extension 
          point="com.dubture.twig.core.templateResolvers">
       <resolver
             class="com.dubture.symfony.twig.model.SymfonyTemplateResolver"></resolver>

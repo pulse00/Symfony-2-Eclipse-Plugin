@@ -19,50 +19,91 @@
 		<module>com.dubture.symfony.ui</module>
 		<module>com.dubture.symfony.test</module>
 		<module>com.dubture.symfony.feature</module>
+		<module>repository</module>
 	</modules>
 
 	<properties>
 		<tycho-version>0.22.0</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<eclipse.name>luna</eclipse.name>
+		<release>false</release>
+		<bintray.user></bintray.user>
+		<bintray.apikey></bintray.apikey>
+		<bintray.owner></bintray.owner>
+		<bintray.repo>symfony-plugin</bintray.repo>
+		<bintray.version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</bintray.version>
+		<pdt.version>latest-nightly</pdt.version>
+		<dltk.version>latest-nightly</dltk.version>
+		<core-plugin.url>http://pdt-eg.github.io/Core-Plugin/nightly</core-plugin.url>
+		<external-mirror.url>http://pdt-eg.github.io/external-mirror/nightly</external-mirror.url>
+		<doctrine.url>http://doctrine.dubture.com/nightly</doctrine.url>
+		<twig.url>http://twig.dubture.com/nightly</twig.url>
+		<indexing.url>http://pulse00.github.io/eclipse-indexing-framework/nightly</indexing.url>
+		<!-- UPDATE to static composite when possible -->
+		<composer.url>http://dl.bintray.com/zulus/composer-plugin/nightly/1.0.2</composer.url>
 	</properties>
 
 	<repositories>
-		<repository>
-			<id>dltk-tests</id>
-			<layout>p2</layout>
-			<url>https://hudson.eclipse.org/dltk/job/dltk-nightly/lastSuccessfulBuild/artifact/org.eclipse.dltk.releng/build/update.site/target/repository/</url>
-		</repository>
-		<repository>
-			<id>dltk-stable</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/technology/dltk/updates-dev/5.1/</url>
-		</repository>
-		<repository>
-			<id>luna</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/luna</url>
-		</repository>
+
 		<repository>
 			<id>yedit</id>
 			<layout>p2</layout>
 			<url>http://dadacoalition.org/yedit</url>
 		</repository>
-
 		<repository>
-			<id>pdt-nightly</id>
+			<id>eclipse</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/tools/pdt/updates/latest-nightly/</url>
+			<url>http://download.eclipse.org/releases/${eclipse.name}</url>
 		</repository>
-
+		<repository>
+			<id>dltk</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/technology/dltk/updates-dev/${dltk.version}/</url>
+		</repository>
+		<repository>
+			<id>pdt</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/tools/pdt/updates/${pdt.version}/</url>
+		</repository>
 		<repository>
 			<id>orbit</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20140114142710/repository</url>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository/</url>
 		</repository>
 		<repository>
 			<id>Sonatype-public</id>
 			<name>SnakeYAML repository</name>
 			<url>http://oss.sonatype.org/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>doctrine</id>
+			<layout>p2</layout>
+			<url>${doctrine.url}</url>
+		</repository>
+		<repository>
+			<id>twig</id>
+			<layout>p2</layout>
+			<url>${twig.url}</url>
+		</repository>
+		<repository>
+			<id>core-plugin</id>
+			<layout>p2</layout>
+			<url>${core-plugin.url}</url>
+		</repository>
+		<repository>
+			<id>external-mirror</id>
+			<layout>p2</layout>
+			<url>${external-mirror.url}</url>
+		</repository>
+		<repository>
+			<id>indexing</id>
+			<layout>p2</layout>
+			<url>${indexing.url}</url>
+		</repository>
+		<repository>
+			<id>composer</id>
+			<layout>p2</layout>
+			<url>${composer.url}</url>
 		</repository>
 	</repositories>
 
@@ -102,8 +143,6 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-
-
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
@@ -145,19 +184,55 @@
 					</environments>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>parse-version</id>
+						<goals>
+							<goal>parse-version</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	<profiles>
 		<profile>
-			<!-- this profile simpplify contributing -->
-			<id>individual</id>
-			<repositories>
-				<repository>
-					<id>pex</id>
-					<layout>p2</layout>
-					<url>http://p2-dev.pdt-extensions.org/</url>
-				</repository>
-			</repositories>
+			<id>release</id>
+			<activation>
+				<property>
+					<name>release</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<properties>
+				<bintray.package>release</bintray.package>
+			</properties>
+		</profile>
+		<profile>
+			<id>nightly</id>
+			<activation>
+				<property>
+					<name>release</name>
+					<value>false</value>
+				</property>
+			</activation>
+			<properties>
+				<bintray.package>nightly</bintray.package>
+			</properties>
 		</profile>
 	</profiles>
 </project>
