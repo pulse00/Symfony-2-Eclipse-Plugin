@@ -8,4 +8,9 @@ Symfony Eclipse Plugin
 - Java 6
 - Eclipse 4.4 (Luna)
 
+### Recommended
+
+- Java 7
+- Eclipse 4.5 (Mars)
+
 For a full list of features and the Updatesite link see http://symfony.dubture.com.
