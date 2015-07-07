@@ -43,6 +43,7 @@ public class ServiceDao extends BaseDao implements IServiceDao {
 	private static final String QUERY_FIND_ALL = "SELECT PATH, NAME, PHPCLASS, _PUBLIC, TAGS  FROM SERVICES"; //$NON-NLS-1$
 	private static final String QUERY_FIND_ONE_BY_NAME = "SELECT PATH, NAME, PHPCLASS FROM SERVICES WHERE NAME = ? LIMIT 1"; //$NON-NLS-1$
 	private static final String QUERY_FIND_BY_PATH = "SELECT NAME, PHPCLASS, PATH, _PUBLIC, TAGS FROM SERVICES WHERE PATH LIKE ?"; //$NON-NLS-1$
+	private static final String QUERY_FIND_BY_PATH_CLASS_NAME = "SELECT NAME, PHPCLASS, PATH, _PUBLIC, TAGS FROM SERVICES WHERE PATH LIKE ? AND ? != ''"; //$NON-NLS-1$
 	private static final String QUERY_FIND_ONE_BY_ID_PATH = "SELECT NAME, PHPCLASS, PATH, _PUBLIC, TAGS FROM SERVICES WHERE PATH LIKE ? AND NAME = ? LIMIT 1"; //$NON-NLS-1$
 	private static final String QUERY_FIND_TAGS_BY_PATH = "SELECT TAGS FROM SERVICES WHERE PATH LIKE ?";
 
@@ -225,6 +226,37 @@ public class ServiceDao extends BaseDao implements IServiceDao {
 			String _public = result.getString(4);
 			String _tags = result.getString(5);
 			handler.handle(_id, _phpClass, _path, _public, _tags);
+		} catch (Exception e) {
+			Logger.logException(e);
+		} finally {
+			closeIfExists(connection);
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	public void findServicesByClassName(String className, String path, IServiceHandler handler)
+	{
+		Connection connection = null;
+		try {
+			connection = SymfonyDbFactory.getInstance().createConnection();
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_BY_PATH_CLASS_NAME);
+			statement.setString(1, escapeLikePattern(path) + LIKE_WILDCARD);
+			statement.setString(2, className.replaceAll("['\"]", "")); //$NON-NLS-1$ //$NON-NLS-2$
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				int columnIndex = 0;
+				String name = result.getString(++columnIndex);
+				String phpClass = result.getString(++columnIndex);
+				String ppath = result.getString(++columnIndex);
+				String _public = result.getString(++columnIndex);
+				String tags = result.getString(++columnIndex);
+				if (phpClass.startsWith("Acme")) {
+					System.out.println(phpClass);
+				}
+				handler.handle(name, phpClass, ppath, _public, tags);
+			}
 		} catch (Exception e) {
 			Logger.logException(e);
 		} finally {

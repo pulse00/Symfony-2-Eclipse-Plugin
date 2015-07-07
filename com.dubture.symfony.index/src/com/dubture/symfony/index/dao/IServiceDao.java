@@ -40,6 +40,8 @@ public interface IServiceDao extends IDao {
 
 	void findService(String id, String path,
 			IServiceHandler iServiceHandler);
+	
+	void findServicesByClassName(String className, String path, IServiceHandler iServiceHandler);
 
 	List<String> findTags(IPath path);
 

@@ -225,4 +225,23 @@
              file-extensions="xliff">
        </file-association>
     </extension>
+    <extension
+          point="org.eclipse.ltk.core.refactoring.renameParticipants">
+       <renameParticipant
+             class="com.dubture.symfony.core.refactoring.RenameServiceClass"
+             id="com.dubture.symfony.core.refactoring.renameServiceClassParticipant"
+             name="Rename Service Class">
+          <enablement>
+          	<with variable="affectedNatures">
+        <iterate operator="or">
+          <equals value="com.dubture.symfony.core.symfonyNature"/>
+        </iterate>
+      </with>
+      <with variable="element">
+        <instanceof value="org.eclipse.dltk.core.IType"/>
+      </with>
+          </enablement>
+       </renameParticipant>
+    </extension>
+    
 </plugin>

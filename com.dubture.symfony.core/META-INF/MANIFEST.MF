@@ -29,7 +29,10 @@ Require-Bundle: org.eclipse.core.runtime,
  com.dubture.indexing.core,
  org.pdtextensions.core;bundle-version="0.16.0",
  org.apache.commons.exec,
- org.eclipse.ui
+ org.eclipse.ui,
+ org.eclipse.ltk.core.refactoring,
+ org.eclipse.search,
+ org.eclipse.text
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.dubture.symfony.core,com.dubture.symfony.core.buil

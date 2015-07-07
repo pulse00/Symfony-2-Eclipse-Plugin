@@ -113,6 +113,10 @@ public class SymfonyIndexer {
 	public void findServices(String string, IServiceHandler iServiceHandler) {
 		serviceDao.findServicesByPath(string, iServiceHandler);		
 	}
+	
+	public void findServicesByClassName(String className, String path, IServiceHandler iServiceHandler) {
+		serviceDao.findServicesByClassName(className, path, iServiceHandler);		
+	}
 
 	public void findService(String id, String path, IServiceHandler iServiceHandler) {
 		serviceDao.findService(id, path, iServiceHandler);

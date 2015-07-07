@@ -128,7 +128,7 @@ public class Service extends SourceType {
     public Service(String id, String phpClass, String path, Scalar scalar) {
 
         super(null, id);
-        this.namespace = PHPModelUtils.extractNameSapceName(phpClass);
+        this.namespace = PHPModelUtils.extractNameSpaceName(phpClass);
         this.className = PHPModelUtils.extractElementName(phpClass);
         setFqcn(phpClass);
         this.id = id;
