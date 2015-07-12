@@ -1,3 +1,7 @@
+1.1.1
+
+* Service class name refactoring support
+
 1.1.0
 
 * Doctrine become standalone feature
