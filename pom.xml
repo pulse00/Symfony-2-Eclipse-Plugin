@@ -39,8 +39,7 @@
 		<doctrine.url>http://doctrine.dubture.com/nightly</doctrine.url>
 		<twig.url>http://twig.dubture.com/nightly</twig.url>
 		<indexing.url>http://pulse00.github.io/eclipse-indexing-framework/nightly</indexing.url>
-		<!-- UPDATE to static composite when possible -->
-		<composer.url>http://dl.bintray.com/zulus/composer-plugin/nightly/1.0.2</composer.url>
+		<composer.url>http://composer.dubture.com/nightly</composer.url>
 	</properties>
 
 	<repositories>
