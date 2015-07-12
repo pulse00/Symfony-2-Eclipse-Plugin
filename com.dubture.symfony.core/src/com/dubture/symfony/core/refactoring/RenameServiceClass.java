@@ -34,6 +34,7 @@ import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEditGroup;
 
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.index.SymfonyIndexer;
 import com.dubture.symfony.index.handler.IServiceHandler;
@@ -86,6 +87,10 @@ public class RenameServiceClass extends RenameParticipant {
 				return null;
 			}
 			resources.add(type.getScriptProject().getProject().getFolder("app/config")); // search by default
+			List<Bundle> findBundles = SymfonyModelAccess.getDefault().findBundles(type.getScriptProject());
+			for (Bundle bundle : findBundles) {
+				resources.add(ResourcesPlugin.getWorkspace().getRoot().getFolder(bundle.getPath().append("Resources").append("config")));
+			}
 			TextSearchScope searchScope = TextSearchScope.newSearchScope(resources.toArray(new IResource[resources.size()]), Pattern.compile(".*"), true);
 			Pattern search = Pattern.compile(PHPModelUtils.getFullName(type).replaceAll("\\\\", "\\\\\\\\"));
 			
@@ -150,9 +155,5 @@ public class RenameServiceClass extends RenameParticipant {
 		newName.append(getArguments().getNewName());
 		return newName.toString();
 	}
-	
-	
-	
-
 
 }

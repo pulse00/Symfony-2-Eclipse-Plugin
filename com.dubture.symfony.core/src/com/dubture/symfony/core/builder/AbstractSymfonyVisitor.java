@@ -204,9 +204,9 @@ public abstract class AbstractSymfonyVisitor {
 			if (parser.hasRoutes()) {
 				indexRoutes(parser.getRoutes());
 			}
-			if (parser.hasServices()) {
-				indexServices(parser.getServices());
-			}
+//			if (parser.hasServices()) {
+//				indexServices(parser.getServices());
+//			}
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
