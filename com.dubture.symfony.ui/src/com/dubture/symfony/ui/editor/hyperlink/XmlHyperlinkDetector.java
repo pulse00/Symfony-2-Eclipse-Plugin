@@ -8,9 +8,18 @@
  ******************************************************************************/
 package com.dubture.symfony.ui.editor.hyperlink;
 
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.internal.filebuffers.FileBuffersPlugin;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.ui.editor.ModelElementHyperlink;
 import org.eclipse.dltk.ui.actions.OpenAction;
@@ -23,6 +32,8 @@ import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.ui.filters.PHPContentTypeFilter;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.internal.Workbench;
 
@@ -31,103 +42,119 @@ import com.dubture.symfony.core.log.Logger;
 @SuppressWarnings("restriction")
 public class XmlHyperlinkDetector extends AbstractHyperlinkDetector {
 
+	private static String PHP_SOURCE = "org.eclipse.php.core.phpsource";
+
 	@Override
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
-			IRegion region, boolean canShowMultipleHyperlinks) {
+	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 
-	    IDocument document = textViewer.getDocument();
-	    int offset = region.getOffset();
+		IDocument document = textViewer.getDocument();
+		int offset = region.getOffset();
+		ITextFileBuffer textFileBuffer = FileBuffersPlugin.getDefault().getFileBufferManager().getTextFileBuffer(document);
+		if (textFileBuffer == null || textFileBuffer.getFileStore() == null) {
+			return null;
+		}
 
-	    try {
+		try {
+			if (PHP_SOURCE.equals(textFileBuffer.getContentType().getId())) {
+				// PHP Editor is resolved as XML due WTP extension
+				return null;
+			}
 
-	        IRegion wordRegion = findWord(document, offset);
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(textFileBuffer.getFileStore().toURI(),
+					IWorkspaceRoot.INCLUDE_HIDDEN);
 
-            if (wordRegion == null)
-                return null;
+			if (files == null || files.length != 1 || files[0].getProject() == null || !files[0].getProject().hasNature(PHPNature.ID)) {
+				return null;
+			}
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(DLTKCore.create(files[0].getProject()));
+			IRegion wordRegion = findWord(document, offset);
 
-            String path = document.get(wordRegion.getOffset(), wordRegion.getLength());
-            PhpModelAccess model = PhpModelAccess.getDefault();
-            
-            if (path == null || path.length() == 0) {
-                return null;
-            }
-            IType[] types = model.findTypes(path, MatchRule.EXACT, 0, 0, SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault()), new NullProgressMonitor());
-            IWorkbenchPartSite site = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getSite();
+			if (wordRegion == null)
+				return null;
 
-            if (types.length > 10) {
-                Logger.debugMSG("Found more than ten (" + types.length +") types during xml hyperlink detection...");
-                return null;
-            }
-            if (types != null && types.length > 0) {
-                
-                IHyperlink[] links = new IHyperlink[types.length];
-                for (int i=0; i < types.length; i++) {
-                    links[i] = new ModelElementHyperlink(wordRegion, types[i], new OpenAction(site));
-                }
-                
-                return links;
-            }
+			String path = document.get(wordRegion.getOffset(), wordRegion.getLength());
+			PhpModelAccess model = PhpModelAccess.getDefault();
 
-	    } catch (Exception e) {
-	        Logger.logException(e);
-	    }
-	    
+			if (path == null || path.length() == 0) {
+				return null;
+			}
+			IType[] types = model.findTypes(path, MatchRule.EXACT, 0, 0, scope, new NullProgressMonitor());
+			IWorkbenchPartSite site = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getSite();
+
+			if (types.length > 10) {
+				Logger.debugMSG("Found more than ten (" + types.length + ") types during xml hyperlink detection...");
+				return null;
+			}
+			if (types != null && types.length > 0) {
+
+				IHyperlink[] links = new IHyperlink[types.length];
+				for (int i = 0; i < types.length; i++) {
+					links[i] = new ModelElementHyperlink(wordRegion, types[i], new OpenAction(site));
+				}
+
+				return links;
+			}
+
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+
 		return null;
 	}
-	
-    public static IRegion findWord(IDocument document, int offset) {
 
-        int start = -2;
-        int end = -1;
+	public static IRegion findWord(IDocument document, int offset) {
 
-        try {
+		int start = -2;
+		int end = -1;
 
-            int pos = offset;
-            char c;
+		try {
 
-            char separator = '>';
-            int length = document.getLength();
+			int pos = offset;
+			char c;
 
-            // search backwards until a string delimiter
-            // to find the start position
-            while (pos >= 0) {
-                c = document.getChar(pos);
+			char separator = '>';
+			int length = document.getLength();
 
-                if (c == '"' || c == ' ' || c == '>') {
-                    separator = c;
-                    break;
-                }
-                --pos;
-            }
+			// search backwards until a string delimiter
+			// to find the start position
+			while (pos >= 0) {
+				c = document.getChar(pos);
 
-            start = pos;
-            pos++;
+				if (c == '"' || c == ' ' || c == '>') {
+					separator = c;
+					break;
+				}
+				--pos;
+			}
 
-            if (separator == '>') {
-                separator = '<';
-            }
+			start = pos;
+			pos++;
 
-            // search forward until a string delimiter
-            // to find the end position
-            while (pos < length) {
-                c = document.getChar(pos);
-                if (c == separator) {
-                    end = pos;
-                    break;
-                }
-                ++pos;
-            }
+			if (separator == '>') {
+				separator = '<';
+			}
 
-            if (start >= 0 && end != 0) {               
-                start++;
-                
-                int rlength = end - start;
-                return new Region(start, rlength );
-            }
+			// search forward until a string delimiter
+			// to find the end position
+			while (pos < length) {
+				c = document.getChar(pos);
+				if (c == separator) {
+					end = pos;
+					break;
+				}
+				++pos;
+			}
 
-        } catch (BadLocationException x) {
-        }
+			if (start >= 0 && end != 0) {
+				start++;
 
-        return null;
-    }           
+				int rlength = end - start;
+				return new Region(start, rlength);
+			}
+
+		} catch (BadLocationException x) {
+		}
+
+		return null;
+	}
 }
