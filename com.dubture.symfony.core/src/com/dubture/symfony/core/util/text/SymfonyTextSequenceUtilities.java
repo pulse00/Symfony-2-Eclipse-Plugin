@@ -279,7 +279,6 @@ public class SymfonyTextSequenceUtilities {
 	 * @return
 	 */
 	public static int readLiteralStartIndex(CharSequence textSequence, int startPosition) {
-
 		while (startPosition > 0) {
 
 			char ch = textSequence.charAt(startPosition - 1);
@@ -288,7 +287,7 @@ public class SymfonyTextSequenceUtilities {
 			}
 			startPosition--;
 		}
-		if (startPosition > 0
+		if (startPosition > 0 && startPosition < textSequence.length()
 				&& (textSequence.charAt(startPosition) == '"' || textSequence.charAt(startPosition) == '\'' )) {
 			startPosition++;
 
