@@ -145,6 +145,10 @@
              <include>
                 <rules>
                    <projectNature id="com.dubture.symfony.core.symfonyNature"/>
+                </rules>
+             </include>
+             <include>
+                <rules>
                    <contentType id="org.eclipse.core.runtime.xml"></contentType>
                    <contentType id="org.eclipse.wst.xml.core.xmlsource"></contentType>
                    <fileext
