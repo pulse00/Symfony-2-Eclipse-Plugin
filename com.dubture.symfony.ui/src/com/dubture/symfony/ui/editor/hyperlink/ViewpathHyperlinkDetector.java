@@ -8,6 +8,7 @@
  ******************************************************************************/
 package com.dubture.symfony.ui.editor.hyperlink;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.ISourceModule;
@@ -22,6 +23,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 
+import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.ViewPath;
@@ -105,11 +107,21 @@ public class ViewpathHyperlinkDetector extends StringHyperlinkDetector {
 		if (editor == null || region == null) {
 			return null;
 		}
+		
+		
 
 		input = EditorUtility.getEditorInputModelElement(editor, false);
 		
 		if (input == null) {
 			editor = null;
+			return null;
+		}
+		
+		try {
+			if (input.getScriptProject() == null || !input.getScriptProject().getProject().hasNature(SymfonyNature.NATURE_ID)) {
+				return null;
+			}
+		} catch (CoreException e1) {
 			return null;
 		}
 
@@ -125,6 +137,13 @@ public class ViewpathHyperlinkDetector extends StringHyperlinkDetector {
 			}
 
 			String path = document.get(wordRegion.getOffset(), wordRegion.getLength());
+			if (wordRegion.getOffset() > 0) {
+				String start = document.get(wordRegion.getOffset() - 1, 1);
+				if (!start.equals("'") && !start.equals("\"") && !start.equals(",")) {
+					// this is not a string. Might be static member access
+					return null;
+				}
+			}
 			ViewPath viewPath = new ViewPath(path);
 			
 			// 	"AcmeDemoBundle::layout.html.twig" 2 part viewpath
