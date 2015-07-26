@@ -1,6 +1,8 @@
 1.1.1
 
 * Service class name refactoring support
+* Move annotation validator to Doctrine plugin
+* Use Annotation cache from Doctrine plugin
 
 1.1.0
 
