@@ -96,7 +96,7 @@ public class RenameServiceClass extends RenameParticipant {
 				resources.add(ResourcesPlugin.getWorkspace().getRoot().getFolder(bundle.getPath().append("Resources").append("config")));
 			}
 			TextSearchScope searchScope = TextSearchScope.newSearchScope(resources.toArray(new IResource[resources.size()]), Pattern.compile(".*"), true);
-			Pattern search = Pattern.compile(PHPModelUtils.getFullName(type).replaceAll("\\\\", "\\\\\\\\"));
+			Pattern search = TextSearchEngine.createPattern(PHPModelUtils.getFullName(type), false, false);
 			
 			final String newName = createNewName();
 		
@@ -108,13 +108,13 @@ public class RenameServiceClass extends RenameParticipant {
 						return true;
 					}
 					char fileContentChar = matchAccess.getFileContentChar(matchAccess.getMatchOffset()-1);
-					if (!(Character.isWhitespace(fileContentChar) || fileContentChar == '\'' || fileContentChar == '"' || fileContentChar == ':')) {
+					if (!(Character.isWhitespace(fileContentChar) || fileContentChar == '\'' || fileContentChar == '"' || fileContentChar == ':' || fileContentChar == '>')) {
 						return false;
 					}
 					int end = matchAccess.getMatchOffset()+matchAccess.getMatchLength();
 					if (end < matchAccess.getFileContentLength()) {
 						fileContentChar = matchAccess.getFileContentChar(end);
-						if (!(Character.isWhitespace(fileContentChar) || fileContentChar == '\'' || fileContentChar == '"')) {
+						if (!(Character.isWhitespace(fileContentChar) || fileContentChar == '\'' || fileContentChar == '"' || fileContentChar == '<')) {
 							return false;
 						}
 					}
@@ -135,7 +135,7 @@ public class RenameServiceClass extends RenameParticipant {
 					return true;
 				}
 			};
-			TextSearchEngine.create().search(searchScope, collector, search, pm);
+			TextSearchEngine.create().search(searchScope, collector, search, null);
 			
 			
 			if (changes.isEmpty()) {
