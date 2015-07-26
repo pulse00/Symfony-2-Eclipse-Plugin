@@ -77,9 +77,13 @@ public class RenameServiceClass extends RenameParticipant {
 				
 				@Override
 				public void handle(String id, String phpClass, String path, String _public, String tags) {
-					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path));
-					if (file.exists()) {
-						resources.add(file);
+					try {
+						IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path));
+						if (file.exists()) {
+							resources.add(file);
+						}
+					} catch (Exception e) {
+						// ignore if not exists
 					}
 				}
 			});
