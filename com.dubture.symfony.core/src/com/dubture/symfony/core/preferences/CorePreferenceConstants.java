@@ -43,7 +43,6 @@ public class CorePreferenceConstants {
 
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(SymfonyCorePlugin.ID);		
 		
-		node.put(SymfonyCoreConstants.ANNOTATION_PROBLEM_SEVERITY, SymfonyCoreConstants.ANNOTATION_WARNING);
 		node.put(Keys.SYNTHETIC_SERVICES, JsonUtils.createDefaultSyntheticServices());		
 				
 	}	

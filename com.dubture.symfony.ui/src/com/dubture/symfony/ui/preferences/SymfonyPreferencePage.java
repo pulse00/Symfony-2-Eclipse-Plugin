@@ -62,11 +62,5 @@ public class SymfonyPreferencePage extends FieldEditorPreferencePage implements 
 
 		String[][] options;
 
-		options = new String[][] { { SymfonyCoreConstants.ANNOTATION_ERROR, SymfonyCoreConstants.ANNOTATION_ERROR },
-				{ SymfonyCoreConstants.ANNOTATION_WARNING, SymfonyCoreConstants.ANNOTATION_WARNING },
-				{ SymfonyCoreConstants.ANNOTATION_IGNORE, SymfonyCoreConstants.ANNOTATION_IGNORE } };
-
-		addField(new ComboFieldEditor(SymfonyCoreConstants.ANNOTATION_PROBLEM_SEVERITY,
-				Messages.SymfonyPreferencePage_3, options, getFieldEditorParent()));
 	}
 }

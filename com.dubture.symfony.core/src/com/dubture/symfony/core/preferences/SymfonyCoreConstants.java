@@ -22,20 +22,6 @@ package com.dubture.symfony.core.preferences;
  */
 public class SymfonyCoreConstants {
 
-    /**
-    * Option for severity level or annotation problems
-    */
-    public static final String ANNOTATION_PROBLEM_SEVERITY = "annotation_problem_severity";
-
-
-    /**
-    * Annotation problem severity levels.
-    */
-    public static final String ANNOTATION_ERROR      = "Error";
-    public static final String ANNOTATION_WARNING    = "Warning";
-    public static final String ANNOTATION_IGNORE     = "Ignore";
-
-
     // Symfony Class and Method names
     public static final String CONTROLLER_CLASS      = "Controller";
     public static final String ACTION_SUFFIX         = "Action";
