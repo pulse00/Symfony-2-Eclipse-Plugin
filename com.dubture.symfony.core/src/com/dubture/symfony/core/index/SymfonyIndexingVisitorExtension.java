@@ -31,7 +31,6 @@ import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
 import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Comment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ExpressionStatement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
@@ -46,8 +45,6 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.json.simple.JSONObject;
 
-import com.dubture.doctrine.annotation.model.Annotation;
-import com.dubture.doctrine.annotation.parser.AnnotationCommentParser;
 import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.index.visitor.RegisterNamespaceVisitor;
 import com.dubture.symfony.core.index.visitor.TemplateVariableVisitor;
@@ -56,7 +53,6 @@ import com.dubture.symfony.core.model.ISymfonyModelElement;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.TemplateVariable;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
-import com.dubture.symfony.core.util.AnnotationUtils;
 import com.dubture.symfony.core.util.JsonUtils;
 import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
 import com.dubture.symfony.index.SymfonyIndexer;
@@ -85,7 +81,6 @@ PhpIndexingVisitorExtension {
     private NamespaceDeclaration namespace;
     private TemplateVariableVisitor controllerIndexer;
     private SymfonyIndexer indexer;
-    private AnnotationCommentParser parser = AnnotationUtils.createParser();
 
     private List<UseStatement> useStatements = new ArrayList<UseStatement>();
     private boolean isSymfonyResource;

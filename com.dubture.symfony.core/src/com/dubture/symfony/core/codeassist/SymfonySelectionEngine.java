@@ -11,7 +11,10 @@ package com.dubture.symfony.core.codeassist;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.codeassist.ScriptSelectionEngine;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
@@ -20,7 +23,6 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.codeassist.PHPSelectionEngine;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -37,12 +39,12 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 import com.dubture.doctrine.annotation.model.Annotation;
-import com.dubture.doctrine.annotation.parser.AnnotationCommentParser;
+import com.dubture.doctrine.core.AnnotationParserUtil;
+import com.dubture.doctrine.core.compiler.IAnnotationModuleDeclaration;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.model.Service;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.ViewPath;
-import com.dubture.symfony.core.util.AnnotationUtils;
 import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
 import com.dubture.symfony.index.model.Route;
 
@@ -63,7 +65,7 @@ import com.dubture.symfony.index.model.Route;
  *
  */
 @SuppressWarnings("restriction")
-public class SymfonySelectionEngine extends PHPSelectionEngine {
+public class SymfonySelectionEngine extends ScriptSelectionEngine {
 
 	private static final IModelElement[] NONE = {};
 
@@ -183,7 +185,7 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
 
 			ModuleDeclaration parsedUnit = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 
-			AnnotationPathVisitor visitor = new AnnotationPathVisitor(project, offset);
+			AnnotationPathVisitor visitor = new AnnotationPathVisitor(sourceModule, offset);
 			parsedUnit.traverse(visitor);
 
 			if (visitor.getTemplate() != null) {
@@ -209,20 +211,25 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
 	 */
 	private static class AnnotationPathVisitor extends PHPASTVisitor {
 
-		private static final String[] TEMPLATE_CLASS_NAMES = new String[] { "Template" };
+		private static final String TEMPLATE_CLASS_NAME = "Template";
 
 		private IScriptProject project;
 		private NamespaceDeclaration namespaceDeclaration;
 		private ClassDeclaration classDeclaration;
 
-		private AnnotationCommentParser parser;
-
 		private IModelElement template = null;
 		private int offset;
 
-		public AnnotationPathVisitor(IScriptProject project, int offset) {
-			this.project = project;
-			this.parser = AnnotationUtils.createParser(TEMPLATE_CLASS_NAMES);
+		private IAnnotationModuleDeclaration annotationModule = null;
+
+		public AnnotationPathVisitor(ISourceModule sourceModule, int offset) {
+			this.project = sourceModule.getScriptProject();
+			try {
+				this.annotationModule = AnnotationParserUtil.getModule(sourceModule);
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			this.offset = offset;
 		}
 
@@ -254,8 +261,11 @@ public class SymfonySelectionEngine extends PHPSelectionEngine {
 			if (phpDoc == null || (phpDoc.sourceStart() > offset || phpDoc.sourceEnd() < offset)) {
 				return false;
 			}
-
-			List<Annotation> annotations = AnnotationUtils.extractAnnotations(parser, methodDeclaration);
+			if (annotationModule == null) {
+				return false;
+			}
+			// FIXME check real name
+			List<Annotation> annotations = annotationModule.readAnnotations((ASTNode) methodDeclaration).findAnnotations(TEMPLATE_CLASS_NAME);
 			if (annotations.size() < 1) {
 				return false;
 			}

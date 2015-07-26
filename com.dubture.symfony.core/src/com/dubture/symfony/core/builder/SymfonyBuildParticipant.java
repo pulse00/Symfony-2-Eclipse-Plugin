@@ -8,17 +8,12 @@
  ******************************************************************************/
 package com.dubture.symfony.core.builder;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.ast.parser.IModuleDeclaration;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
 
 import com.dubture.symfony.core.log.Logger;
-import com.dubture.symfony.core.visitor.AnnotationVisitor;
 
 /**
  *
@@ -42,9 +37,6 @@ public class SymfonyBuildParticipant implements IBuildParticipant {
 		try {
 			PHPModuleDeclaration module = getModuleDeclaration(context);
 
-			if (module != null) {
-				module.traverse(new AnnotationVisitor(context));
-			}
 		} catch (Exception e) {
 			Logger.logException(e);
 		}

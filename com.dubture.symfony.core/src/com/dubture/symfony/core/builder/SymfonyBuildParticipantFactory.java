@@ -16,10 +16,10 @@ import org.eclipse.dltk.core.builder.IBuildParticipantFactory;
 
 /**
  * 
- * DLTK BuildParticipant extension point. 
+ * DLTK BuildParticipant extension point.
  * 
- * Creates a {@link SymfonyBuildParticipant} for
- * projects with the {@link SymfonyNature}.
+ * Creates a {@link SymfonyBuildParticipant} for projects with the
+ * {@link SymfonyNature}.
  * 
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
@@ -27,20 +27,17 @@ import org.eclipse.dltk.core.builder.IBuildParticipantFactory;
  */
 public class SymfonyBuildParticipantFactory implements IBuildParticipantFactory {
 
-
 	@Override
-	public IBuildParticipant createBuildParticipant(IScriptProject project)
-			throws CoreException {
-		
+	public IBuildParticipant createBuildParticipant(IScriptProject project) throws CoreException {
+
 		IProjectNature nature = project.getProject().getNature(SymfonyNature.NATURE_ID);
-			
-		
-		if (nature instanceof SymfonyNature) {			
-			return new SymfonyBuildParticipant();			
+
+		if (nature instanceof SymfonyNature) {
+			return new SymfonyBuildParticipant();
 		}
-		
-		return null;		
-		
+
+		return null;
+
 	}
 
 }

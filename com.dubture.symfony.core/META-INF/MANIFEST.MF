@@ -35,20 +35,31 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.text
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: com.dubture.symfony.core,com.dubture.symfony.core.buil
- der,com.dubture.symfony.core.codeassist,com.dubture.symfony.core.code
- assist.contexts,com.dubture.symfony.core.codeassist.strategies,com.du
- bture.symfony.core.compiler,com.dubture.symfony.core.event,com.dubtur
- e.symfony.core.facet,com.dubture.symfony.core.goals,com.dubture.symfo
- ny.core.goals.evaluator,com.dubture.symfony.core.index,com.dubture.sy
- mfony.core.index.visitor,com.dubture.symfony.core.launch,com.dubture.
- symfony.core.log,com.dubture.symfony.core.model,com.dubture.symfony.c
- ore.model.exception,com.dubture.symfony.core.model.listener,com.dubtu
- re.symfony.core.parser,com.dubture.symfony.core.parser.antlr.error,co
- m.dubture.symfony.core.preferences,com.dubture.symfony.core.resources
- ,com.dubture.symfony.core.util,com.dubture.symfony.core.util.text,com
- .dubture.symfony.core.validation,com.dubture.symfony.core.visitor,com
- .dubture.symfony.core.yaml.exception
+Export-Package: com.dubture.symfony.core,
+ com.dubture.symfony.core.builder,
+ com.dubture.symfony.core.codeassist,
+ com.dubture.symfony.core.codeassist.contexts,
+ com.dubture.symfony.core.codeassist.strategies,
+ com.dubture.symfony.core.compiler,
+ com.dubture.symfony.core.event,
+ com.dubture.symfony.core.facet,
+ com.dubture.symfony.core.goals,
+ com.dubture.symfony.core.goals.evaluator,
+ com.dubture.symfony.core.index,
+ com.dubture.symfony.core.index.visitor,
+ com.dubture.symfony.core.launch,
+ com.dubture.symfony.core.log,
+ com.dubture.symfony.core.model,
+ com.dubture.symfony.core.model.exception,
+ com.dubture.symfony.core.model.listener,
+ com.dubture.symfony.core.parser,
+ com.dubture.symfony.core.parser.antlr.error,
+ com.dubture.symfony.core.preferences,
+ com.dubture.symfony.core.resources,
+ com.dubture.symfony.core.util,
+ com.dubture.symfony.core.util.text,
+ com.dubture.symfony.core.validation,
+ com.dubture.symfony.core.yaml.exception
 Bundle-ClassPath: .
 
 

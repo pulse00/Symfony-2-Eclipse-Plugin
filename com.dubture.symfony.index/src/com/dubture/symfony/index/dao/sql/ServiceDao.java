@@ -252,9 +252,6 @@ public class ServiceDao extends BaseDao implements IServiceDao {
 				String ppath = result.getString(++columnIndex);
 				String _public = result.getString(++columnIndex);
 				String tags = result.getString(++columnIndex);
-				if (phpClass.startsWith("Acme")) {
-					System.out.println(phpClass);
-				}
 				handler.handle(name, phpClass, ppath, _public, tags);
 			}
 		} catch (Exception e) {
