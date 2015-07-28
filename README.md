@@ -16,3 +16,4 @@ Symfony Eclipse Plugin
 - Eclipse 4.5 (Mars)
 
 For a full list of features and the Updatesite link see http://symfony.dubture.com.
+
