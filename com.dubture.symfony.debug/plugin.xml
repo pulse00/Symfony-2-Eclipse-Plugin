@@ -7,14 +7,14 @@
             class="com.dubture.symfony.debug.launch.LaunchDelegateListener">
       </launchDelegateListener>
    </extension>
-   <extension
+   <!--extension
          point="org.eclipse.php.debug.core.phpDebuggers">
       <phpDebugger
             debuggerConfiguration="com.dubture.symfony.debug.DebuggerConfiguration"
             id="com.dubture.symfony.debug.xdebugger"
             name="XDebug (Symfony)">
       </phpDebugger>
-   </extension>
+   </extension-->
    
  <extension
        point="org.eclipse.debug.ui.launchShortcuts">
