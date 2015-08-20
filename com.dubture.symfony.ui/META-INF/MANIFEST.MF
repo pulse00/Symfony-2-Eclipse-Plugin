@@ -10,7 +10,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.debug.ui,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.dltk.core,
- org.eclipse.dltk.ui,
+ org.eclipse.dltk.ui;bundle-version="5.3.0",
  org.eclipse.php.core,
  org.eclipse.php.ui,
  com.dubture.getcomposer.core,
@@ -68,3 +68,5 @@ Export-Package: com.dubture.symfony.core.model,
  com.dubture.symfony.ui.wizards.project
 Bundle-ClassPath: .
 Bundle-Vendor: https://github.com/pulse00
+Import-Package: org.eclipse.search.core.text,
+ org.eclipse.search.ui.text

@@ -601,6 +601,16 @@
           path="ico/full/obj16/symfony_icon_16.png">
     </image>
  </extension>
+ <extension
+       point="org.eclipse.dltk.ui.queryParticipants"> 
+    <queryParticipant
+          class="com.dubture.symfony.ui.search.SymfonySearchParticipant"
+          id="com.dubture.symfony.ui.queryParticipant"
+          language="org.eclipse.php.core.PHPNature"
+          name="Symfony Class Reference "
+          nature="com.dubture.symfony.core.symfonyNature">
+    </queryParticipant>
+ </extension>
  
  
  
