@@ -18,7 +18,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
-import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
+import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
 import com.dubture.symfony.core.goals.ServiceTypeGoal;
 import com.dubture.symfony.core.log.Logger;
@@ -36,8 +36,6 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 	private final static int STATE_WAITING_SERVICE_TYPE = 3;
 	private final static int STATE_GOT_SERVICE_TYPE = 4;
 	
-	private final static String SLASH = "\\"; //$NON-NLS-1$
-
 	private IEvaluatedType result;
 
 	private int state = STATE_INIT;
@@ -60,7 +58,7 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 
 	private IGoal produceNextSubgoal(IGoal previousGoal,
 			IEvaluatedType previousResult, GoalState goalState) {
-		MethodElementReturnTypeGoal typedGoal = (MethodElementReturnTypeGoal) goal;
+		PHPDocMethodReturnTypeGoal typedGoal = (PHPDocMethodReturnTypeGoal) goal;
 		// just starting to evaluate method, evaluate method receiver first:
 		if (state == STATE_INIT) {
 			if(typedGoal.getTypes() == null || typedGoal.getTypes().length < 1) {
@@ -77,7 +75,7 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 			try {
 				IType[] types = typedGoal.getTypes();
 				for (IType type : types) {
-					String fq = type.getFullyQualifiedName(SLASH);
+					String fq = PHPModelUtils.getFullName(type);
 					IGoal result = checkName(fq);
 					if (result != null) {
 						return result;
@@ -85,7 +83,7 @@ public class ServiceGoalEvaluator extends GoalEvaluator {
 					
 					IType[] superClasses = PHPModelUtils.getSuperClasses(type, accessCache != null ? accessCache.getSuperTypeHierarchy(type, null) : null);
 					for (IType sc : superClasses) {
-						result = checkName(sc.getFullyQualifiedName(SLASH));
+						result = checkName(PHPModelUtils.getFullName(sc));
 						if (result != null) {
 							return result;
 						}

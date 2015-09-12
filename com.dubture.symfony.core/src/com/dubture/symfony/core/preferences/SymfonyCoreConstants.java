@@ -75,8 +75,7 @@ public class SymfonyCoreConstants {
 
 	public static final String CONTAINER_INTERFACE   = "Symfony\\Component\\DependencyInjection\\ContainerInterface";
 	
-	public static final String DOCTRINE_REGISTRY_NAME         = "Doctrine\\Bundle\\DoctrineBundle\\Registry";
-
-
+	public static final String DOCTRINE_REGISTRY_NAME = "Doctrine\\Common\\Persistence\\ManagerRegistry";
+	
 
 }

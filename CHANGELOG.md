@@ -3,6 +3,7 @@
 * Service class name refactoring support
 * Move annotation validator to Doctrine plugin
 * Use Annotation cache from Doctrine plugin
+* Improved doctrine entity manager resolver
 
 1.1.0
 
