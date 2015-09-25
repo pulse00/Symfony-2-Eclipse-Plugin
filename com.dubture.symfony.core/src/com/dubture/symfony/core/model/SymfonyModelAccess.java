@@ -399,17 +399,21 @@ public class SymfonyModelAccess extends PhpModelAccess {
     * @return
     */
     public ScriptFolder findBundleFolder(String bundle, IScriptProject project) {
-
-        IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
-
-        IType[] types = findTypes(bundle, MatchRule.EXACT, 0, 0, scope, null);
-
-        if (types.length != 1)
-            return null;
-
-        IType bundleType = types[0];
+        IType bundleType = findBundleType(bundle, project);
         return  (ScriptFolder) bundleType.getSourceModule().getParent();
 
+    }
+    
+    public IType findBundleType(String bundle, IScriptProject project)
+    {
+    	  IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
+
+          IType[] types = findTypes(bundle, MatchRule.EXACT, 0, 0, scope, null);
+
+          if (types.length != 1)
+              return null;
+          
+          return types[0];
     }
 
     /**
@@ -750,19 +754,38 @@ public class SymfonyModelAccess extends PhpModelAccess {
         if ( (controllerCache.get(key)) != null) {
             return controllerCache.get(key) == NULL_ENTRY ? null : (IType) controllerCache.get(key);
         }
-
-        ScriptFolder bundleFolder = findBundleFolder(bundle, scriptProject);
-        if(bundleFolder == null)
+        IType findBundleType = findBundleType(bundle, scriptProject);
+        if (findBundleType == null) {
+        	return null;
+        }
+        IModelElement parent = findBundleType.getParent();
+        StringBuilder ns = new StringBuilder();
+        if (parent.getElementType() == IModelElement.TYPE) {
+        	ns.append(parent.getElementName());
+        }
+        ScriptFolder bundleFolder = (ScriptFolder) parent.getAncestor(IScriptFolder.class);
+        if(bundleFolder == null) {
             return null;
+        }
 
         ISourceModule controllerSource = bundleFolder.getSourceModule("Controller");
 
-        if (controllerSource == null)
+        if (controllerSource == null) {
             return null;
+        }
 
         IDLTKSearchScope controllerScope = SearchEngine.createSearchScope(controllerSource);
         
-        IType[] controllers = findTypes(controller, MatchRule.PREFIX, 0, 0, controllerScope, null);
+        String[] split = controller.split("/");
+        ns.append("\\Controller");
+        if (split.length > 1) {
+        	for (int i = 0; i + 1 < split.length; i++) {
+        		ns.append('\\').append(split[i]);
+        	}
+        	controller = split[split.length -1];
+        }
+        
+        IType[] controllers = findTypes(ns.toString(), controller + "Controller", MatchRule.PREFIX, 0, 0, controllerScope, null);
 
         if(controllers.length == 1) {
             controllerCache.put(key, controllers[0]);
