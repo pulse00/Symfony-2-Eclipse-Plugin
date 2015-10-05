@@ -8,10 +8,9 @@
  ******************************************************************************/
 package com.dubture.symfony.ui.wizards.project;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.window.IShellProvider;
-import org.eclipse.php.internal.ui.preferences.util.PreferencesSupport;
 import org.eclipse.php.internal.ui.wizards.CompositeData;
 import org.eclipse.php.internal.ui.wizards.NameGroup;
 import org.eclipse.swt.SWT;
@@ -71,9 +70,7 @@ public class SymfonyProjectWizardFirstPage extends PackageProjectWizardFirstPage
 		projectTemplateValidator = new Validator(this) {
 			@Override
 			protected void finishValidation() throws ValidationException {
-				IPreferenceStore store = ComposerPlugin.getDefault().getPreferenceStore();
-				PreferencesSupport prefSupport = new PreferencesSupport(ComposerPlugin.ID, store);
-				String executable = prefSupport.getPreferencesValue(Keys.PHP_EXECUTABLE, null, null);
+				String executable = Platform.getPreferencesService().getString(ComposerPlugin.ID, Keys.PHP_EXECUTABLE, null, null);
 				
 				if (executable == null || executable.isEmpty()) {
 					// the user has not set any preference for PHP executable yet,
