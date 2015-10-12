@@ -23,9 +23,9 @@
 	</modules>
 
 	<properties>
-		<tycho-version>0.22.0</tycho-version>
+		<tycho-version>0.23.1</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<eclipse.name>luna</eclipse.name>
+		<eclipse.name>mars</eclipse.name>
 		<release>false</release>
 		<bintray.user></bintray.user>
 		<bintray.apikey></bintray.apikey>
