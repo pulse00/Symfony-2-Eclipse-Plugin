@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
-import junit.framework.TestCase;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +22,8 @@ import org.junit.Test;
 import com.dubture.symfony.core.parser.XMLConfigParser;
 import com.dubture.symfony.index.model.Route;
 import com.dubture.symfony.index.model.Service;
+
+import junit.framework.TestCase;
 
 
 /**

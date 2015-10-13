@@ -9,7 +9,6 @@
 package com.dubture.symfony.core.index;
 
 import org.eclipse.dltk.core.ISourceModule;
-
 import org.eclipse.dltk.core.index2.IIndexingRequestor;
 import org.eclipse.php.internal.core.index.PhpIndexingVisitor;
 

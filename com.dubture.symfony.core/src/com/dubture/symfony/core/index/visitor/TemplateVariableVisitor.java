@@ -39,7 +39,6 @@ import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
 import com.dubture.doctrine.annotation.model.Annotation;
-import com.dubture.doctrine.annotation.parser.AnnotationCommentParser;
 import com.dubture.doctrine.core.AnnotationParserUtil;
 import com.dubture.doctrine.core.compiler.IAnnotationModuleDeclaration;
 import com.dubture.symfony.core.log.Logger;
@@ -208,7 +207,6 @@ public class TemplateVariableVisitor extends PHPASTVisitor {
 	 *
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
 	public boolean visit(ReturnStatement statement) throws Exception {
 
 		// we're inside an action, find the template variables

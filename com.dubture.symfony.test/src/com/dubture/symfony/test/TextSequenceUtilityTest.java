@@ -8,13 +8,13 @@
  ******************************************************************************/
 package com.dubture.symfony.test;
 
-import junit.framework.TestCase;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.dubture.symfony.core.util.text.SymfonyTextSequenceUtilities;
+
+import junit.framework.TestCase;
 
 
 /**

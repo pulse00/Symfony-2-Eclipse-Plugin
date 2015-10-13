@@ -10,7 +10,6 @@ package com.dubture.symfony.ui.editor.template;
 
 
 import org.eclipse.core.runtime.IPath;
-
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariable;

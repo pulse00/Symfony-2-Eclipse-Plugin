@@ -25,7 +25,6 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 
 import com.dubture.doctrine.core.model.DoctrineModelAccess;

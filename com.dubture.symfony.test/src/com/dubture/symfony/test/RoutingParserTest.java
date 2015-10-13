@@ -13,12 +13,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Stack;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
 
 import com.dubture.symfony.core.parser.YamlRoutingParser;
 import com.dubture.symfony.index.model.Route;
+
+import junit.framework.TestCase;
 
 public class RoutingParserTest extends TestCase {
 

@@ -11,7 +11,6 @@ package com.dubture.symfony.core.codeassist.strategies;
 import java.util.List;
 
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
@@ -19,7 +18,6 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
-import org.pdtextensions.core.log.Logger;
 
 import com.dubture.symfony.core.codeassist.contexts.ServiceContainerContext;
 import com.dubture.symfony.core.model.Service;

@@ -9,7 +9,6 @@
 package com.dubture.symfony.ui.preferences;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -19,7 +18,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
-import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 import com.dubture.symfony.ui.Messages;
 import com.dubture.symfony.ui.SymfonyUiPlugin;
 
@@ -60,7 +58,6 @@ public class SymfonyPreferencePage extends FieldEditorPreferencePage implements 
 	@Override
 	protected void createFieldEditors() {
 
-		String[][] options;
 
 	}
 }

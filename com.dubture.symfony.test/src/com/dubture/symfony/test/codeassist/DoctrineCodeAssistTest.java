@@ -1,7 +1,7 @@
 package com.dubture.symfony.test.codeassist;
 
-import org.junit.Test;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import com.dubture.symfony.test.AbstractCodeAssistTest;
 

@@ -12,8 +12,6 @@ package com.dubture.symfony.test;
 import java.sql.Connection;
 import java.util.Stack;
 
-import junit.framework.TestCase;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +20,8 @@ import com.dubture.symfony.index.SymfonyDbFactory;
 import com.dubture.symfony.index.dao.IServiceDao;
 import com.dubture.symfony.index.handler.IServiceHandler;
 import com.dubture.symfony.index.model.Service;
+
+import junit.framework.TestCase;
 
 /**
  * 

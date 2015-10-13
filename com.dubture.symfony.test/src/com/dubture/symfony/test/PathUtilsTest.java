@@ -9,8 +9,6 @@
 package com.dubture.symfony.test;
 
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.junit.After;
@@ -18,6 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.dubture.symfony.core.util.PathUtils;
+
+import junit.framework.TestCase;
 
 public class PathUtilsTest extends TestCase {
 

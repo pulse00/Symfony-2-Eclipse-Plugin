@@ -15,14 +15,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
 
-import junit.framework.TestCase;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.dubture.symfony.core.parser.YamlConfigParser;
 import com.dubture.symfony.index.model.Service;
+
+import junit.framework.TestCase;
 
 /**
  * 

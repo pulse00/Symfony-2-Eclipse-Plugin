@@ -9,7 +9,6 @@
 package com.dubture.symfony.index.model;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
 /**

@@ -55,7 +55,6 @@ public class RegisterNamespaceVisitor extends PHPASTVisitor {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")	
 	public boolean visit(PHPCallExpression call) throws Exception {
 			
 		List<ASTNode> nodes = call.getArgs().getChilds();

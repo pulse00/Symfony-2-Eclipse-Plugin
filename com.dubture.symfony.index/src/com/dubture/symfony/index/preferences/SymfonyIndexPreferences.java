@@ -11,7 +11,6 @@ package com.dubture.symfony.index.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IScopeContext;
 
 import com.dubture.symfony.index.SymfonyIndex;
 

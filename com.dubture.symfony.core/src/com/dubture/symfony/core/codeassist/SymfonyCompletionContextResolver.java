@@ -15,7 +15,6 @@ import org.eclipse.php.internal.core.codeassist.contexts.CompletionContextResolv
 import com.dubture.symfony.core.codeassist.contexts.EntityCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.RouteCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.ServiceContainerContext;
-import com.dubture.symfony.core.codeassist.contexts.ServiceReturnTypeContext;
 import com.dubture.symfony.core.codeassist.contexts.TemplateVariableContext;
 import com.dubture.symfony.core.codeassist.contexts.TransUnitCompletionContext;
 import com.dubture.symfony.core.codeassist.contexts.ViewPathArgumentContext;

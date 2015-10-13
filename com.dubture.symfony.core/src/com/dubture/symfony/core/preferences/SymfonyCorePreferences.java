@@ -8,9 +8,6 @@
  ******************************************************************************/
 package com.dubture.symfony.core.preferences;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.dltk.compiler.problem.ProblemSeverity;
-
 /**
  * Utility class to access the plugins preferences.
  * 

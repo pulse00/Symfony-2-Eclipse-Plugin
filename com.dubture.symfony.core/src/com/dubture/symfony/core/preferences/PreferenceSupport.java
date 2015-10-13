@@ -13,6 +13,7 @@ import java.util.HashMap;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.Logger;
 import org.osgi.service.prefs.BackingStoreException;
 

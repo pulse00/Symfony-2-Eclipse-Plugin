@@ -1,7 +1,8 @@
 package com.dubture.symfony.ui.preferences;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.preference.ListEditor;
@@ -77,9 +78,9 @@ public class LibraryEditor extends ListEditor {
 		
         StringTokenizer st = new StringTokenizer(stringList, File.pathSeparator
                 + "\n\r");//$NON-NLS-1$
-        ArrayList v = new ArrayList();
-        while (st.hasMoreElements()) {
-            v.add(st.nextElement());
+        List<String> v = new LinkedList<String>();
+        while (st.hasMoreTokens()) {
+            v.add(st.nextToken());
         }
         return (String[]) v.toArray(new String[v.size()]);
 		

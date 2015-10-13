@@ -35,7 +35,7 @@ import com.dubture.symfony.index.model.Route;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction" })
 public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 
 	public RouteCompletionStrategy(ICompletionContext context) {

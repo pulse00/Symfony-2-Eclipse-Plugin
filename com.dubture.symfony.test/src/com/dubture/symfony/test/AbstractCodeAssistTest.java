@@ -11,8 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -65,6 +63,8 @@ import com.dubture.symfony.core.facet.FacetManager;
 import com.dubture.symfony.core.preferences.CorePreferenceConstants.Keys;
 import com.dubture.symfony.test.codeassist.CodeAssistPdttFile;
 import com.dubture.symfony.test.codeassist.CodeAssistPdttFile.ExpectedProposal;
+
+import junit.framework.TestCase;
 
 @SuppressWarnings("restriction")
 abstract public class AbstractCodeAssistTest extends TestCase {

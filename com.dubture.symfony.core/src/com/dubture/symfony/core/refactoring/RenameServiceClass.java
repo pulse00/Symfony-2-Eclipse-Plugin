@@ -2,9 +2,7 @@ package com.dubture.symfony.core.refactoring;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
@@ -28,7 +26,6 @@ import org.eclipse.search.core.text.TextSearchEngine;
 import org.eclipse.search.core.text.TextSearchMatchAccess;
 import org.eclipse.search.core.text.TextSearchRequestor;
 import org.eclipse.search.core.text.TextSearchScope;
-import org.eclipse.search.ui.text.FileTextSearchScope;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEditGroup;

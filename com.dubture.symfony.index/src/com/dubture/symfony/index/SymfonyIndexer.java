@@ -9,7 +9,6 @@
 package com.dubture.symfony.index;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;

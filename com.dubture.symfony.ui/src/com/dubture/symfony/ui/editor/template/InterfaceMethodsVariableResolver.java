@@ -23,7 +23,6 @@ import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
 import org.eclipse.php.internal.core.ast.rewrite.IndentManipulation;
-import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.ui.CodeGeneration;
 
