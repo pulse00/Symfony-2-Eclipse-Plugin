@@ -30,6 +30,10 @@ public class SymfonyBuildParticipantFactory implements IBuildParticipantFactory 
 	@Override
 	public IBuildParticipant createBuildParticipant(IScriptProject project) throws CoreException {
 
+		if (!project.getProject().isAccessible()) {
+			return null;
+		}
+		
 		IProjectNature nature = project.getProject().getNature(SymfonyNature.NATURE_ID);
 
 		if (nature instanceof SymfonyNature) {
