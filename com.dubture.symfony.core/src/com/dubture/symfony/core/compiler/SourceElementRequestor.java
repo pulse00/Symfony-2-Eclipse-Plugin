@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.expressions.MethodCallExpression;
 import org.eclipse.dltk.ast.expressions.StringLiteral;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.env.IModuleSource;
@@ -111,7 +112,6 @@ public class SourceElementRequestor extends PHPSourceElementRequestorExtension {
         if (!isSymfonySource)
             return false;
 
-
         if (st instanceof StringLiteral) {
 
             StringLiteral literal = (StringLiteral) st;
@@ -121,12 +121,11 @@ public class SourceElementRequestor extends PHPSourceElementRequestorExtension {
                 //TODO: report viewpath reference
             }
 
-            IPath path = getSourceModule().getModelElement().getScriptProject().getPath();
-            Service service = model.findService(literalValue, path);
-
-            if (service != null) {
-                fRequestor.acceptTypeReference(service.getFullyQualifiedName(), literal.sourceStart());
-            }
+//            IPath path = getSourceModule().getModelElement().getScriptProject().getPath();
+//            Service service = model.findService(literalValue, path);
+//            if (service != null) {
+//                fRequestor.acceptTypeReference(service.getFullyQualifiedName(), literal.sourceStart());
+//            }
         }
 
         return true;
