@@ -80,12 +80,12 @@
 
 
 	<!-- PDT SourceElementRequestor - not used at the moment -->
-   <extension
+   <!--extension
          point="org.eclipse.php.core.phpSourceElementRequestors">
       <requestor
             class="com.dubture.symfony.core.compiler.SourceElementRequestor">
       </requestor>
-   </extension>
+   </extension-->
 
    <extension
          point="org.eclipse.php.core.goalEvaluatorFactories">
