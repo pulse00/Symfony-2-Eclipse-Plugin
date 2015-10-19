@@ -28,8 +28,10 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.ui.actions.SelectionHandler;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.part.MultiPageEditorPart;
@@ -60,10 +62,13 @@ abstract public class BaseTextInsertionHandler extends SelectionHandler implemen
 
         if(editorPart  != null)
         {
-            IFileEditorInput input = (IFileEditorInput)editorPart.getEditorInput() ;
-            IFile file = input.getFile();
-            IProject activeProject = file.getProject();
-            return DLTKCore.create(activeProject);
+        	IEditorInput editorInput = editorPart.getEditorInput();
+        	if (editorInput instanceof IFileEditorInput) {
+        		IFileEditorInput input = (IFileEditorInput)editorPart.getEditorInput() ;
+        		IFile file = input.getFile();
+        		IProject activeProject = file.getProject();
+        		return DLTKCore.create(activeProject);
+        	} 
         }
         return null;
     }
