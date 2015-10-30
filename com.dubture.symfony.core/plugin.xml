@@ -151,12 +151,10 @@
                 <rules>
                    <contentType id="org.eclipse.core.runtime.xml"></contentType>
                    <contentType id="org.eclipse.wst.xml.core.xmlsource"></contentType>
-                   <fileext
-                         caseSensitive="false"
-                         ext="xml">
-                   </fileext>
                 </rules>
              </include>
+             <group
+				id="org.eclipse.wst.sse.core.structuredModelGroup" />
        </validator>
     </extension>
     <extension
