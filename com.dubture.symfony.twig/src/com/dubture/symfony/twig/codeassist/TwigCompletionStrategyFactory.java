@@ -12,8 +12,6 @@ package com.dubture.symfony.twig.codeassist;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.internal.core.codeassist.strategies.AbstractCompletionStrategy;
 
 import com.dubture.symfony.twig.codeassist.context.RouteCompletionContext;
 import com.dubture.symfony.twig.codeassist.context.TemplateVariableCompletionContext;
@@ -25,6 +23,8 @@ import com.dubture.symfony.twig.codeassist.strategies.TemplateVariableCompletion
 import com.dubture.symfony.twig.codeassist.strategies.TemplateVariableFieldCompletionStrategy;
 import com.dubture.symfony.twig.codeassist.strategies.TranslationCompletionStrategy;
 import com.dubture.symfony.twig.codeassist.strategies.ViewPathCompletionStrategy;
+import com.dubture.twig.core.codeassist.ICompletionContext;
+import com.dubture.twig.core.codeassist.ICompletionStrategy;
 import com.dubture.twig.core.codeassist.ITwigCompletionStrategyFactory;
 
 /**
@@ -46,10 +46,10 @@ public class TwigCompletionStrategyFactory implements
 
 
 	@Override
-	public AbstractCompletionStrategy[] create(ICompletionContext[] contexts) {
+	public ICompletionStrategy[] create(ICompletionContext[] contexts) {
 
 
-		List<AbstractCompletionStrategy> result = new LinkedList<AbstractCompletionStrategy>();
+		List<ICompletionStrategy> result = new LinkedList<ICompletionStrategy>();
 		
 		for (ICompletionContext context : contexts) {
 			if (context.getClass() == TemplateVariableCompletionContext.class) {
@@ -75,8 +75,8 @@ public class TwigCompletionStrategyFactory implements
 			}
 		}
 		
-		return (AbstractCompletionStrategy[]) result
-		        .toArray(new AbstractCompletionStrategy[result.size()]);
+		return (ICompletionStrategy[]) result
+		        .toArray(new ICompletionStrategy[result.size()]);
 				
 	}
 }

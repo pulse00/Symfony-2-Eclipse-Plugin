@@ -7,15 +7,13 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 import com.dubture.twig.ui.editor.contentassist.ICompletionProposalProvider;
 
-public class CompletionProposalProvider implements ICompletionProposalProvider
+public class CompletionProposalProvider
 {
-    @Override
     public ProposalInfo createScriptCompletionProposal(CompletionProposal proposal, ScriptCompletionProposalCollector collector)
     {
         return com.dubture.symfony.ui.contentassist.CompletionProposalProvider.createScriptCompletionProposal(proposal, collector);
     }
 
-    @Override
     public ImageDescriptor createTypeImageDescriptor(CompletionProposal proposal)
     {
         return com.dubture.symfony.ui.contentassist.CompletionProposalProvider.createTypeImageDescriptor(proposal);

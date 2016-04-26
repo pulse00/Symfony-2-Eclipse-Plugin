@@ -193,20 +193,20 @@ public class TemplateProvider implements ITemplateProvider
                         try {
 
                             SymfonyTemplateResolver resolver = new SymfonyTemplateResolver();
-                            SourceModule sourceModule = resolver.revolePath(parent, scriptProject);
-                            TwigModuleDeclaration twig = (TwigModuleDeclaration) SourceParserUtil.parseSourceModule(sourceModule);
-
-                            blocks = new LinkedList<String>();
-                            if (twig != null) {
-                                for (BlockStatement block : twig.getBlocks()) {
-
-                                    if (block.isBlock()) {
-                                        blocks.add(block.getBlockName().getValue());
-                                    }
-                                }
-                                blockTable.setInput(blocks);
-                                checkedBlocks = new LinkedList<String>();
-                            }
+//                            SourceModule sourceModule = resolver.revolePath(parent, scriptProject.getProject());
+//                            TwigModuleDeclaration twig = (TwigModuleDeclaration) SourceParserUtil.parseSourceModule(sourceModule);
+//
+//                            blocks = new LinkedList<String>();
+//                            if (twig != null) {
+//                                for (BlockStatement block : twig.getBlocks()) {
+//
+//                                    if (block.isBlock()) {
+//                                        blocks.add(block.getBlockName().getValue());
+//                                    }
+//                                }
+//                                blockTable.setInput(blocks);
+//                                checkedBlocks = new LinkedList<String>();
+//                            }
                         } catch (Exception e) {
                             Logger.logException(e);
                         }

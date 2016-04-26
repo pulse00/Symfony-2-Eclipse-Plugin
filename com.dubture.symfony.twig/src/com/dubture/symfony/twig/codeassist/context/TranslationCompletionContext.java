@@ -45,7 +45,7 @@ public class TranslationCompletionContext extends AbstractCompletionContext {
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
 		
-	    if (sourceModule.getResource() == null || TwigModelUtils.isTwigTemplate(sourceModule.getResource().getName()) == false) {
+	    if (sourceModule.getResource() == null || TwigModelUtils.isTwigTemplate(sourceModule.getResource()) == false) {
 	        return false;
 	    }
 	    

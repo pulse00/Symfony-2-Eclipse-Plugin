@@ -8,14 +8,11 @@
  ******************************************************************************/
 package com.dubture.symfony.twig.codeassist.strategies;
 
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
-import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
 
-import com.dubture.symfony.core.codeassist.CodeassistUtils;
-import com.dubture.symfony.twig.codeassist.context.ViewPathArgumentContext;
+import com.dubture.twig.core.codeassist.ICompletionContext;
+import com.dubture.twig.core.codeassist.ICompletionReporter;
+import com.dubture.twig.core.codeassist.strategies.AbstractTwigCompletionStrategy;
 
 
 /**
@@ -31,8 +28,7 @@ import com.dubture.symfony.twig.codeassist.context.ViewPathArgumentContext;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings({ "restriction", "deprecation" })
-public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy 
+public class ViewPathCompletionStrategy extends AbstractTwigCompletionStrategy
 {
 	public ViewPathCompletionStrategy(ICompletionContext context) 
 	{
@@ -42,10 +38,10 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException
 	{
-        ViewPathArgumentContext context = (ViewPathArgumentContext) getContext();       
-        SourceRange range = getReplacementRange(context);
-        CodeassistUtils.reportViewpath(reporter, context.getViewPath(), 
-                context.getPrefix(), range, context.getSourceModule().getScriptProject());
+//        ViewPathArgumentContext context = (ViewPathArgumentContext) getContext();       
+//        SourceRange range = getReplacementRange(context);
+//        CodeassistUtils.reportViewpath(reporter, context.getViewPath(), 
+//                context.getPrefix(), range, context.getSourceModule().getScriptProject());
 
 	}
 }
