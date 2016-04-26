@@ -11,9 +11,9 @@ package com.dubture.symfony.twig.codeassist.strategies;
 import java.util.List;
 
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
@@ -36,7 +36,7 @@ import com.dubture.symfony.index.model.Route;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction" })
 public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 
 	public static int workaroundCount = 0;
@@ -53,7 +53,7 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 		//TODO: this needs caching!!!
 		ISourceModule module = context.getSourceModule();		
 		List<Route> routes = SymfonyModelAccess.getDefault().findRoutes(module.getScriptProject());		
-		SourceRange range = getReplacementRange(context);
+		ISourceRange range = getReplacementRange(context);
 		
 		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
 		

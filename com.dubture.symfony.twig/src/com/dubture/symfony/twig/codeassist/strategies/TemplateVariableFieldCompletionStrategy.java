@@ -14,6 +14,7 @@ import java.util.List;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -47,7 +48,7 @@ import com.dubture.twig.core.codeassist.strategies.AbstractTwigCompletionStrateg
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction" })
 public class TemplateVariableFieldCompletionStrategy extends
 AbstractTwigCompletionStrategy {
 
@@ -72,7 +73,7 @@ AbstractTwigCompletionStrategy {
 		
 		String prefix = ctx.getPrefix();
 		
-		SourceRange range = getReplacementRange(getContext());
+		ISourceRange range = getReplacementRange(getContext());
 		
 		if (className != null) {
 

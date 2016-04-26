@@ -14,8 +14,8 @@ import java.util.List;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
@@ -59,7 +59,7 @@ import com.dubture.twig.core.codeassist.strategies.AbstractTwigCompletionStrateg
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction" })
 public class TemplateVariableCompletionStrategy extends AbstractTwigCompletionStrategy {
 	
 	
@@ -81,7 +81,7 @@ public class TemplateVariableCompletionStrategy extends AbstractTwigCompletionSt
 			List<TemplateField>variables = model.findTemplateVariables(controller);
 			String viewPath = PathUtils.createViewPathFromTemplate(ctxt.getSourceModule(), true);
 			
-			SourceRange range = getReplacementRange(ctxt);
+			ISourceRange range = getReplacementRange(ctxt);
 			
 			// prepend the php dollar variable for the equals check
 			String prefix = "$" +ctxt.getPrefix();
