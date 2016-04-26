@@ -10,7 +10,7 @@ package com.dubture.symfony.core.codeassist.strategies;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
@@ -27,7 +27,7 @@ import com.dubture.symfony.core.codeassist.contexts.TransUnitCompletionContext;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction" })
 public class TransUnitCompletionStrategy extends MethodParameterKeywordStrategy {
 
 	public TransUnitCompletionStrategy(ICompletionContext context) {
@@ -48,7 +48,7 @@ public class TransUnitCompletionStrategy extends MethodParameterKeywordStrategy 
 		}
 		
 		IScriptProject project = context.getSourceModule().getScriptProject();
-		SourceRange range = getReplacementRange(context);		
+		ISourceRange range = getReplacementRange(context);		
 		String prefix = context.getPrefix();
 		
 		CodeassistUtils.reportTranslations(reporter, prefix, range, project );		

@@ -12,12 +12,12 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
@@ -63,7 +63,7 @@ public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
         EntityCompletionContext context = (EntityCompletionContext) getContext();
         SymfonyModelAccess model = SymfonyModelAccess.getDefault();
         IScriptProject project = context.getSourceModule().getScriptProject();
-        SourceRange range = getReplacementRange(context);
+        ISourceRange range = getReplacementRange(context);
         IDLTKSearchScope projectScope = SearchEngine.createSearchScope(context.getSourceModule().getScriptProject());
         DoctrineModelAccess doctrineModel =  DoctrineModelAccess.getDefault();
         IModelAccessCache cache = null;

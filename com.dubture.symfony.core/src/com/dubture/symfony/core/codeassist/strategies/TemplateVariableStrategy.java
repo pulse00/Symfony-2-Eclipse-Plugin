@@ -10,7 +10,7 @@ package com.dubture.symfony.core.codeassist.strategies;
 
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.GlobalElementStrategy;
@@ -28,7 +28,7 @@ import com.dubture.symfony.core.index.SymfonyElementResolver.TemplateField;
  * @author "Robert Gruendler <r.gruendler@gmail.com>"
  *
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction" })
 public class TemplateVariableStrategy extends GlobalElementStrategy {
 
 	public TemplateVariableStrategy(ICompletionContext context) {
@@ -40,7 +40,7 @@ public class TemplateVariableStrategy extends GlobalElementStrategy {
 	public void apply(ICompletionReporter reporter) throws Exception {
 
 		TemplateVariableContext ctxt = (TemplateVariableContext) getContext();
-		SourceRange range = getReplacementRange(getContext());
+		ISourceRange range = getReplacementRange(getContext());
 		String viewPath = ctxt.getViewPath();
 		
 		for(TemplateField element : ctxt.getVariables()) {

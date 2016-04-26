@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.ast.ASTNode;
@@ -92,7 +93,8 @@ PhpIndexingVisitorExtension {
         super.setSourceModule(module);
 
         try {
-            isSymfonyResource = sourceModule.getScriptProject().getProject().getNature(SymfonyNature.NATURE_ID) != null;
+        	IProject project = sourceModule.getScriptProject().getProject();
+            isSymfonyResource = project.isAccessible() && project.getNature(SymfonyNature.NATURE_ID) != null;
         } catch (CoreException e) {
             Logger.logException(e);
             isSymfonyResource = false;

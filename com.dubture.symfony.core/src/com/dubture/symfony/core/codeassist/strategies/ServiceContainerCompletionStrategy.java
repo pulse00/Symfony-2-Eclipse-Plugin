@@ -11,8 +11,8 @@ package com.dubture.symfony.core.codeassist.strategies;
 import java.util.List;
 
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
@@ -41,7 +41,7 @@ import com.dubture.symfony.core.model.SymfonyModelAccess;
  * @author "Robert Gruendler <r.gruendler@gmail.com>"
  *
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction" })
 public class ServiceContainerCompletionStrategy extends
         MethodParameterKeywordStrategy {
 
@@ -58,7 +58,7 @@ public class ServiceContainerCompletionStrategy extends
 
         SymfonyModelAccess model= SymfonyModelAccess.getDefault();
         List<Service> services = model.findServices(project.getPath());
-        SourceRange range = getReplacementRange(context);
+        ISourceRange range = getReplacementRange(context);
 
         String prefix = context.getPrefix();
         if (services == null) {

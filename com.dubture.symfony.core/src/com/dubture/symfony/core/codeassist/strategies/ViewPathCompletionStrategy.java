@@ -8,7 +8,7 @@
  ******************************************************************************/
 package com.dubture.symfony.core.codeassist.strategies;
 
-import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
@@ -35,7 +35,7 @@ import com.dubture.symfony.core.codeassist.contexts.ViewPathArgumentContext;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction" })
 public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 
 	public ViewPathCompletionStrategy(ICompletionContext context) 
@@ -47,7 +47,7 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 	public void apply(ICompletionReporter reporter) throws BadLocationException 
 	{
 		ViewPathArgumentContext context = (ViewPathArgumentContext) getContext();		
-		SourceRange range = getReplacementRange(context);
+		ISourceRange range = getReplacementRange(context);
 		CodeassistUtils.reportViewpath(reporter, context.getViewPath(), 
 		        context.getPrefix(), range, context.getSourceModule().getScriptProject());
 

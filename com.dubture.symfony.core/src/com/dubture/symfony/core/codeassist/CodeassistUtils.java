@@ -13,12 +13,12 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
@@ -34,7 +34,7 @@ import com.dubture.symfony.index.model.TransUnit;
 @SuppressWarnings({ "restriction", "deprecation" })
 public class CodeassistUtils {
 
-	public static void reportTranslations(ICompletionReporter reporter, String prefix, SourceRange range, IScriptProject project) {
+	public static void reportTranslations(ICompletionReporter reporter, String prefix, ISourceRange range, IScriptProject project) {
 
 		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
 		
@@ -68,7 +68,7 @@ public class CodeassistUtils {
 	/**
 	 * Report the different parts of a ViewPath (Bundle:Controller(/Subpath):template) to the completion engine 
 	 */
-	public static void reportViewpath(ICompletionReporter reporter, ViewPath viewPath, String prefix, SourceRange range, IScriptProject project)
+	public static void reportViewpath(ICompletionReporter reporter, ViewPath viewPath, String prefix, ISourceRange range, IScriptProject project)
 	{
         SymfonyModelAccess model = SymfonyModelAccess.getDefault();
         String bundle = viewPath.getBundle();
