@@ -23,7 +23,9 @@ import com.dubture.symfony.core.codeassist.contexts.RouteCompletionContext;
 import com.dubture.symfony.core.model.RouteSource;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.index.model.Route;
+import com.dubture.symfony.twig.codeassist.CompletionProposalFlag;
 import com.dubture.twig.core.codeassist.ICompletionContext;
+import com.dubture.twig.core.codeassist.ICompletionProposalFlag;
 import com.dubture.twig.core.codeassist.ICompletionReporter;
 import com.dubture.twig.core.codeassist.context.AbstractTwigCompletionContext;
 import com.dubture.twig.core.codeassist.strategies.AbstractTwigCompletionStrategy;
@@ -49,30 +51,27 @@ public class RouteCompletionStrategy extends AbstractTwigCompletionStrategy {
 	
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		AbstractTwigCompletionContext context = (AbstractTwigCompletionContext) getContext();
 		
-//		AbstractTwigCompletionContext context = (AbstractTwigCompletionContext) getContext();
-//		
-//		//TODO: this needs caching!!!
-//		ISourceModule module = context.getSourceModule();		
-//		List<Route> routes = SymfonyModelAccess.getDefault().findRoutes(module.getScriptProject());		
-//		ISourceRange range = getReplacementRange(context);
-//		
-//		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
-//		
-//		String prefix = context.getPrefix();
-//		
-//		for (Route route : routes) {
-//
-//			IType controller = model.findController(route.bundle, route.controller, context.getScriptProject());
-//			
-//			if (controller == null) {
-//				continue;
-//			}
-//			
-//			if (CodeAssistUtils.startsWithIgnoreCase(route.name, prefix)) {
-//				RouteSource rs = new RouteSource((ModelElement) controller, route.name, route);
-//				reporter.reportType(rs, "", range);
-//			}
-//		}	
+		//TODO: this needs caching!!!
+		List<Route> routes = SymfonyModelAccess.getDefault().findRoutes(context.getScriptProject());		
+		ISourceRange range = getReplacementRange(context);
+		
+		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
+		
+		String prefix = context.getPrefix();
+		
+		for (Route route : routes) {
+
+			IType controller = model.findController(route.bundle, route.controller, context.getScriptProject());
+			
+			if (controller == null) {
+				continue;
+			}
+			
+			if (CodeAssistUtils.startsWithIgnoreCase(route.name, prefix)) {
+				reporter.reportKeyword(route.name, range, new ICompletionProposalFlag[]{CompletionProposalFlag.ROUTE});
+			}
+		}	
 	}
 }

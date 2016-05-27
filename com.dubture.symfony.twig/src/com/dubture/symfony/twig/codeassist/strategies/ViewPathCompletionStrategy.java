@@ -8,8 +8,11 @@
  ******************************************************************************/
 package com.dubture.symfony.twig.codeassist.strategies;
 
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 
+import com.dubture.symfony.core.codeassist.CodeassistUtils;
+import com.dubture.symfony.twig.codeassist.context.ViewPathArgumentContext;
 import com.dubture.twig.core.codeassist.ICompletionContext;
 import com.dubture.twig.core.codeassist.ICompletionReporter;
 import com.dubture.twig.core.codeassist.strategies.AbstractTwigCompletionStrategy;
@@ -38,10 +41,10 @@ public class ViewPathCompletionStrategy extends AbstractTwigCompletionStrategy
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException
 	{
-//        ViewPathArgumentContext context = (ViewPathArgumentContext) getContext();       
-//        SourceRange range = getReplacementRange(context);
-//        CodeassistUtils.reportViewpath(reporter, context.getViewPath(), 
-//                context.getPrefix(), range, context.getSourceModule().getScriptProject());
+        ViewPathArgumentContext context = (ViewPathArgumentContext) getContext();       
+        ISourceRange range = getReplacementRange(context);
+//        CodeassistUtils.reportViewpath(new ICompletionRepo, context.getViewPath(), 
+//                context.getPrefix(), range, context.getScriptProject());
 
 	}
 }

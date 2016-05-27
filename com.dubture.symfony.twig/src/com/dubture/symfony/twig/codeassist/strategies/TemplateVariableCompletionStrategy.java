@@ -71,8 +71,8 @@ public class TemplateVariableCompletionStrategy extends AbstractTwigCompletionSt
 
 		try {
 			
-//			TemplateVariableCompletionContext ctxt = (TemplateVariableCompletionContext) getContext();
-//			
+			TemplateVariableCompletionContext ctxt = (TemplateVariableCompletionContext) getContext();
+			
 //			SymfonyModelAccess model = SymfonyModelAccess.getDefault();
 //			ISourceModule module = ctxt.getSourceModule();
 //			IType controller = model.findControllerByTemplate(module);

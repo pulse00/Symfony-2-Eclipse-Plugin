@@ -31,21 +31,22 @@ import com.dubture.symfony.core.model.Translation;
 import com.dubture.symfony.core.model.ViewPath;
 import com.dubture.symfony.index.model.TransUnit;
 
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction" })
 public class CodeassistUtils {
 
-	public static void reportTranslations(ICompletionReporter reporter, String prefix, ISourceRange range, IScriptProject project) {
+	public static void reportTranslations(ICompletionReporter reporter, String prefix, ISourceRange range,
+			IScriptProject project) {
 
 		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
-		
+
 		List<Bundle> bundles = model.findBundles(project);
-		List<TransUnit> units = model.findTranslations(project.getPath());		
-		
+		List<TransUnit> units = model.findTranslations(project.getPath());
+
 		for (TransUnit unit : units) {
 
 			Bundle targetBundle = null;
 
-			for (Bundle bundle : bundles) {			
+			for (Bundle bundle : bundles) {
 				if (unit.path.startsWith(bundle.getTranslationPath())) {
 					targetBundle = bundle;
 					break;
@@ -57,117 +58,117 @@ public class CodeassistUtils {
 			}
 
 			if (targetBundle != null && CodeAssistUtils.startsWithIgnoreCase(unit.name, prefix)) {
-				Translation trans = new Translation(targetBundle,unit);				
-				reporter.reportType(trans, "", range);	
+				Translation trans = new Translation(targetBundle, unit);
+				reporter.reportType(trans, "", range);
 			}
-		}			
+		}
 
 	}
 
-	
 	/**
-	 * Report the different parts of a ViewPath (Bundle:Controller(/Subpath):template) to the completion engine 
+	 * Report the different parts of a ViewPath
+	 * (Bundle:Controller(/Subpath):template) to the completion engine
 	 */
-	public static void reportViewpath(ICompletionReporter reporter, ViewPath viewPath, String prefix, ISourceRange range, IScriptProject project)
-	{
-        SymfonyModelAccess model = SymfonyModelAccess.getDefault();
-        String bundle = viewPath.getBundle();
-        String controller = viewPath.getController();
-        String template = viewPath.getTemplate();
-        IDLTKSearchScope projectScope = SearchEngine.createSearchScope(project);
-	    
-        // complete the bundle part
-        if (bundle == null && controller == null && template == null) {
+	public static void reportViewpath(ICompletionReporter reporter, ViewPath viewPath, String prefix,
+			ISourceRange range, IScriptProject project) {
+		SymfonyModelAccess model = SymfonyModelAccess.getDefault();
+		String bundle = viewPath.getBundle();
+		String controller = viewPath.getController();
+		String template = viewPath.getTemplate();
+		IDLTKSearchScope projectScope = SearchEngine.createSearchScope(project);
 
-            List<Bundle> bundles = model.findBundles(project);
+		// complete the bundle part
+		if (bundle == null && controller == null && template == null) {
 
-            for (Bundle b : bundles) {              
-                
-                IType[] bundleTypes = PhpModelAccess.getDefault().findTypes(b.getElementName(), MatchRule.EXACT, 0, 0, projectScope, null);
-                
-                if (bundleTypes.length == 1) {
-                    
-                    ModelElement bType = (ModelElement) bundleTypes[0];
-                    
-                    if (CodeAssistUtils.startsWithIgnoreCase(bType.getElementName(), prefix)) {
-                        Bundle bundleType = new Bundle(bType, b.getElementName());
-                        reporter.reportType(bundleType, ":", range);                        
-                    }
-                }
-            }           
-        // complete the controller part: "Bundle:| 
-        } else if (controller == null && template == null) {            
-            
-            IType[] controllers = model.findBundleControllers(bundle, project);
-            
-            for (IPath path : model.findBundleViewPaths(bundle, project)) {
-                
-                IType t  = null;
-                for (IType type : controllers) {
-                    
-                    String pathString = path.removeLastSegments(path.segmentCount()-1).toString();
-                    
-                    if (type.getElementName().contains(pathString)) {
-                        t = type;
-                        break;
-                    }
-                }
-                
-                if (t == null) {
-                    continue;
-                }
-                
-                Controller ctrl = new Controller((ModelElement)t, path.toString());
-                reporter.reportType(ctrl, ":", range);
-            }
+			List<Bundle> bundles = model.findBundles(project);
 
-            
-        // complete template path: "Bundle:Controller:|
-        } else if (bundle != null && controller != null) {
+			for (Bundle b : bundles) {
 
-            IModelElement[] templates = model.findTemplates(bundle, controller, project);
-            
-            if (templates != null) {                
-                for (IModelElement tpl : templates) {
+				IType[] bundleTypes = PhpModelAccess.getDefault().findTypes(b.getElementName(), MatchRule.EXACT, 0, 0,
+						projectScope, null);
 
-                    if (CodeAssistUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
-                        Template t = new Template((ModelElement) tpl, tpl.getElementName());
-                        reporter.reportType(t, "", range);
-                    }
-                    
-                }
-            }
-            
-        // project root: "::| 
-        } else if (bundle == null && controller == null && template != null) {
+				if (bundleTypes.length == 1) {
 
-            IModelElement[] templates = model.findRootTemplates(project);
-            
-            if (templates != null) {                
-                for (IModelElement tpl : templates) {
-                    
-                    if (CodeAssistUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
-                        Template t = new Template((ModelElement) tpl, tpl.getElementName());
-                        reporter.reportType(t, "", range);
-                    }
-                    
-                }
-            }
-            
-        // bundle root: "AcmeDemoBundle::| 
-        } else if (bundle != null && controller == null && template != null) {
-            
-            IModelElement[] templates = model.findBundleRootTemplates(bundle, project);
-            
-            if (templates != null) {                
-                for (IModelElement tpl : templates) {
-                    
-                    if (CodeAssistUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
-                        Template t = new Template((ModelElement) tpl, tpl.getElementName());
-                        reporter.reportType(t, "", range);
-                    }                   
-                }
-            }
-        }	    
+					ModelElement bType = (ModelElement) bundleTypes[0];
+
+					if (CodeAssistUtils.startsWithIgnoreCase(bType.getElementName(), prefix)) {
+						Bundle bundleType = new Bundle(bType, b.getElementName());
+						reporter.reportType(bundleType, ":", range);
+					}
+				}
+			}
+			// complete the controller part: "Bundle:|
+		} else if (controller == null && template == null) {
+
+			IType[] controllers = model.findBundleControllers(bundle, project);
+
+			for (IPath path : model.findBundleViewPaths(bundle, project)) {
+
+				IType t = null;
+				for (IType type : controllers) {
+
+					String pathString = path.removeLastSegments(path.segmentCount() - 1).toString();
+
+					if (type.getElementName().contains(pathString)) {
+						t = type;
+						break;
+					}
+				}
+
+				if (t == null) {
+					continue;
+				}
+
+				Controller ctrl = new Controller((ModelElement) t, path.toString());
+				reporter.reportType(ctrl, ":", range);
+			}
+
+			// complete template path: "Bundle:Controller:|
+		} else if (bundle != null && controller != null) {
+
+			IModelElement[] templates = model.findTemplates(bundle, controller, project);
+
+			if (templates != null) {
+				for (IModelElement tpl : templates) {
+
+					if (CodeAssistUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
+						Template t = new Template((ModelElement) tpl, tpl.getElementName());
+						reporter.reportType(t, "", range);
+					}
+
+				}
+			}
+
+			// project root: "::|
+		} else if (bundle == null && controller == null && template != null) {
+
+			IModelElement[] templates = model.findRootTemplates(project);
+
+			if (templates != null) {
+				for (IModelElement tpl : templates) {
+
+					if (CodeAssistUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
+						Template t = new Template((ModelElement) tpl, tpl.getElementName());
+						reporter.reportType(t, "", range);
+					}
+
+				}
+			}
+
+			// bundle root: "AcmeDemoBundle::|
+		} else if (bundle != null && controller == null && template != null) {
+
+			IModelElement[] templates = model.findBundleRootTemplates(bundle, project);
+
+			if (templates != null) {
+				for (IModelElement tpl : templates) {
+
+					if (CodeAssistUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
+						Template t = new Template((ModelElement) tpl, tpl.getElementName());
+						reporter.reportType(t, "", range);
+					}
+				}
+			}
+		}
 	}
 }

@@ -7,16 +7,15 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 import com.dubture.twig.ui.editor.contentassist.ICompletionProposalProvider;
 
-public class CompletionProposalProvider
-{
-    public ProposalInfo createScriptCompletionProposal(CompletionProposal proposal, ScriptCompletionProposalCollector collector)
-    {
-        return com.dubture.symfony.ui.contentassist.CompletionProposalProvider.createScriptCompletionProposal(proposal, collector);
-    }
+public class CompletionProposalProvider {
+	public ProposalInfo createScriptCompletionProposal(CompletionProposal proposal,
+			ScriptCompletionProposalCollector collector) {
+		return com.dubture.symfony.ui.contentassist.CompletionProposalProvider.createScriptCompletionProposal(proposal,
+				collector);
+	}
 
-    public ImageDescriptor createTypeImageDescriptor(CompletionProposal proposal)
-    {
-        return com.dubture.symfony.ui.contentassist.CompletionProposalProvider.createTypeImageDescriptor(proposal);
-    }
+	public ImageDescriptor createTypeImageDescriptor(CompletionProposal proposal) {
+		return com.dubture.symfony.ui.contentassist.CompletionProposalProvider.createTypeImageDescriptor(proposal);
+	}
 
 }

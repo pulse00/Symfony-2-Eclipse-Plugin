@@ -16,6 +16,7 @@ import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.twig.codeassist.context.RouteCompletionContext;
 import com.dubture.symfony.twig.codeassist.context.TemplateVariableCompletionContext;
 import com.dubture.symfony.twig.codeassist.context.TemplateVariableFieldCompletionContext;
+import com.dubture.symfony.twig.codeassist.context.TranslationCompletionContext;
 import com.dubture.symfony.twig.codeassist.context.ViewPathArgumentContext;
 import com.dubture.symfony.twig.log.Logger;
 import com.dubture.twig.core.codeassist.ICompletionContext;
@@ -23,7 +24,6 @@ import com.dubture.twig.core.codeassist.ITwigCompletionContextResolver;
 
 
 /**
- * 
  * Contributes Symfony2 completion contexts to the Twig 
  * plugin.
  * 
@@ -53,6 +53,7 @@ public class TwigCompletionContextResolver implements
 				new TemplateVariableFieldCompletionContext(),
 				new RouteCompletionContext(),
 				new ViewPathArgumentContext(),
+				new TranslationCompletionContext()
 				
 		};
 	}
