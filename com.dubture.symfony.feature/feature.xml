@@ -30,7 +30,7 @@ THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRES
    <requires>
       <import feature="org.eclipse.php" version="4.0.0" match="greaterOrEqual"/>
       <import feature="com.dubture.composer.feature" version="1.0.2" match="greaterOrEqual"/>
-      <import feature="com.dubture.twig.feature" version="1.0.11" match="greaterOrEqual"/>
+      <import feature="com.dubture.twig.feature" version="2.0.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.platform" version="4.2.0" match="greaterOrEqual"/>
       <import feature="com.dubture.doctrine.feature" version="1.0.8" match="greaterOrEqual" />
       <import feature="com.dubture.indexing.feature" version="0.0.15" match="greaterOrEqual" />
