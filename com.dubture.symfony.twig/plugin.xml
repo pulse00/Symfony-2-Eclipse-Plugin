@@ -20,7 +20,7 @@
             class="com.dubture.symfony.twig.codeassist.TwigCompletionContextResolver">
       </resolver>
    </extension> 
-   <extension
+   <!--extension
          id="id2"
          point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
       <scriptCompletionProposalComputer
@@ -31,7 +31,7 @@
                type="com.dubture.twig.TWIG_DEFAULT">
          </partition>
       </scriptCompletionProposalComputer>
-   </extension>
+   </extension-->
    <extension
          point="com.dubture.symfony.ui.projectWizardExtension">
       <wizardextension
