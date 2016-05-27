@@ -8,8 +8,10 @@
  ******************************************************************************/
 package com.dubture.symfony.twig.codeassist.context;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.jface.text.IDocument;
 
 import com.dubture.twig.core.codeassist.context.TemplateVariablesContext;
 
@@ -27,19 +29,11 @@ public class TemplateVariableCompletionContext extends
 	
 	
 	@Override
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
-	
-		if (super.isValid(sourceModule, offset, requestor)) {
-	
-            if (!requestor.getClass().getName().contains("Twig")) {
-                return false;
-            }
-		    
-			return true;
-			
+	public boolean isValid(IDocument template, int offset, IProgressMonitor monitor) {
+		if (!super.isValid(template, offset, monitor)) {
+			return false;
 		}
-		
-		return false;
+	
+		return true;
 	}
 }

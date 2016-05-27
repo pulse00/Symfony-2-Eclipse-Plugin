@@ -8,8 +8,10 @@
  ******************************************************************************/
 package com.dubture.symfony.twig.codeassist.context;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.core.util.text.TextSequenceUtilities;
@@ -17,6 +19,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.text.XMLStructuredDocumentRegion;
 
+import com.dubture.twig.core.codeassist.context.AbstractTwigCompletionContext;
 import com.dubture.twig.core.documentModel.parser.TwigRegionContext;
 import com.dubture.twig.core.util.TwigModelUtils;
 
@@ -35,31 +38,26 @@ import com.dubture.twig.core.util.TwigModelUtils;
  *
  */
 @SuppressWarnings("restriction")
-public class TranslationCompletionContext extends AbstractCompletionContext {
+public class TranslationCompletionContext extends AbstractTwigCompletionContext{
 	
 	private XMLStructuredDocumentRegion textRegion;
 	
 	private int offset;
 	
 	@Override
-	public boolean isValid(ISourceModule sourceModule, int offset,
-			CompletionRequestor requestor) {
+	public boolean isValid(IDocument template, int offset, IProgressMonitor monitor) {
 		
-	    if (sourceModule.getResource() == null || TwigModelUtils.isTwigTemplate(sourceModule.getResource().getName()) == false) {
-	        return false;
-	    }
-	    
-		super.isValid(sourceModule, offset, requestor);
+		if (!super.isValid(template, offset, monitor)) {
+			return false;
+		}
 		
-        if (!requestor.getClass().getName().contains("Twig")) {
-            return false;
-        }
+		IStructuredDocument doc = getDocument();
 		
-		IStructuredDocument doc = getDocument();		
 		ITextRegion region = doc.getRegionAtCharacterOffset(offset);
 		
-		if (region == null || region.getType() != "XML_CONTENT")
+		if (region == null ) {
 			return false;
+		}
 		
 		ITextRegion previous = doc.getRegionAtCharacterOffset(region.getStart() -1);		
 

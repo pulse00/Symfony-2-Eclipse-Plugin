@@ -10,22 +10,12 @@ package com.dubture.symfony.core.model;
 
 import com.dubture.symfony.core.log.Logger;
 
-
 /**
- * 
  * Represents a ViewPath in the form
- * 
- * 
  * <pre>
- * 
  * 	BundleName:ControllerName:TemplateName
- * 
  * </pre>
- * 
- * 
- * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
- *
  */
 public class ViewPath {
 

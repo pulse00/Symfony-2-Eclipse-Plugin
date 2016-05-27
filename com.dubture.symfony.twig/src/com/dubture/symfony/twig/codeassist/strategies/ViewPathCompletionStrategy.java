@@ -10,29 +10,23 @@ package com.dubture.symfony.twig.codeassist.strategies;
 
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
-import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
 
-import com.dubture.symfony.core.codeassist.CodeassistUtils;
 import com.dubture.symfony.twig.codeassist.context.ViewPathArgumentContext;
+import com.dubture.twig.core.codeassist.ICompletionContext;
+import com.dubture.twig.core.codeassist.ICompletionReporter;
+import com.dubture.twig.core.codeassist.strategies.AbstractTwigCompletionStrategy;
 
 
 /**
- * 
  * A viewpath completion strategy for Twig templates:
- * 
  * 
  * <pre> 
  * 	{% extends '|   <-- shows available Bundles etc. 
  * </pre>
  * 
- * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
- *
  */
-@SuppressWarnings({ "restriction" })
-public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy 
+public class ViewPathCompletionStrategy extends AbstractTwigCompletionStrategy
 {
 	public ViewPathCompletionStrategy(ICompletionContext context) 
 	{
@@ -44,8 +38,8 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy
 	{
         ViewPathArgumentContext context = (ViewPathArgumentContext) getContext();       
         ISourceRange range = getReplacementRange(context);
-        CodeassistUtils.reportViewpath(reporter, context.getViewPath(), 
-                context.getPrefix(), range, context.getSourceModule().getScriptProject());
+//        CodeassistUtils.reportViewpath(new ICompletionRepo, context.getViewPath(), 
+//                context.getPrefix(), range, context.getScriptProject());
 
 	}
 }
