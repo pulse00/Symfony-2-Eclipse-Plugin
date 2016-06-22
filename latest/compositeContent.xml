@@ -3,9 +3,9 @@
 <repository name="Symfony Plugin - latest"
     type="org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository" version="1.0.0">
   <properties size="1">
-    <property name="p2.timestamp" value="1243822502503"/>
+    <property name="p2.timestamp" value="1243822502504"/>
   </properties>
  <children size="1">
-   <child location="http://dl.bintray.com/zulus/symfony-plugin/release/1.2.0/"/>
+   <child location="http://dl.bintray.com/zulus/symfony-plugin/release/1.3.0/"/>
   </children>
 </repository>
