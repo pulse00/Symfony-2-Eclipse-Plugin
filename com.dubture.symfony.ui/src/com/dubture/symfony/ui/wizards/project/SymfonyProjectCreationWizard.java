@@ -11,9 +11,9 @@ package com.dubture.symfony.ui.wizards.project;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard;
 
-import com.dubture.composer.ui.wizard.AbstractComposerWizard;
-import com.dubture.composer.ui.wizard.AbstractWizardFirstPage;
-import com.dubture.composer.ui.wizard.AbstractWizardSecondPage;
+import org.eclipse.php.composer.ui.wizard.AbstractComposerWizard;
+import org.eclipse.php.composer.ui.wizard.AbstractWizardFirstPage;
+import org.eclipse.php.composer.ui.wizard.AbstractWizardSecondPage;
 import com.dubture.symfony.ui.SymfonyPluginImages;
 
 /**

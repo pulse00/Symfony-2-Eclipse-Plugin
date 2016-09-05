@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
-import com.dubture.composer.ui.wizard.LocationGroup;
+import org.eclipse.php.composer.ui.wizard.LocationGroup;
 
 /**
  * Based on {@link org.eclipse.php.internal.ui.wizards.LocationGroup}

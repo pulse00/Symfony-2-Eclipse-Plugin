@@ -18,7 +18,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.pdtextensions.core.ui.preferences.PHPExecutableChangeListener;
 
-import com.dubture.composer.ui.ComposerUIPlugin;
+import org.eclipse.php.composer.ui.ComposerUIPlugin;
 import com.dubture.symfony.core.SymfonyCorePlugin;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.preferences.CorePreferenceConstants.Keys;

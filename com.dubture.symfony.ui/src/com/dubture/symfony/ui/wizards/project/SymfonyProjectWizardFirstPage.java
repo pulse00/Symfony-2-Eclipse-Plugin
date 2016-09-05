@@ -22,13 +22,13 @@ import org.eclipse.ui.PlatformUI;
 import org.pdtextensions.core.exception.ExecutableNotFoundException;
 import org.pdtextensions.core.util.LaunchUtil;
 
-import com.dubture.composer.core.ComposerPlugin;
-import com.dubture.composer.ui.converter.String2KeywordsConverter;
-import com.dubture.composer.ui.wizard.ValidationException;
-import com.dubture.composer.ui.wizard.ValidationException.Severity;
-import com.dubture.composer.ui.wizard.project.template.PackageProjectWizardFirstPage;
-import com.dubture.composer.ui.wizard.project.template.Validator;
-import com.dubture.getcomposer.core.ComposerPackage;
+import org.eclipse.php.composer.core.ComposerPlugin;
+import org.eclipse.php.composer.ui.converter.String2KeywordsConverter;
+import org.eclipse.php.composer.ui.wizard.ValidationException;
+import org.eclipse.php.composer.ui.wizard.ValidationException.Severity;
+import org.eclipse.php.composer.ui.wizard.project.template.PackageProjectWizardFirstPage;
+import org.eclipse.php.composer.ui.wizard.project.template.Validator;
+import org.eclipse.php.composer.api.ComposerPackage;
 import com.dubture.symfony.core.preferences.CorePreferenceConstants.Keys;
 import com.dubture.symfony.ui.SymfonyUiPlugin;
 

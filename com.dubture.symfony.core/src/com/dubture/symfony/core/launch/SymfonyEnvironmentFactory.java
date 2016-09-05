@@ -1,8 +1,8 @@
 package com.dubture.symfony.core.launch;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.pdtextensions.core.launch.environment.AbstractEnvironmentFactory;
-import org.pdtextensions.core.launch.environment.PrjPharEnvironment;
+import org.eclipse.php.composer.core.launch.environment.AbstractEnvironmentFactory;
+import org.eclipse.php.composer.core.launch.environment.PrjPharEnvironment;
 
 import com.dubture.symfony.core.SymfonyCorePlugin;
 import com.dubture.symfony.core.preferences.CorePreferenceConstants.Keys;

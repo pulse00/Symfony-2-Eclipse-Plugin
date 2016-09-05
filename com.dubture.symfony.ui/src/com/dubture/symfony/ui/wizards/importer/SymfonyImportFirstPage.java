@@ -31,10 +31,10 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.PlatformUI;
 
-import com.dubture.getcomposer.core.ComposerPackage;
-import com.dubture.getcomposer.core.VersionedPackage;
-import com.dubture.getcomposer.core.collection.Dependencies;
-import com.dubture.getcomposer.json.ParseException;
+import org.eclipse.php.composer.api.ComposerPackage;
+import org.eclipse.php.composer.api.VersionedPackage;
+import org.eclipse.php.composer.api.collection.Dependencies;
+import org.eclipse.php.composer.api.json.ParseException;
 import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.ui.SymfonyPluginImages;

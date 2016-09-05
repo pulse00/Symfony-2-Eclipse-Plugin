@@ -4,8 +4,8 @@ import org.apache.commons.exec.CommandLine;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
-import org.pdtextensions.core.launch.ScriptNotFoundException;
-import org.pdtextensions.core.launch.environment.PrjPharEnvironment;
+import org.eclipse.php.composer.core.launch.ScriptNotFoundException;
+import org.eclipse.php.composer.core.launch.environment.PrjPharEnvironment;
 
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 

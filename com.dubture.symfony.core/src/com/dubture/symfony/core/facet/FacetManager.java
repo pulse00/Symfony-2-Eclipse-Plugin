@@ -11,7 +11,7 @@ import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
-import com.dubture.composer.core.facet.ComposerFacetConstants;
+import org.eclipse.php.composer.core.facet.ComposerFacetConstants;
 import com.dubture.indexing.core.IndexingCorePlugin;
 import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.log.Logger;
@@ -40,7 +40,7 @@ public class FacetManager {
 			}
 			
 			if (!hasComposerFacet) {
-				facetedProject = com.dubture.composer.core.facet.FacetManager.installFacets(project, version, monitor);
+				facetedProject = org.eclipse.php.composer.core.facet.FacetManager.installFacets(project, version, monitor);
 			} else {
 				facetedProject = ProjectFacetsManager.create(project);
 			}

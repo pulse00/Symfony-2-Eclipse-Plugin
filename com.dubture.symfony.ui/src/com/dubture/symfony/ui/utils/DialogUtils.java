@@ -26,7 +26,7 @@ import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PlatformUI;
 import org.pdtextensions.core.ui.wizards.NewClassWizard;
 
-import com.dubture.composer.core.model.ModelAccess;
+import org.eclipse.php.composer.core.model.ModelAccess;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.resources.SymfonyMarker;
 

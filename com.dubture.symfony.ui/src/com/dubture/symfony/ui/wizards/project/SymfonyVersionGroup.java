@@ -11,14 +11,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 
-import com.dubture.composer.core.log.Logger;
-import com.dubture.composer.ui.wizard.AbstractVersionGroup;
-import com.dubture.composer.ui.wizard.AbstractWizardFirstPage;
-import com.dubture.getcomposer.core.ComposerPackage;
-import com.dubture.getcomposer.core.RepositoryPackage;
-import com.dubture.getcomposer.core.collection.Versions;
-import com.dubture.getcomposer.packages.AsyncPackagistDownloader;
-import com.dubture.getcomposer.packages.PackageListenerInterface;
+import org.eclipse.php.composer.core.log.Logger;
+import org.eclipse.php.composer.ui.wizard.AbstractVersionGroup;
+import org.eclipse.php.composer.ui.wizard.AbstractWizardFirstPage;
+import org.eclipse.php.composer.api.ComposerPackage;
+import org.eclipse.php.composer.api.RepositoryPackage;
+import org.eclipse.php.composer.api.collection.Versions;
+import org.eclipse.php.composer.api.packages.AsyncPackagistDownloader;
+import org.eclipse.php.composer.api.packages.PackageListenerInterface;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 
 @SuppressWarnings("restriction")

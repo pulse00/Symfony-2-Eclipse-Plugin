@@ -34,8 +34,8 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
 import org.osgi.service.prefs.BackingStoreException;
 
-import com.dubture.composer.core.ComposerNature;
-import com.dubture.composer.core.buildpath.BuildPathManager;
+import org.eclipse.php.composer.core.ComposerNature;
+import org.eclipse.php.composer.core.buildpath.BuildPathManager;
 import com.dubture.symfony.core.SymfonyCorePlugin;
 import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.builder.SymfonyNature;

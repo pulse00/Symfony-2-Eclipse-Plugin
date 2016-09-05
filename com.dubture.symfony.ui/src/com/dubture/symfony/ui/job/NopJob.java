@@ -2,7 +2,7 @@ package com.dubture.symfony.ui.job;
 
 import java.io.IOException;
 
-import org.pdtextensions.core.launch.ScriptLauncher;
+import org.eclipse.php.composer.core.launch.ScriptLauncher;
 
 public class NopJob extends ConsoleJob {
 

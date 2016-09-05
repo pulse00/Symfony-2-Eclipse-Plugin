@@ -214,7 +214,7 @@
        </action>
     </extension>
     <extension
-          point="org.pdtextensions.core.executableLauncher">
+          point="org.eclipse.php.composer.core.executableLauncher">
        <environmentFactory
              class="com.dubture.symfony.core.launch.SymfonyEnvironmentFactory"
              id="com.dubture.symfony.core.launcherfactory">

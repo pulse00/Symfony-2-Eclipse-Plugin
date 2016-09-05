@@ -11,17 +11,17 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.swt.widgets.Display;
-import org.pdtextensions.core.exception.ExecutableNotFoundException;
-import org.pdtextensions.core.launch.ScriptLauncher;
-import org.pdtextensions.core.launch.ScriptLauncherManager;
-import org.pdtextensions.core.launch.ScriptNotFoundException;
-import org.pdtextensions.core.launch.execution.ExecutionResponseAdapter;
+import org.eclipse.php.composer.core.launch.ExecutableNotFoundException;
+import org.eclipse.php.composer.core.launch.ScriptLauncher;
+import org.eclipse.php.composer.core.launch.ScriptLauncherManager;
+import org.eclipse.php.composer.core.launch.ScriptNotFoundException;
+import org.eclipse.php.composer.core.launch.execution.ExecutionResponseAdapter;
 import org.pdtextensions.core.ui.PEXUIPlugin;
 
-import com.dubture.composer.core.ComposerPlugin;
-import com.dubture.composer.ui.handler.ConsoleResponseHandler;
-import com.dubture.composer.ui.job.runner.ComposerFailureMessageRunner;
-import com.dubture.composer.ui.job.runner.MissingExecutableRunner;
+import org.eclipse.php.composer.core.ComposerPlugin;
+import org.eclipse.php.composer.ui.handler.ConsoleResponseHandler;
+import org.eclipse.php.composer.ui.job.runner.ComposerFailureMessageRunner;
+import org.eclipse.php.composer.ui.job.runner.MissingExecutableRunner;
 import com.dubture.symfony.core.launch.SymfonyEnvironmentFactory;
 import com.dubture.symfony.core.log.Logger;
 
