@@ -36,7 +36,7 @@ public class SymfonyVersionGroup extends AbstractVersionGroup {
 		symfonyVersionSelector.setLabelText("Symfony Version:");
 		symfonyVersionSelector.doFillIntoGrid(group, 2);
 		symfonyVersionSelector.setDialogFieldListener(this);
-		fConfigurationBlock.setMinimumVersion(PHPVersion.PHP5_3);
+		fConfigurationBlock.setMinimumVersion(PHPVersion.PHP5_3.toApi());
 		loadVersionCombo();
 	}
 	
