@@ -25,7 +25,7 @@
 	<properties>
 		<tycho-version>0.23.1</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<eclipse.name>mars</eclipse.name>
+		<eclipse.name>neon</eclipse.name>
 		<release>false</release>
 		<bintray.user></bintray.user>
 		<bintray.apikey></bintray.apikey>
