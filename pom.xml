@@ -39,7 +39,6 @@
 		<doctrine.url>http://doctrine.dubture.com/nightly</doctrine.url>
 		<twig.url>http://twig.dubture.com/nightly</twig.url>
 		<indexing.url>http://pulse00.github.io/eclipse-indexing-framework/nightly</indexing.url>
-		<composer.url>http://composer.dubture.com/nightly</composer.url>
 	</properties>
 
 	<repositories>
@@ -99,19 +98,9 @@
 			<layout>p2</layout>
 			<url>${indexing.url}</url>
 		</repository>
-		<repository>
-			<id>composer</id>
-			<layout>p2</layout>
-			<url>${composer.url}</url>
-		</repository>
 	</repositories>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.dubture</groupId>
-			<artifactId>composer-java-api</artifactId>
-			<version>0.0.6-SNAPSHOT</version>
-		</dependency>
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
