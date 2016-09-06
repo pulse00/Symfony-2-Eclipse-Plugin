@@ -4,15 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ComboDialogField;
 import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.wizards.PHPProjectWizardFirstPage.VersionGroup;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 
 import org.eclipse.php.composer.core.log.Logger;
-import org.eclipse.php.composer.ui.wizard.AbstractVersionGroup;
 import org.eclipse.php.composer.ui.wizard.AbstractWizardFirstPage;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.RepositoryPackage;
@@ -22,18 +27,26 @@ import org.eclipse.php.composer.api.packages.PackageListenerInterface;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 
 @SuppressWarnings("restriction")
-public class SymfonyVersionGroup extends AbstractVersionGroup {
+public class SymfonyVersionGroup extends VersionGroup {
 
 	protected ComboDialogField symfonyVersionSelector;
 	
+	protected AbstractWizardFirstPage firstPage;
+	
 	public SymfonyVersionGroup(AbstractWizardFirstPage composerProjectWizardFirstPage, Composite composite) {
-		super(composerProjectWizardFirstPage, composite, 4, PHPVersion.PHP5_3);
+		super(composerProjectWizardFirstPage, composite, PHPVersion.PHP5_3);
+		firstPage = composerProjectWizardFirstPage;
+		
+		final Group group = new Group(composite, SWT.NONE);
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		group.setLayout(new GridLayout(2, false));
+		group.setText("Symfony Version");
+		createSubComponents(group);
 	}
 	
-	@Override
-	protected void createSubComponents(Group group) {
+	protected void createSubComponents(Composite group) {
 		symfonyVersionSelector = new ComboDialogField(SWT.READ_ONLY);
-		symfonyVersionSelector.setLabelText("Symfony Version:");
+		symfonyVersionSelector.setLabelText("Please select:");
 		symfonyVersionSelector.doFillIntoGrid(group, 2);
 		symfonyVersionSelector.setDialogFieldListener(this);
 		fConfigurationBlock.setMinimumVersion(PHPVersion.PHP5_3.toApi());
@@ -81,5 +94,10 @@ public class SymfonyVersionGroup extends AbstractVersionGroup {
 	
 	public String getSymfonyVersion() {
 		return symfonyVersionSelector.getText();
+	}
+
+	@Override
+	public IEnvironment getEnvironment() {
+		return firstPage.getEnvironment();
 	}
 }
