@@ -19,7 +19,7 @@ import org.osgi.framework.BundleContext;
 import org.pdtextensions.core.ui.preferences.PHPExecutableChangeListener;
 
 import org.eclipse.php.composer.ui.ComposerUIPlugin;
-import com.dubture.symfony.core.SymfonyCorePlugin;
+import com.dubture.symfony.core.SymfonyCorePlugin;  
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.preferences.CorePreferenceConstants.Keys;
 import com.dubture.symfony.ui.editor.template.CodeTemplateContextType;
@@ -82,13 +82,6 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
-	 * )
-	 */
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;

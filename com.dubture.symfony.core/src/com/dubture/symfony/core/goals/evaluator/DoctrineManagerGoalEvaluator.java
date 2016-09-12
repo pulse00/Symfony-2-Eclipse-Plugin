@@ -71,6 +71,7 @@ public class DoctrineManagerGoalEvaluator extends GoalEvaluator {
 		}
 
 		if (state == STATE_GOT_RECEIVER) {
+			state = STATE_WAITING_SERVICE_TYPE;
 			IModelAccessCache accessCache = null;
 			if (goal.getContext() instanceof IModelCacheContext) {
 				accessCache = ((IModelCacheContext)goal.getContext()).getCache();

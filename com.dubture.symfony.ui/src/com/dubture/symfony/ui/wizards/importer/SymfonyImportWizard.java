@@ -26,6 +26,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.php.composer.core.buildpath.BuildPathManager;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.ui.IImportWizard;
@@ -34,8 +35,6 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
 import org.osgi.service.prefs.BackingStoreException;
 
-import org.eclipse.php.composer.core.ComposerNature;
-import org.eclipse.php.composer.core.buildpath.BuildPathManager;
 import com.dubture.symfony.core.SymfonyCorePlugin;
 import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.builder.SymfonyNature;
@@ -109,7 +108,7 @@ public class SymfonyImportWizard extends Wizard implements IImportWizard {
 					project.open(monitor);
 					monitor.worked(1);
 					
-					applyNatures(new String[]{PHPNature.ID, SymfonyNature.NATURE_ID, ComposerNature.NATURE_ID },  project, monitor);
+					applyNatures(new String[]{PHPNature.ID, SymfonyNature.NATURE_ID },  project, monitor);
 					
 					IScriptProject scriptProject = DLTKCore.create(project);
 					IFile vendorPath = project.getFile(SymfonyCoreConstants.VENDOR_PATH);

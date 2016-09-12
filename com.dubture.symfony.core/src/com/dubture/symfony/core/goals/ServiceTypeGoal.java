@@ -29,13 +29,15 @@ public class ServiceTypeGoal extends AbstractGoal{
 		} else if (this.getClass() != obj.getClass()) {
 			return false;
 		}
-
 		return serviceId.equals(((ServiceTypeGoal) obj).getServiceId());
 	}
 
 	@Override
 	public int hashCode() {
-		return 41 * serviceId.hashCode();
+		final int prime = 66;
+		int result = 1;
+		result = prime * result + serviceId.hashCode();
+		return result;
 	}
 
 	public String getServiceId() {

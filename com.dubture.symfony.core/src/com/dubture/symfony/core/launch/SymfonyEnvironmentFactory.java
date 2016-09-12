@@ -1,6 +1,5 @@
 package com.dubture.symfony.core.launch;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.composer.core.launch.environment.AbstractEnvironmentFactory;
 import org.eclipse.php.composer.core.launch.environment.PrjPharEnvironment;
 
@@ -14,10 +13,6 @@ public class SymfonyEnvironmentFactory extends AbstractEnvironmentFactory {
 
 	public static final String FACTORY_ID = "com.dubture.symfony.core.launcherfactory";
 	
-	@Override
-	protected IPreferenceStore getPreferenceStore() {
-		return SymfonyCorePlugin.getDefault().getPreferenceStore();
-	}
 
 	@Override
 	protected String getPluginId() {
@@ -42,5 +37,10 @@ public class SymfonyEnvironmentFactory extends AbstractEnvironmentFactory {
 	@Override
 	protected String getScriptKey() {
 		return Keys.CONSOLE;
+	}
+
+	@Override
+	protected String getPreferenceQualifier() {
+		return SymfonyCorePlugin.ID;
 	}
 }
