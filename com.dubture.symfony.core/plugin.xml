@@ -226,6 +226,15 @@
              content-type="org.eclipse.core.runtime.xml"
              file-extensions="xliff">
        </file-association>
+       <file-association
+             content-type="org.dadacoalition.yedit.yamlsource"
+             file-extensions="yml.dist">
+       </file-association>
+       <!-- drop this when eclipse bug 361534 will be fixed -->
+       <file-association
+             content-type="org.dadacoalition.yedit.yamlsource"
+             file-names="parameters.yml.dist">
+       </file-association>
     </extension>
     <extension
           point="org.eclipse.ltk.core.refactoring.renameParticipants">
