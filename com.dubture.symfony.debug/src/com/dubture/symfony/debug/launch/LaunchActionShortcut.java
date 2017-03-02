@@ -161,7 +161,7 @@ public class LaunchActionShortcut extends PHPWebPageLaunchShortcut {
 				String selectedURL = null;
 				boolean showDebugDialog = true;
 				if (obj instanceof IScriptProject) {
-					final PHPWebPageLaunchDialog dialog = new PHPWebPageLaunchDialog(mode, (IScriptProject) obj, basePath);
+					final PHPWebPageLaunchDialog dialog = new PHPWebPageLaunchDialog(mode, (IScriptProject) obj);
 					final int open = dialog.open();
 					if (open == PHPWebPageLaunchDialog.OK) {
 						defaultServer = dialog.getServer();
