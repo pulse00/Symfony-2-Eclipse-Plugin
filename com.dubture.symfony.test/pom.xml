@@ -20,7 +20,6 @@
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<configuration>
-					<parallel>classes</parallel>
 					<threadCount>1</threadCount>
 					<testSuite>com.dubture.symfony.test</testSuite>
 					<testClass>com.dubture.symfony.test.AllTests</testClass>
