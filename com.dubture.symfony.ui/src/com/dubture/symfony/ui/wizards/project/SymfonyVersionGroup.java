@@ -6,24 +6,22 @@ import java.util.Map.Entry;
 
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ComboDialogField;
-import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.wizards.PHPProjectWizardFirstPage.VersionGroup;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
-
-import org.eclipse.php.composer.core.log.Logger;
-import org.eclipse.php.composer.ui.wizard.AbstractWizardFirstPage;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.RepositoryPackage;
 import org.eclipse.php.composer.api.collection.Versions;
 import org.eclipse.php.composer.api.packages.AsyncPackagistDownloader;
 import org.eclipse.php.composer.api.packages.PackageListenerInterface;
+import org.eclipse.php.composer.core.log.Logger;
+import org.eclipse.php.composer.ui.wizard.AbstractWizardFirstPage;
+import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.internal.ui.wizards.PHPProjectWizardFirstPage.VersionGroup;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
+
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
 
 @SuppressWarnings("restriction")
@@ -49,7 +47,7 @@ public class SymfonyVersionGroup extends VersionGroup {
 		symfonyVersionSelector.setLabelText("Please select:");
 		symfonyVersionSelector.doFillIntoGrid(group, 2);
 		symfonyVersionSelector.setDialogFieldListener(this);
-		fConfigurationBlock.setMinimumVersion(PHPVersion.PHP5_3.toApi());
+		fConfigurationBlock.setMinimumVersion(PHPVersion.PHP5_3);
 		loadVersionCombo();
 	}
 	

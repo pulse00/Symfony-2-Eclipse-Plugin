@@ -47,7 +47,6 @@ import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
@@ -186,7 +185,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
         public boolean visit(PHPMethodDeclaration s) throws Exception {
             if (s.getName().equals(method)) {
                 PHPDocBlock docs = s.getPHPDoc();
-                PHPDocTag[] returnTags = docs.getTags(PHPDocTagKinds.RETURN);
+                PHPDocTag[] returnTags = docs.getTags(PHPDocTag.TagKind.RETURN);
                 if (returnTags.length == 1) {
                     PHPDocTag tag = returnTags[0];
 

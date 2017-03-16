@@ -55,7 +55,7 @@ public class DialogUtils
 //        
 //        if (serviceClass == null) {
 //        	Logger.log(Logger.ERROR, "Could not retrieve service class to open class dialog");
-//        	return;
+//        	return;x
 //        }
 //
 //        ModelAccess composer = ModelAccess.getInstance();

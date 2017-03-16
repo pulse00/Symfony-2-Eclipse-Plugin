@@ -40,7 +40,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.codeassist.ICompletionContextResolver;
 import org.eclipse.php.core.codeassist.ICompletionStrategyFactory;
 import org.eclipse.php.core.tests.filenetwork.FileUtil;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestorExtension;
 import org.eclipse.php.internal.core.codeassist.contexts.CompletionContextResolver;
