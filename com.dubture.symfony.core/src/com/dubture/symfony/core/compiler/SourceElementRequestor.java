@@ -20,9 +20,9 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.php.core.compiler.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
+import org.eclipse.php.core.compiler.ast.nodes.ClassDeclaration;
+import org.eclipse.php.core.compiler.ast.nodes.FullyQualifiedReference;
+import org.eclipse.php.core.compiler.ast.nodes.PHPMethodDeclaration;
 
 import com.dubture.symfony.core.builder.SymfonyNature;
 import com.dubture.symfony.core.model.Service;

@@ -47,7 +47,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.CompletionContextResolv
 import org.eclipse.php.internal.core.codeassist.strategies.CompletionStrategyFactory;
 import org.eclipse.php.internal.core.facet.PHPFacets;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.osgi.framework.Bundle;
 
@@ -104,7 +104,7 @@ abstract public class AbstractCodeAssistTest extends TestCase {
 		desc.setNatureIds(new String[] { PHPNature.ID, SymfonyNature.NATURE_ID, DoctrineNature.NATURE_ID });
 		project.setDescription(desc, null);
 
-		ProjectOptions.setPhpVersion(PHPVersion.PHP5_3, project);
+		ProjectOptions.setPHPVersion(PHPVersion.PHP5_3, project);
 
 		PHPFacets.setFacetedVersion(project, PHPVersion.PHP5_3);
 		FacetManager.installFacets(project, PHPVersion.PHP5_3, SymfonyVersion.Symfony2_2_1, new NullProgressMonitor());

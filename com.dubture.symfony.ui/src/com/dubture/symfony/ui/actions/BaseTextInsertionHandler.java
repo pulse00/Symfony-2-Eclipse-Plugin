@@ -78,6 +78,9 @@ abstract public class BaseTextInsertionHandler extends SelectionHandler implemen
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
         project = getProject();
+        if (project == null) {
+        	return null;
+        }
         Assert.isNotNull(project);
         
         final Shell p = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();

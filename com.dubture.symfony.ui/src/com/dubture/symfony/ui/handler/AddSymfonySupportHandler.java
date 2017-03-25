@@ -8,13 +8,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.dubture.symfony.core.SymfonyVersion;
 import com.dubture.symfony.core.facet.FacetManager;
 
-@SuppressWarnings("restriction")
 public class AddSymfonySupportHandler extends AbstractHandler {
 
 	@Override
@@ -30,7 +29,7 @@ public class AddSymfonySupportHandler extends AbstractHandler {
 				IAdaptable adaptable = (IAdaptable)item;
 				IProject project = ((IResource)adaptable.getAdapter(IResource.class)).getProject();
 				
-				FacetManager.installFacets(project, ProjectOptions.getDefaultPhpVersion(), SymfonyVersion.Symfony2_2_1, null);
+				FacetManager.installFacets(project, ProjectOptions.getDefaultPHPVersion(), SymfonyVersion.Symfony2_2_1, null);
 			}
 		}
 		

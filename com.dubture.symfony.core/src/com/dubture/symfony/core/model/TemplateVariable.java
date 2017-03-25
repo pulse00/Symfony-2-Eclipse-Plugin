@@ -8,7 +8,7 @@
  ******************************************************************************/
 package com.dubture.symfony.core.model;
 
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
+import org.eclipse.php.core.compiler.ast.nodes.PHPMethodDeclaration;
 
 
 /**

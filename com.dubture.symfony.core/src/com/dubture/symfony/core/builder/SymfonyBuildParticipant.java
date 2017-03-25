@@ -11,7 +11,7 @@ package com.dubture.symfony.core.builder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
+import org.eclipse.php.core.compiler.ast.nodes.PHPModuleDeclaration;
 
 import com.dubture.symfony.core.log.Logger;
 
@@ -22,7 +22,6 @@ import com.dubture.symfony.core.log.Logger;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings("restriction")
 public class SymfonyBuildParticipant implements IBuildParticipant {
 	private PHPModuleDeclaration getModuleDeclaration(IBuildContext context) {
 		if (context.get(IBuildContext.ATTR_MODULE_DECLARATION) instanceof PHPModuleDeclaration) {

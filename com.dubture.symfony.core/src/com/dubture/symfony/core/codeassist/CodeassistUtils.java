@@ -20,7 +20,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
-import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 import com.dubture.symfony.core.model.Bundle;

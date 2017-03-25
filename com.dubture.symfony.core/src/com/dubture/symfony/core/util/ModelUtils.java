@@ -17,9 +17,9 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceDeclaration;
+import org.eclipse.php.core.compiler.ast.nodes.PHPCallExpression;
+import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 
 import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.Service;

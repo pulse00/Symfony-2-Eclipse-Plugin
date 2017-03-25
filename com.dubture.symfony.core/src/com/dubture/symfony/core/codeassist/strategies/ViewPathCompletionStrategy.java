@@ -11,7 +11,7 @@ package com.dubture.symfony.core.codeassist.strategies;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
 
 import com.dubture.symfony.core.codeassist.CodeassistUtils;
