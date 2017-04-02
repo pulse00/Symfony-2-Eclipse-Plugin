@@ -19,7 +19,7 @@ import org.eclipse.php.core.compiler.ast.nodes.ArrayElement;
 import org.eclipse.php.core.compiler.ast.nodes.InfixExpression;
 import org.eclipse.php.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.core.compiler.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 
 import com.dubture.symfony.core.log.Logger;
 

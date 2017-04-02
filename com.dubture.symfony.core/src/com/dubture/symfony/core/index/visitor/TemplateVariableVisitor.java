@@ -33,7 +33,7 @@ import org.eclipse.php.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.core.compiler.ast.nodes.UseStatement;
-import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.model.PerFileModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.wst.sse.core.utils.StringUtils;
