@@ -10,12 +10,12 @@ package com.dubture.symfony.core.codeassist.strategies;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
 
@@ -66,7 +66,7 @@ public class ServiceContainerCompletionStrategy extends
         }
 
         for(Service service : services) {
-            if (CodeAssistUtils.startsWithIgnoreCase(service.getId(), prefix)) {
+            if (StringUtils.startsWithIgnoreCase(service.getId(), prefix)) {
                 ModelElement parent = (ModelElement) context.getSourceModule();
                 Service s = new Service(parent, service.getElementName());
                 s.setId(service.getId());

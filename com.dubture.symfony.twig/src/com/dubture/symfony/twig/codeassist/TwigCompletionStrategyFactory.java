@@ -36,7 +36,6 @@ import com.dubture.twig.core.codeassist.ITwigCompletionStrategyFactory;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings("restriction")
 public class TwigCompletionStrategyFactory implements
 		ITwigCompletionStrategyFactory {
 

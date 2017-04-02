@@ -28,7 +28,6 @@ import com.dubture.twig.core.codeassist.strategies.AbstractTwigCompletionStrateg
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings({ "restriction" })
 public class TemplateVariableFieldCompletionStrategy extends AbstractTwigCompletionStrategy {
 
 	public TemplateVariableFieldCompletionStrategy(ICompletionContext context) {

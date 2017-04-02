@@ -10,10 +10,10 @@ package com.dubture.symfony.twig.codeassist.strategies;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 
 import com.dubture.symfony.core.codeassist.contexts.RouteCompletionContext;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
@@ -29,7 +29,6 @@ import com.dubture.twig.core.codeassist.strategies.AbstractTwigCompletionStrateg
  * Completes route names inside a {@link RouteCompletionContext}
  * @author Robert Gruendler <r.gruendler@gmail.com>
  */
-@SuppressWarnings({ "restriction" })
 public class RouteCompletionStrategy extends AbstractTwigCompletionStrategy {
 
 	public static int workaroundCount = 0;
@@ -58,7 +57,7 @@ public class RouteCompletionStrategy extends AbstractTwigCompletionStrategy {
 				continue;
 			}
 			
-			if (CodeAssistUtils.startsWithIgnoreCase(route.name, prefix)) {
+			if (StringUtils.startsWithIgnoreCase(route.name, prefix)) {
 				reporter.reportKeyword(route.name, range, new ICompletionProposalFlag[]{CompletionProposalFlag.ROUTE});
 			}
 		}	

@@ -11,6 +11,7 @@ package com.dubture.symfony.core.codeassist.strategies;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
@@ -20,7 +21,6 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
@@ -48,7 +48,7 @@ import com.dubture.symfony.core.model.SymfonyModelAccess;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction"})
 public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
 	private final static IType[] EMPTY_TYPES = new IType[0];
 
@@ -87,7 +87,7 @@ public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
                 }
                 if (bundleTypes.length == 1) {
                     ModelElement bType = (ModelElement) bundleTypes[0];
-                    if (CodeAssistUtils.startsWithIgnoreCase(bType.getElementName(), prefix)) {
+                    if (StringUtils.startsWithIgnoreCase(bType.getElementName(), prefix)) {
                         Bundle bundleType = new Bundle(bType, b.getElementName());
                         reporter.reportType(bundleType, ":", range);
                     }

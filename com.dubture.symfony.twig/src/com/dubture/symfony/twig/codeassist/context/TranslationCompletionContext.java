@@ -9,10 +9,7 @@
 package com.dubture.symfony.twig.codeassist.context;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.core.util.text.TextSequenceUtilities;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -21,7 +18,6 @@ import org.eclipse.wst.xml.core.internal.text.XMLStructuredDocumentRegion;
 
 import com.dubture.twig.core.codeassist.context.AbstractTwigCompletionContext;
 import com.dubture.twig.core.documentModel.parser.TwigRegionContext;
-import com.dubture.twig.core.util.TwigModelUtils;
 
 /**
  * 

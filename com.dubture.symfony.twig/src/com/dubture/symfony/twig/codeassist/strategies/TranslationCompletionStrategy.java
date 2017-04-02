@@ -10,11 +10,11 @@ package com.dubture.symfony.twig.codeassist.strategies;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 
 import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
@@ -27,7 +27,6 @@ import com.dubture.twig.core.codeassist.ICompletionProposalFlag;
 import com.dubture.twig.core.codeassist.ICompletionReporter;
 import com.dubture.twig.core.codeassist.strategies.AbstractTwigCompletionStrategy;
 
-@SuppressWarnings({ "restriction" })
 public class TranslationCompletionStrategy extends AbstractTwigCompletionStrategy {
 
 	private TranslationCompletionContext tContext;
@@ -64,7 +63,7 @@ public class TranslationCompletionStrategy extends AbstractTwigCompletionStrateg
 				targetBundle.setProject(project);
 			}
 
-			if (targetBundle != null && CodeAssistUtils.startsWithIgnoreCase(unit.name, prefix)) {
+			if (targetBundle != null && StringUtils.startsWithIgnoreCase(unit.name, prefix)) {
 				Translation trans = new Translation(targetBundle, unit);
 				reporter.reportKeyword(unit.name, range,
 						new ICompletionProposalFlag[] { CompletionProposalFlag.TRANSLATION });

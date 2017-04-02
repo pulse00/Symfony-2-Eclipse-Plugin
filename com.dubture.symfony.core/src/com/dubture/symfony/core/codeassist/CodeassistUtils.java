@@ -10,6 +10,7 @@ package com.dubture.symfony.core.codeassist;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
@@ -19,7 +20,6 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
@@ -57,7 +57,7 @@ public class CodeassistUtils {
 				targetBundle.setProject(project);
 			}
 
-			if (targetBundle != null && CodeAssistUtils.startsWithIgnoreCase(unit.name, prefix)) {
+			if (targetBundle != null && StringUtils.startsWithIgnoreCase(unit.name, prefix)) {
 				Translation trans = new Translation(targetBundle, unit);
 				reporter.reportType(trans, "", range);
 			}
@@ -91,7 +91,7 @@ public class CodeassistUtils {
 
 					ModelElement bType = (ModelElement) bundleTypes[0];
 
-					if (CodeAssistUtils.startsWithIgnoreCase(bType.getElementName(), prefix)) {
+					if (StringUtils.startsWithIgnoreCase(bType.getElementName(), prefix)) {
 						Bundle bundleType = new Bundle(bType, b.getElementName());
 						reporter.reportType(bundleType, ":", range);
 					}
@@ -131,7 +131,7 @@ public class CodeassistUtils {
 			if (templates != null) {
 				for (IModelElement tpl : templates) {
 
-					if (CodeAssistUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
+					if (StringUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
 						Template t = new Template((ModelElement) tpl, tpl.getElementName());
 						reporter.reportType(t, "", range);
 					}
@@ -147,7 +147,7 @@ public class CodeassistUtils {
 			if (templates != null) {
 				for (IModelElement tpl : templates) {
 
-					if (CodeAssistUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
+					if (StringUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
 						Template t = new Template((ModelElement) tpl, tpl.getElementName());
 						reporter.reportType(t, "", range);
 					}
@@ -163,7 +163,7 @@ public class CodeassistUtils {
 			if (templates != null) {
 				for (IModelElement tpl : templates) {
 
-					if (CodeAssistUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
+					if (StringUtils.startsWithIgnoreCase(tpl.getElementName(), prefix)) {
 						Template t = new Template((ModelElement) tpl, tpl.getElementName());
 						reporter.reportType(t, "", range);
 					}

@@ -36,9 +36,6 @@ import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.SymfonyModelAccess;
 import com.dubture.symfony.core.model.ViewPath;
 import com.dubture.symfony.twig.model.SymfonyTemplateResolver;
-import com.dubture.twig.core.parser.SourceParserUtil;
-import com.dubture.twig.core.parser.ast.node.BlockStatement;
-import com.dubture.twig.core.parser.ast.node.TwigModuleDeclaration;
 import com.dubture.twig.ui.wizards.ITemplateProvider;
 
 /**

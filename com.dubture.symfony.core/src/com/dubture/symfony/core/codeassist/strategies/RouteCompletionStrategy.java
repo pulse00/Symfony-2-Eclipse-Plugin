@@ -10,13 +10,13 @@ package com.dubture.symfony.core.codeassist.strategies;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
@@ -56,7 +56,7 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 		String prefix = context.getPrefix();
 
 		for (Route route : routes) {
-			if (CodeAssistUtils.startsWithIgnoreCase(route.name, prefix)) {
+			if (StringUtils.startsWithIgnoreCase(route.name, prefix)) {
 				IType controller = model.findController(route.bundle, route.controller,
 						context.getSourceModule().getScriptProject());
 
