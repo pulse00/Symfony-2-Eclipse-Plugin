@@ -28,7 +28,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.internal.Workbench;
@@ -69,7 +69,7 @@ public class XmlHyperlinkDetector extends AbstractHyperlinkDetector {
 				return null;
 
 			String path = document.get(wordRegion.getOffset(), wordRegion.getLength());
-			PhpModelAccess model = PhpModelAccess.getDefault();
+			PHPModelAccess model = PHPModelAccess.getDefault();
 
 			if (path == null || path.length() == 0) {
 				return null;

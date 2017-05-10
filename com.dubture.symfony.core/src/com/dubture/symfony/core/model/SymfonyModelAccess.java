@@ -49,7 +49,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 
 import com.dubture.symfony.core.SymfonyLanguageToolkit;
@@ -69,7 +69,7 @@ import com.dubture.symfony.index.model.TransUnit;
 /**
  *
  * The {@link SymfonyModelAccess} is an extension to the
- * {@link PhpModelAccess} and provides additional helper
+ * {@link PHPModelAccess} and provides additional helper
  * methods to find Symfony2 model elements.
  *
  *
@@ -77,7 +77,7 @@ import com.dubture.symfony.index.model.TransUnit;
  *
  */
 @SuppressWarnings("restriction")
-public class SymfonyModelAccess extends PhpModelAccess {
+public class SymfonyModelAccess extends PHPModelAccess {
 
 
     private static SymfonyModelAccess modelInstance = null;
@@ -262,7 +262,7 @@ public class SymfonyModelAccess extends PhpModelAccess {
         }
 
         // find the type
-        IType types[] = PhpModelAccess.getDefault().findTypes(controller,
+        IType types[] = PHPModelAccess.getDefault().findTypes(controller,
                 MatchRule.EXACT, 0, 0,
                 SearchEngine.createSearchScope(module.getScriptProject()), null);
 

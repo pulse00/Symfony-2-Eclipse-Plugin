@@ -21,7 +21,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 
 import com.dubture.symfony.core.model.Bundle;
 import com.dubture.symfony.core.model.Controller;
@@ -84,7 +84,7 @@ public class CodeassistUtils {
 
 			for (Bundle b : bundles) {
 
-				IType[] bundleTypes = PhpModelAccess.getDefault().findTypes(b.getElementName(), MatchRule.EXACT, 0, 0,
+				IType[] bundleTypes = PHPModelAccess.getDefault().findTypes(b.getElementName(), MatchRule.EXACT, 0, 0,
 						projectScope, null);
 
 				if (bundleTypes.length == 1) {

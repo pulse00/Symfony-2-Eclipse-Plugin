@@ -20,7 +20,7 @@ import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.index.IPHPDocAwareElement;
-import org.eclipse.php.internal.core.index.PhpElementResolver;
+import org.eclipse.php.internal.core.index.PHPElementResolver;
 import org.json.simple.JSONObject;
 
 import com.dubture.symfony.core.log.Logger;
@@ -38,7 +38,7 @@ import com.dubture.symfony.core.util.JsonUtils;
  *
  */
 @SuppressWarnings("restriction")
-public class SymfonyElementResolver extends PhpElementResolver {
+public class SymfonyElementResolver extends PHPElementResolver {
 
 
 	@Override

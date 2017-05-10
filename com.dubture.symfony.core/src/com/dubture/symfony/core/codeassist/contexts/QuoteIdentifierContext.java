@@ -21,11 +21,11 @@ abstract public class QuoteIdentifierContext extends QuotesContext {
 		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(
 				statementText, statementLength); // read whitespace
 		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-				getPhpVersion(), statementText, prefixEnd, true);
+				getPHPVersion(), statementText, prefixEnd, true);
 		
 		while (prefixStart > 0 && statementText.charAt(prefixStart - 1) == '.') {
 			prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-					getPhpVersion(), statementText, prefixStart - 1, true);
+					getPHPVersion(), statementText, prefixStart - 1, true);
 		}
 		
 		return statementText.subSequence(prefixStart, prefixEnd).toString();

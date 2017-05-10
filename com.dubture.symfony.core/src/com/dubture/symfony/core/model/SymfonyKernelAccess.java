@@ -20,13 +20,13 @@ import org.eclipse.dltk.core.index2.search.ISearchRequestor;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 
 import com.dubture.symfony.core.SymfonyLanguageToolkit;
 import com.dubture.symfony.core.log.Logger;
 
 @SuppressWarnings("restriction")
-public class SymfonyKernelAccess extends PhpModelAccess {
+public class SymfonyKernelAccess extends PHPModelAccess {
 	
 	
 	private static SymfonyKernelAccess instance = null;

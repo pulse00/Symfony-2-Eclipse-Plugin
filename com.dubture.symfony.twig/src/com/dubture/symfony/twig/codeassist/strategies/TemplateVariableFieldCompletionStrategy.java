@@ -56,7 +56,7 @@ public class TemplateVariableFieldCompletionStrategy extends AbstractTwigComplet
 //
 //		if (className != null) {
 //
-//			IType[] types = PhpModelAccess.getDefault().findTypes(var.getQualifier(), var.getClassName(),
+//			IType[] types = PHPModelAccess.getDefault().findTypes(var.getQualifier(), var.getClassName(),
 //					MatchRule.EXACT, 0, 0, scope, null);
 //
 //			if (types.length == 1) {
@@ -64,7 +64,7 @@ public class TemplateVariableFieldCompletionStrategy extends AbstractTwigComplet
 //
 //				IDLTKSearchScope methodScope = SearchEngine.createSuperHierarchyScope(type);
 //
-//				IMethod[] methods = PhpModelAccess.getDefault().findMethods(prefix, MatchRule.PREFIX, 0, 0, methodScope,
+//				IMethod[] methods = PHPModelAccess.getDefault().findMethods(prefix, MatchRule.PREFIX, 0, 0, methodScope,
 //						null);
 //
 //				List<String> reported = new ArrayList<String>();
@@ -78,7 +78,7 @@ public class TemplateVariableFieldCompletionStrategy extends AbstractTwigComplet
 //				}
 //
 //				IDLTKSearchScope fieldScope = SearchEngine.createSuperHierarchyScope(type);
-//				IField[] fields = PhpModelAccess.getDefault().findFields(prefix, MatchRule.PREFIX, 0, 0, fieldScope,
+//				IField[] fields = PHPModelAccess.getDefault().findFields(prefix, MatchRule.PREFIX, 0, 0, fieldScope,
 //						null);
 //
 //				for (IField field : fields) {

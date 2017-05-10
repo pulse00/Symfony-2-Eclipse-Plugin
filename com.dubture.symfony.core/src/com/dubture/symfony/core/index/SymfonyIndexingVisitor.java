@@ -10,10 +10,10 @@ package com.dubture.symfony.core.index;
 
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.IIndexingRequestor;
-import org.eclipse.php.internal.core.index.PhpIndexingVisitor;
+import org.eclipse.php.internal.core.index.PHPIndexingVisitor;
 
 @SuppressWarnings("restriction")
-public class SymfonyIndexingVisitor extends PhpIndexingVisitor {
+public class SymfonyIndexingVisitor extends PHPIndexingVisitor {
 
 	public SymfonyIndexingVisitor(IIndexingRequestor requestor, ISourceModule sourceModule) {
 		super(requestor, sourceModule);

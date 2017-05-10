@@ -29,7 +29,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -120,9 +120,9 @@ public class SymfonySelectionEngine extends ScriptSelectionEngine {
 			tRegion = container.getRegionAtCharacterOffset(offset);
 		}
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
+			IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) tRegion;
 			try {
-				tRegion = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+				tRegion = phpScriptRegion.getPHPToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 			} catch (BadLocationException e) {
 			}
 			

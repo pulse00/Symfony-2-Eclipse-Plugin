@@ -10,19 +10,19 @@ package com.dubture.symfony.core.index;
 
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.core.index2.IIndexingParser;
-import org.eclipse.php.internal.core.index.PhpIndexerParticipant;
+import org.eclipse.php.internal.core.index.PHPIndexerParticipant;
 
 /**
  * 
  * Provides additional indexing capabilities to the 
- * PDT {@link PhpIndexerParticipant}
+ * PDT {@link PHPIndexerParticipant}
  * 
  * 
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
 @SuppressWarnings("restriction")
-public class SymfonyIndexerParticipant extends PhpIndexerParticipant  {
+public class SymfonyIndexerParticipant extends PHPIndexerParticipant  {
 
 	public SymfonyIndexerParticipant() {
 		

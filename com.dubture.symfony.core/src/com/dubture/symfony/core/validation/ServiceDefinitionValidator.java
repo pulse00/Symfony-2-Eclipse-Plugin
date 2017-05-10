@@ -13,7 +13,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.wst.validation.AbstractValidator;
 import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.validation.ValidationState;
@@ -52,7 +52,7 @@ public class ServiceDefinitionValidator extends AbstractValidator {
 			HashMap<String,Service> services = parser.getServices();
 			
 			Iterator<String> it = services.keySet().iterator();
-			PhpModelAccess model = PhpModelAccess.getDefault();
+			PHPModelAccess model = PHPModelAccess.getDefault();
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 			
 			while(it.hasNext()) {

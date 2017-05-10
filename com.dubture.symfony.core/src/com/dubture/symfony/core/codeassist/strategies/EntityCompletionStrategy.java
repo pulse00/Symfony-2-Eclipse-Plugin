@@ -23,7 +23,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.strategies.MethodParameterKeywordStrategy;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 
@@ -83,7 +83,7 @@ public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
                 		bundleTypes = types.toArray(new IType[types.size()]);
                 	}
                 } else {
-                	bundleTypes = PhpModelAccess.getDefault().findTypes(b.getElementName(), MatchRule.EXACT, 0, 0, projectScope, null);
+                	bundleTypes = PHPModelAccess.getDefault().findTypes(b.getElementName(), MatchRule.EXACT, 0, 0, projectScope, null);
                 }
                 if (bundleTypes.length == 1) {
                     ModelElement bType = (ModelElement) bundleTypes[0];

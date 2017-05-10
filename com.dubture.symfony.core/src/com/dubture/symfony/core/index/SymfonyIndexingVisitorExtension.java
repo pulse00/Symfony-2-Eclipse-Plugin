@@ -29,7 +29,7 @@ import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
-import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
+import org.eclipse.php.core.index.PHPIndexingVisitorExtension;
 import org.eclipse.php.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.core.compiler.ast.nodes.ClassInstanceCreation;
 import org.eclipse.php.core.compiler.ast.nodes.ExpressionStatement;
@@ -75,7 +75,7 @@ import com.dubture.symfony.index.model.Route;
  */
 @SuppressWarnings("restriction")
 public class SymfonyIndexingVisitorExtension extends
-PhpIndexingVisitorExtension {
+PHPIndexingVisitorExtension {
 
     private boolean inController = false;
     private ClassDeclaration currentClass;

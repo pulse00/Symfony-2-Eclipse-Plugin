@@ -27,7 +27,7 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.core.compiler.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 
@@ -219,7 +219,7 @@ public class Service extends SourceType {
         if (className != null && namespace != null) {
             IScriptProject project = getScriptProject();
             IDLTKSearchScope scope = project != null ? SearchEngine.createSearchScope(project) : SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
-            IType[] types = PhpModelAccess.getDefault().findTypes(namespace, className, MatchRule.EXACT, 0, 0, scope, null);
+            IType[] types = PHPModelAccess.getDefault().findTypes(namespace, className, MatchRule.EXACT, 0, 0, scope, null);
             if (types.length >= 1) {
                 return types[0].getSourceModule();
             }

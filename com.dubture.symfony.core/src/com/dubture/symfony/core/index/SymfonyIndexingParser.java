@@ -10,7 +10,7 @@ package com.dubture.symfony.core.index;
 
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.IIndexingRequestor;
-import org.eclipse.php.internal.core.index.PhpIndexingParser;
+import org.eclipse.php.internal.core.index.PHPIndexingParser;
 
 import com.dubture.symfony.core.builder.SymfonyBuildParticipant;
 
@@ -28,7 +28,7 @@ import com.dubture.symfony.core.builder.SymfonyBuildParticipant;
  *
  */
 @SuppressWarnings("restriction")
-public class SymfonyIndexingParser extends PhpIndexingParser {
+public class SymfonyIndexingParser extends PHPIndexingParser {
 	
 	@Override
 	public void parseSourceModule(ISourceModule module,

@@ -17,7 +17,7 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.core.compiler.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
 import com.dubture.symfony.core.model.SymfonyModelAccess;
@@ -100,7 +100,7 @@ public class PathUtils {
             return false;
 
         IDLTKSearchScope scope = SearchEngine.createSearchScope(field.getSourceModule());
-        IMethod[] methods = PhpModelAccess.getDefault().findMethods(null, MatchRule.PREFIX, 0, 0, scope, null);
+        IMethod[] methods = PHPModelAccess.getDefault().findMethods(null, MatchRule.PREFIX, 0, 0, scope, null);
 
         for (IMethod method : methods) {
             if (method.getElementName().startsWith(viewName))

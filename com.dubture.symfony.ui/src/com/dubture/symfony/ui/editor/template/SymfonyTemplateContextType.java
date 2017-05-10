@@ -11,7 +11,7 @@ package com.dubture.symfony.ui.editor.template;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContext;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType;
+import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextType;
 
 /**
  * 
@@ -21,7 +21,7 @@ import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType;
  *
  */
 @SuppressWarnings("restriction")
-public class SymfonyTemplateContextType extends PhpTemplateContextType {
+public class SymfonyTemplateContextType extends PHPTemplateContextType {
 
 	public static final String SYMFONY_CONTEXT_TYPE_ID = "symfony"; //$NON-NLS-1$	
 	

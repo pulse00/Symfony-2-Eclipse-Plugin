@@ -16,7 +16,7 @@ import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateBuffer;
 import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.TemplateException;
-import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
+import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContext;
 
 
 /**
@@ -26,7 +26,7 @@ import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
  *
  */
 @SuppressWarnings("restriction")
-public class SymfonyTemplateContext extends PhpTemplateContext {
+public class SymfonyTemplateContext extends PHPTemplateContext {
 
 	
 	private CodeTemplateVariableHolder varHolder;
