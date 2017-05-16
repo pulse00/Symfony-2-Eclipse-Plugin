@@ -64,7 +64,7 @@ public class InterfaceMethodsVariableResolver extends TemplateVariableResolver {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);		
 
 		indentChar = FormatterUtils
-				.getFormatterCommonPrferences().getIndentationChar(symfonyContext.getDocument());
+				.getFormatterCommonPreferences().getIndentationChar(symfonyContext.getDocument());
 		indendation = String.valueOf(indentChar);
 		
 		try {
