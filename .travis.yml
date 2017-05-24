@@ -1,4 +1,16 @@
-language: java
-sudo: false
-jdk:
-  - oraclejdk8
+{
+	"Statement": [
+		{
+			"Effect": "Allow",
+			"Principal": {"AWS":"arn:aws:iam::<user1's ARN here>:user/user1"},
+			"Action": "s3:PutObject",
+			"Resource": "arn:aws:s3:::jlibtorrent95/*"
+		},
+		{
+			"Effect": "Allow",
+			"Principal": "*",
+			"Action": "s3:GetObject",
+			"Resource": "arn:aws:s3:::jlibtorrent95/*"
+		}
+	]
+}
