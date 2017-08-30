@@ -83,7 +83,7 @@ public class ServiceReturnTypeContext extends ClassMemberContext {
 				// find get()
 				PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(getDocument(), offset - statementText.length() + elementStart-1, true);
 				int open = scanner.findOpeningPeer(offset - statementText.length() + elementStart-1, PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
-				statementText = getStatementText(open);
+				statementText = PHPTextSequenceUtilities.getStatement(open, getStructuredDocumentRegion(), true);;
 				totalLength = statementText.length();
 				elementStart = PHPTextSequenceUtilities.readBackwardSpaces(
 						statementText, totalLength);
