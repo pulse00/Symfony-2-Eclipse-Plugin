@@ -13,7 +13,7 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
-import org.eclipse.php.internal.core.codeassist.strategies.GlobalElementStrategy;
+import org.eclipse.php.internal.core.codeassist.strategies.ElementsStrategy;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 
 import com.dubture.symfony.core.codeassist.contexts.TemplateVariableContext;
@@ -29,7 +29,7 @@ import com.dubture.symfony.core.index.SymfonyElementResolver.TemplateField;
  *
  */
 @SuppressWarnings({ "restriction" })
-public class TemplateVariableStrategy extends GlobalElementStrategy {
+public class TemplateVariableStrategy extends ElementsStrategy {
 
 	public TemplateVariableStrategy(ICompletionContext context) {
 		super(context);
