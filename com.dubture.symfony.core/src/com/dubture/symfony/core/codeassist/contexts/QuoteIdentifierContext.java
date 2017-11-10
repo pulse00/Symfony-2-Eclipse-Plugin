@@ -12,7 +12,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 @SuppressWarnings("restriction")
 abstract public class QuoteIdentifierContext extends QuotesContext {
 	@Override
-	public String getPrefixWithoutProcessing() {
+	public String getPrefix() {
 		if (hasWhitespaceBeforeCursor()) {
 			return ""; //$NON-NLS-1$
 		}
