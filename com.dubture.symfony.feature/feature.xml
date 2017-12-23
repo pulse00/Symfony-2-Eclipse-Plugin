@@ -2,7 +2,7 @@
 <feature
       id="com.dubture.symfony.feature"
       label="Symfony Feature"
-      version="1.4.1.qualifier"
+      version="1.4.2.qualifier"
       provider-name="https://github.com/pulse00">
 
    <description url="https://github.com/pulse00/Symfony-2-Eclipse-Plugin">
@@ -40,35 +40,35 @@ THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRES
          id="com.dubture.symfony.core"
          download-size="0"
          install-size="0"
-         version="1.4.1.qualifier"
+         version="1.4.2.qualifier"
          unpack="false"/>
 
    <plugin
          id="com.dubture.symfony.debug"
          download-size="0"
          install-size="0"
-         version="1.4.1.qualifier"
+         version="1.4.2.qualifier"
          unpack="false"/>
 
    <plugin
          id="com.dubture.symfony.index"
          download-size="0"
          install-size="0"
-         version="1.4.1.qualifier"
+         version="1.4.2.qualifier"
          unpack="false"/>
 
    <plugin
          id="com.dubture.symfony.twig"
          download-size="0"
          install-size="0"
-         version="1.4.1.qualifier"
+         version="1.4.2.qualifier"
          unpack="false"/>
 
    <plugin
          id="com.dubture.symfony.ui"
          download-size="0"
          install-size="0"
-         version="1.4.1.qualifier"
+         version="1.4.2.qualifier"
          unpack="false"/>
 
    <plugin
