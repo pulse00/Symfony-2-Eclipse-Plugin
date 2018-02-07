@@ -181,7 +181,7 @@ public class XMLConfigParser implements IConfigParser {
             if (namedItem != null) {
             	phpClass =  namedItem.getNodeValue();
             } else {
-            	Logger.log(Logger.INFO, "Unable to parse class attribute from service " + childNode);
+            	Logger.log(Logger.INFO_DEBUG, "Unable to parse class attribute from service " + childNode);
             }
             
             Node publicItem = attributes.getNamedItem("public");
