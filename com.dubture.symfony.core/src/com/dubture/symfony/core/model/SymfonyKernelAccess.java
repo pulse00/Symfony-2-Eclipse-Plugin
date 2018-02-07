@@ -20,9 +20,9 @@ import org.eclipse.dltk.core.index2.search.ISearchRequestor;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 
-import com.dubture.symfony.core.SymfonyLanguageToolkit;
 import com.dubture.symfony.core.log.Logger;
 
 @SuppressWarnings("restriction")
@@ -56,7 +56,7 @@ public class SymfonyKernelAccess extends PHPModelAccess {
 		final List<AppKernel> kernels = new ArrayList<AppKernel>();
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
-		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());		
+		ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());		
 
 		engine.search(ISymfonyModelElement.ENVIRONMENT, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
 
@@ -90,7 +90,7 @@ public class SymfonyKernelAccess extends PHPModelAccess {
 		final List<AppKernel> kernels = new ArrayList<AppKernel>();
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(project);
-		ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());
+		ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
 		
 		if (project == null || name == null || scope == null) {
 		    Logger.log(Logger.WARNING, "unable to retrieve kernel");

@@ -52,7 +52,6 @@ import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 
-import com.dubture.symfony.core.SymfonyLanguageToolkit;
 import com.dubture.symfony.core.index.SymfonyElementResolver.TemplateField;
 import com.dubture.symfony.core.log.Logger;
 import com.dubture.symfony.core.preferences.SymfonyCoreConstants;
@@ -219,13 +218,13 @@ public class SymfonyModelAccess extends PHPModelAccess {
         // create a searchscope for the whole ScriptProject,
         // as view variables can be declared across controllers
         IDLTKSearchScope scope = SearchEngine.createSearchScope(controller.getScriptProject());
-        ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());
+        ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
         final List<TemplateField> variables = new ArrayList<TemplateField>();
         if (scope == null || engine == null) {
             return variables;
         }
 
-        final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
+        final IElementResolver resolver = ModelAccess.getElementResolver(PHPLanguageToolkit.getDefault());
         engine.search(ISymfonyModelElement.TEMPLATE_VARIABLE, null, null, 0, 0, 100, SearchFor.REFERENCES, MatchRule.PREFIX, scope, new ISearchRequestor() {
             @Override
             public void match(int elementType, int flags, int offset, int length,
@@ -294,13 +293,13 @@ public class SymfonyModelAccess extends PHPModelAccess {
 
         // create a searchscope for the Controller class only
         IDLTKSearchScope scope = SearchEngine.createSearchScope(controller);
-        ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());
+        ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
         if (scope == null || engine == null) {
             return null;
         }
 
         final List<TemplateField> variables = new ArrayList<TemplateField>();
-        final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
+        final IElementResolver resolver = ModelAccess.getElementResolver(PHPLanguageToolkit.getDefault());
 
         engine.search(ISymfonyModelElement.TEMPLATE_VARIABLE, null, variableName, 0, 0, 100, SearchFor.REFERENCES, MatchRule.EXACT, scope, new ISearchRequestor() {
             @Override
@@ -1237,13 +1236,13 @@ public class SymfonyModelAccess extends PHPModelAccess {
     public List<TemplateField> findTemplateVariables(ISourceModule sourceModule, String varName) {
         String viewPath = PathUtils.createViewPathFromTemplate(sourceModule, false);
         IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
-        ISearchEngine engine = ModelAccess.getSearchEngine(SymfonyLanguageToolkit.getDefault());
+        ISearchEngine engine = ModelAccess.getSearchEngine(PHPLanguageToolkit.getDefault());
         if (scope == null || engine == null) {
             return null;
         }
 
         final List<TemplateField> variables = new ArrayList<TemplateField>();
-        final IElementResolver resolver = ModelAccess.getElementResolver(SymfonyLanguageToolkit.getDefault());
+        final IElementResolver resolver = ModelAccess.getElementResolver(PHPLanguageToolkit.getDefault());
 
         // handle twig variables
         if (!varName.startsWith("$")) {
