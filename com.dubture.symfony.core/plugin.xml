@@ -40,7 +40,7 @@
 	<!-- The Symfony2 dltk builder - traverses AST nodes during building to parse model elements like Bundles/AppKernel etc. -->
 
 	<!-- org.eclipse.php.core.PHPNature -->
-   <extension
+   <!--extension
          point="org.eclipse.dltk.core.buildParticipant">
       <buildParticipant
             class="com.dubture.symfony.core.builder.SymfonyBuildParticipantFactory"
@@ -51,7 +51,7 @@
                id="org.eclipse.php.core.buildParticipant.parser">
          </requires>
       </buildParticipant>
-   </extension>
+   </extension-->
    <extension
          point="org.eclipse.dltk.core.indexerParticipant">
       <indexerParticipant
