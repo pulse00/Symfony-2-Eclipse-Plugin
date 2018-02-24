@@ -53,7 +53,7 @@ public class ViewPathArgumentContext extends QuoteIdentifierContext {
 				    return false;
 				
 				TextSequence statement = getStatementText();
-				IScriptProject project = getSourceModule().getScriptProject();
+				IScriptProject project = getCompanion().getSourceModule().getScriptProject();
 
 				if (SymfonyTextSequenceUtilities.isInViewPathFunctionParameter(statement, project) == false)
 					return false;

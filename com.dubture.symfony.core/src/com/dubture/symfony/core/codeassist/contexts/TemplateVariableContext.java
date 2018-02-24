@@ -67,10 +67,10 @@ public class TemplateVariableContext extends GlobalStatementContext {
                 }
 
                 SymfonyModelAccess model = SymfonyModelAccess.getDefault();
-                ISourceModule module = getSourceModule();
+                ISourceModule module = getCompanion().getSourceModule();
                 IType controller = model.findControllerByTemplate(module);
                 variables = model.findTemplateVariables(controller);
-                viewPath = PathUtils.createViewPathFromTemplate(getSourceModule(), false);
+                viewPath = PathUtils.createViewPathFromTemplate(getCompanion().getSourceModule(), false);
 
                 return true;
 

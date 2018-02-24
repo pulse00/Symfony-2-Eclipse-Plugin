@@ -54,7 +54,7 @@ public class ServiceContainerCompletionStrategy extends
     public void apply(ICompletionReporter reporter) throws BadLocationException {
 
         ServiceContainerContext context = (ServiceContainerContext) getContext();
-        IScriptProject project = context.getSourceModule().getScriptProject();
+        IScriptProject project = getCompanion().getSourceModule().getScriptProject();
 
         SymfonyModelAccess model= SymfonyModelAccess.getDefault();
         List<Service> services = model.findServices(project.getPath());
@@ -67,7 +67,7 @@ public class ServiceContainerCompletionStrategy extends
 
         for(Service service : services) {
             if (StringUtils.startsWithIgnoreCase(service.getId(), prefix)) {
-                ModelElement parent = (ModelElement) context.getSourceModule();
+                ModelElement parent = (ModelElement) getCompanion().getSourceModule();
                 Service s = new Service(parent, service.getElementName());
                 s.setId(service.getId());
                 reporter.reportType(s, "", range);

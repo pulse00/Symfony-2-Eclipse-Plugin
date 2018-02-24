@@ -49,7 +49,7 @@ public class ViewPathCompletionStrategy extends MethodParameterKeywordStrategy {
 		ViewPathArgumentContext context = (ViewPathArgumentContext) getContext();		
 		ISourceRange range = getReplacementRange(context);
 		CodeassistUtils.reportViewpath(reporter, context.getViewPath(), 
-		        context.getPrefix(), range, context.getSourceModule().getScriptProject());
+		        context.getPrefix(), range, getCompanion().getSourceModule().getScriptProject());
 
 	}
 }

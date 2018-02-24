@@ -56,8 +56,7 @@
          point="org.eclipse.dltk.core.indexerParticipant">
       <indexerParticipant
             class="com.dubture.symfony.core.index.SymfonyIndexerParticipant"
-            nature="org.eclipse.php.core.PHPNature"
-            targetId="org.eclipse.dltk.core.index.sql.indexer">
+            nature="org.eclipse.php.core.PHPNature">
       </indexerParticipant>
    </extension>
 

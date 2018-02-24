@@ -49,7 +49,7 @@ public class RouteCompletionContext extends QuoteIdentifierContext{
 					return false;
 				}
 				TextSequence statement = getStatementText();
-				IScriptProject project = getSourceModule().getScriptProject();
+				IScriptProject project = getCompanion().getSourceModule().getScriptProject();
 
 				if (SymfonyTextSequenceUtilities.isInRouteFunctionParameter(statement, project) == false) {
 					return false;

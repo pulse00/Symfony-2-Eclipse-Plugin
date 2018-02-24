@@ -47,7 +47,7 @@ public class TransUnitCompletionStrategy extends MethodParameterKeywordStrategy 
 			return;			
 		}
 		
-		IScriptProject project = context.getSourceModule().getScriptProject();
+		IScriptProject project = getCompanion().getSourceModule().getScriptProject();
 		ISourceRange range = getReplacementRange(context);		
 		String prefix = context.getPrefix();
 		

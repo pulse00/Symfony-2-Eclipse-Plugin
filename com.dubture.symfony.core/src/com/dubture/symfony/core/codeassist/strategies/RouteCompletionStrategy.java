@@ -47,7 +47,7 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 
 		AbstractCompletionContext context = (AbstractCompletionContext) getContext();
 
-		ISourceModule module = context.getSourceModule();
+		ISourceModule module = getCompanion().getSourceModule();
 		List<Route> routes = SymfonyModelAccess.getDefault().findRoutes(module.getScriptProject());
 		ISourceRange range = getReplacementRange(context);
 
@@ -58,7 +58,7 @@ public class RouteCompletionStrategy extends MethodParameterKeywordStrategy {
 		for (Route route : routes) {
 			if (StringUtils.startsWithIgnoreCase(route.name, prefix)) {
 				IType controller = model.findController(route.bundle, route.controller,
-						context.getSourceModule().getScriptProject());
+						getCompanion().getSourceModule().getScriptProject());
 
 				if (controller == null)
 					continue;

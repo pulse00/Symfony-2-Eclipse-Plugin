@@ -62,9 +62,9 @@ public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
 
         EntityCompletionContext context = (EntityCompletionContext) getContext();
         SymfonyModelAccess model = SymfonyModelAccess.getDefault();
-        IScriptProject project = context.getSourceModule().getScriptProject();
+        IScriptProject project = getCompanion().getSourceModule().getScriptProject();
         ISourceRange range = getReplacementRange(context);
-        IDLTKSearchScope projectScope = SearchEngine.createSearchScope(context.getSourceModule().getScriptProject());
+        IDLTKSearchScope projectScope = SearchEngine.createSearchScope(getCompanion().getSourceModule().getScriptProject());
         DoctrineModelAccess doctrineModel =  DoctrineModelAccess.getDefault();
         IModelAccessCache cache = null;
         if (context instanceof IModelCacheContext) {
@@ -78,7 +78,7 @@ public class EntityCompletionStrategy extends MethodParameterKeywordStrategy {
             for (Bundle b : bundles) {
                 IType[] bundleTypes = EMPTY_TYPES;
                 if (cache != null) {
-                	Collection<IType> types = cache.getTypes(context.getSourceModule(), b.getElementName(), null, null);
+                	Collection<IType> types = cache.getTypes(getCompanion().getSourceModule(), b.getElementName(), null, null);
                 	if (types != null) {
                 		bundleTypes = types.toArray(new IType[types.size()]);
                 	}

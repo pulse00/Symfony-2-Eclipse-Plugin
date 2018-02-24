@@ -81,9 +81,9 @@ public class ServiceReturnTypeContext extends ClassMemberContext {
 				}
 
 				// find get()
-				PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(getDocument(), offset - statementText.length() + elementStart-1, true);
+				PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(getCompanion().getDocument(), offset - statementText.length() + elementStart-1, true);
 				int open = scanner.findOpeningPeer(offset - statementText.length() + elementStart-1, PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
-				statementText = PHPTextSequenceUtilities.getStatement(open, getStructuredDocumentRegion(), true);;
+				statementText = PHPTextSequenceUtilities.getStatement(open, getCompanion().getStructuredDocumentRegion(), true);;
 				totalLength = statementText.length();
 				elementStart = PHPTextSequenceUtilities.readBackwardSpaces(
 						statementText, totalLength);
@@ -92,7 +92,7 @@ public class ServiceReturnTypeContext extends ClassMemberContext {
 
 
 				// read lhs types
-				IType[] lhsTypes = CodeAssistUtils.getTypesFor(getSourceModule(), statementText, elementStart, open);
+				IType[] lhsTypes = CodeAssistUtils.getTypesFor(getCompanion().getSourceModule(), statementText, elementStart, open);
 
 				for (IType type : lhsTypes) {
 					if (type.getFullyQualifiedName("\\").equals(SymfonyCoreConstants.CONTAINER_INTERFACE) || type.getFullyQualifiedName("\\").equals(SymfonyCoreConstants.CONTROLLER_PARENT)) {
