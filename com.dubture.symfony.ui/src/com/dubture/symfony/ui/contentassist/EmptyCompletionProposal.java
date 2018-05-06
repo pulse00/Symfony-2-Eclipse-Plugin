@@ -8,7 +8,10 @@
  ******************************************************************************/
 package com.dubture.symfony.ui.contentassist;
 
+import java.util.function.Supplier;
+
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposal;
 import org.eclipse.swt.graphics.Image;
 
@@ -27,10 +30,14 @@ import com.dubture.symfony.core.model.Service;
 public class EmptyCompletionProposal extends PHPCompletionProposal {
 
 	public EmptyCompletionProposal(String replacementString,
-			int replacementOffset, int replacementLength, Image image,
+			int replacementOffset, int replacementLength, final Image image,
 			String displayString, int relevance) {
-		super(replacementString, replacementOffset, replacementLength, image,
-				displayString, relevance);
+		super(replacementString, replacementOffset, replacementLength, new Supplier<Image>() {
+			public Image get() {
+				return image;
+			}
+		},
+				new StyledString(displayString), relevance);
 
 	}
 		

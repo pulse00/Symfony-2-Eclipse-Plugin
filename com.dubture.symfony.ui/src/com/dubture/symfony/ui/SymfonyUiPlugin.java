@@ -10,6 +10,9 @@ package com.dubture.symfony.ui;
 
 import java.io.IOException;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -43,6 +46,7 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 	private SymfonyTemplateStore fCodeTemplateStore;
 
 	protected ContextTypeRegistry codeTypeRegistry = null;
+	private IEclipseContext eclipseContext;
 
 	/**
 	 * The constructor
@@ -61,14 +65,8 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		eclipseContext = EclipseContextFactory.getServiceContext(context);
 
-		// TODO: implement OpenDocumentListener for file links in
-		// symfony exception pages
-		// currently this is not used, as eclipse itself handles this
-		// event and opens the file
-		// Display.getDefault().addListener(SWT.OpenDocument, new
-		// OpenDocumentListener());
-		
 		try {
 			PHPDebugPlugin
 					.getDefault()
@@ -128,5 +126,9 @@ public class SymfonyUiPlugin extends AbstractUIPlugin {
 		}
 
 		return codeTypeRegistry;
+	}
+
+	public IEclipseContext getEclipseContext() {
+		return eclipseContext;
 	}
 }

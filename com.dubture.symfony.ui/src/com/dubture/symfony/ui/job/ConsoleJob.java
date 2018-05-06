@@ -16,7 +16,6 @@ import org.eclipse.php.composer.core.launch.ScriptLauncher;
 import org.eclipse.php.composer.core.launch.ScriptLauncherManager;
 import org.eclipse.php.composer.core.launch.ScriptNotFoundException;
 import org.eclipse.php.composer.core.launch.execution.ExecutionResponseAdapter;
-import org.pdtextensions.core.ui.PEXUIPlugin;
 
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.ui.handler.ConsoleResponseHandler;
@@ -24,6 +23,7 @@ import org.eclipse.php.composer.ui.job.runner.ComposerFailureMessageRunner;
 import org.eclipse.php.composer.ui.job.runner.MissingExecutableRunner;
 import com.dubture.symfony.core.launch.SymfonyEnvironmentFactory;
 import com.dubture.symfony.core.log.Logger;
+import com.dubture.symfony.ui.SymfonyUiPlugin;
 
 abstract public class ConsoleJob extends Job {
 
@@ -39,7 +39,7 @@ abstract public class ConsoleJob extends Job {
 
 	public ConsoleJob(String name) {
 		super(name);
-		ContextInjectionFactory.inject(this, PEXUIPlugin.getDefault().getEclipseContext());
+		ContextInjectionFactory.inject(this, SymfonyUiPlugin.getDefault().getEclipseContext());
 	}
 
 	@Override
