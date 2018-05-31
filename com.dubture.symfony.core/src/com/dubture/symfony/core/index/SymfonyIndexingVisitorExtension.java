@@ -101,16 +101,29 @@ public class SymfonyIndexingVisitorExtension extends PHPIndexingVisitorExtension
 
 	@Override
 	public boolean visit(ASTNode s) throws Exception {
+		if (!isSymfonyResource) {
+			return false;
+		}
 		return true;
 	}
 
 	@Override
 	public boolean visit(ModuleDeclaration s) throws Exception {
+		if (!isSymfonyResource) {
+			return false;
+		}
+
+		if (indexer == null) {
+			indexer = SymfonyIndexer.getInstance();
+		}
 		return true;
 	}
 
 	@Override
 	public boolean visit(Statement s) throws Exception {
+		if (!isSymfonyResource) {
+			return false;
+		}
 
 		if (s instanceof ExpressionStatement) {
 			ExpressionStatement stmt = (ExpressionStatement) s;
