@@ -6,7 +6,7 @@
     <property name="p2.timestamp" value="1243822502445"/>
   </properties>
   <children size="1">
-    <child location="http://dl.bintray.com/zulus/symfony-plugin/nightly/1.5.0/"/>
+    <child location="http://dl.bintray.com/zulus/symfony-plugin/nightly/1.6.0/"/>
   </children>
 </repository>
 
