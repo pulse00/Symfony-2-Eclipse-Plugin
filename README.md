@@ -8,8 +8,8 @@ Symfony Eclipse Plugin
 ### Requirements
 
 - Java 8
-- Eclipse 4.8 (Photon)
-- PDT 6.0
+- Eclipse 2019-09
+- PDT 7.0
 
 For a full list of features and the Updatesite link see http://symfony.dubture.com.
 
