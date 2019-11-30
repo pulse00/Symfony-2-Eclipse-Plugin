@@ -29,7 +29,6 @@ import com.dubture.symfony.index.model.TransUnit;
 
 
 /**
- * 
  * {@link SymfonyIndexer} is the main class to index
  * Symfony2 services and routes in a local H2 SQL 
  * database.
