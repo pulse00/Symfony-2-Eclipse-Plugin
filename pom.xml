@@ -36,8 +36,8 @@
 		<dltk.version>latest-nightly</dltk.version>
 		<core-plugin.url>http://pdt-eg.github.io/Core-Plugin/nightly</core-plugin.url>
 		<external-mirror.url>http://pdt-eg.github.io/external-mirror/nightly</external-mirror.url>
-		<doctrine.url>http://doctrine.dubture.com/nightly</doctrine.url>
-		<twig.url>http://twig.dubture.com/nightly</twig.url>
+		<doctrine.url>http://pulse00.github.io/Symfony-2-Eclipse-Plugin/nightly</doctrine.url>
+		<twig.url>http://pulse00.github.io/Twig-Eclipse-Plugin/nightly</twig.url>
 		<indexing.url>http://pulse00.github.io/eclipse-indexing-framework/nightly</indexing.url>
 	</properties>
 
