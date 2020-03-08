@@ -40,8 +40,7 @@
 <project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk.core"/>
 <project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk.core.doc.isv"/>
 <project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk.core.index"/>
-<project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk.core.index.sql"/>
-<project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk.core.index.sql.h2"/>
+<project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk.core.index.lucene"/>
 <project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk.core.manipulation"/>
 <project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk.core.tools.ui"/>
 <project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk.debug"/>
