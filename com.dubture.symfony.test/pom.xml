@@ -26,7 +26,7 @@
 					<dependencies>
 						<dependency>
 							<type>p2-installable-unit</type>
-							<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
+							<artifactId>org.eclipse.dltk.core.index.lucene</artifactId>
 						</dependency>
 					</dependencies>
 				</configuration>
