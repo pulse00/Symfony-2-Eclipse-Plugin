@@ -23,9 +23,9 @@
 	</modules>
 
 	<properties>
-		<tycho-version>1.4.0</tycho-version>
+		<tycho-version>1.6.0</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<eclipse.name>2019-09</eclipse.name>
+		<eclipse.name>2020-03</eclipse.name>
 		<release>false</release>
 		<bintray.user></bintray.user>
 		<bintray.apikey></bintray.apikey>
