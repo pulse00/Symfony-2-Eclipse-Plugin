@@ -214,8 +214,12 @@
     <extension
           point="org.eclipse.core.contenttype.contentTypes">
        <file-association
-             content-type="org.eclipse.core.runtime.xml"
+             content-type="org.eclipse.wildwebdeveloper.xml"
              file-extensions="xliff">
+       </file-association>
+       <file-association
+             content-type="org.eclipse.wildwebdeveloper.xml"
+             file-extensions="xlf">
        </file-association>
        <file-association
              content-type="org.dadacoalition.yedit.yamlsource"
