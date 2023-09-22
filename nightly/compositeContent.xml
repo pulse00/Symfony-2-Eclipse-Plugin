@@ -3,9 +3,9 @@
 <repository name="Symfony Plugin - nightly"
     type="org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository" version="1.0.0">
   <properties size="1">
-    <property name="p2.timestamp" value="16397595170000"/>
+    <property name="p2.timestamp" value="1695410043000"/>
   </properties>
  <children size="1">
-   <child location="https://pdt.w3des.net/symfony/nightly/1.7.0/"/>
+   <child location="https://pdt.w3des.net/symfony/nightly/1.8.0/"/>
   </children>
 </repository>
