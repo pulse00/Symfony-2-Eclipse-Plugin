@@ -45,7 +45,7 @@ public class XmlHyperlinkDetector extends AbstractHyperlinkDetector {
 
 		IDocument document = textViewer.getDocument();
 		int offset = region.getOffset();
-		ITextFileBuffer textFileBuffer = FileBuffersPlugin.getDefault().getFileBufferManager().getTextFileBuffer(document);
+		ITextFileBuffer textFileBuffer = FileBuffersPlugin.getFileBufferManager().getTextFileBuffer(document);
 		if (textFileBuffer == null || textFileBuffer.getFileStore() == null) {
 			return null;
 		}

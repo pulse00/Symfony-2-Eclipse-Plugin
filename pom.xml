@@ -23,9 +23,9 @@
 	</modules>
 
 	<properties>
-		<tycho-version>1.6.0</tycho-version>
+		<tycho-version>4.0.2</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<eclipse.name>2020-03</eclipse.name>
+		<eclipse.name>2023-09</eclipse.name>
 		<release>false</release>
 		<bintray.user></bintray.user>
 		<bintray.apikey></bintray.apikey>
@@ -143,12 +143,17 @@
 						<environment>
 							<os>linux</os>
 							<ws>gtk</ws>
-							<arch>x86</arch>
+							<arch>aarch64</arch>
 						</environment>
 						<environment>
 							<os>macosx</os>
 							<ws>cocoa</ws>
 							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>aarch64</arch>
 						</environment>
 						<environment>
 							<os>win32</os>

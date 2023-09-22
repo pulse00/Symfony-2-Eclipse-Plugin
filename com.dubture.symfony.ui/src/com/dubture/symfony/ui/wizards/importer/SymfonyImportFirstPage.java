@@ -304,7 +304,7 @@ public class SymfonyImportFirstPage extends WizardPage {
 			IPath projectPath = sourcePath.append(".project");
 
 			if (projectPath.toFile().exists()) {
-				ProjectDescriptionReader reader = new ProjectDescriptionReader();
+				ProjectDescriptionReader reader = new ProjectDescriptionReader(workspace);
 				final ProjectDescription projectDescription = reader.read(projectPath);
 
 				if (projectDescription != null && projectDescription.getName() != null) {
