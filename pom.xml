@@ -101,11 +101,6 @@
 	</repositories>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.yaml</groupId>
-			<artifactId>snakeyaml</artifactId>
-			<version>1.13</version>
-		</dependency>
 		<!-- dependency> <groupId>com.dubture.osgi</groupId> <artifactId>org.yaml.snakeyaml</artifactId> 
 			<version>0.0.1-SNAPSHOT</version> </dependency -->
 		<dependency>
