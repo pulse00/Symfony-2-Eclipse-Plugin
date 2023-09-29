@@ -30,10 +30,6 @@
 <project reference="1.0,git@github.com:pulse00/Twig-Eclipse-Plugin.git,master,com.dubture.twig.feature"/>
 <project reference="1.0,git@github.com:pulse00/Twig-Eclipse-Plugin.git,master,com.dubture.twig.test"/>
 <project reference="1.0,git@github.com:pulse00/Twig-Eclipse-Plugin.git,master,com.dubture.twig.ui"/>
-<project reference="1.0,git@github.com:pulse00/yedit.git,master,org.dadacoalition.yedit"/>
-<project reference="1.0,git@github.com:pulse00/yedit.git,master,org.dadacoalition.yedit.feature"/>
-<project reference="1.0,git@github.com:pulse00/yedit.git,master,org.dadacoalition.yedit.test"/>
-<project reference="1.0,git@github.com:pulse00/yedit.git,master,org.dadacoalition.yedit.update"/>
 <project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk"/>
 <project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk.console"/>
 <project reference="1.0,git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git,master,core/plugins/org.eclipse.dltk.console.ui"/>

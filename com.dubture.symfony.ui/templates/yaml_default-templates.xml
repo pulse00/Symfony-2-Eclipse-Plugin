@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <templates>
-    <template autoinsert="true" id="com.dubture.symfony.yaml.route" context="org.dadacoalition.yedit.template.yaml" deleted="false" description="a Symfony route" enabled="true" name="route">${name}:
+    <template autoinsert="true" id="com.dubture.symfony.yaml.route" context="org.eclipse.wildwebdeveloper.yaml.template.yaml" deleted="false" description="a Symfony route" enabled="true" name="route">${name}:
   pattern: ${pattern}
   defaults: { _controller: ${controller} }
     </template>
-    <template autoinsert="true" context="org.dadacoalition.yedit.template.yaml" id="com.dubture.symfony.yaml.service" deleted="false" description="a Symfony service" enabled="true" name="service">${id}:
+    <template autoinsert="true" context="org.eclipse.wildwebdeveloper.yaml.template.yaml" id="com.dubture.symfony.yaml.service" deleted="false" description="a Symfony service" enabled="true" name="service">${id}:
   class: ${class}
   arguments: ${args}
   tags: ${tags}

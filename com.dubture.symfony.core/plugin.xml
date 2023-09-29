@@ -222,12 +222,12 @@
              file-extensions="xlf">
        </file-association>
        <file-association
-             content-type="org.dadacoalition.yedit.yamlsource"
+             content-type="org.eclipse.wildwebdeveloper.yaml"
              file-extensions="yml.dist">
        </file-association>
        <!-- drop this when eclipse bug 361534 will be fixed -->
        <file-association
-             content-type="org.dadacoalition.yedit.yamlsource"
+             content-type="org.eclipse.wildwebdeveloper.yaml"
              file-names="parameters.yml.dist">
        </file-association>
     </extension>

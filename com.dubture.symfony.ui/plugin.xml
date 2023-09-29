@@ -87,7 +87,7 @@
           class="com.dubture.symfony.ui.editor.hyperlink.YamlHyperlinkDetector"
           id="com.dubture.symfony.ui.yamlHyperlinkDetector"
           name="%yamlHyperLinkDetector.name%"
-          targetId="org.dadacoalition.yedit.yamlsource">
+          targetId="org.eclipse.wildwebdeveloper.yaml">
     </hyperlinkDetector>
     <hyperlinkDetector
           activate="true"
