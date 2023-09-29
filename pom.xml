@@ -46,32 +46,32 @@
 		<repository>
 			<id>yedit</id>
 			<layout>p2</layout>
-			<url>http://dadacoalition.org/yedit</url>
+			<url>https://dadacoalition.org/yedit</url>
 		</repository>
 		<repository>
 			<id>eclipse</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/${eclipse.name}</url>
+			<url>https://download.eclipse.org/releases/${eclipse.name}</url>
 		</repository>
 		<repository>
 			<id>dltk</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/technology/dltk/updates-dev/${dltk.version}/</url>
+			<url>https://download.eclipse.org/technology/dltk/updates-dev/${dltk.version}/</url>
 		</repository>
 		<repository>
 			<id>pdt</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/tools/pdt/updates/${pdt.version}/</url>
+			<url>https://download.eclipse.org/tools/pdt/updates/${pdt.version}/</url>
 		</repository>
 		<repository>
 			<id>orbit</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository/</url>
+			<url>https://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository/</url>
 		</repository>
 		<repository>
 			<id>Sonatype-public</id>
 			<name>SnakeYAML repository</name>
-			<url>http://oss.sonatype.org/content/groups/public/</url>
+			<url>https://oss.sonatype.org/content/groups/public/</url>
 		</repository>
 		<repository>
 			<id>doctrine</id>
